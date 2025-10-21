@@ -1,2 +1,6 @@
-﻿  main.cpp
+﻿  Input.cpp
+  Player.cpp
+C:\GitHub\Winter_HomeWork_2025\VillageMonster\Player.cpp(32,17): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\GitHub\Winter_HomeWork_2025\VillageMonster\Player.cpp(32,13): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+  コードを生成中...
   VillageMonster.vcxproj -> C:\GitHub\Winter_HomeWork_2025\VillageMonster\x64\Debug\VillageMonster.exe
