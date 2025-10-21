@@ -1,4 +1,5 @@
 #pragma once
+class Input;
 class Player
 {
 public: 
@@ -6,7 +7,7 @@ public:
 	~Player();
 
 	void Init();
-	void Update();
+	void Update(Input&input);
 	void Draw();
 
 private:

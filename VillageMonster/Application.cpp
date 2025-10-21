@@ -3,6 +3,7 @@
 #include "Application.h"
 #include "Game.h"
 #include"Player.h"
+#include"Input.h"
 
 Application::Application()
 {
@@ -45,6 +46,7 @@ void Application::Run()
 	SetDrawScreen(DX_SCREEN_BACK);
 
 	Player player;
+	Input input;
 
 	while (ProcessMessage() != -1)
 	{
@@ -55,7 +57,8 @@ void Application::Run()
 		ClearDrawScreen();
 
 		// ‚±‚±‚ÉƒQ[ƒ€‚Ìˆ—‚ğ‘‚­
-		player.Update();
+		player.Update(input);
+		input.Update();
 		player.Draw();
 
 
