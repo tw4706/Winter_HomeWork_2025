@@ -13,5 +13,6 @@ public:
 private:
 	float x_;
 	float y_;
+	int playerHandle_;//プレイヤーの画像ハンドル
 };
 
