@@ -10,6 +10,5 @@ public:
 	void Draw();
 	virtual void Attack() = 0;
 private:
-
 };
 
