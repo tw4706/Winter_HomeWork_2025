@@ -58,5 +58,5 @@ void Player::Update(Input&input)
 
 void Player::Draw()
 {
-	DrawGraph(x_, y_, playerHandle_, true);
+	DrawRotaGraph3(x_,y_
 }
