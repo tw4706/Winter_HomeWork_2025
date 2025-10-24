@@ -24,7 +24,7 @@ Player::~Player()
 
 void Player::Init()
 {
-	playerHandle_ = LoadGraph("data/Player/Player_Idle.png");
+	playerHandle_ = LoadGraph("data/Player/Player.png");
 }
 
 void Player::Update(Input&input)
@@ -58,5 +58,4 @@ void Player::Update(Input&input)
 
 void Player::Draw()
 {
-	DrawRotaGraph3(x_,y_
 }
