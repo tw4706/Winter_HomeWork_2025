@@ -2,6 +2,7 @@
 #include"Dxlib.h"
 #include"Game.h"
 #include "Input.h"
+#include"Geometory.h"
 
 namespace
 {
@@ -12,8 +13,7 @@ namespace
 }
 
 Player::Player():
-	x_(kPlayerPosX),
-	y_(kPlayerPosY),
+	pos_{},
 	playerHandle_(-1)
 {
 }
@@ -24,6 +24,8 @@ Player::~Player()
 
 void Player::Init()
 {
+	pos_.x = kPlayerPosX;
+	pos_.y = kPlayerPosY;
 	playerHandle_ = LoadGraph("data/Player/Player.png");
 }
 
@@ -31,31 +33,32 @@ void Player::Update(Input&input)
 {
 	if (input.IsPressed("left"))
 	{
-		x_ -= kSpeed;
+		pos_.x -= kSpeed;
 	}
 	if (input.IsPressed("right"))
 	{
-		x_ += kSpeed;
+		pos_.x += kSpeed;
 	}
 	//êßå¿
-	if (x_ < kRadius)
+	if (pos_.x < kRadius)
 	{
-		x_ = kRadius;
+		pos_.x = kRadius;
 	}
-	if (x_ >= Game::kScreenWidth + kRadius)
+	if (pos_.x >= Game::kScreenWidth + kRadius)
 	{
-		x_ = Game::kScreenWidth + kRadius;
+		pos_.x = Game::kScreenWidth + kRadius;
 	}
-	if (y_ <= kRadius)
+	if (pos_.y <= kRadius)
 	{
-		y_ = kRadius;
+		pos_.y = kRadius;
 	}
-	if (y_ >= Game::kScreenHeight - kRadius)
+	if (pos_.y >= Game::kScreenHeight - kRadius)
 	{
-		y_ = Game::kScreenHeight- kRadius;
+		pos_.y = Game::kScreenHeight- kRadius;
 	}
 }
 
 void Player::Draw()
 {
+	DrawCircle(pos_.x, pos_.y, 16, GetColor(255, 255, 255), true);
 }

@@ -1,5 +1,6 @@
 #pragma once
 class Input;
+class Geometory;
 class Player
 {
 public: 
@@ -11,8 +12,8 @@ public:
 	void Draw();
 
 private:
-	float x_;
-	float y_;
 	int playerHandle_;//プレイヤーの画像ハンドル
+protected:
+	Geometory pos_;//プレイヤーの位置情報
 };
 
