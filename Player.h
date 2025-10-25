@@ -13,7 +13,5 @@ public:
 
 private:
 	int playerHandle_;//プレイヤーの画像ハンドル
-protected:
-	Geometory pos_;//プレイヤーの位置情報
 };
 
