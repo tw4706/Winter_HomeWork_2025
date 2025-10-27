@@ -1,6 +1,5 @@
 #pragma once
 class Input;
-class Geometory;
 class Player
 {
 public: 
@@ -13,5 +12,7 @@ public:
 
 private:
 	int playerHandle_;//プレイヤーの画像ハンドル
+	float x_;
+	float y_;
 };
 
