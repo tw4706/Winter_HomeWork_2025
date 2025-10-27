@@ -7,7 +7,7 @@ namespace
 {
 	constexpr float kPlayerPosX = 300.0f;
 	constexpr float kPlayerPosY = 300.0f;
-	constexpr float kSpeed = 2.0f;
+	constexpr float kSpeed = 6.0f;
 	constexpr float kRadius = 16.0f;
 }
 
@@ -24,8 +24,8 @@ Player::~Player()
 
 void Player::Init()
 {
-	x_ = 300.0f;
-	y_ = 300.0f;
+	x_ = kPlayerPosX;
+	y_ = kPlayerPosY;
 	playerHandle_ = LoadGraph("data/Player/Player.png");
 }
 
@@ -33,11 +33,20 @@ void Player::Update(Input&input)
 {
 	if (input.IsPressed("left"))
 	{
-		x_ -= kSpeed;
+		x_--;
 	}
 	if (input.IsPressed("right"))
 	{
-		x_ += kSpeed;
+		x_++;
+	}
+	//êßå¿óp
+	if (x_ < kRadius)
+	{
+		x_ = kRadius;
+	}
+	if (x_ > Game::kScreenWidth + kRadius)
+	{
+		x_ = Game::kScreenWidth+kRadius;
 	}
 }
 

@@ -56,6 +56,8 @@ void Application::Run()
 		// 前のフレームに描画した内容をクリアする
 		ClearDrawScreen();
 
+		player.Init();
+
 		// ここにゲームの処理を書く
 		player.Update(input);
 		input.Update();
