@@ -2,24 +2,20 @@
 #include "Player.h"
 #include "Input.h"
 #include<cassert>
+#include "Character.h"
 
 namespace {
 	constexpr int kWidth = 192;//幅
 	constexpr int kHeight = 192;//高さ
 	constexpr float kRadius = 16.0f;//半径
 	constexpr float kSpeed = 4.0f;//速度
-	constexpr float kGravity = 5.0f;//加速度
-	constexpr float kJumpPower = 80.0f;//加速度
-	constexpr float kGround = 300.0f;//着地位置
+	constexpr float kJumpPower = 25.0f;//加速度
 	//constexpr int kIdleNum=
 }
 
 
-Player::Player():
-	frameCount_(0),
-	playerH_(-1),
-	isTurn_(false),
-	isJumping_(false)
+Player::Player() :
+	playerH_(-1)
 {
 }
 
@@ -36,59 +32,56 @@ void Player::Init()
 
 void Player::Update()
 {
-
 }
 
 void Player::Update(Input& input)
 {
-	GameObject::Update();
-	if (input.IsPressed("left"))
-	{
-		pos_.x -= kSpeed;
-		isTurn_ = false;
-	}
-	if (input.IsPressed("right"))
-	{
-		pos_.x += kSpeed;
-		isTurn_ = true;
-	}
+	Character::Update();
+	Move(input);
 	if (input.IsPressed("jump"))
 	{
-		Gravity(input);
-		Jump(input);
-		if (pos_.y >= kGround)
-		{
-			pos_.y = kGround;
-
-		}
+		Jump();
 	}
+	pos_ += vel_;
 }
 
 void Player::Draw()
 {
-	GameObject::Draw();
-	if (!isTurn_)
+	if (is_turn)
 	{
 		DrawRectGraph(pos_.x, pos_.y, 0, 0, kWidth, kHeight, playerH_, false);
 	}
 	else
 	{
-		DrawRectGraph(pos_.x, pos_.y, 0, 0, kWidth, kHeight, playerH_, false,true);
+		DrawRectGraph(pos_.x, pos_.y, 0, 0, kWidth, kHeight, playerH_, false, true);
 	}
 	//DrawGraph(pos_.x, pos_.y, playerH_, true);
-	
+
 }
 
-void Player::Gravity(Input&input)
+void Player::Move(Input&input)
 {
-	pos_.y += kGravity;
-}
 
-void Player::Jump(Input& input)
-{
-	if (input.IsPressed("jump") && !isJumping_)
-	{
-		pos_.y -= kJumpPower;
-		isJumping_ = true;
+	if (input.IsPressed("left")) {
+		vel_.x = -kSpeed;
+		is_turn = false;
 	}
+	else if (input.IsPressed("right")) {
+		vel_.x = kSpeed;
+		is_turn = true;
+	}
+	else {
+		vel_.x = 0.0f;
+	}
+
+}
+
+void Player::Jump()
+{
+	//ジャンプ中は処理しない
+	if (!is_ground)return;
+
+	vel_.y = -kJumpPower;
+	is_ground = false;
+
 }

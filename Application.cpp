@@ -1,5 +1,4 @@
 #include<Dxlib.h>
-#include<cassert>
 #include<memory>
 #include "Application.h"
 #include "Game.h"
