@@ -1,8 +1,9 @@
 #include<Dxlib.h>
 #include<cassert>
+#include<memory>
 #include "Application.h"
 #include "Game.h"
-#include"Player.h"
+#include "Player.h"
 #include"Input.h"
 
 Application::Application()
@@ -44,9 +45,9 @@ void Application::Run()
 {
 	// 描画対象をバックバッファに変更
 	SetDrawScreen(DX_SCREEN_BACK);
-
 	Player player;
 	Input input;
+	player.Init();
 
 	while (ProcessMessage() != -1)
 	{
@@ -56,13 +57,10 @@ void Application::Run()
 		// 前のフレームに描画した内容をクリアする
 		ClearDrawScreen();
 
-		player.Init();
-
 		// ここにゲームの処理を書く
-		player.Update(input);
 		input.Update();
+		player.Update(input);
 		player.Draw();
-
 
 		// escキーを押したらゲームを強制終了
 		if (CheckHitKey(KEY_INPUT_ESCAPE))

@@ -1,16 +1,16 @@
 #pragma once
-#include"GameObject.h"
-class Enemy:public GameObject
+#include"Geometry.h"
+class GameObject
 {
 public:
-	Enemy();
-	virtual~Enemy();
+	GameObject();
+	virtual~GameObject();
 
 	virtual void Init()abstract;
 	virtual void Update()abstract;
 	virtual void Draw()abstract;
-	virtual void Attack()abstract;//çUåÇ
 protected:
-
+	Vector2 pos_;
+	Vector2 vel_;
 };
 

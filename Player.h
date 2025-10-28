@@ -1,18 +1,17 @@
 #pragma once
+#include"GameObject.h"
 class Input;
-class Player
+class Player :public GameObject
 {
-public: 
+public:
 	Player();
-	~Player();
+	~Player()override;
 
-	void Init();
+	void Init()override;
+	void Update()override;
 	void Update(Input&input);
-	void Draw();
-
+	void Draw()override;
 private:
-	int playerHandle_;//プレイヤーの画像ハンドル
-	float x_;
-	float y_;
+	int playerH_;//プレイヤーの画像ハンドル
 };
 

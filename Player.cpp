@@ -1,20 +1,17 @@
-#include "Player.h"
 #include"Dxlib.h"
-#include"Game.h"
+#include "Player.h"
 #include "Input.h"
+#include<cassert>
 
-namespace
-{
-	constexpr float kPlayerPosX = 300.0f;
-	constexpr float kPlayerPosY = 300.0f;
-	constexpr float kSpeed = 6.0f;
+namespace {
 	constexpr float kRadius = 16.0f;
+	constexpr float kSpeed = 4.0f;
+	//constexpr int kIdleNum=
 }
 
+
 Player::Player():
-	x_(0.0f),
-	y_(0.0f),
-	playerHandle_(-1)
+	playerH_(-1)
 {
 }
 
@@ -24,33 +21,29 @@ Player::~Player()
 
 void Player::Init()
 {
-	x_ = kPlayerPosX;
-	y_ = kPlayerPosY;
-	playerHandle_ = LoadGraph("data/Player/Player.png");
+	pos_ = { 300.0f,300.0f };
+	playerH_ = LoadGraph("data/Player/Player.png");
+	assert(playerH_ >= 0);
 }
 
-void Player::Update(Input&input)
+void Player::Update() {
+
+}
+
+void Player::Update(Input& input)
 {
 	if (input.IsPressed("left"))
 	{
-		x_--;
+		pos_.x -= kSpeed;
 	}
 	if (input.IsPressed("right"))
 	{
-		x_++;
-	}
-	//êßå¿óp
-	if (x_ < kRadius)
-	{
-		x_ = kRadius;
-	}
-	if (x_ > Game::kScreenWidth + kRadius)
-	{
-		x_ = Game::kScreenWidth+kRadius;
+		pos_.x += kSpeed;
 	}
 }
 
 void Player::Draw()
 {
-	DrawCircle(x_, y_, kRadius, GetColor(255, 255, 255), true);
+
+	DrawGraph(pos_.x, pos_.y, playerH_, true);
 }
