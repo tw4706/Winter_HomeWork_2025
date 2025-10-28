@@ -1,5 +1,6 @@
 #pragma once
 #include"Geometry.h"
+class Input;
 class GameObject
 {
 public:
