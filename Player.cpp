@@ -10,6 +10,7 @@ namespace {
 	constexpr float kRadius = 16.0f;//半径
 	constexpr float kSpeed = 4.0f;//速度
 	constexpr float kJumpPower = 25.0f;//加速度
+	constexpr float kGround = 400.0f; // 地面位置
 	//constexpr int kIdleNum=
 }
 
@@ -43,6 +44,14 @@ void Player::Update(Input& input)
 		Jump();
 	}
 	pos_ += vel_;
+
+	//地面の接地判定
+	if (pos_.y >= kGround) {
+		pos_.y = kGround;
+		vel_.y = 0.0f;
+		is_ground = true;
+	}
+
 }
 
 void Player::Draw()
