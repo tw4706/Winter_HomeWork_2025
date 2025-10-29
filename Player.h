@@ -16,5 +16,6 @@ public:
 	void Jump();
 private:
 	int playerH_;//プレイヤーの画像ハンドル
+	bool isJumping_;//ジャンプしているかどうか
 };
 

@@ -14,8 +14,8 @@ protected:
 protected:
 	int width;//幅
 	int height;//高さ
-	bool is_turn;//反転してるかどうか
-	bool is_ground;//地面に接地しているかどうか
+	bool isTurn_;//反転してるかどうか
+	bool isGround_;//地面に接地しているかどうか
 	Rect colRect_;//当たり判定の矩形
 };
 

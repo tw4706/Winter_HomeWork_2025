@@ -3,11 +3,14 @@
 namespace
 {
 	constexpr float kGravity = 1.5f;  // 重力
+	constexpr float kCharaSize = 192.0f;//キャラクターサイズ
 }
 
-Character::Character():
-	is_turn(false),
-	is_ground(false)
+Character::Character() :
+	width(0.0f),
+	height(0.0f),
+	isTurn_(false),
+	isGround_(false)
 {
 }
 
@@ -15,23 +18,21 @@ Character::~Character()
 {
 }
 
-void Character::Init() 
+void Character::Init()
 {
 
 }
 
-void Character::Update() 
+void Character::Update()
 {
 	Gravity();
-	colRect_.SetCenter(pos_.x, pos_.y, width, height);
+	colRect_.SetCenter(pos_.x, pos_.y, kCharaSize, kCharaSize);
 }
 
-void Character::Draw() 
+void Character::Draw()
 {
-#ifndef _DEBUG
 	//当たり判定を表示
 	colRect_.Draw(0x0000ff, false);
-#endif
 }
 
 void Character::Gravity() {
