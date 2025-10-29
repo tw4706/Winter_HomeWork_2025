@@ -2,8 +2,8 @@
 
 namespace
 {
-	constexpr float kGravity = 1.5f;  // 重力
-	constexpr float kCharaSize = 192.0f;//キャラクターサイズ
+	constexpr float kGravity = 0.3f;  // 重力
+	constexpr float kCharaSize = 32.0f;//キャラクターサイズ
 }
 
 Character::Character() :

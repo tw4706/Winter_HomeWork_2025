@@ -1,5 +1,5 @@
 #include "Input.h"
-#include"Dxlib.h"
+#include<Dxlib.h>
 
 Input::Input() :inputData_{}, lastInputData_{}, inputTable_{}
 {

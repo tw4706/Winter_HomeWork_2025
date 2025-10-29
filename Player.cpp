@@ -1,16 +1,16 @@
-#include"Dxlib.h"
+#include<Dxlib.h>
+#include<cassert>
 #include "Player.h"
 #include "Input.h"
-#include<cassert>
 #include "Character.h"
 
-namespace 
+namespace
 {
 	constexpr int kWidth = 192;//幅
 	constexpr int kHeight = 192;//高さ
 	constexpr float kRadius = 16.0f;//半径
 	constexpr float kSpeed = 4.0f;//速度
-	constexpr float kJumpPower = 25.0f;//ジャンプの高さ
+	constexpr float kJumpPower = 10.0f;//ジャンプの高さ
 	constexpr float kGround = 400.0f; // 地面位置
 }
 
@@ -40,11 +40,9 @@ void Player::Update(Input& input)
 {
 	Character::Update();
 	Move(input);
-	if (!isJumping_) {
-		if (input.IsTriggered("jump"))
-		{
-			Jump();
-		}
+	if (input.IsTriggered("jump"))
+	{
+		Jump();
 	}
 	pos_ += vel_;
 
@@ -54,37 +52,72 @@ void Player::Update(Input& input)
 		vel_.y = 0.0f;
 		isGround_ = true;
 	}
-
 }
 
 void Player::Draw()
 {
 	if (isTurn_)
 	{
-		DrawRectGraph(pos_.x, pos_.y, 0, 0, kWidth, kHeight, playerH_, false);
+		DrawRectRotaGraph3(pos_.x, pos_.y,	//描画位置
+			0, 0,				//左上の描画開始位置			
+			kWidth, kHeight,	//描画する矩形のサイズ
+			0, 0,				//回転の中心
+			1, 1,				//縦幅と横幅の拡大率
+			0,					//回転角度(ラジアン)
+			playerH_, false);
 	}
 	else
 	{
-		DrawRectGraph(pos_.x, pos_.y, 0, 0, kWidth, kHeight, playerH_, false, true);
+		DrawRectRotaGraph3(pos_.x, pos_.y,
+			0, 0,
+			kWidth, kHeight,
+			0, 0,
+			1, 1,
+			0,
+			playerH_, false, true);
 	}
-	//DrawGraph(pos_.x, pos_.y, playerH_, true);
-
+#ifdef _DEBUG
+	colRect_.Draw(0xff0000, false);
+#endif
 }
 
-void Player::Move(Input&input)
+void Player::Move(Input& input)
 {
+	if (isGround_)
+	{
+		if (input.IsPressed("left"))
+		{
+			vel_.x = -kSpeed;
+			isTurn_ = false;
+		}
+		else if (input.IsPressed("right"))
+		{
+			vel_.x = kSpeed;
+			isTurn_ = true;
+		}
+		else
+		{
+			vel_.x = 0.0f;
+		}
+	}
+	else if (!isGround_)
+	{
+		if (input.IsPressed("left"))
+		{
+			vel_.x = -1;
+			isTurn_ = false;
+		}
+		else if (input.IsPressed("right"))
+		{
+			vel_.x = 1;
+			isTurn_ = true;
+		}
+		else
+		{
+			vel_.x = 0.0f;
+		}
+	}
 
-	if (input.IsPressed("left")) {
-		vel_.x = -kSpeed;
-		isTurn_ = false;
-	}
-	else if (input.IsPressed("right")) {
-		vel_.x = kSpeed;
-		isTurn_ = true;
-	}
-	else {
-		vel_.x = 0.0f;
-	}
 
 }
 
@@ -92,7 +125,6 @@ void Player::Jump()
 {
 	//ジャンプ中は処理しない
 	if (!isGround_)return;
-
 	vel_.y = -kJumpPower;
 	isGround_ = false;
 

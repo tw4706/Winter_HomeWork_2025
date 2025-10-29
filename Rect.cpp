@@ -1,5 +1,5 @@
 #include "Rect.h"
-#include "Dxlib.h"
+#include <Dxlib.h>
 #include<cassert>
 
 Rect::Rect():
