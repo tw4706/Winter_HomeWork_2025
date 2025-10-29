@@ -15,15 +15,23 @@ Character::~Character()
 {
 }
 
-void Character::Init() {
+void Character::Init() 
+{
 
 }
 
-void Character::Update() {
+void Character::Update() 
+{
 	Gravity();
+	colRect_.SetCenter(pos_.x, pos_.y, width, height);
 }
 
-void Character::Draw() {
+void Character::Draw() 
+{
+#ifndef _DEBUG
+	//“–‚½‚è”»’è‚ð•\Ž¦
+	colRect_.Draw(0x0000ff, false);
+#endif
 }
 
 void Character::Gravity() {

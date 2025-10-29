@@ -1,5 +1,6 @@
 #pragma once
 #include"GameObject.h"
+#include"Rect.h"
 class Character:public GameObject
 {
 public:
@@ -11,7 +12,10 @@ public:
 protected:
 	virtual void Gravity();
 protected:
+	int width;//•
+	int height;//‚‚³
 	bool is_turn;//”½“]‚µ‚Ä‚é‚©‚Ç‚¤‚©
 	bool is_ground;//’n–Ê‚ÉÚ’n‚µ‚Ä‚¢‚é‚©‚Ç‚¤‚©
+	Rect colRect_;//“–‚½‚è”»’è‚Ì‹éŒ`
 };
 
