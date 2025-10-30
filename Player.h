@@ -13,9 +13,10 @@ public:
 	virtual void Draw()override;
 
 	void Move(Input& input);
-	void Jump();
+	void Jump(Input& input);
 private:
 	int playerH_;//プレイヤーの画像ハンドル
 	bool isJumping_;//ジャンプしているかどうか
+	bool isDoubleJump_;//ダブルジャンプできるかどうか
 };
 

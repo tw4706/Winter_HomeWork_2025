@@ -9,15 +9,17 @@ namespace
 	constexpr int kWidth = 192;//幅
 	constexpr int kHeight = 192;//高さ
 	constexpr float kRadius = 16.0f;//半径
-	constexpr float kSpeed = 4.0f;//速度
-	constexpr float kJumpPower = 8.0f;//ジャンプの高さ
+	constexpr float kSpeed = 3.0f;//速度
+	constexpr float kJumpPower = 10.0f;//ジャンプの高さ
+	constexpr float kDoubleJumpPower = 10.0f;//ダブルジャンプの高さ
 	constexpr float kGround = 400.0f; // 地面位置
 }
 
 
 Player::Player() :
 	playerH_(-1),
-	isJumping_(false)
+	isJumping_(false),
+	isDoubleJump_(false)
 {
 }
 
@@ -42,7 +44,7 @@ void Player::Update(Input& input)
 	Move(input);
 	if (input.IsTriggered("jump"))
 	{
-		Jump();
+		Jump(input);
 	}
 	pos_ += vel_;
 
@@ -117,15 +119,20 @@ void Player::Move(Input& input)
 			vel_.x = 0.0f;
 		}
 	}
-
-
 }
 
-void Player::Jump()
+void Player::Jump(Input& input)
 {
 	//ジャンプ中は処理しない
 	if (!isGround_)return;
 	vel_.y = -kJumpPower;
-	isGround_ = false;
+	isDoubleJump_ = true;
+	//ダブルジャンプ処理
+	if (isDoubleJump_ && input.IsTriggered("jump"))
+	{
+		vel_.y = -kDoubleJumpPower;
+		isDoubleJump_ = false;
+		isGround_ = false;
+	}
 
 }

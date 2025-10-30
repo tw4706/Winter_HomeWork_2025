@@ -31,8 +31,11 @@ void Character::Update()
 
 void Character::Draw()
 {
+#ifdef _DEBUG
 	//“–‚½‚è”»’è‚ð•\Ž¦
 	colRect_.Draw(0x0000ff, false);
+#endif
+
 }
 
 void Character::Gravity() {
