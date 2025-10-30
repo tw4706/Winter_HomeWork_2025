@@ -10,7 +10,5 @@ public:
 	virtual void Update()abstract;
 	virtual void Draw()abstract;
 	virtual void Attack()abstract;//UŒ‚
-protected:
-
 };
 

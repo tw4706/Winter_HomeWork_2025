@@ -126,13 +126,5 @@ void Player::Jump(Input& input)
 	//ジャンプ中は処理しない
 	if (!isGround_)return;
 	vel_.y = -kJumpPower;
-	isDoubleJump_ = true;
-	//ダブルジャンプ処理
-	if (isDoubleJump_ && input.IsTriggered("jump"))
-	{
-		vel_.y = -kDoubleJumpPower;
-		isDoubleJump_ = false;
-		isGround_ = false;
-	}
-
+	isGround_ = false;
 }
