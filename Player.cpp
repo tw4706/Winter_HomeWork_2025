@@ -10,7 +10,7 @@ namespace
 	constexpr int kHeight = 192;//高さ
 	constexpr float kRadius = 16.0f;//半径
 	constexpr float kSpeed = 4.0f;//速度
-	constexpr float kJumpPower = 10.0f;//ジャンプの高さ
+	constexpr float kJumpPower = 8.0f;//ジャンプの高さ
 	constexpr float kGround = 400.0f; // 地面位置
 }
 
@@ -104,12 +104,12 @@ void Player::Move(Input& input)
 	{
 		if (input.IsPressed("left"))
 		{
-			vel_.x = -1;
+			vel_.x = -0.5f;
 			isTurn_ = false;
 		}
 		else if (input.IsPressed("right"))
 		{
-			vel_.x = 1;
+			vel_.x = 0.5f;
 			isTurn_ = true;
 		}
 		else
