@@ -3,11 +3,12 @@
 class TitleScene :public Scene
 {
 private:
+	int titleH_;//タイトル画像ハンドル
 	int frame_;//経過フレーム
 
 	void FadeInUpdate(Input&);
-	void NormalUpdate(Input&input);
-	void FadeOutUpdate(Input&input);
+	void NormalUpdate(Input&);
+	void FadeOutUpdate(Input&);
 	using UpdateFunc_t = void (TitleScene::*)(Input&);
 	UpdateFunc_t update_;
 

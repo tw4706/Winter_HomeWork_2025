@@ -3,6 +3,7 @@
 #include"Input.h"
 #include"SceneController.h"
 #include"Application.h"
+#include "GameScene.h"
 
 constexpr int fade_interval = 60;
 
@@ -26,7 +27,7 @@ void TitleScene::NormalUpdate(Input&input)
 	}
 }
 
-void TitleScene::FadeOutUpdate(Input&)
+void TitleScene::FadeOutUpdate(Input&input)
 {
 	if (frame_++ >= fade_interval) {
 		controller_.ChangeScene(std::make_shared<GameScene>(controller_));
@@ -36,21 +37,35 @@ void TitleScene::FadeOutUpdate(Input&)
 
 void TitleScene::NormalDraw()
 {
-
+	const auto& wsize = Application::GetInstance().GetWindowSize();
+	DrawRotaGraph(wsize.w / 2, wsize.h / 2, 1.0f, 0.0f, titleH_, true);
 }
 
 void TitleScene::FadeDraw()
 {
+	const auto& wsize = Application::GetInstance().GetWindowSize();
+	DrawRotaGraph(wsize.w / 2, wsize.h / 2, 1.0f, 0.0f, titleH_, true);
+	// 値の範囲を一旦0.0~1.0にしておくといろいろと扱いやすくなります
+	auto rate = static_cast<float>(frame_) / static_cast<float>(fade_interval);
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255 * rate);// αブレンド
+	DrawBox(0, 0, wsize.w, wsize.h, 0x000000, true);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);// ブレンドしない
 }
 
-TitleScene::TitleScene(SceneController&)
+TitleScene::TitleScene(SceneController&controller):Scene(controller)
 {
+	titleH_ = LoadGraph("data/title.png");
+	update_ = &TitleScene::FadeInUpdate;
+	draw_ = &TitleScene::FadeDraw;
+	frame_ = fade_interval;
 }
 
 void TitleScene::Update(Input&input)
 {
+	(this->*update_)(input);
 }
 
 void TitleScene::Draw()
 {
+	(this->*draw_)();
 }
