@@ -7,8 +7,8 @@ namespace
 }
 
 Character::Character() :
-	width(0.0f),
-	height(0.0f),
+	width_(0.0f),
+	height_(0.0f),
 	isTurn_(false),
 	isGround_(false)
 {

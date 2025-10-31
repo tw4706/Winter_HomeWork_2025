@@ -12,8 +12,8 @@ public:
 protected:
 	virtual void Gravity();
 protected:
-	int width;//•
-	int height;//‚‚³
+	int width_;//•
+	int height_;//‚‚³
 	bool isTurn_;//”½“]‚µ‚Ä‚é‚©‚Ç‚¤‚©
 	bool isGround_;//’n–Ê‚ÉÚ’n‚µ‚Ä‚¢‚é‚©‚Ç‚¤‚©
 	Rect colRect_;//“–‚½‚è”»’è‚Ì‹éŒ`

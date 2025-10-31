@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "Input.h"
 #include "Character.h"
+#include "SceneController.h"
 
 namespace
 {
