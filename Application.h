@@ -5,7 +5,6 @@
 class Application
 {
 private:
-	Size windowSize_{};
 	Application();
 	Application(const Application& app) = delete;
 	void operator=(const Application& app) = delete;
@@ -23,8 +22,5 @@ public:
 	//更新処理
 	void Run();
 	void Terminate();
-
-	//ウィンドウサイズの取得
-	const Size& GetWindowSize()const { return windowSize_; }
 };
 

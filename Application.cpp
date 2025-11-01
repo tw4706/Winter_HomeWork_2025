@@ -3,17 +3,11 @@
 #include "Application.h"
 #include "Game.h"
 #include"Input.h"
+#include"Player.h"
 #include"SceneController.h"
 #include"TitleScene.h"
 
-namespace
-{
-	constexpr int default_window_width = 640;//デフォルトウィンドウ幅
-	constexpr int default_window_height = 480;//デフォルトウィンドウ高
-	constexpr int default_color_bit = 32;//デフォルトカラービット
-}
-
-Application::Application() :windowSize_{ default_window_width ,default_window_height }
+Application::Application()
 {
 
 }
@@ -31,11 +25,11 @@ Application& Application::GetInstance()
 
 bool Application::Init()
 {
-	// ウインドウモード設定
-	SetWindowSize(windowSize_.w, windowSize_.h);
 	DxLib::ChangeWindowMode(true);
 	// ウインドウのタイトル変更
 	DxLib::SetWindowText("VillageMonster");
+	// 画面のサイズ変更
+	SetGraphMode(Game::kScreenWidth, Game::kScreenHeight, Game::kColorBitNum);
 
 	if (DxLib_Init() == -1)		// ＤＸライブラリ初期化処理
 	{
@@ -52,8 +46,8 @@ void Application::Run()
 	// 描画対象をバックバッファに変更
 	SetDrawScreen(DX_SCREEN_BACK);
 	Input input;
-	SceneController controller;
-	controller.ChangeScene(std::make_shared<TitleScene>(controller));
+	Player player({ 0, 0 }, Vector2());
+	player.Init();
 
 	while (ProcessMessage() != -1)
 	{
@@ -65,10 +59,8 @@ void Application::Run()
 
 		// ここにゲームの処理を書く
 		input.Update();
-		//シーンの更新
-		controller.Update(input);
-		//シーンの描画
-		controller.Draw();
+		player.Update(input);
+		player.Draw();
 
 		// escキーを押したらゲームを強制終了
 		if (CheckHitKey(KEY_INPUT_ESCAPE))

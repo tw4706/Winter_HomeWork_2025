@@ -1,10 +1,10 @@
 #pragma once
-#include"Character.h"
+#include"GameObject.h"
 class Input;
-class Player :public Character
+class Player :public GameObject
 {
 public:
-	Player();
+	Player(Vector2 pos, Vector2 vel);
 	~Player()override;
 
 	virtual void Init()override;
@@ -17,6 +17,6 @@ public:
 private:
 	int playerH_;//プレイヤーの画像ハンドル
 	bool isJumping_;//ジャンプしているかどうか
-	bool isDoubleJump_;//ダブルジャンプできるかどうか
+	bool canDoubleJumping_;//だ部ジャンプ可能かどうか
 };
 

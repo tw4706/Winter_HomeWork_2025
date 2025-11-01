@@ -1,14 +1,18 @@
 #pragma once
-#include"Character.h"
-class Enemy:public Character
+#include"GameObject.h"
+class Enemy:public GameObject
 {
 public:
-	Enemy();
+	Enemy(Vector2 pos);
 	virtual~Enemy();
 
-	virtual void Init()abstract;
-	virtual void Update()abstract;
-	virtual void Draw()abstract;
-	virtual void Attack()abstract;//UŒ‚
+	virtual void Init() = 0;
+	virtual void Update()=0;
+	virtual void Draw() = 0;
+
+	virtual void Attack() = 0;//UŒ‚
+	virtual void Move() = 0;//ˆÚ“®
+	virtual bool IsDead()const;//€–S”»’è
+
 };
 

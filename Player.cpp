@@ -2,7 +2,6 @@
 #include<cassert>
 #include "Player.h"
 #include "Input.h"
-#include "Character.h"
 #include "SceneController.h"
 
 namespace
@@ -11,16 +10,18 @@ namespace
 	constexpr int kHeight = 192;//高さ
 	constexpr float kRadius = 16.0f;//半径
 	constexpr float kSpeed = 3.0f;//速度
-	constexpr float kJumpPower = 5.0f;//ジャンプの高さ
-	constexpr float kDoubleJumpPower = 10.0f;//ダブルジャンプの高さ
+	constexpr float kHalfSpeed = 1.5f;//ジャンプ時の横移動速度
+	constexpr float kJumpPower = 10.0f;//ジャンプの高さ
+	constexpr float kDoubleJumpPower = 8.0f;//ダブルジャンプの高さ
 	constexpr float kGround = 400.0f; // 地面位置
 }
 
 
-Player::Player() :
+Player::Player(Vector2 pos, Vector2 vel):
+	GameObject(pos,Vector2()),
 	playerH_(-1),
 	isJumping_(false),
-	isDoubleJump_(false)
+	canDoubleJumping_(false)
 {
 }
 
@@ -41,7 +42,7 @@ void Player::Update()
 
 void Player::Update(Input& input)
 {
-	Character::Update();
+	GameObject::Update();
 	Move(input);
 	if (input.IsTriggered("jump"))
 	{
@@ -50,10 +51,14 @@ void Player::Update(Input& input)
 	pos_ += vel_;
 
 	//地面の接地判定
-	if (pos_.y >= kGround) {
+	if (pos_.y >= kGround)
+	{
 		pos_.y = kGround;
 		vel_.y = 0.0f;
 		isGround_ = true;
+		isJumping_ = false;
+		canDoubleJumping_ = false;
+
 	}
 }
 
@@ -86,7 +91,7 @@ void Player::Draw()
 
 void Player::Move(Input& input)
 {
-	if (isGround_)
+	if (isGround_||canDoubleJumping_)
 	{
 		if (input.IsPressed("left"))
 		{
@@ -107,12 +112,12 @@ void Player::Move(Input& input)
 	{
 		if (input.IsPressed("left"))
 		{
-			vel_.x = -(kSpeed/2);
+			vel_.x = -kHalfSpeed;
 			isTurn_ = false;
 		}
 		else if (input.IsPressed("right"))
 		{
-			vel_.x = kSpeed / 2;
+			vel_.x = kHalfSpeed;
 			isTurn_ = true;
 		}
 		else
@@ -124,8 +129,19 @@ void Player::Move(Input& input)
 
 void Player::Jump(Input& input)
 {
-	//ジャンプ中は処理しない
-	if (!isGround_)return;
-	vel_.y = -kJumpPower;
-	isGround_ = false;
+	// 通常ジャンプ
+	if (isGround_) 
+	{
+		vel_.y = -kJumpPower;
+		isGround_ = false;
+		canDoubleJumping_ = true;
+		return;
+	}
+
+	// 二段ジャンプ
+	if (canDoubleJumping_) 
+	{
+		vel_.y = -kDoubleJumpPower;
+		canDoubleJumping_ = false;
+	}
 }

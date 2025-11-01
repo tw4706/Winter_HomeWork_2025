@@ -13,14 +13,14 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Scenes">
-      <UniqueIdentifier>{f8da6bcb-9874-4eae-a76e-bcd2872cfc7e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Scenes">
-      <UniqueIdentifier>{ca41c4e4-164d-4692-b3c2-51b6ee74fe91}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\Character">
       <UniqueIdentifier>{5abd770a-2ef9-4613-a66d-fa6e8f8c8952}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\BaseClassH">
+      <UniqueIdentifier>{31e394d2-f915-41d0-8f46-ba68caab3aa4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\BaseClassCPP">
+      <UniqueIdentifier>{73d2bb27-d41d-4c8d-85e1-f76dccf8850b}</UniqueIdentifier>
     </Filter>
     <Filter Include="ヘッダー ファイル\Character">
       <UniqueIdentifier>{2d03a14f-64f7-4609-845b-ecb2d3fbf9c5}</UniqueIdentifier>
@@ -39,32 +39,20 @@
     <ClCompile Include="Geometry.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Rect.cpp">
       <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="GameScene.cpp">
-      <Filter>ソース ファイル\Scenes</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene.cpp">
-      <Filter>ソース ファイル\Scenes</Filter>
-    </ClCompile>
-    <ClCompile Include="SceneController.cpp">
-      <Filter>ソース ファイル\Scenes</Filter>
-    </ClCompile>
-    <ClCompile Include="TitleScene.cpp">
-      <Filter>ソース ファイル\Scenes</Filter>
     </ClCompile>
     <ClCompile Include="Player.cpp">
       <Filter>ソース ファイル\Character</Filter>
     </ClCompile>
-    <ClCompile Include="Enemy.cpp">
+    <ClCompile Include="Zombie.cpp">
       <Filter>ソース ファイル\Character</Filter>
     </ClCompile>
-    <ClCompile Include="Character.cpp">
-      <Filter>ソース ファイル\Character</Filter>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>ソース ファイル\BaseClassCPP</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>ソース ファイル\BaseClassCPP</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -80,32 +68,20 @@
     <ClInclude Include="Geometry.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Rect.h">
       <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="GameScene.h">
-      <Filter>ヘッダー ファイル\Scenes</Filter>
-    </ClInclude>
-    <ClInclude Include="SceneController.h">
-      <Filter>ヘッダー ファイル\Scenes</Filter>
-    </ClInclude>
-    <ClInclude Include="TitleScene.h">
-      <Filter>ヘッダー ファイル\Scenes</Filter>
-    </ClInclude>
-    <ClInclude Include="Enemy.h">
-      <Filter>ヘッダー ファイル\Character</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">
       <Filter>ヘッダー ファイル\Character</Filter>
     </ClInclude>
-    <ClInclude Include="Character.h">
+    <ClInclude Include="Zombie.h">
       <Filter>ヘッダー ファイル\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>ヘッダー ファイル\BaseClassH</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy.h">
+      <Filter>ヘッダー ファイル\BaseClassH</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

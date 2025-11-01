@@ -1,10 +1,22 @@
 #include "Enemy.h"
-#include "Player.h"
 
-Enemy::Enemy()
+namespace
 {
-
+	//エネミーの開始位置
+	constexpr int kStartX = 500;
+	constexpr int kStartY = 300;
 }
+
+Enemy::Enemy(Vector2 pos):
+	GameObject(pos,Vector2())
+{
+}
+
 Enemy::~Enemy()
 {
+}
+
+bool Enemy::IsDead() const
+{
+	return false;
 }
