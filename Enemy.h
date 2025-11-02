@@ -13,6 +13,9 @@ public:
 	virtual void Attack() = 0;//UŒ‚
 	virtual void Move() = 0;//ˆÚ“®
 	virtual bool IsDead()const;//€–S”»’è
+	const Vector2& GetPos()const { return pos_; }
 
+protected:
+	bool isRight_;	//‰E‚ğŒü‚¢‚Ä‚¢‚é‚©‚Ç‚¤‚©
 };
 

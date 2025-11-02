@@ -4,6 +4,7 @@
 #include "Game.h"
 #include"Input.h"
 #include"Player.h"
+#include"Zombie.h"
 #include"SceneController.h"
 #include"TitleScene.h"
 
@@ -46,8 +47,10 @@ void Application::Run()
 	// 描画対象をバックバッファに変更
 	SetDrawScreen(DX_SCREEN_BACK);
 	Input input;
-	Player player({ 0, 0 }, Vector2());
+	Player player({ 100, 500 }, Vector2());
+	Zombie zombie({ 800,500 });
 	player.Init();
+	zombie.Init();
 
 	while (ProcessMessage() != -1)
 	{
@@ -60,7 +63,9 @@ void Application::Run()
 		// ここにゲームの処理を書く
 		input.Update();
 		player.Update(input);
+		zombie.Update();
 		player.Draw();
+		zombie.Draw();
 
 		// escキーを押したらゲームを強制終了
 		if (CheckHitKey(KEY_INPUT_ESCAPE))

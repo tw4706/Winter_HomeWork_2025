@@ -6,8 +6,8 @@
 
 namespace
 {
-	constexpr int kWidth = 192;//幅
-	constexpr int kHeight = 192;//高さ
+	constexpr int kGraphW = 192;//幅
+	constexpr int kGraphH = 192;//高さ
 	constexpr float kRadius = 16.0f;//半径
 	constexpr float kSpeed = 3.0f;//速度
 	constexpr float kHalfSpeed = 1.5f;//ジャンプ時の横移動速度
@@ -29,9 +29,14 @@ Player::~Player()
 {
 }
 
+Player& Player::GetInstance()
+{
+	static Player instance({ 0,0 }, { 0,0 });
+	return instance;
+}
+
 void Player::Init()
 {
-	pos_ = { 300.0f,300.0f };
 	playerH_ = LoadGraph("data/Player/Player.png");
 	assert(playerH_ >= 0);
 }
@@ -68,7 +73,7 @@ void Player::Draw()
 	{
 		DrawRectRotaGraph3(pos_.x, pos_.y,	//描画位置
 			0, 0,				//左上の描画開始位置			
-			kWidth, kHeight,	//描画する矩形のサイズ
+			kGraphW, kGraphH,	//描画する矩形のサイズ
 			0, 0,				//回転の中心
 			1, 1,				//縦幅と横幅の拡大率
 			0,					//回転角度(ラジアン)
@@ -78,7 +83,7 @@ void Player::Draw()
 	{
 		DrawRectRotaGraph3(pos_.x, pos_.y,
 			0, 0,
-			kWidth, kHeight,
+			kGraphW, kGraphH,
 			0, 0,
 			1, 1,
 			0,
