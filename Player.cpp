@@ -2,20 +2,20 @@
 #include<cassert>
 #include "Player.h"
 #include "Input.h"
-#include "SceneController.h"
+#include"GrobalConstants.h"
 
+// プレイヤーに関する定数
 namespace
 {
-	constexpr int kGraphW = 192;//幅
-	constexpr int kGraphH = 192;//高さ
+	constexpr int kGraphW = 128;//幅
+	constexpr int kGraphH = 128;//高さ
 	constexpr float kRadius = 16.0f;//半径
 	constexpr float kSpeed = 3.0f;//速度
 	constexpr float kHalfSpeed = 1.5f;//ジャンプ時の横移動速度
-	constexpr float kJumpPower = 10.0f;//ジャンプの高さ
-	constexpr float kDoubleJumpPower = 8.0f;//ダブルジャンプの高さ
-	constexpr float kGround = 400.0f; // 地面位置
+	constexpr float kJumpPower = 8.0f;//ジャンプの高さ
+	constexpr float kDoubleJumpPower = 6.0f;//ダブルジャンプの高さ
+	constexpr float kGround = 450.0f; // 地面位置
 }
-
 
 Player::Player(Vector2 pos, Vector2 vel):
 	GameObject(pos,Vector2()),
@@ -29,15 +29,9 @@ Player::~Player()
 {
 }
 
-Player& Player::GetInstance()
-{
-	static Player instance({ 0,0 }, { 0,0 });
-	return instance;
-}
-
 void Player::Init()
 {
-	playerH_ = LoadGraph("data/Player/Player.png");
+	playerH_ = LoadGraph("data/Player/Idle.png");
 	assert(playerH_ >= 0);
 }
 
@@ -55,6 +49,9 @@ void Player::Update(Input& input)
 	}
 	pos_ += vel_;
 
+	DrawFormatString(0, 0, GetColor(255, 255, 255), "PlayerX:%f", pos_.x);
+	DrawFormatString(0, 20, GetColor(255, 255, 255), "VelX:%f", vel_.x);
+
 	//地面の接地判定
 	if (pos_.y >= kGround)
 	{
@@ -63,7 +60,6 @@ void Player::Update(Input& input)
 		isGround_ = true;
 		isJumping_ = false;
 		canDoubleJumping_ = false;
-
 	}
 }
 
@@ -71,23 +67,23 @@ void Player::Draw()
 {
 	if (isTurn_)
 	{
-		DrawRectRotaGraph3(pos_.x, pos_.y,	//描画位置
-			0, 0,				//左上の描画開始位置			
-			kGraphW, kGraphH,	//描画する矩形のサイズ
-			0, 0,				//回転の中心
-			1, 1,				//縦幅と横幅の拡大率
-			0,					//回転角度(ラジアン)
-			playerH_, false);
+		DrawRectRotaGraph3(pos_.x, pos_.y,			//描画位置
+			0, 0,									//左上の描画開始位置			
+			kGraphW, kGraphH,						//描画する矩形のサイズ
+			kGraphW / 2, kGraphH / 2 + 32,				//回転の中心
+			1.5, 1.5,									//縦幅と横幅の拡大率
+			0,										//回転角度(ラジアン)
+			playerH_, true);
 	}
 	else
 	{
 		DrawRectRotaGraph3(pos_.x, pos_.y,
 			0, 0,
 			kGraphW, kGraphH,
-			0, 0,
-			1, 1,
+			kGraphW / 2, kGraphH / 2+32,
+			1.5, 1.5,
 			0,
-			playerH_, false, true);
+			playerH_, true, true);
 	}
 #ifdef _DEBUG
 	colRect_.Draw(0xff0000, false);
@@ -149,4 +145,9 @@ void Player::Jump(Input& input)
 		vel_.y = -kDoubleJumpPower;
 		canDoubleJumping_ = false;
 	}
+}
+
+Vector2 Player::GetPos() const
+{
+	return pos_;
 }

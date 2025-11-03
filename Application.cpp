@@ -1,7 +1,7 @@
 #include<Dxlib.h>
 #include<memory>
 #include "Application.h"
-#include "Game.h"
+#include "GrobalConstants.h"
 #include"Input.h"
 #include"Player.h"
 #include"Zombie.h"
@@ -47,10 +47,11 @@ void Application::Run()
 	// 描画対象をバックバッファに変更
 	SetDrawScreen(DX_SCREEN_BACK);
 	Input input;
-	Player player({ 100, 500 }, Vector2());
-	Zombie zombie({ 800,500 });
+	Player player({ 100, 50 }, Vector2());
+	Zombie zombie({ 800,450 });
 	player.Init();
 	zombie.Init();
+	zombie.SetPlayer(&player);
 
 	while (ProcessMessage() != -1)
 	{

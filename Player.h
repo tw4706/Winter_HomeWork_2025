@@ -14,9 +14,7 @@ public:
 
 	void Move(Input& input);
 	void Jump(Input& input);
-	const Vector2& GetPos()const { return pos_; }//プレイヤーの位置を取得する
-	static Player& GetInstance();//プレイヤーのインスタンスを取得する関数
-
+	Vector2 GetPos()const;//プレイヤーの位置を取得する
 private:
 	int playerH_;//プレイヤーの画像ハンドル
 	bool isJumping_;//ジャンプしているかどうか

@@ -13,75 +13,105 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="ソース ファイル\Character">
-      <UniqueIdentifier>{5abd770a-2ef9-4613-a66d-fa6e8f8c8952}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\BaseClassH">
       <UniqueIdentifier>{31e394d2-f915-41d0-8f46-ba68caab3aa4}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\BaseClassCPP">
       <UniqueIdentifier>{73d2bb27-d41d-4c8d-85e1-f76dccf8850b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Character">
+    <Filter Include="ソース ファイル\CharacterCPP">
+      <UniqueIdentifier>{5abd770a-2ef9-4613-a66d-fa6e8f8c8952}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\CharacterH">
       <UniqueIdentifier>{2d03a14f-64f7-4609-845b-ecb2d3fbf9c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\SystemCPP">
+      <UniqueIdentifier>{57c60b4e-5a74-41f2-b43c-4065c9f74449}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\SystemH">
+      <UniqueIdentifier>{5838c258-4004-4d4a-ac42-db19e861887d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\EnemyH">
+      <UniqueIdentifier>{d600b4e6-26fa-46f7-9483-b5d51588d7ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\EnemyCPP">
+      <UniqueIdentifier>{8e18f000-1627-46a4-9eb6-77ef9b298266}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\ApplicationH">
+      <UniqueIdentifier>{5b87404c-45bc-4d0d-8997-edba0de30094}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\ApplicationCPP">
+      <UniqueIdentifier>{11116165-0534-405b-a69c-71c7f2933697}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\ScenesH">
+      <UniqueIdentifier>{ba7de23b-100a-4a80-80c5-db569a77baa7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\ScenesCPP">
+      <UniqueIdentifier>{aa15edc0-ec66-4107-b5aa-4f8cbf7447f8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Application.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Input.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Geometry.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Rect.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Player.cpp">
-      <Filter>ソース ファイル\Character</Filter>
-    </ClCompile>
-    <ClCompile Include="Zombie.cpp">
-      <Filter>ソース ファイル\Character</Filter>
+      <Filter>ソース ファイル\CharacterCPP</Filter>
     </ClCompile>
     <ClCompile Include="GameObject.cpp">
       <Filter>ソース ファイル\BaseClassCPP</Filter>
     </ClCompile>
+    <ClCompile Include="Geometry.cpp">
+      <Filter>ソース ファイル\SystemCPP</Filter>
+    </ClCompile>
+    <ClCompile Include="Input.cpp">
+      <Filter>ソース ファイル\SystemCPP</Filter>
+    </ClCompile>
+    <ClCompile Include="Rect.cpp">
+      <Filter>ソース ファイル\SystemCPP</Filter>
+    </ClCompile>
+    <ClCompile Include="Zombie.cpp">
+      <Filter>ソース ファイル\EnemyCPP</Filter>
+    </ClCompile>
     <ClCompile Include="Enemy.cpp">
-      <Filter>ソース ファイル\BaseClassCPP</Filter>
+      <Filter>ソース ファイル\EnemyCPP</Filter>
+    </ClCompile>
+    <ClCompile Include="Application.cpp">
+      <Filter>ソース ファイル\ApplicationCPP</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>ソース ファイル\ScenesCPP</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Game.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Application.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Input.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Geometry.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Rect.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Player.h">
-      <Filter>ヘッダー ファイル\Character</Filter>
-    </ClInclude>
-    <ClInclude Include="Zombie.h">
-      <Filter>ヘッダー ファイル\Character</Filter>
+      <Filter>ヘッダー ファイル\CharacterH</Filter>
     </ClInclude>
     <ClInclude Include="GameObject.h">
       <Filter>ヘッダー ファイル\BaseClassH</Filter>
     </ClInclude>
+    <ClInclude Include="Geometry.h">
+      <Filter>ヘッダー ファイル\SystemH</Filter>
+    </ClInclude>
+    <ClInclude Include="GrobalConstants.h">
+      <Filter>ヘッダー ファイル\SystemH</Filter>
+    </ClInclude>
+    <ClInclude Include="Input.h">
+      <Filter>ヘッダー ファイル\SystemH</Filter>
+    </ClInclude>
+    <ClInclude Include="Rect.h">
+      <Filter>ヘッダー ファイル\SystemH</Filter>
+    </ClInclude>
     <ClInclude Include="Enemy.h">
-      <Filter>ヘッダー ファイル\BaseClassH</Filter>
+      <Filter>ヘッダー ファイル\EnemyH</Filter>
+    </ClInclude>
+    <ClInclude Include="Zombie.h">
+      <Filter>ヘッダー ファイル\EnemyH</Filter>
+    </ClInclude>
+    <ClInclude Include="Application.h">
+      <Filter>ヘッダー ファイル\ApplicationH</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>ヘッダー ファイル\ScenesH</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
