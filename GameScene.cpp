@@ -38,6 +38,7 @@ void GameScene::FadeOutUpdate(Input&) {
 	if (frame_++ >= fade_interval)
 	{
 //		controller_.ChangeScene(std::make_shared<GameOverScene>(controller_));
+		return;
 	}
 }
 
@@ -59,6 +60,9 @@ void GameScene::Init()
 void GameScene::Update(Input& input)
 {
 	(this->*update_)(input);
+
+	if (update_ != &GameScene::NormalUpdate) return;
+
 	player_.Update(input);
 	zombie_.Update();
 }

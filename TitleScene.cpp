@@ -59,6 +59,14 @@ TitleScene::TitleScene(SceneController&controller):Scene(controller)
 	frame_ = 0;
 }
 
+TitleScene::~TitleScene()
+{
+}
+
+void TitleScene::Init()
+{
+}
+
 void TitleScene::Update(Input&input)
 {
 	(this->*update_)(input);

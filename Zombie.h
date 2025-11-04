@@ -18,7 +18,7 @@ public:
 	void SetPlayer(Player*player);
 
 private:
-	int zombieH_;	//ゾンビの画像ハンドル
-	Player* pPlayer_ = nullptr;
+	int zombieH_;			//ゾンビの画像ハンドル
+	Player* pPlayer_ ;		//プレイヤーのポインタ
 };
 

@@ -28,5 +28,5 @@ public:
 	void Draw()override;
 private:
 	Player player_ = { {100,500}, {} };
-	Zombie zombie_ = { {800,500} };
+	Zombie zombie_ = { {800,450} };
 };

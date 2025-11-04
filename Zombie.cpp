@@ -21,7 +21,8 @@ namespace
 
 Zombie::Zombie(Vector2 pos) :
 	Enemy(pos),
-	zombieH_(-1)
+	zombieH_(-1),
+	pPlayer_(nullptr)
 {
 }
 

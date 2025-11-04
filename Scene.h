@@ -12,6 +12,11 @@ public:
 	Scene(SceneController& controller);
 
 	/// <summary>
+	/// シーンの初期化
+	/// </summary>
+	virtual void Init() = 0;
+
+	/// <summary>
 	/// シーンの情報の更新
 	/// </summary>
 	/// <param name="input"></param>

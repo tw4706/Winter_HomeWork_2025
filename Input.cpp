@@ -3,6 +3,9 @@
 
 Input::Input() :inputData_{}, lastInputData_{}, inputTable_{}
 {
+
+	inputTable_["ok"] = {{ PeripheralType::keyboard, KEY_INPUT_RETURN },
+							{ PeripheralType::pad1, PAD_INPUT_START } };
 	inputTable_["left"] = { { PeripheralType::keyboard,KEY_INPUT_LEFT },
 							{ PeripheralType::pad1,PAD_INPUT_LEFT} };
 	inputTable_["right"] = { { PeripheralType::keyboard,KEY_INPUT_RIGHT },
