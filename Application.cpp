@@ -1,10 +1,8 @@
 #include<Dxlib.h>
 #include<memory>
+#include"Input.h"
 #include "Application.h"
 #include "GrobalConstants.h"
-#include"Input.h"
-#include"Player.h"
-#include"Zombie.h"
 #include"SceneController.h"
 #include"TitleScene.h"
 
@@ -47,11 +45,8 @@ void Application::Run()
 	// 描画対象をバックバッファに変更
 	SetDrawScreen(DX_SCREEN_BACK);
 	Input input;
-	Player player({ 100, 50 }, Vector2());
-	Zombie zombie({ 800,450 });
-	player.Init();
-	zombie.Init();
-	zombie.SetPlayer(&player);
+	SceneController controller;
+	controller.ChangeScene(std::make_shared<TitleScene>(controller));
 
 	while (ProcessMessage() != -1)
 	{
@@ -63,10 +58,9 @@ void Application::Run()
 
 		// ここにゲームの処理を書く
 		input.Update();
-		player.Update(input);
-		zombie.Update();
-		player.Draw();
-		zombie.Draw();
+		controller.Update(input);
+
+		controller.Draw();
 
 		// escキーを押したらゲームを強制終了
 		if (CheckHitKey(KEY_INPUT_ESCAPE))

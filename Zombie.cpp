@@ -22,7 +22,8 @@ namespace
 Zombie::Zombie(Vector2 pos) :
 	Enemy(pos),
 	zombieH_(-1)
-{}
+{
+}
 
 Zombie::~Zombie()
 {
@@ -100,7 +101,7 @@ void Zombie::Move()
 	}
 }
 
-void Zombie::SetPlayer(Player* player)
+void Zombie::SetPlayer(Player*player)
 {
 	pPlayer_ = player;
 }

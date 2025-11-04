@@ -1,7 +1,8 @@
 #include "GameScene.h"
 #include<Dxlib.h>
 #include"Input.h"
-//#include"GameOverScene.h"
+#include"Player.h"
+#include"Zombie.h"
 #include"SceneController.h"
 #include"Application.h"
 #include<cassert>
@@ -48,12 +49,24 @@ void GameScene::NormalDraw() {
 
 }
 
-void GameScene::Update(Input&input)
+void GameScene::Init()
+{
+	player_.Init();
+	zombie_.Init();
+	zombie_.SetPlayer(&player_);
+}
+
+void GameScene::Update(Input& input)
 {
 	(this->*update_)(input);
+	player_.Update(input);
+	zombie_.Update();
 }
 
 void GameScene::Draw()
 {
 	(this->*draw_)();
+
+	player_.Draw();
+	zombie_.Draw();
 }

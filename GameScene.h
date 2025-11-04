@@ -1,6 +1,9 @@
 #pragma once
 #include "Scene.h"
+#include "Player.h"
+#include "Zombie.h"
 #include"Geometry.h"
+#include<memory>
 class GameScene :public Scene
 {
 private:
@@ -20,7 +23,10 @@ private:
 
 public:
 	GameScene(SceneController& controller);
+	void Init();
 	void Update(Input&)override;
 	void Draw()override;
+private:
+	Player player_ = { {100,500}, {} };
+	Zombie zombie_ = { {800,500} };
 };
-

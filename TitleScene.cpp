@@ -1,16 +1,16 @@
 #include "TitleScene.h"
 #include<Dxlib.h>
 #include"Input.h"
-#include"Game.h"
-#include"SceneController.h"
 #include"Application.h"
 #include "GameScene.h"
+#include "SceneController.h"
+#include"GrobalConstants.h"
 
 constexpr int fade_interval = 60;
 
-void TitleScene::FadeInUpdate(Input&)
+void TitleScene::FadeInUpdate(Input&input)
 {
-	if (frame_-- <= 0)
+	if (--frame_ <= 0)
 	{
 		update_ = &TitleScene::NormalUpdate;
 		draw_ = &TitleScene::NormalDraw;
@@ -38,7 +38,7 @@ void TitleScene::FadeOutUpdate(Input&input)
 
 void TitleScene::NormalDraw()
 {
-	DrawRotaGraph(Game::kScreenWidth, Game::kScreenHeight, 1.0f, 0.0f, titleH_, true);
+	DrawRotaGraph(Game::kScreenWidth / 2, Game::kScreenHeight / 2, 1.0f, 0.0f, titleH_, true);
 }
 
 void TitleScene::FadeDraw()
@@ -56,7 +56,7 @@ TitleScene::TitleScene(SceneController&controller):Scene(controller)
 	titleH_ = LoadGraph("data/title.png");
 	update_ = &TitleScene::FadeInUpdate;
 	draw_ = &TitleScene::FadeDraw;
-	frame_ = fade_interval;
+	frame_ = 0;
 }
 
 void TitleScene::Update(Input&input)

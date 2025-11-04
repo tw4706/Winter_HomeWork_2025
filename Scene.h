@@ -15,11 +15,11 @@ public:
 	/// シーンの情報の更新
 	/// </summary>
 	/// <param name="input"></param>
-	virtual void Update(Input& input)=0;
+	virtual void Update(Input& input) = 0;
 
 	/// <summary>
 	/// シーンの描画
 	/// </summary>
-	virtual void Draw()=0;
+	virtual void Draw() = 0;
 };
 
