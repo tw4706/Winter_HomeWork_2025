@@ -16,6 +16,10 @@ void Enemy::Update()
 	Move();
 }
 
+void Enemy::Draw()
+{
+}
+
 void Enemy::Move()
 {
 

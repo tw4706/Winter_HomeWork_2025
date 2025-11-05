@@ -43,7 +43,7 @@ void TitleScene::NormalDraw()
 
 void TitleScene::FadeDraw()
 {
-	DrawRotaGraph(Game::kScreenWidth, Game::kScreenHeight, 1.0f, 0.0f, titleH_, true);
+	DrawRotaGraph(Game::kScreenWidth/2, Game::kScreenHeight/2, 1.0f, 0.0f, titleH_, true);
 	// ’l‚Ì”ÍˆÍ‚ðˆê’U0.0~1.0‚É‚µ‚Ä‚¨‚­‚Æ‚¢‚ë‚¢‚ë‚Æˆµ‚¢‚â‚·‚­‚È‚è‚Ü‚·
 	auto rate = static_cast<float>(frame_) / static_cast<float>(fade_interval);
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255 * rate);// ƒ¿ƒuƒŒƒ“ƒh

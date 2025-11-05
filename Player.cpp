@@ -2,6 +2,7 @@
 #include<cassert>
 #include "Player.h"
 #include "Input.h"
+#include"Animation.h"
 #include"GrobalConstants.h"
 
 // ƒvƒŒƒCƒ„[‚ÉŠÖ‚·‚é’è”
