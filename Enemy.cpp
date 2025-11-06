@@ -15,6 +15,7 @@ Enemy::~Enemy()
 
 void Enemy::Update()
 {
+	GameObject::Update();
 }
 
 void Enemy::Draw()

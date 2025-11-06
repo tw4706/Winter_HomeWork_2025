@@ -18,7 +18,8 @@ GameScene::GameScene(SceneController& controller) :
 	update_(&GameScene::FadeInUpdate),
 	draw_(&GameScene::FadeDraw),
 	player_({ {100,500}, {} }),
-	zombie_({ {800,450},{} })
+	zombie_({ {800,450},{} }),
+	dog_({ 1000,500 }, {})
 {
 	;
 }
@@ -57,6 +58,7 @@ void GameScene::Init()
 {
 	player_.Init();
 	zombie_.Init();
+	dog_.Init();
 	zombie_.SetPlayer(&player_);
 }
 
@@ -68,6 +70,7 @@ void GameScene::Update(Input& input)
 
 	player_.Update(input);
 	zombie_.Update();
+	dog_.Update();
 }
 
 void GameScene::Draw()
@@ -76,4 +79,5 @@ void GameScene::Draw()
 
 	player_.Draw();
 	zombie_.Draw();
+	dog_.Draw();
 }

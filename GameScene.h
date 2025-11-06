@@ -2,6 +2,7 @@
 #include "Scene.h"
 #include "Player.h"
 #include "Zombie.h"
+#include "Dog.h"
 #include"Geometry.h"
 #include<memory>
 class GameScene :public Scene
@@ -29,4 +30,5 @@ public:
 private:
 	Player player_;
 	Zombie zombie_;
+	Dog dog_;
 };
