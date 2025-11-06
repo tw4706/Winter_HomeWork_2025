@@ -13,11 +13,14 @@ namespace
 	constexpr int fade_interval = 60;
 }
 
-GameScene::GameScene(SceneController& controller):
+GameScene::GameScene(SceneController& controller) :
 	Scene(controller),
 	update_(&GameScene::FadeInUpdate),
-	draw_(&GameScene::FadeDraw)
+	draw_(&GameScene::FadeDraw),
+	player_({ {100,500}, {} }),
+	zombie_({ {800,450},{} })
 {
+	;
 }
 
 void GameScene::FadeInUpdate(Input&) {

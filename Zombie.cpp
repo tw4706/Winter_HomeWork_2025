@@ -19,8 +19,8 @@ namespace
 	const float kDistance = 200.0f;
 }
 
-Zombie::Zombie(Vector2 pos) :
-	Enemy(pos),
+Zombie::Zombie(Vector2 pos,Vector2 vel) :
+	Enemy(pos,vel),
 	zombieH_(-1),
 	pPlayer_(nullptr)
 {

@@ -5,7 +5,7 @@ class Player;
 class Zombie :public Enemy
 {
 public:
-	Zombie(Vector2 pos);
+	Zombie(Vector2 pos,Vector2 vel);
 	virtual ~Zombie();
 
 	void Init()override;
@@ -13,7 +13,7 @@ public:
 	void Draw()override;
 
 	void Attack()override;	//攻撃処理
-	void Move()override;	//移動処理
+	void Move();			//移動処理
 	//プレイヤーのポインタをセットする関数(セッター関数)
 	void SetPlayer(Player*player);
 

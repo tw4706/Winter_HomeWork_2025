@@ -90,9 +90,6 @@
     <ClCompile Include="GameScene.cpp">
       <Filter>ソース ファイル\ScenesCPP</Filter>
     </ClCompile>
-    <ClCompile Include="Animation.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Dog.cpp">
       <Filter>ソース ファイル\EnemyCPP</Filter>
     </ClCompile>
@@ -136,9 +133,6 @@
     </ClInclude>
     <ClInclude Include="GameScene.h">
       <Filter>ヘッダー ファイル\ScenesH</Filter>
-    </ClInclude>
-    <ClInclude Include="Animation.h">
-      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Dog.h">
       <Filter>ヘッダー ファイル\EnemyH</Filter>

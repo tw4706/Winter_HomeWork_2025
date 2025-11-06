@@ -1,10 +1,12 @@
 #include "Enemy.h"
 #include<Dxlib.h>
 
-Enemy::Enemy(Vector2 pos):
-	GameObject(pos,Vector2()),
+Enemy::Enemy(Vector2 pos,Vector2 vel):
+	GameObject(pos,vel),
 	isRight_(false)
 {
+	pos_ = pos;
+	vel_ = vel;
 }
 
 Enemy::~Enemy()
@@ -13,19 +15,8 @@ Enemy::~Enemy()
 
 void Enemy::Update()
 {
-	Move();
 }
 
 void Enemy::Draw()
 {
-}
-
-void Enemy::Move()
-{
-
-}
-
-bool Enemy::IsDead() const
-{
-	return false;
 }
