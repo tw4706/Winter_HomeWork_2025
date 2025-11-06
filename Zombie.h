@@ -14,11 +14,8 @@ public:
 
 	void Attack()override;	//攻撃処理
 	void Move();			//移動処理
-	//プレイヤーのポインタをセットする関数(セッター関数)
-	void SetPlayer(Player*player);
 
 private:
 	int zombieH_;			//ゾンビの画像ハンドル
-	Player* pPlayer_ ;		//プレイヤーのポインタ
 };
 

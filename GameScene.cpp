@@ -60,6 +60,7 @@ void GameScene::Init()
 	zombie_.Init();
 	dog_.Init();
 	zombie_.SetPlayer(&player_);
+	dog_.SetPlayer(&player_);
 }
 
 void GameScene::Update(Input& input)

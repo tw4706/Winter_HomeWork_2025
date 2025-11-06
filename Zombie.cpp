@@ -21,8 +21,7 @@ namespace
 
 Zombie::Zombie(Vector2 pos,Vector2 vel) :
 	Enemy(pos,vel),
-	zombieH_(-1),
-	pPlayer_(nullptr)
+	zombieH_(-1)
 {
 }
 
@@ -100,9 +99,4 @@ void Zombie::Move()
 			isRight_ = true;
 		}
 	}
-}
-
-void Zombie::SetPlayer(Player*player)
-{
-	pPlayer_ = player;
 }
