@@ -93,6 +93,9 @@
     <ClCompile Include="Dog.cpp">
       <Filter>ソース ファイル\EnemyCPP</Filter>
     </ClCompile>
+    <ClCompile Include="Skull.cpp">
+      <Filter>ソース ファイル\EnemyCPP</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Player.h">
@@ -135,6 +138,9 @@
       <Filter>ヘッダー ファイル\ScenesH</Filter>
     </ClInclude>
     <ClInclude Include="Dog.h">
+      <Filter>ヘッダー ファイル\EnemyH</Filter>
+    </ClInclude>
+    <ClInclude Include="Skull.h">
       <Filter>ヘッダー ファイル\EnemyH</Filter>
     </ClInclude>
   </ItemGroup>

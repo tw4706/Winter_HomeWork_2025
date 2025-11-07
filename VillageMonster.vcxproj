@@ -147,6 +147,7 @@
     <ClCompile Include="Rect.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneController.cpp" />
+    <ClCompile Include="Skull.cpp" />
     <ClCompile Include="TitleScene.cpp" />
     <ClCompile Include="Zombie.cpp" />
   </ItemGroup>
@@ -163,6 +164,7 @@
     <ClInclude Include="Rect.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneController.h" />
+    <ClInclude Include="Skull.h" />
     <ClInclude Include="TitleScene.h" />
     <ClInclude Include="Zombie.h" />
   </ItemGroup>
