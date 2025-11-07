@@ -61,25 +61,25 @@ public:
 	/// 矩形の左上のX座標を取得
 	/// </summary>
 	/// <returns>左上のX座標</returns>
-	float GetLeft()const { return m_left; }
+	float GetLeft()const { return left_; }
 
 	/// <summary>
 	/// 矩形の左上の座標を取得
 	/// </summary>
 	/// <returns>左上のX座標を取得</returns>
-	float GetTop()const { return m_top; }
+	float GetTop()const { return top_; }
 
 	/// <summary>
 	/// 矩形の右上のX座標を取得
 	/// </summary>
 	/// <returns>右下のX座標</returns>
-	float GetRight()const { return m_right; }
+	float GetRight()const { return right_; }
 
 	/// <summary>
 	/// 矩形の右下のX座標を取得
 	/// </summary>
 	/// <returns>右下のY座標</returns>
-	float GetBottom()const { return m_bottom; }
+	float GetBottom()const { return bottom_; }
 
 	/// <summary>
 	/// 矩形の当たり判定
@@ -90,9 +90,9 @@ public:
 
 
 public:
-	float m_left;	//左上のX座標
-	float m_top;	//左上のY座標
-	float m_right;	//右下のX座標
-	float m_bottom;	//右上のY座標
+	float left_;	//左上のX座標
+	float top_;	//左上のY座標
+	float right_;	//右下のX座標
+	float bottom_;	//右上のY座標
 };
 
