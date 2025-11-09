@@ -1,7 +1,6 @@
 #pragma once
 #include"Geometry.h"
 #include"Rect.h"
-class Input;
 class GameObject
 {
 protected:
