@@ -2,7 +2,8 @@
 #include<cassert>
 #include "Player.h"
 #include "Input.h"
-#include"GrobalConstants.h"
+#include "Bullet.h"
+#include"GlobalConstants.h"
 
 // プレイヤーに関する定数
 namespace
@@ -14,7 +15,8 @@ namespace
 	constexpr float kHalfSpeed = 1.5f;//ジャンプ時の横移動速度
 	constexpr float kJumpPower = 8.0f;//ジャンプの高さ
 	constexpr float kDoubleJumpPower = 6.0f;//ダブルジャンプの高さ
-	constexpr float kGround = 450.0f; // 地面位置
+	constexpr float kGround = 450.0f; //地面位置
+	constexpr int kBulletNum = 3; //弾の存在できる数
 }
 
 Player::Player(Vector2 pos, Vector2 vel):
@@ -43,14 +45,13 @@ void Player::Update(Input& input)
 {
 	GameObject::Update();
 	Move(input);
+	// ジャンプ処理
 	if (input.IsTriggered("jump"))
 	{
 		Jump(input);
 	}
 	pos_ += vel_;
 
-	DrawFormatString(0, 0, GetColor(255, 255, 255), "PlayerX:%f", pos_.x);
-	DrawFormatString(0, 20, GetColor(255, 255, 255), "VelX:%f", vel_.x);
 
 	//地面の接地判定
 	if (pos_.y >= kGround)
@@ -61,6 +62,45 @@ void Player::Update(Input& input)
 		isJumping_ = false;
 		canDoubleJumping_ = false;
 	}
+
+	//弾の発射・更新
+	if (input.IsTriggered("shot")&&bullets_.size() < kBulletNum)
+	{
+		//向いている向きによって弾の方向を変える
+		Vector2 bulletsVel_ = (isTurn_) ? Vector2{ 10.0f,0.0f } :
+			Vector2{ -10.0f,0.0f };
+		bullets_.push_back(new Bullet(pos_, bulletsVel_));
+	}
+
+	//弾の更新処理
+	//beginは先頭の要素、endは末尾の次の要素
+	// it != bullets_.end() で、リストの最後までループする
+	//erase() は指定した要素を削除し、次の要素を返す
+	//弾が死んでいなければ、次の弾に進む
+	for (auto it = bullets_.begin(); it != bullets_.end();)
+
+	{
+		(*it)->Update(input);		//弾の位置を更新
+
+		if ((*it)->IsDead()) 
+		{							//画面外に出たら
+			delete* it;				//メモリ解放
+			it = bullets_.erase(it);// リストから削除
+		}
+		else 
+		{
+			it++;
+		}
+	}
+
+
+#ifdef _DEBUG
+	//デバッグ用
+	DrawFormatString(0, 0, GetColor(255, 255, 255), "PlayerX:%f", pos_.x);
+	DrawFormatString(0, 20, GetColor(255, 255, 255), "VelX:%f", vel_.x);
+#endif
+
+
 }
 
 void Player::Draw()
@@ -85,6 +125,13 @@ void Player::Draw()
 			0,
 			playerH_, true, true);
 	}
+
+	//弾の描画
+	for (Bullet* bullet : bullets_) {
+		bullet->Draw();
+	}
+
+
 #ifdef _DEBUG
 	colRect_.Draw(0xff0000, false);
 #endif

@@ -4,7 +4,7 @@
 #include"Application.h"
 #include "GameScene.h"
 #include "SceneController.h"
-#include"GrobalConstants.h"
+#include"GlobalConstants.h"
 
 constexpr int fade_interval = 60;
 

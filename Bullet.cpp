@@ -1,5 +1,6 @@
 #include "Bullet.h"
 #include "Input.h"
+#include "GlobalConstants.h"
 #include<Dxlib.h>
 
 Bullet::Bullet(Vector2 pos, Vector2 vel) :
@@ -18,11 +19,17 @@ void Bullet::Init()
 {
 }
 
+void Bullet::Update()
+{
+}
+
 void Bullet::Update(Input&input)
 {
-	if (input.IsTriggered("shot"))
-	{
-		pos_.x += vel_.x;
+	pos_ += vel_;
+
+	// âÊñ äOÇ…èoÇΩÇÁè¡ñ≈
+	if (pos_.x < 0 || pos_.x > Game::kScreenWidth|| pos_.y < 0 || pos_.y > Game::kScreenHeight) {
+		isDead_ = true;
 	}
 
 }

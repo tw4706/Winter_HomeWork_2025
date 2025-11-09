@@ -158,7 +158,7 @@
     <ClInclude Include="Dog.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="GameScene.h" />
-    <ClInclude Include="GrobalConstants.h" />
+    <ClInclude Include="GlobalConstants.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Geometry.h" />
     <ClInclude Include="Input.h" />

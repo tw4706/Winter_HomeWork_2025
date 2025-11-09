@@ -44,12 +44,17 @@ void Dog::Update()
 		vel_.y = 0.0f;
 		isGround_ = true;
 	}
+
+	DrawFormatString(0, 130, 0xffffff, "Dog Timer:%f", timer_);
+	DrawFormatString(0, 150, 0xffffff, "Dog PosX:%f", pos_.x);
+	DrawFormatString(0, 170, 0xffffff, "Dog VelX:%f", vel_.x);
+	DrawFormatString(0, 190, 0xffffff, "Dog Dist:%f", std::abs(pPlayer_->GetPos().x - pos_.x));
 }
 
 void Dog::Draw()
 {
 	DrawBox(pos_.x, pos_.y, pos_.x + 32, pos_.y + 32, 0xffaaaa, false);
-	DrawFormatString(0, 300, 0xffffff, "x:%f,y:%f", pos_.x, pos_.y);
+
 }
 
 void Dog::Attack()

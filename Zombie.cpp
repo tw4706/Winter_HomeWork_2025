@@ -1,6 +1,6 @@
 #include "Zombie.h"
 #include "Player.h"
-#include"GrobalConstants.h"
+#include"GlobalConstants.h"
 #include <Dxlib.h>
 #include <cassert>
 #include<cmath>
@@ -82,9 +82,8 @@ void Zombie::Move()
 	float dx = playerX - enemyX;
 	float distance = std::abs(dx);
 
-	DrawFormatString(0, 180, GetColor(255, 255, 255), "PlayerX:%f", pPlayer_->GetPos().x);
-	DrawFormatString(0, 140, GetColor(255, 255, 255), "dx:%f", dx);
-	DrawFormatString(0, 160, GetColor(255, 255, 255), "distance:%f", distance);
+	DrawFormatString(0, 80, GetColor(255, 255, 255), "ZombieDx:%f", dx);
+	DrawFormatString(0, 100, GetColor(255, 255, 255), "ZombieDistance:%f", distance);
 
 
 	//‹——£‚ªˆê’èˆÈ‰º‚Ì‚ÍƒvƒŒƒCƒ„[‚ÉŒü‚©‚Á‚ÄˆÚ“®

@@ -1,6 +1,8 @@
 #pragma once
 #include"GameObject.h"
+#include<vector>
 class Input;
+class Bullet;
 class Player :public GameObject
 {
 public:
@@ -18,6 +20,7 @@ public:
 private:
 	int playerH_;//プレイヤーの画像ハンドル
 	bool isJumping_;//ジャンプしているかどうか
-	bool canDoubleJumping_;//だ部ジャンプ可能かどうか
+	bool canDoubleJumping_;//ダブルジャンプ可能かどうか
+	std::vector<Bullet*>bullets_;//弾の配列
 };
 

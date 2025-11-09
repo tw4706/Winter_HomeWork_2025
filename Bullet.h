@@ -10,12 +10,16 @@ public:
 	~Bullet()override;
 
 	void Init()override;
+	void Update()override;
 	void Update(Input&input);
 	void Draw()override;
+
+	// ’e‚ªÁ‚¦‚½‚©‚Ç‚¤‚©‚ğ•Ô‚·
+	bool IsDead()const { return isDead_; }
 
 private:
 	Vector2 pos_;//ˆÊ’u
 	Vector2 vel_;//‘¬“x
-	bool isDead_;//‹…‚ªÁ‚¦‚½‚©‚Ç‚¤‚©
+	bool isDead_;//’e‚ªÁ‚¦‚½‚©‚Ç‚¤‚©
 };
 
