@@ -65,11 +65,15 @@ void Player::Update(Input& input)
 	}
 
 	//弾の発射・更新
-	if (input.IsTriggered("shot") && bullets_.size())
+	if (input.IsTriggered("shot") && bullets_.size() < kBulletNum)
 	{
 		//向いている向きによって弾の方向を変える
 		Vector2 bulletsVel_ = (isTurn_) ? Vector2{ 10.0f,0.0f } : Vector2{ -10.0f,0.0f };
-		bullets_.push_back(new Bullet(pos_, bulletsVel_));
+		//弾のインスタンスを作成
+		Bullet* bullet = new Bullet(pos_, bulletsVel_);
+		bullet->Init(); // 弾の初期化
+		bullets_.push_back(bullet);
+
 	}
 
 	//弾の更新処理

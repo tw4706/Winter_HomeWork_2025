@@ -4,6 +4,12 @@
 #include "GlobalConstants.h"
 #include<Dxlib.h>
 #include<cassert>
+#include<cmath>
+
+namespace
+{
+	constexpr float kScale = 1.5f;
+}
 
 Bullet::Bullet(Vector2 pos, Vector2 vel) :
 	GameObject(pos, vel),
@@ -44,7 +50,9 @@ void Bullet::Update(Input&input)
 
 void Bullet::Draw()
 {
-	DrawGraph(pos_.x,pos_.y, bulletH_, false);
+	//Šp“x‚ðŒü‚«‚É‰ž‚¶‚Ä•ÏX
+	float angle = (vel_.x >= 0) ? DX_PI / 2.0f : DX_PI+ (DX_PI / 2.0f);
+	DrawRotaGraph(pos_.x,pos_.y,kScale,angle, bulletH_, false);
 #ifdef _DEBUG
 	colRect_.Draw(0xff0000, false);
 #endif

@@ -22,5 +22,13 @@ public:
 	//プレイヤーのポインタをセットする関数(セッター関数)
 	void SetPlayer(Player* player);
 
+	//当たり判定の矩形を取得する関数
+	virtual const Rect& GetRect()const = 0;
+
+	//弾が当たった時の処理
+	virtual void IsHit() = 0;
+	
+	//敵の死亡処理
+	virtual bool IsDead() const = 0;
 };
 
