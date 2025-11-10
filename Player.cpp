@@ -19,8 +19,8 @@ namespace
 	constexpr int kBulletNum = 3; //弾の存在できる数
 }
 
-Player::Player(Vector2 pos, Vector2 vel):
-	GameObject(pos,Vector2()),
+Player::Player(Vector2 pos, Vector2 vel) :
+	GameObject(pos, Vector2()),
 	playerH_(-1),
 	isJumping_(false),
 	canDoubleJumping_(false)
@@ -35,6 +35,7 @@ void Player::Init()
 {
 	playerH_ = LoadGraph("data/Player/Idle.png");
 	assert(playerH_ >= 0);
+	//弾のサイズを3にする
 }
 
 void Player::Update()
@@ -64,11 +65,10 @@ void Player::Update(Input& input)
 	}
 
 	//弾の発射・更新
-	if (input.IsTriggered("shot")&&bullets_.size() < kBulletNum)
+	if (input.IsTriggered("shot") && bullets_.size())
 	{
 		//向いている向きによって弾の方向を変える
-		Vector2 bulletsVel_ = (isTurn_) ? Vector2{ 10.0f,0.0f } :
-			Vector2{ -10.0f,0.0f };
+		Vector2 bulletsVel_ = (isTurn_) ? Vector2{ 10.0f,0.0f } : Vector2{ -10.0f,0.0f };
 		bullets_.push_back(new Bullet(pos_, bulletsVel_));
 	}
 
@@ -82,12 +82,12 @@ void Player::Update(Input& input)
 	{
 		(*it)->Update(input);		//弾の位置を更新
 
-		if ((*it)->IsDead()) 
+		if ((*it)->IsDead())
 		{							//画面外に出たら
 			delete* it;				//メモリ解放
 			it = bullets_.erase(it);// リストから削除
 		}
-		else 
+		else
 		{
 			it++;
 		}
@@ -120,14 +120,15 @@ void Player::Draw()
 		DrawRectRotaGraph3(pos_.x, pos_.y,
 			0, 0,
 			kGraphW, kGraphH,
-			kGraphW / 2, kGraphH / 2+32,
+			kGraphW / 2, kGraphH / 2 + 32,
 			1.5, 1.5,
 			0,
 			playerH_, true, true);
 	}
 
 	//弾の描画
-	for (Bullet* bullet : bullets_) {
+	for (auto&bullet : bullets_)
+	{
 		bullet->Draw();
 	}
 
@@ -139,7 +140,7 @@ void Player::Draw()
 
 void Player::Move(Input& input)
 {
-	if (isGround_||canDoubleJumping_)
+	if (isGround_ || canDoubleJumping_)
 	{
 		if (input.IsPressed("left"))
 		{
@@ -178,7 +179,7 @@ void Player::Move(Input& input)
 void Player::Jump(Input& input)
 {
 	// 通常ジャンプ
-	if (isGround_) 
+	if (isGround_)
 	{
 		vel_.y = -kJumpPower;
 		isGround_ = false;
@@ -187,7 +188,7 @@ void Player::Jump(Input& input)
 	}
 
 	// 二段ジャンプ
-	if (canDoubleJumping_) 
+	if (canDoubleJumping_)
 	{
 		vel_.y = -kDoubleJumpPower;
 		canDoubleJumping_ = false;

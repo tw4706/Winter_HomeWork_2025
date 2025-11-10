@@ -21,5 +21,6 @@ private:
 	Vector2 pos_;//位置
 	Vector2 vel_;//速度
 	bool isDead_;//弾が消えたかどうか
+	int bulletH_;//弾の画像ハンドル
 };
 

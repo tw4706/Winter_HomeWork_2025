@@ -21,7 +21,6 @@ GameScene::GameScene(SceneController& controller) :
 	zombie_({ {800,450},{} }),
 	dog_({ 1000,500 }, {})
 {
-	;
 }
 
 void GameScene::FadeInUpdate(Input&) {

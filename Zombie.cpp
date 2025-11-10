@@ -39,6 +39,7 @@ void Zombie::Update()
 {
 	Enemy::Update();
 	Move();
+	colRect_.SetCenter(pos_.x, pos_.y+20, 32, 64);
 }
 
 void Zombie::Draw()
@@ -65,6 +66,10 @@ void Zombie::Draw()
 			0,										//‰ñ“]Šp“x(ƒ‰ƒWƒAƒ“)
 			zombieH_, true, true);
 	}
+
+#ifdef _DEBUG
+	colRect_.Draw(0xff0000, false);
+#endif
 }
 
 void Zombie::Attack()
