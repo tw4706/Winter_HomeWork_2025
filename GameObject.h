@@ -18,6 +18,9 @@ public:
 	virtual void Update() = 0;
 	virtual void Draw() = 0;
 
+	//“–‚½‚è”»’è‚Ì‹éŒ`‚ğæ“¾‚·‚éŠÖ”
+	const Rect& GetColRect() const { return colRect_; }
+
 protected:
 	virtual void Gravity();//d—Í
 };

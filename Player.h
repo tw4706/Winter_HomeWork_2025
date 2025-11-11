@@ -17,6 +17,8 @@ public:
 	void Move(Input& input);
 	void Jump(Input& input);
 	Vector2 GetPos()const;//プレイヤーの位置を取得する
+
+
 private:
 	int playerH_;//プレイヤーの画像ハンドル
 	bool isJumping_;//ジャンプしているかどうか

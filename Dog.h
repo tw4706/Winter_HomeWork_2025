@@ -11,10 +11,10 @@ public:
 	void Draw()override;
 
 	void Attack()override;
-	void Move();//移動処理
+	void Move()override;	//移動処理
 
 private:
-	int dogH_;//ドッグの画像ハンドル
-	float timer_;//タイマー
+	int dogH_;				//ドッグの画像ハンドル
+	float timer_;			//タイマー
 };
 

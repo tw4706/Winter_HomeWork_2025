@@ -12,11 +12,18 @@ namespace
 	constexpr int kGraphH = 128;//高さ
 	constexpr float kRadius = 16.0f;//半径
 	constexpr float kSpeed = 3.0f;//速度
-	constexpr float kHalfSpeed = 1.5f;//ジャンプ時の横移動速度
-	constexpr float kJumpPower = 8.0f;//ジャンプの高さ
-	constexpr float kDoubleJumpPower = 6.0f;//ダブルジャンプの高さ
-	constexpr float kGround = 450.0f; //地面位置
-	constexpr int kBulletNum = 3; //弾の存在できる数
+
+	//ジャンプ時の横移動速度
+	constexpr float kHalfSpeed = 1.5f;
+	//ジャンプの高さ
+	constexpr float kJumpPower = 8.0f;
+	//ダブルジャンプの高さ
+	constexpr float kDoubleJumpPower = 6.0f;
+
+	//地面位置
+	constexpr float kGround = 450.0f; 
+	//弾の存在できる数
+	constexpr int kBulletNum = 3; 
 }
 
 Player::Player(Vector2 pos, Vector2 vel) :
@@ -29,13 +36,13 @@ Player::Player(Vector2 pos, Vector2 vel) :
 
 Player::~Player()
 {
+
 }
 
 void Player::Init()
 {
 	playerH_ = LoadGraph("data/Player/Idle.png");
 	assert(playerH_ >= 0);
-	//弾のサイズを3にする
 }
 
 void Player::Update()
@@ -71,7 +78,8 @@ void Player::Update(Input& input)
 		Vector2 bulletsVel_ = (isTurn_) ? Vector2{ 10.0f,0.0f } : Vector2{ -10.0f,0.0f };
 		//弾のインスタンスを作成
 		Bullet* bullet = new Bullet(pos_, bulletsVel_);
-		bullet->Init(); // 弾の初期化
+		 // 弾の初期化
+		bullet->Init();
 		bullets_.push_back(bullet);
 
 	}
@@ -84,9 +92,9 @@ void Player::Update(Input& input)
 	for (auto it = bullets_.begin(); it != bullets_.end();)
 
 	{
-		(*it)->Update(input);		//弾の位置を更新
+		(*it)->Update(input, enemies);		//弾の位置を更新
 
-		if ((*it)->IsDead())
+		if ((*it)->IsAlive())
 		{							//画面外に出たら
 			delete* it;				//メモリ解放
 			it = bullets_.erase(it);// リストから削除
@@ -111,17 +119,19 @@ void Player::Draw()
 {
 	if (isTurn_)
 	{
-		DrawRectRotaGraph3(pos_.x, pos_.y,			//描画位置
-			0, 0,									//左上の描画開始位置			
-			kGraphW, kGraphH,						//描画する矩形のサイズ
+		DrawRectRotaGraph3(static_cast<int>(pos_.x), 
+			static_cast<int>(pos_.y),					//描画位置
+			0, 0,										//左上の描画開始位置			
+			kGraphW, kGraphH,							//描画する矩形のサイズ
 			kGraphW / 2, kGraphH / 2 + 32,				//回転の中心
 			1.5, 1.5,									//縦幅と横幅の拡大率
-			0,										//回転角度(ラジアン)
+			0,											//回転角度(ラジアン)
 			playerH_, true);
 	}
 	else
 	{
-		DrawRectRotaGraph3(pos_.x, pos_.y,
+		DrawRectRotaGraph3(static_cast<int>(pos_.x),
+			static_cast<int>(pos_.y),
 			0, 0,
 			kGraphW, kGraphH,
 			kGraphW / 2, kGraphH / 2 + 32,

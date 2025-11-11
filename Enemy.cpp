@@ -3,8 +3,7 @@
 
 Enemy::Enemy(Vector2 pos,Vector2 vel):
 	GameObject(pos,vel),
-	isRight_(false),
-	pPlayer_(nullptr)
+	isRight_(false)
 {
 	pos_ = pos;
 	vel_ = vel;
@@ -23,7 +22,7 @@ void Enemy::Draw()
 {
 }
 
-void Enemy::SetPlayer(Player* pPlayer)
+void Enemy::SetPlayer(std::shared_ptr<Player> player)
 {
-	pPlayer_ = pPlayer;
+	pPlayer_ = player;
 }

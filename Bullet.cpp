@@ -1,6 +1,7 @@
 #include "Bullet.h"
 #include "Input.h"
 #include "Rect.h"
+#include "Enemy.h"
 #include "GlobalConstants.h"
 #include<Dxlib.h>
 #include<cassert>
@@ -15,7 +16,7 @@ Bullet::Bullet(Vector2 pos, Vector2 vel) :
 	GameObject(pos, vel),
 	pos_(pos),
 	vel_(vel),
-	isDead_(false),
+	isAlive_(false),
 	bulletH_(-1)
 {
 }
@@ -35,15 +36,25 @@ void Bullet::Update()
 	colRect_.SetCenter(pos_.x, pos_.y, 32, 32);
 }
 
-void Bullet::Update(Input&input)
+void Bullet::Update(Input&input, std::vector<std::shared_ptr<Enemy>>& enemies)
 {
 	pos_ += vel_;
+	colRect_.SetCenter(pos_.x, pos_.y, 32, 32);
+
+	for (auto& enemy : enemies)
+	{
+		if (colRect_.IsCollision(enemy->GetColRect()))
+		{
+			isAlive_ = false;//íeÇè¡Ç∑
+			break;
+		}
+	}
 
 	// âÊñ äOÇ…èoÇΩÇÁè¡ñ≈
 	if (pos_.x < 0 || pos_.x > Game::kScreenWidth|| 
 		pos_.y < 0 || pos_.y > Game::kScreenHeight) 
 	{
-		isDead_ = true;
+		isAlive_ = false;
 	}
 
 }

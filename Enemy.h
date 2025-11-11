@@ -1,11 +1,13 @@
 #pragma once
 #include"GameObject.h"
 #include"Player.h"
+#include<memory>
 class Enemy:public GameObject
 {
 protected:
-	bool isRight_;			//右を向いているかどうか
-	Player* pPlayer_;		//プレイヤーのポインタ
+	bool isRight_;					//右を向いているかどうか
+	std::shared_ptr<Player>pPlayer_;	//プレイヤーのスマートポインタ
+	Rect colRect_;					//当たり判定の矩形
 
 public:
 	Enemy(Vector2 pos,Vector2 vel);
@@ -16,19 +18,14 @@ public:
 	virtual void Draw() = 0;
 
 	virtual void Attack() = 0;//攻撃
-	virtual void Move() = 0;  //移動	
+	virtual void Move() = 0;  //移動
+
 	//位置を取得する関数(ゲッター関数)
 	const Vector2& GetPos()const { return pos_; }
 	//プレイヤーのポインタをセットする関数(セッター関数)
-	void SetPlayer(Player* player);
+	void SetPlayer(std::shared_ptr<Player> player);
 
 	//当たり判定の矩形を取得する関数
-	virtual const Rect& GetRect()const = 0;
-
-	//弾が当たった時の処理
-	virtual void IsHit() = 0;
-	
-	//敵の死亡処理
-	virtual bool IsDead() const = 0;
+	const Rect& GetColRect() const { return colRect_; }
 };
 

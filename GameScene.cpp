@@ -16,11 +16,11 @@ namespace
 GameScene::GameScene(SceneController& controller) :
 	Scene(controller),
 	update_(&GameScene::FadeInUpdate),
-	draw_(&GameScene::FadeDraw),
-	player_({ {100,500}, {} }),
-	zombie_({ {800,450},{} }),
-	dog_({ 1000,500 }, {})
+	draw_(&GameScene::FadeDraw)
 {
+	player_ = std::make_shared<Player>(Vector2{ 100,500 }, Vector2{});
+	enemies_.push_back(std::make_shared<Zombie>(Vector2{ 800,450 }, Vector2{}));
+	enemies_.push_back(std::make_shared<Dog>(Vector2{ 1000,500 }, Vector2{}));
 }
 
 void GameScene::FadeInUpdate(Input&) {
@@ -55,11 +55,13 @@ void GameScene::NormalDraw() {
 
 void GameScene::Init()
 {
-	player_.Init();
-	zombie_.Init();
-	dog_.Init();
-	zombie_.SetPlayer(&player_);
-	dog_.SetPlayer(&player_);
+	player_->Init();
+
+	for (auto& enemy : enemies_)
+	{
+		enemy->Init();
+		enemy->SetPlayer(player_);
+	}
 }
 
 void GameScene::Update(Input& input)
@@ -68,16 +70,20 @@ void GameScene::Update(Input& input)
 
 	if (update_ != &GameScene::NormalUpdate) return;
 
-	player_.Update(input);
-	zombie_.Update();
-	dog_.Update();
+	player_->Update(input);
+	for (auto& enemy : enemies_)
+	{
+		enemy->Update();
+	}
 }
 
 void GameScene::Draw()
 {
 	(this->*draw_)();
 
-	player_.Draw();
-	zombie_.Draw();
-	dog_.Draw();
+	player_->Draw();
+	for (auto& enemy : enemies_)
+	{
+		enemy->Draw();
+	}
 }

@@ -27,8 +27,8 @@ public:
 	void Init();
 	void Update(Input&)override;
 	void Draw()override;
+
 private:
-	Player player_;
-	Zombie zombie_;
-	Dog dog_;
+	std::shared_ptr<Player>player_;
+	std::vector<std::shared_ptr<Enemy>>enemies_;
 };

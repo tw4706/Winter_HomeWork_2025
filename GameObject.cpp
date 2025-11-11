@@ -10,8 +10,7 @@ GameObject::GameObject(Vector2 pos,Vector2 vel):
 	pos_(pos),
 	vel_(vel),
 	isTurn_(false),
-	isGround_(false),
-	colRect_()
+	isGround_(false)
 {
 
 }
