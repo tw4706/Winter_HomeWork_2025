@@ -104,8 +104,3 @@ void Zombie::Move()
 		}
 	}
 }
-
-void Zombie::IsHit()
-{
-
-}

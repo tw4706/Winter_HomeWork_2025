@@ -82,6 +82,7 @@ void Player::Update(Input& input)
 	//erase() は指定した要素を削除し、次の要素を返す
 	//弾が死んでいなければ、次の弾に進む
 	for (auto it = bullets_.begin(); it != bullets_.end();)
+
 	{
 		(*it)->Update(input);		//弾の位置を更新
 
