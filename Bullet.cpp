@@ -15,7 +15,6 @@ Bullet::Bullet(Vector2 pos, Vector2 vel) :
 	GameObject(pos, vel),
 	pos_(pos),
 	vel_(vel),
-	isDead_(false),
 	bulletH_(-1)
 {
 }
@@ -32,15 +31,18 @@ void Bullet::Init()
 
 void Bullet::Update()
 {
-	colRect_.SetCenter(pos_.x, pos_.y, 32, 32);
+	
 }
 
 void Bullet::Update(Input&input)
 {
+
+	colRect_.SetCenter(pos_.x, pos_.y, 32, 32);
+
 	pos_ += vel_;
 
 	// âÊñ äOÇ…èoÇΩÇÁè¡ñ≈
-	if (pos_.x < 0 || pos_.x > Game::kScreenWidth|| 
+	if (pos_.x-16 < 0 || pos_.x > Game::kScreenWidth+16|| 
 		pos_.y < 0 || pos_.y > Game::kScreenHeight) 
 	{
 		isDead_ = true;

@@ -12,5 +12,8 @@ public:
 
 	void Attack()override;
 	void Move()override;
+
+	//’e‚ª“–‚½‚Á‚½‚Ìˆ—
+	virtual void IsHit() = 0;
 };
 

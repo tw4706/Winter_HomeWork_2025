@@ -111,4 +111,8 @@ void Dog::Move()
 	}
 }
 
+void Dog::IsHit()
+{
+}
+
 

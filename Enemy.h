@@ -23,7 +23,7 @@ public:
 	void SetPlayer(Player* player);
 
 	//“–‚½‚è”»’è‚Ì‹éŒ`‚ğæ“¾‚·‚éŠÖ”
-	virtual const Rect& GetRect()const = 0;
+	virtual const Rect& GetColRect()const = 0;
 
 	//’e‚ª“–‚½‚Á‚½‚Ìˆ—
 	virtual void IsHit() = 0;

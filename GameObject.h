@@ -9,7 +9,7 @@ protected:
 	bool isTurn_;//”½“]‚µ‚Ä‚é‚©‚Ç‚¤‚©
 	bool isGround_;//’n–Ê‚ÉÚ’n‚µ‚Ä‚¢‚é‚©‚Ç‚¤‚©
 	Rect colRect_;//“–‚½‚è”»’è‚Ì‹éŒ`
-
+	bool isDead_;
 public:
 	GameObject(Vector2 pos,Vector2 vel);
 	virtual~GameObject();
