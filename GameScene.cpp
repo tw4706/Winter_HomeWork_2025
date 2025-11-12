@@ -10,6 +10,7 @@
 
 namespace 
 {
+	//フェードまでの間隔
 	constexpr int fade_interval = 60;
 }
 
@@ -55,8 +56,10 @@ void GameScene::NormalDraw() {
 
 void GameScene::Init()
 {
+	//プレイヤーの初期化処理
 	player_->Init();
 
+	//敵の初期化処理
 	for (auto& enemy : enemies_)
 	{
 		enemy->Init();
@@ -70,7 +73,9 @@ void GameScene::Update(Input& input)
 
 	if (update_ != &GameScene::NormalUpdate) return;
 
-	player_->Update(input);
+	//プレイヤーの更新処理
+	player_->Update(input,enemies_);
+	//敵の更新処理
 	for (auto& enemy : enemies_)
 	{
 		enemy->Update();
@@ -81,7 +86,9 @@ void GameScene::Draw()
 {
 	(this->*draw_)();
 
+	//プレイヤーの描画処理
 	player_->Draw();
+	//敵の描画処理
 	for (auto& enemy : enemies_)
 	{
 		enemy->Draw();

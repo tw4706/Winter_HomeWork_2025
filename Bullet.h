@@ -13,11 +13,13 @@ public:
 
 	void Init()override;
 	void Update()override;
-	void Update(Input&input,std::vector<std::shared_ptr<Enemy>>&enemies);
+	void Update(Input&input,std::vector<std::shared_ptr<Enemy>>& enemies);
 	void Draw()override;
 
 	// ’e‚ªÁ‚¦‚½‚©‚Ç‚¤‚©‚ğ•Ô‚·
-	bool IsAlive()const { return isAlive_; }
+	void Destroy() { isAlive_ = false; }
+	bool IsAlive() const { return isAlive_; }
+
 
 private:
 	Vector2 pos_;//ˆÊ’u

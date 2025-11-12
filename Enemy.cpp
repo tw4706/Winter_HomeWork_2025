@@ -21,8 +21,3 @@ void Enemy::Update()
 void Enemy::Draw()
 {
 }
-
-void Enemy::SetPlayer(std::shared_ptr<Player> player)
-{
-	pPlayer_ = player;
-}

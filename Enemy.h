@@ -1,12 +1,12 @@
 #pragma once
 #include"GameObject.h"
-#include"Player.h"
 #include<memory>
+class Player;
 class Enemy:public GameObject
 {
 protected:
 	bool isRight_;					//右を向いているかどうか
-	std::shared_ptr<Player>pPlayer_;	//プレイヤーのスマートポインタ
+	std::shared_ptr<Player>pPlayer_;//プレイヤーのスマートポインタ
 	Rect colRect_;					//当たり判定の矩形
 
 public:
@@ -23,7 +23,7 @@ public:
 	//位置を取得する関数(ゲッター関数)
 	const Vector2& GetPos()const { return pos_; }
 	//プレイヤーのポインタをセットする関数(セッター関数)
-	void SetPlayer(std::shared_ptr<Player> player);
+	void SetPlayer(std::shared_ptr<Player> player) { pPlayer_ = player; }
 
 	//当たり判定の矩形を取得する関数
 	const Rect& GetColRect() const { return colRect_; }

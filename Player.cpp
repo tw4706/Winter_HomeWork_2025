@@ -32,6 +32,7 @@ Player::Player(Vector2 pos, Vector2 vel) :
 	isJumping_(false),
 	canDoubleJumping_(false)
 {
+	
 }
 
 Player::~Player()
@@ -41,15 +42,18 @@ Player::~Player()
 
 void Player::Init()
 {
+	//初期化処理
 	playerH_ = LoadGraph("data/Player/Idle.png");
 	assert(playerH_ >= 0);
+	//弾のサイズ
+	bullets_.resize(kBulletNum);
 }
 
 void Player::Update()
 {
 }
 
-void Player::Update(Input& input)
+void Player::Update(Input& input, std::vector<std::shared_ptr<Enemy>>& enemies)
 {
 	GameObject::Update();
 	Move(input);
@@ -59,7 +63,6 @@ void Player::Update(Input& input)
 		Jump(input);
 	}
 	pos_ += vel_;
-
 
 	//地面の接地判定
 	if (pos_.y >= kGround)
@@ -72,39 +75,39 @@ void Player::Update(Input& input)
 	}
 
 	//弾の発射・更新
-	if (input.IsTriggered("shot") && bullets_.size() < kBulletNum)
+	if (input.IsTriggered("shot"))
 	{
-		//向いている向きによって弾の方向を変える
-		Vector2 bulletsVel_ = (isTurn_) ? Vector2{ 10.0f,0.0f } : Vector2{ -10.0f,0.0f };
-		//弾のインスタンスを作成
-		Bullet* bullet = new Bullet(pos_, bulletsVel_);
-		 // 弾の初期化
-		bullet->Init();
-		bullets_.push_back(bullet);
-
-	}
-
-	//弾の更新処理
-	//beginは先頭の要素、endは末尾の次の要素
-	// it != bullets_.end() で、リストの最後までループする
-	//erase() は指定した要素を削除し、次の要素を返す
-	//弾が死んでいなければ、次の弾に進む
-	for (auto it = bullets_.begin(); it != bullets_.end();)
-
-	{
-		(*it)->Update(input, enemies);		//弾の位置を更新
-
-		if ((*it)->IsAlive())
-		{							//画面外に出たら
-			delete* it;				//メモリ解放
-			it = bullets_.erase(it);// リストから削除
-		}
-		else
+		//弾の数分回す
+		for (auto& bullet : bullets_)
 		{
-			it++;
+			//弾がNullでかつ弾が存在していないとき
+			if (!bullet || !bullet->IsAlive())
+			{
+				Vector2 bulletVel_ = isTurn_ ? Vector2{ 10.0f,0.0f } : Vector2{ -10.0f,0.0f };
+				bullet = std::make_shared<Bullet>(pos_, bulletVel_);
+				bullet->Init();
+				break;
+			}
 		}
 	}
 
+	for (auto& bullet : bullets_)
+	{
+		//生きている弾だけは更新
+		if (bullet&&bullet->IsAlive())
+		{
+			bullet->Update(input, enemies);
+
+			//敵との当たり判定
+			for (auto& enemy : enemies)
+			{
+				if (enemy && bullet->GetColRect().IsCollision(enemy->GetColRect()))
+				{
+					break;
+				}
+			}
+		}
+	}
 
 #ifdef _DEBUG
 	//デバッグ用
@@ -117,6 +120,7 @@ void Player::Update(Input& input)
 
 void Player::Draw()
 {
+	//プレイヤーの描画
 	if (isTurn_)
 	{
 		DrawRectRotaGraph3(static_cast<int>(pos_.x), 
@@ -143,7 +147,10 @@ void Player::Draw()
 	//弾の描画
 	for (auto&bullet : bullets_)
 	{
-		bullet->Draw();
+		if (bullet&&bullet->IsAlive())
+		{
+			bullet->Draw();
+		}
 	}
 
 
@@ -152,8 +159,10 @@ void Player::Draw()
 #endif
 }
 
+//移動処理
 void Player::Move(Input& input)
 {
+	//地面にいるときかつダブルジャンプが可能な時
 	if (isGround_ || canDoubleJumping_)
 	{
 		if (input.IsPressed("left"))
@@ -171,7 +180,7 @@ void Player::Move(Input& input)
 			vel_.x = 0.0f;
 		}
 	}
-	else if (!isGround_)
+	else if (!isGround_)//空中移動
 	{
 		if (input.IsPressed("left"))
 		{
@@ -190,6 +199,7 @@ void Player::Move(Input& input)
 	}
 }
 
+//ジャンプ処理
 void Player::Jump(Input& input)
 {
 	// 通常ジャンプ
@@ -209,6 +219,7 @@ void Player::Jump(Input& input)
 	}
 }
 
+//ポジションを返す関数
 Vector2 Player::GetPos() const
 {
 	return pos_;

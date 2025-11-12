@@ -16,7 +16,7 @@ Bullet::Bullet(Vector2 pos, Vector2 vel) :
 	GameObject(pos, vel),
 	pos_(pos),
 	vel_(vel),
-	isAlive_(false),
+	isAlive_(true),
 	bulletH_(-1)
 {
 }
@@ -36,7 +36,7 @@ void Bullet::Update()
 	colRect_.SetCenter(pos_.x, pos_.y, 32, 32);
 }
 
-void Bullet::Update(Input&input, std::vector<std::shared_ptr<Enemy>>& enemies)
+void Bullet::Update(Input& input, std::vector<std::shared_ptr<Enemy>>& enemies)
 {
 	pos_ += vel_;
 	colRect_.SetCenter(pos_.x, pos_.y, 32, 32);
@@ -51,12 +51,11 @@ void Bullet::Update(Input&input, std::vector<std::shared_ptr<Enemy>>& enemies)
 	}
 
 	// âÊñ äOÇ…èoÇΩÇÁè¡ñ≈
-	if (pos_.x < 0 || pos_.x > Game::kScreenWidth|| 
-		pos_.y < 0 || pos_.y > Game::kScreenHeight) 
+	if (pos_.x < 0 || pos_.x > Game::kScreenWidth ||
+		pos_.y < 0 || pos_.y > Game::kScreenHeight)
 	{
 		isAlive_ = false;
 	}
-
 }
 
 void Bullet::Draw()

@@ -1,4 +1,5 @@
 #include "Dog.h"
+#include "Player.h"
 #include<Dxlib.h>
 #include<cmath>
 
