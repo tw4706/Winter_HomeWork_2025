@@ -44,7 +44,7 @@ void Zombie::Update()
 
 void Zombie::Draw()
 {
-	if (isRight_)
+	if (isTurn_)
 	{
 		DrawRectRotaGraph3(static_cast<int>(pos_.x),
 			static_cast<int>(pos_.y),				//•`‰æˆÊ’u
@@ -96,11 +96,11 @@ void Zombie::Move()
 	{
 		if (dx < 0) {
 			pos_.x -= kSpeed;  // ¶‚ÖˆÚ“®
-			isRight_ = false;
+			isTurn_ = false;
 		}
 		else if (dx > 0) {
 			pos_.x += kSpeed;  // ‰E‚ÖˆÚ“®
-			isRight_ = true;
+			isTurn_ = true;
 		}
 	}
 }

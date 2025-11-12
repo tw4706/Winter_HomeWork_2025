@@ -1,12 +1,13 @@
 #include "GameScene.h"
-#include<Dxlib.h>
 #include"Input.h"
 #include"Player.h"
 #include"Zombie.h"
-#include"SceneController.h"
+#include"Dog.h"
 #include"Application.h"
-#include<cassert>
+#include"SceneController.h"
 #include<cmath>
+#include<cassert>
+#include<Dxlib.h>
 
 namespace 
 {
@@ -74,12 +75,19 @@ void GameScene::Update(Input& input)
 	if (update_ != &GameScene::NormalUpdate) return;
 
 	//ƒvƒŒƒCƒ„[‚ÌXVˆ—
-	player_->Update(input,enemies_);
+	player_->Update(input,bulletManager_);
+
 	//“G‚ÌXVˆ—
 	for (auto& enemy : enemies_)
 	{
-		enemy->Update();
+		if (!enemy->IsDead())
+		{
+			enemy->Update();
+		}
 	}
+
+	//’e‚ÌXVˆ—
+	bulletManager_.Update(enemies_, *player_);
 }
 
 void GameScene::Draw()
@@ -91,6 +99,11 @@ void GameScene::Draw()
 	//“G‚Ì•`‰æˆ—
 	for (auto& enemy : enemies_)
 	{
-		enemy->Draw();
+		if (!enemy->IsDead())
+		{
+			enemy->Draw();
+		}
 	}
+	//’e‚Ì•`‰æˆ—
+	bulletManager_.Draw();
 }

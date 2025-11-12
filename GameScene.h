@@ -1,10 +1,9 @@
 #pragma once
 #include "Scene.h"
-#include "Player.h"
-#include "Zombie.h"
-#include "Dog.h"
 #include"Geometry.h"
+#include"BulletManager.h"
 #include<memory>
+class Player;
 class GameScene :public Scene
 {
 private:
@@ -31,4 +30,5 @@ public:
 private:
 	std::shared_ptr<Player>player_;
 	std::vector<std::shared_ptr<Enemy>>enemies_;
+	BulletManager bulletManager_;
 };

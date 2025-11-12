@@ -5,9 +5,17 @@
 
 namespace
 {
+	//当たり判定のサイズ
+	constexpr  int kRectWidth = 32;
+	constexpr  int kRectHeight = 32;
+
+	//ジャンプの高さ
 	constexpr float kJumpPower = 15.0f;
+	//移動速度
 	constexpr float kSpeed = 4.0f;
+	//地面の位置
 	constexpr float kGround = 450.0f;
+	//ジャンプ間隔
 	constexpr int kJumpInterval = 120;
 	//プレイヤーとの距離
 	const float kDistance = 300.0f;
@@ -33,8 +41,10 @@ void Dog::Init()
 void Dog::Update()
 {
 	Enemy::Update();
-	Move();
+	Move();//移動処理
 	pos_ += vel_;
+
+	colRect_.SetCenter(pos_.x,pos_.y, kRectWidth, kRectHeight);
 
 	GameObject::Gravity();
 
@@ -55,6 +65,10 @@ void Dog::Update()
 void Dog::Draw()
 {
 	DrawBox(pos_.x, pos_.y, pos_.x + 32, pos_.y + 32, 0xffaaaa, false);
+
+#ifdef _DEBUG
+	colRect_.Draw(0xff0000, false);
+#endif
 
 }
 

@@ -54,13 +54,13 @@ Vector2 Rect::GetCenter() const
 	return Vector2{ x,y };
 }
 
-bool Rect::IsCollision(const Rect& rect)
+bool Rect::IsCollision(const Rect& rect)const
 {
 	//絶対に当たらないパターンを洗い出していく
 	if (left_ > rect.right_)return false;
 	if (top_ > rect.bottom_)return false;
-	if (right_ > rect.left_)return false;
-	if (bottom_ > rect.top_)return false;
+	if (right_ < rect.left_)return false;
+	if (bottom_ < rect.top_)return false;
 
 	//これ以外のパターンは当たっている
 	return true;

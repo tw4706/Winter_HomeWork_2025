@@ -2,7 +2,7 @@
 #include<cassert>
 #include "Player.h"
 #include "Input.h"
-#include "Bullet.h"
+#include "BulletManager.h"
 #include"GlobalConstants.h"
 
 // ÉvÉåÉCÉÑÅ[Ç…ä÷Ç∑ÇÈíËêî
@@ -45,15 +45,13 @@ void Player::Init()
 	//èâä˙âªèàóù
 	playerH_ = LoadGraph("data/Player/Idle.png");
 	assert(playerH_ >= 0);
-	//íeÇÃÉTÉCÉY
-	bullets_.resize(kBulletNum);
 }
 
 void Player::Update()
 {
 }
 
-void Player::Update(Input& input, std::vector<std::shared_ptr<Enemy>>& enemies)
+void Player::Update(Input& input, BulletManager& bm)
 {
 	GameObject::Update();
 	Move(input);
@@ -77,36 +75,10 @@ void Player::Update(Input& input, std::vector<std::shared_ptr<Enemy>>& enemies)
 	//íeÇÃî≠éÀÅEçXêV
 	if (input.IsTriggered("shot"))
 	{
-		//íeÇÃêîï™âÒÇ∑
-		for (auto& bullet : bullets_)
-		{
-			//íeÇ™NullÇ≈Ç©Ç¬íeÇ™ë∂ç›ÇµÇƒÇ¢Ç»Ç¢Ç∆Ç´
-			if (!bullet || !bullet->IsAlive())
-			{
-				Vector2 bulletVel_ = isTurn_ ? Vector2{ 10.0f,0.0f } : Vector2{ -10.0f,0.0f };
-				bullet = std::make_shared<Bullet>(pos_, bulletVel_);
-				bullet->Init();
-				break;
-			}
-		}
-	}
-
-	for (auto& bullet : bullets_)
-	{
-		//ê∂Ç´ÇƒÇ¢ÇÈíeÇæÇØÇÕçXêV
-		if (bullet&&bullet->IsAlive())
-		{
-			bullet->Update(input, enemies);
-
-			//ìGÇ∆ÇÃìñÇΩÇËîªíË
-			for (auto& enemy : enemies)
-			{
-				if (enemy && bullet->GetColRect().IsCollision(enemy->GetColRect()))
-				{
-					break;
-				}
-			}
-		}
+		Vector2 bulletVel_ = isTurn_ ? Vector2{ 10.0f,0.0f } : Vector2{ -10.0f,0.0f };
+		auto bullet = std::make_shared<Bullet>(pos_, bulletVel_, BulletType::Player);
+		bullet->Init();
+		bm.AddBullet(bullet);
 	}
 
 #ifdef _DEBUG
@@ -143,16 +115,6 @@ void Player::Draw()
 			0,
 			playerH_, true, true);
 	}
-
-	//íeÇÃï`âÊ
-	for (auto&bullet : bullets_)
-	{
-		if (bullet&&bullet->IsAlive())
-		{
-			bullet->Draw();
-		}
-	}
-
 
 #ifdef _DEBUG
 	colRect_.Draw(0xff0000, false);

@@ -4,7 +4,7 @@
 #include<vector>
 #include<memory>
 class Input;
-class Bullet;
+class BulletManager;
 class Player :public GameObject
 {
 public:
@@ -13,7 +13,7 @@ public:
 
 	virtual void Init()override;
 	virtual void Update()override;
-	void Update(Input& input, std::vector<std::shared_ptr<Enemy>>& enemies);
+	void Update(Input& input,BulletManager&bm );
 	virtual void Draw()override;
 
 	void Move(Input& input);
@@ -25,7 +25,5 @@ private:
 	int playerH_;//プレイヤーの画像ハンドル
 	bool isJumping_;//ジャンプしているかどうか
 	bool canDoubleJumping_;//ダブルジャンプ可能かどうか
-	std::vector<std::shared_ptr<Bullet>>bullets_;//弾の配列
-	std::vector<std::shared_ptr<Enemy>>enemies_;//敵のリスト
 };
 

@@ -86,7 +86,7 @@ public:
 	/// </summary>
 	/// <param name="rect">‹éŒ`î•ñ</param>
 	/// <returns>“–‚½‚Á‚Ä‚¢‚é‚©‚Ç‚¤‚©</returns>
-	bool IsCollision(const Rect& rect);
+	bool IsCollision(const Rect& rect)const;
 
 
 public:

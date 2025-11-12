@@ -5,9 +5,10 @@ class Player;
 class Enemy:public GameObject
 {
 protected:
-	bool isRight_;					//右を向いているかどうか
+	bool isTurn_;					//右を向いているかどうか
 	std::shared_ptr<Player>pPlayer_;//プレイヤーのスマートポインタ
 	Rect colRect_;					//当たり判定の矩形
+	bool isDead_;					//死亡フラグ
 
 public:
 	Enemy(Vector2 pos,Vector2 vel);
@@ -27,5 +28,10 @@ public:
 
 	//当たり判定の矩形を取得する関数
 	const Rect& GetColRect() const { return colRect_; }
+	//死亡フラグを取得する関数
+	bool IsDead() const { return isDead_; }
+
+	//弾が当たった時の処理
+	virtual void OnHit() { isDead_ = true; colRect_.SetCenter(-9999, -9999, 0, 0); }// 当たり判定を消す
 };
 
