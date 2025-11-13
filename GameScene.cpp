@@ -21,7 +21,7 @@ GameScene::GameScene(SceneController& controller) :
 	draw_(&GameScene::FadeDraw)
 {
 	player_ = std::make_shared<Player>(Vector2{ 100,500 }, Vector2{});
-	enemies_.push_back(std::make_shared<Zombie>(Vector2{ 800,450 }, Vector2{}));
+	enemies_.push_back(std::make_shared<Zombie>(Vector2{ 800,500 }, Vector2{}));
 	enemies_.push_back(std::make_shared<Dog>(Vector2{ 1000,500 }, Vector2{}));
 }
 
@@ -88,6 +88,16 @@ void GameScene::Update(Input& input)
 
 	//弾の更新処理
 	bulletManager_.Update(enemies_, *player_);
+
+	//プレイヤーと敵の当たり判定
+	for (auto& enemy : enemies_)
+	{
+		if (!enemy->IsDead() && player_->GetColRect().IsCollision(enemy->GetColRect()))
+		{
+			player_->OnDamage();
+			printfDx("PlayerHit\n");
+		}
+	}
 }
 
 void GameScene::Draw()

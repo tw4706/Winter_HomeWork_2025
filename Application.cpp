@@ -2,6 +2,7 @@
 #include<memory>
 #include"Input.h"
 #include "Application.h"
+#include "Animation.h"
 #include "GlobalConstants.h"
 #include"SceneController.h"
 #include"TitleScene.h"
@@ -47,6 +48,10 @@ void Application::Run()
 	Input input;
 	SceneController controller;
 	controller.ChangeScene(std::make_shared<TitleScene>(controller));
+
+
+	int handle = LoadGraph("data/Player/Idle.png");
+
 
 	while (ProcessMessage() != -1)
 	{

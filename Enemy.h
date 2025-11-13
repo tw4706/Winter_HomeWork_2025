@@ -32,6 +32,10 @@ public:
 	bool IsDead() const { return isDead_; }
 
 	//’e‚ª“–‚½‚Á‚½‚Ìˆ—
-	virtual void OnHit() { isDead_ = true; colRect_.SetCenter(-9999, -9999, 0, 0); }// “–‚½‚è”»’è‚ğÁ‚·
+	virtual void OnHit() { isDead_ = true; colRect_.SetCenter(-9999, -9999, 0, 0); }//“–‚½‚è”»’è‚ğÁ‚·
+
+public:
+	//’n–Ê‚ÌˆÊ’u
+	static constexpr float kGround = 500.0f;
 };
 

@@ -40,6 +40,16 @@ void Zombie::Update()
 	Enemy::Update();
 	Move();
 	colRect_.SetCenter(pos_.x, pos_.y+20, 32, 64);
+
+	GameObject::Gravity();
+
+	//’n–Ê‚ÌÚ’n”»’è
+	if (pos_.y >= kGround)
+	{
+		pos_.y = kGround;
+		vel_.y = 0.0f;
+		isGround_ = true;
+	}
 }
 
 void Zombie::Draw()

@@ -1,6 +1,7 @@
 #include "Enemy.h"
 #include<Dxlib.h>
 
+
 Enemy::Enemy(Vector2 pos,Vector2 vel):
 	GameObject(pos,vel),
 	isTurn_(false),

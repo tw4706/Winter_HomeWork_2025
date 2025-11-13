@@ -21,16 +21,26 @@ namespace
 	constexpr float kDoubleJumpPower = 6.0f;
 
 	//地面位置
-	constexpr float kGround = 450.0f; 
+	constexpr float kGround = 500.0f; 
 	//弾の存在できる数
 	constexpr int kBulletNum = 3; 
+
+	//ダメージを受けたときの無敵時間
+	constexpr int kDamageDuration = 60;
 }
 
 Player::Player(Vector2 pos, Vector2 vel) :
 	GameObject(pos, Vector2()),
-	playerH_(-1),
+	idleH_(-1),
+	attackH_(-1),
 	isJumping_(false),
-	canDoubleJumping_(false)
+	canDoubleJumping_(false),
+	isDamaged_(false),
+	damageTimer_(0),
+	state_(PlayerState::IDLE),
+	idleAnim_(0, 128, 128,7,150),
+	attackAnim_(0, 128, 128, 8, 100),
+	currentAnim_(nullptr)
 {
 	
 }
@@ -43,12 +53,36 @@ Player::~Player()
 void Player::Init()
 {
 	//初期化処理
-	playerH_ = LoadGraph("data/Player/Idle.png");
-	assert(playerH_ >= 0);
+	idleH_ = LoadGraph("data/Player/Idle.png");
+	assert(idleH_ >= 0);
+	attackH_ = LoadGraph("data/Player/Attack.png");
+	assert(idleH_ >= 0);
+
+	//アニメーションに画像ハンドルを設定する
+	idleAnim_ = Animation(idleH_, 128, 128, 7, 150);
+	attackAnim_ = Animation(attackH_, 128, 128, 8, 100);
+
+	//初期化時のアニメーションを設定
+	currentAnim_ = &idleAnim_;
 }
 
 void Player::Update()
 {
+	// 状態に応じてアニメーション切り替え
+	if (state_ == PlayerState::IDLE) {
+		currentAnim_ = &idleAnim_;
+	}
+	else if (state_ == PlayerState::ATTACK) {
+		currentAnim_ = &attackAnim_;
+	}
+
+
+	//攻撃アニメーションが最後のフレームに達したら、Idle状態に戻す
+	if (attackAnim_.GetCurrentFrame() == attackAnim_.GetFrameCount() - 1) {
+		state_ = PlayerState::IDLE;
+	}
+	currentAnim_->Update();
+
 }
 
 void Player::Update(Input& input, BulletManager& bm)
@@ -66,8 +100,8 @@ void Player::Update(Input& input, BulletManager& bm)
 	//地面の接地判定
 	if (pos_.y >= kGround)
 	{
-		pos_.y = kGround;
-		vel_.y = 0.0f;
+		pos_.y = kGround;//地面の位置に固定
+		vel_.y = 0.0f;//速度を0に
 		isGround_ = true;
 		isJumping_ = false;
 		canDoubleJumping_ = false;
@@ -76,11 +110,24 @@ void Player::Update(Input& input, BulletManager& bm)
 	//弾の発射・更新
 	if (input.IsTriggered("shot"))
 	{
+
+		state_ = PlayerState::ATTACK;
+		attackAnim_.Reset();
+		//三項演算子で向きに応じた弾の速度を設定
 		Vector2 bulletVel_ = isTurn_ ? Vector2{ 10.0f,0.0f } : Vector2{ -10.0f,0.0f };
 		auto bullet = std::make_shared<Bullet>(pos_, bulletVel_, BulletType::Player);
-		bullet->Init();
-		bm.AddBullet(bullet);
+		bullet->Init();//弾の初期化
+		bm.AddBullet(bullet);//弾の追加
 	}
+	if (damageTimer_ > 0)
+	{
+		damageTimer_--;
+		if (damageTimer_ == 0)
+		{
+			isDamaged_ = false;
+		}
+	}
+	Update(); // アニメーション更新
 
 #ifdef _DEBUG
 	//デバッグ用
@@ -93,32 +140,18 @@ void Player::Update(Input& input, BulletManager& bm)
 
 void Player::Draw()
 {
-	//プレイヤーの描画
-	if (isTurn_)
+	currentAnim_->Draw(pos_,isTurn_);
+
+#ifdef _DEBUG
+	if (isDamaged_)
 	{
-		DrawRectRotaGraph3(static_cast<int>(pos_.x), 
-			static_cast<int>(pos_.y),					//描画位置
-			0, 0,										//左上の描画開始位置			
-			kGraphW, kGraphH,							//描画する矩形のサイズ
-			kGraphW / 2, kGraphH / 2 + 32,				//回転の中心
-			1.5, 1.5,									//縦幅と横幅の拡大率
-			0,											//回転角度(ラジアン)
-			playerH_, true);
+		//当たり判定の矩形の色を変える
+		colRect_.Draw(0x0000ff, false);
 	}
 	else
 	{
-		DrawRectRotaGraph3(static_cast<int>(pos_.x),
-			static_cast<int>(pos_.y),
-			0, 0,
-			kGraphW, kGraphH,
-			kGraphW / 2, kGraphH / 2 + 32,
-			1.5, 1.5,
-			0,
-			playerH_, true, true);
+		colRect_.Draw(0xff0000, false);
 	}
-
-#ifdef _DEBUG
-	colRect_.Draw(0xff0000, false);
 #endif
 }
 
@@ -186,4 +219,10 @@ void Player::Jump(Input& input)
 Vector2 Player::GetPos() const
 {
 	return pos_;
+}
+
+void Player::OnDamage()
+{
+	isDamaged_ = true;
+	damageTimer_ = kDamageDuration;
 }

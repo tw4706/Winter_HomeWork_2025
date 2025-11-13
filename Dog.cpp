@@ -1,5 +1,6 @@
 #include "Dog.h"
 #include "Player.h"
+#include "Enemy.h"
 #include<Dxlib.h>
 #include<cmath>
 
@@ -19,8 +20,6 @@ namespace
 	constexpr float kJumpPower = 15.0f;
 	//移動速度
 	constexpr float kSpeed = 4.0f;
-	//地面の位置
-	constexpr float kGround = 450.0f;
 	//ジャンプ間隔
 	constexpr int kJumpInterval = 120;
 	//プレイヤーとの距離
@@ -40,6 +39,7 @@ Dog::~Dog()
 
 void Dog::Init()
 {
+	//画像のロード
 	dogH_ = LoadGraph("data/Enemy/dog.png");
 }
 
@@ -49,9 +49,14 @@ void Dog::Update()
 	Move();//移動処理
 	pos_ += vel_;
 
+	//当たり判定の更新
 	colRect_.SetCenter(pos_.x,pos_.y, kRectWidth, kRectHeight);
 
 	GameObject::Gravity();
+
+	DrawFormatString(0, 150, 0xffffff, "Dog PosX:%f", pos_.x);
+	DrawFormatString(0, 170, 0xffffff, "Dog VelX:%f", vel_.x);
+	DrawFormatString(0, 190, 0xffffff, "Dog Dist:%f", std::abs(pPlayer_->GetPos().x - pos_.x));
 
 	//地面の接地判定
 	if (pos_.y >= kGround)
@@ -60,10 +65,6 @@ void Dog::Update()
 		vel_.y = 0.0f;
 		isGround_ = true;
 	}
-
-	DrawFormatString(0, 150, 0xffffff, "Dog PosX:%f", pos_.x);
-	DrawFormatString(0, 170, 0xffffff, "Dog VelX:%f", vel_.x);
-	DrawFormatString(0, 190, 0xffffff, "Dog Dist:%f", std::abs(pPlayer_->GetPos().x - pos_.x));
 }
 
 void Dog::Draw()
@@ -76,8 +77,6 @@ void Dog::Draw()
 		1.5, 1.5,
 		0,
 		dogH_, true);
-
-
 
 #ifdef _DEBUG
 	colRect_.Draw(0xff0000, false);
@@ -101,11 +100,12 @@ void Dog::Move()
 	float enemyX = pos_.x;
 	float dx = playerX - enemyX;
 	float distance = std::abs(dx);
-	//動く向きを決める
-	int moveDirection = 0;
+
 	//距離が一定以下の時はプレイヤーに向かって移動
 	if (distance < kDistance)
 	{
+		//y軸の位置が地面にいるときかつ
+		// ジャンプ間隔を超えたときにジャンプする
 		if (pos_.y >= kGround && timer_ > kJumpInterval)
 		{
 			vel_.y = -kJumpPower;
@@ -114,15 +114,18 @@ void Dog::Move()
 
 			if (dx > 0)
 			{
-				vel_.x = kSpeed; //プレイヤーが右だと右にジャンプ
+				//プレイヤーが右だと右にジャンプ
+				vel_.x = kSpeed;
 			}
 			else if (dx < 0)
 			{
-				vel_.x = -kSpeed; //プレイヤーが左だと左にジャンプ
+				//プレイヤーが左だと左にジャンプ
+				vel_.x = -kSpeed;
 			}
 			else
 			{
-				vel_.x = 0.0f; //上にジャンプ
+				//上にジャンプ
+				vel_.x = 0.0f;
 			}
 		}
 		else if (pos_.y >= kGround)
