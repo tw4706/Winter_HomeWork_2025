@@ -53,7 +53,6 @@ void Player::Update()
 
 void Player::Update(Input& input, BulletManager& bm)
 {
-	GameObject::Update();
 	Move(input);
 	// ジャンプ処理
 	if (input.IsTriggered("jump"))
@@ -61,6 +60,8 @@ void Player::Update(Input& input, BulletManager& bm)
 		Jump(input);
 	}
 	pos_ += vel_;
+
+	GameObject::Update();
 
 	//地面の接地判定
 	if (pos_.y >= kGround)

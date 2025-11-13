@@ -31,7 +31,7 @@ Zombie::~Zombie()
 
 void Zombie::Init()
 {
-	zombieH_ = LoadGraph("data/Enemy/zombie.png");
+	zombieH_ = LoadGraph("data/Enemy/zombie_walk.png");
 	assert(zombieH_ >= 0);
 }
 

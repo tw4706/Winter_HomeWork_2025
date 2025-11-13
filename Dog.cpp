@@ -5,6 +5,12 @@
 
 namespace
 {
+	//画像の切り取りサイズ
+	constexpr int kGraphW = 48;
+	constexpr int kGraphH = 48;
+	constexpr int kGraphHalf_W = kGraphW-16;
+	constexpr int kGraphHalf_H = kGraphH-16;
+
 	//当たり判定のサイズ
 	constexpr  int kRectWidth = 32;
 	constexpr  int kRectHeight = 32;
@@ -34,8 +40,7 @@ Dog::~Dog()
 
 void Dog::Init()
 {
-	//dogH_ = LoadGraph();
-
+	dogH_ = LoadGraph("data/Enemy/dog.png");
 }
 
 void Dog::Update()
@@ -56,7 +61,6 @@ void Dog::Update()
 		isGround_ = true;
 	}
 
-	DrawFormatString(0, 130, 0xffffff, "Dog Timer:%f", timer_);
 	DrawFormatString(0, 150, 0xffffff, "Dog PosX:%f", pos_.x);
 	DrawFormatString(0, 170, 0xffffff, "Dog VelX:%f", vel_.x);
 	DrawFormatString(0, 190, 0xffffff, "Dog Dist:%f", std::abs(pPlayer_->GetPos().x - pos_.x));
@@ -64,7 +68,16 @@ void Dog::Update()
 
 void Dog::Draw()
 {
-	DrawBox(pos_.x, pos_.y, pos_.x + 32, pos_.y + 32, 0xffaaaa, false);
+	DrawRectRotaGraph3(static_cast<int>(pos_.x),
+		static_cast<int>(pos_.y),
+		0, 0,
+		kGraphW,kGraphH,
+		kGraphHalf_W, kGraphHalf_H,
+		1.5, 1.5,
+		0,
+		dogH_, true);
+
+
 
 #ifdef _DEBUG
 	colRect_.Draw(0xff0000, false);
@@ -101,23 +114,22 @@ void Dog::Move()
 
 			if (dx > 0)
 			{
-				vel_.x = kSpeed; //プレイヤーが右 → 右にジャンプ
+				vel_.x = kSpeed; //プレイヤーが右だと右にジャンプ
 			}
 			else if (dx < 0)
 			{
-				vel_.x = -kSpeed; //プレイヤーが左 → 左にジャンプ
+				vel_.x = -kSpeed; //プレイヤーが左だと左にジャンプ
 			}
 			else
 			{
-				vel_.x = 0.0f; //真上にジャンプ
+				vel_.x = 0.0f; //上にジャンプ
 			}
 		}
 		else if (pos_.y >= kGround)
 		{
-			//地面にいるがジャンプ条件を満たしていない → 停止
+			//地面にいるがジャンプ条件を満たしていない場合は停止
 			vel_.x = 0.0f;
 		}
-		//空中では vel_.x を変更しない（ジャンプ時に決めた方向を維持）
 	}
 	else
 	{
