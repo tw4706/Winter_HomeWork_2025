@@ -4,6 +4,7 @@
 #include"BulletManager.h"
 #include<memory>
 class Player;
+class Bg;
 class GameScene :public Scene
 {
 private:
@@ -31,4 +32,5 @@ private:
 	std::shared_ptr<Player>player_;
 	std::vector<std::shared_ptr<Enemy>>enemies_;
 	BulletManager bulletManager_;
+	std::shared_ptr<Bg>bg_;
 };

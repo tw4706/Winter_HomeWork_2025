@@ -11,7 +11,7 @@ namespace
 	constexpr int kGraphW = 128;//幅
 	constexpr int kGraphH = 128;//高さ
 	constexpr float kRadius = 16.0f;//半径
-	constexpr float kSpeed = 3.0f;//速度
+	constexpr float kSpeed = 5.0f;//速度 //通常時:3
 
 	//ジャンプ時の横移動速度
 	constexpr float kHalfSpeed = 1.5f;
@@ -69,11 +69,16 @@ void Player::Init()
 void Player::Update()
 {
 	// 状態に応じてアニメーション切り替え
-	if (state_ == PlayerState::IDLE) {
+	switch (state_)
+	{
+	case PlayerState::IDLE:
 		currentAnim_ = &idleAnim_;
-	}
-	else if (state_ == PlayerState::ATTACK) {
+		break;
+	case PlayerState::ATTACK:
 		currentAnim_ = &attackAnim_;
+		break;
+	default:
+		break;
 	}
 
 

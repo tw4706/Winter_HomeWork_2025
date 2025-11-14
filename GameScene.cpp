@@ -3,6 +3,7 @@
 #include"Player.h"
 #include"Zombie.h"
 #include"Dog.h"
+#include"Bg.h"
 #include"Application.h"
 #include"SceneController.h"
 #include<cmath>
@@ -23,6 +24,7 @@ GameScene::GameScene(SceneController& controller) :
 	player_ = std::make_shared<Player>(Vector2{ 100,500 }, Vector2{});
 	enemies_.push_back(std::make_shared<Zombie>(Vector2{ 800,500 }, Vector2{}));
 	enemies_.push_back(std::make_shared<Dog>(Vector2{ 1000,500 }, Vector2{}));
+	bg_ = std::make_shared<Bg>(player_);
 }
 
 void GameScene::FadeInUpdate(Input&) {
@@ -57,10 +59,9 @@ void GameScene::NormalDraw() {
 
 void GameScene::Init()
 {
-	//プレイヤーの初期化処理
+	//各クラスの初期化
+	bg_->Init();
 	player_->Init();
-
-	//敵の初期化処理
 	for (auto& enemy : enemies_)
 	{
 		enemy->Init();
@@ -74,10 +75,9 @@ void GameScene::Update(Input& input)
 
 	if (update_ != &GameScene::NormalUpdate) return;
 
-	//プレイヤーの更新処理
+	//各クラスの更新処理
 	player_->Update(input,bulletManager_);
 
-	//敵の更新処理
 	for (auto& enemy : enemies_)
 	{
 		if (!enemy->IsDead())
@@ -104,9 +104,10 @@ void GameScene::Draw()
 {
 	(this->*draw_)();
 
-	//プレイヤーの描画処理
+	//各クラスの描画処理
+	bg_->Draw();
 	player_->Draw();
-	//敵の描画処理
+
 	for (auto& enemy : enemies_)
 	{
 		if (!enemy->IsDead())
@@ -114,6 +115,6 @@ void GameScene::Draw()
 			enemy->Draw();
 		}
 	}
-	//弾の描画処理
+
 	bulletManager_.Draw();
 }

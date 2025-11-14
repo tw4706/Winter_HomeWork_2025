@@ -15,6 +15,7 @@ void BulletManager::AddBullet(std::shared_ptr<Bullet> bullets)
 
 void BulletManager::Update(std::vector<std::shared_ptr<Enemy>>&enemies, Player&player)
 {
+	//弾とキャラクターの当たり判定
 	for (auto& bullet : bullets_)
 	{
 		if (!bullet->IsAlive())continue;

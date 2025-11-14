@@ -80,7 +80,7 @@ void Bullet::Draw()
 	if (!isAlive_)return;
 	//Šp“x‚ðŒü‚«‚É‰ž‚¶‚Ä•ÏX
 	float angle = (vel_.x >= 0) ? DX_PI / 2.0f : DX_PI+ (DX_PI / 2.0f);
-	DrawRotaGraph(pos_.x,pos_.y,kScale,angle, bulletH_, false);
+	DrawRotaGraph(pos_.x,pos_.y,kScale,angle, bulletH_, true);
 #ifdef _DEBUG
 	colRect_.Draw(0xff0000, false);
 #endif
