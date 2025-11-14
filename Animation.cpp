@@ -35,7 +35,7 @@ void Animation::Draw(Vector2 pos,bool isTurn)
 
     DrawRectGraph(
         static_cast<int>(pos.x - frameW_ / 2), // íÜêSäÓèÄÇ…ï‚ê≥
-        static_cast<int>(pos.y - frameH_ / 2),
+        static_cast<int>(pos.y - frameH_ / 2)-20,
         srcX, srcY,
         frameW_, frameH_,
         handle_, TRUE,!isTurn
