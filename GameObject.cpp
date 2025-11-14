@@ -1,4 +1,5 @@
 #include"GameObject.h"
+#include"Bg.h"
 
 namespace
 {
@@ -10,7 +11,8 @@ GameObject::GameObject(Vector2 pos,Vector2 vel):
 	pos_(pos),
 	vel_(vel),
 	isTurn_(false),
-	isGround_(false)
+	isGround_(false),
+	pBg_(nullptr)
 {
 
 }
@@ -32,6 +34,8 @@ void GameObject::Update()
 
 void GameObject::Draw()
 {
+	float drawX = pos_.x - pBg_->GetScrollX() - kCharaSize * 0.5f;
+	float drawY = pos_.y - pBg_->GetScrollY() - kCharaSize * 0.5f;
 #ifdef _DEBUG
 	//“–‚½‚è”»’è‚ð•\Ž¦
 	colRect_.Draw(0x0000ff, false);

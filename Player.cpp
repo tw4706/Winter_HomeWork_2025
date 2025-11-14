@@ -2,6 +2,7 @@
 #include<cassert>
 #include "Player.h"
 #include "Input.h"
+#include"Bg.h"
 #include "BulletManager.h"
 #include"GlobalConstants.h"
 

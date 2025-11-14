@@ -50,7 +50,9 @@ void Bg::DrawBg()
 
 int Bg::GetScrollX()
 {
-	int result = static_cast<int>(pPlayer_->GetPos().x - Game::kScreenWidth * 0.5);
+	float playerX = pPlayer_->GetPos().x;
+	//画面中央にプレイヤーが来るスクロール量を計算
+	float result = playerX-(Game::kScreenWidth * 0.5);
 
 	if (result < 0)
 	{
