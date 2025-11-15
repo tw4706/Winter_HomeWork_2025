@@ -4,6 +4,7 @@
 #include"Animation.h"
 #include<vector>
 #include<memory>
+#include<map>
 
 enum class PlayerState
 {
@@ -19,16 +20,23 @@ public:
 	Player(Vector2 pos, Vector2 vel);
 	~Player()override;
 
-	virtual void Init()override;
-	virtual void Update()override;
-	void Update(Input& input,BulletManager&bm );
-	virtual void Draw()override;
+	void Init()override;
+	void Update()override;
+	void Update(Input& input, BulletManager& bm);
+	void Draw()override;
 
 	void Move(Input& input);
 	void Jump(Input& input);
-	Vector2 GetPos()const;//プレイヤーの位置を取得する
 	//ダメージを受けた時の処理
 	void OnDamage();
+
+	//アニメーション関連
+	//アニメーションの状態セットする関数
+	void SetAnimationState(PlayerState state,std::shared_ptr<Animation>anim);
+	//アニメーションの更新
+	void UpdateAnimation();
+	//アニメーションの描画
+	void DrawAnimation();
 
 
 private:
@@ -38,9 +46,15 @@ private:
 	bool canDoubleJumping_;//ダブルジャンプ可能かどうか
 	bool isDamaged_;//ダメージを受けているかどうか
 	int damageTimer_;//ダメージを受けてからのタイマー
-	PlayerState state_;//プレイヤーの状態
-	Animation idleAnim_;//待機アニメーション
-	Animation attackAnim_;//Attackアニメーション
-	Animation* currentAnim_;//現在のアニメーション
+	//プレイヤーの状態
+	PlayerState state_;
+
+	//各アニメーションのスマートポインタ
+	std::shared_ptr<Animation>idleAnim_;
+	std::shared_ptr<Animation>attackAnim_;
+	//現在のアニメーション
+	std::shared_ptr<Animation>currentAnim_;
+	//状態とアニメーションのマップ
+	std::map<PlayerState, std::shared_ptr<Animation>>animMap_;
 };
 

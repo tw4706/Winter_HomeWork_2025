@@ -20,9 +20,6 @@ public:
 
 	virtual void Attack() = 0;//攻撃
 	virtual void Move() = 0;  //移動
-
-	//位置を取得する関数(ゲッター関数)
-	const Vector2& GetPos()const { return pos_; }
 	//プレイヤーのポインタをセットする関数(セッター関数)
 	void SetPlayer(std::shared_ptr<Player> player) { pPlayer_ = player; }
 

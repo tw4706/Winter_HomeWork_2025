@@ -9,10 +9,12 @@
 // プレイヤーに関する定数
 namespace
 {
-	constexpr int kGraphW = 128;//幅
-	constexpr int kGraphH = 128;//高さ
-	constexpr float kRadius = 16.0f;//半径
-	constexpr float kSpeed = 5.0f;//速度 //通常時:3
+	//プレイヤーの画像サイズ
+	constexpr int kGraphWidth = 128;
+	constexpr int kGraphHeight = 128;
+
+	//移動速度 //通常:3
+	constexpr float kSpeed = 5.0f;
 
 	//ジャンプ時の横移動速度
 	constexpr float kHalfSpeed = 1.5f;
@@ -39,11 +41,9 @@ Player::Player(Vector2 pos, Vector2 vel) :
 	isDamaged_(false),
 	damageTimer_(0),
 	state_(PlayerState::IDLE),
-	idleAnim_(0, 128, 128,7,150),
-	attackAnim_(0, 128, 128, 8, 100),
 	currentAnim_(nullptr)
 {
-	
+
 }
 
 Player::~Player()
@@ -59,36 +59,20 @@ void Player::Init()
 	attackH_ = LoadGraph("data/Player/Attack.png");
 	assert(idleH_ >= 0);
 
-	//アニメーションに画像ハンドルを設定する
-	idleAnim_ = Animation(idleH_, 128, 128, 7, 150);
-	attackAnim_ = Animation(attackH_, 128, 128, 8, 100);
+	//アニメーションを状態ごとに設定
+	idleAnim_ = std::make_shared<Animation>(idleH_, kGraphWidth, kGraphHeight);
+	idleAnim_->InitIdle();
+	SetAnimationState(PlayerState::IDLE, idleAnim_);
+	attackAnim_ = std::make_shared<Animation>(attackH_, kGraphWidth, kGraphHeight);
+	attackAnim_->InitAttack();
+	SetAnimationState(PlayerState::ATTACK, attackAnim_);
 
-	//初期化時のアニメーションを設定
-	currentAnim_ = &idleAnim_;
+	//初期に設定するアニメーション
+	currentAnim_ = animMap_[PlayerState::IDLE];
 }
 
 void Player::Update()
 {
-	// 状態に応じてアニメーション切り替え
-	switch (state_)
-	{
-	case PlayerState::IDLE:
-		currentAnim_ = &idleAnim_;
-		break;
-	case PlayerState::ATTACK:
-		currentAnim_ = &attackAnim_;
-		break;
-	default:
-		break;
-	}
-
-
-	//攻撃アニメーションが最後のフレームに達したら、Idle状態に戻す
-	if (attackAnim_.GetCurrentFrame() == attackAnim_.GetFrameCount() - 1) {
-		state_ = PlayerState::IDLE;
-	}
-	currentAnim_->Update();
-
 }
 
 void Player::Update(Input& input, BulletManager& bm)
@@ -116,14 +100,15 @@ void Player::Update(Input& input, BulletManager& bm)
 	//弾の発射・更新
 	if (input.IsTriggered("shot"))
 	{
-
-		state_ = PlayerState::ATTACK;
-		attackAnim_.Reset();
+		SetAnimationState(PlayerState::ATTACK, attackAnim_);
+		animMap_[PlayerState::ATTACK]->Reset();
 		//三項演算子で向きに応じた弾の速度を設定
 		Vector2 bulletVel_ = isTurn_ ? Vector2{ 10.0f,0.0f } : Vector2{ -10.0f,0.0f };
 		auto bullet = std::make_shared<Bullet>(pos_, bulletVel_, BulletType::Player);
-		bullet->Init();//弾の初期化
-		bm.AddBullet(bullet);//弾の追加
+		//弾の初期化
+		bullet->Init();
+		//弾の追加
+		bm.AddBullet(bullet);
 	}
 	if (damageTimer_ > 0)
 	{
@@ -133,7 +118,15 @@ void Player::Update(Input& input, BulletManager& bm)
 			isDamaged_ = false;
 		}
 	}
-	Update(); // アニメーション更新
+
+	//アニメーションの更新
+	if(state_==PlayerState::ATTACK&&currentAnim_->
+		GetCurrentFrame() == currentAnim_->GetFrameCount() - 1)
+	{
+		//攻撃アニメーションが終了したら待機状態に戻す
+		SetAnimationState(PlayerState::IDLE, idleAnim_);
+	}
+	UpdateAnimation();
 
 #ifdef _DEBUG
 	//デバッグ用
@@ -146,7 +139,8 @@ void Player::Update(Input& input, BulletManager& bm)
 
 void Player::Draw()
 {
-	currentAnim_->Draw(pos_,isTurn_);
+	//アニメーションの描画
+	DrawAnimation();
 
 #ifdef _DEBUG
 	if (isDamaged_)
@@ -164,6 +158,8 @@ void Player::Draw()
 //移動処理
 void Player::Move(Input& input)
 {
+	//スクロールに応じた移動制限
+
 	//地面にいるときかつダブルジャンプが可能な時
 	if (isGround_ || canDoubleJumping_)
 	{
@@ -221,14 +217,34 @@ void Player::Jump(Input& input)
 	}
 }
 
-//ポジションを返す関数
-Vector2 Player::GetPos() const
-{
-	return pos_;
-}
-
+//ダメージを受けたときの処理
 void Player::OnDamage()
 {
 	isDamaged_ = true;
 	damageTimer_ = kDamageDuration;
+}
+
+//アニメーション状態の設定
+void Player::SetAnimationState(PlayerState state, std::shared_ptr<Animation> anim)
+{
+	animMap_[state] = anim;
+	//
+	if(animMap_.count(state))
+	{
+		//状態に応じたアニメーションを設定
+		currentAnim_ = animMap_[state];
+		state_ = state;
+	}
+}
+
+//アニメーションの更新
+void Player::UpdateAnimation()
+{
+	currentAnim_->Update();
+}
+
+//アニメーションの描画
+void Player::DrawAnimation()
+{
+	currentAnim_->Draw(pos_, isTurn_);
 }

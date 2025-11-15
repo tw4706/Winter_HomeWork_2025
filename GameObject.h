@@ -1,9 +1,6 @@
 #pragma once
 #include"Geometry.h"
 #include"Rect.h"
-#include<vector>
-#include<memory>
-class Bg;
 class GameObject
 {
 protected:
@@ -24,11 +21,10 @@ public:
 	//当たり判定の矩形を取得する関数
 	const Rect& GetColRect() const { return colRect_; }
 
-	//Bgクラスのポインタをセットする関数
-	void SetBg(std::shared_ptr<Bg>bg) { pBg_ = bg; }
+	//位置を取得する関数(ゲッター関数)
+	const Vector2& GetPos()const { return pos_; }
 
 protected:
 	virtual void Gravity();//重力
-	std::shared_ptr<Bg> pBg_;//背景のポインタ
 };
 

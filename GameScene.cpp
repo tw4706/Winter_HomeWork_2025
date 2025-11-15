@@ -25,7 +25,6 @@ GameScene::GameScene(SceneController& controller) :
 	enemies_.push_back(std::make_shared<Zombie>(Vector2{ 800,500 }, Vector2{}));
 	enemies_.push_back(std::make_shared<Dog>(Vector2{ 1000,500 }, Vector2{}));
 	bg_ = std::make_shared<Bg>(player_);
-	player_->SetBg(bg_);
 }
 
 void GameScene::FadeInUpdate(Input&) {
