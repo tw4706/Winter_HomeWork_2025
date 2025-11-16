@@ -18,9 +18,7 @@ Animation::Animation(int handle, int frameW, int frameH):
     frameH_(frameH),
     frameCount_(0),
     currentFrame_(0),
-    frameInterval_(0),
-    frameTimer_(0),
-    lastTime_(GetNowCount())
+    frameTimer_(0)
 {
 }
 
@@ -45,15 +43,16 @@ void Animation::Update() {
     }
 }
 
-void Animation::Draw(Vector2 pos,bool isTurn)
+void Animation::Draw(Vector2 pos,float charaSize,bool isTurn,float scrollX)
 {
+    float drawX = pos.x - scrollX - charaSize * 0.5f;
+
 	//描画位置と描画するフレームを計算
     int srcX = currentFrame_ * frameW_;
     int srcY = 0;
 
 	//画像の描画
-    DrawRectGraph(
-        static_cast<int>(pos.x - frameW_ / 2), //画像の中心
+    DrawRectGraph(static_cast<int>(drawX), //画像の中心
         static_cast<int>(pos.y - frameH_ / 2)-20,
         srcX, srcY,
         frameW_, frameH_,

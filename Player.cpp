@@ -43,7 +43,7 @@ Player::Player(Vector2 pos, Vector2 vel) :
 	state_(PlayerState::IDLE),
 	currentAnim_(nullptr)
 {
-
+	
 }
 
 Player::~Player()
@@ -246,5 +246,6 @@ void Player::UpdateAnimation()
 //アニメーションの描画
 void Player::DrawAnimation()
 {
-	currentAnim_->Draw(pos_, isTurn_);
+	float scrollX = pBg_->GetScrollX();
+	currentAnim_->Draw(pos_,kGraphWidth,isTurn_,scrollX);
 }

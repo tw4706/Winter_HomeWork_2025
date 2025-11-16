@@ -10,7 +10,7 @@ public:
     void InitAttack();
 
 	void Update();
-	void Draw(Vector2 pos, bool isTurn);
+    void Draw(Vector2 pos, float charaSize, bool isTurn, float scrollX);
 
 	//アニメーションを最初のフレームにリセット
     void Reset();
@@ -27,8 +27,6 @@ private:
     int frameH_;            //フレームの高さ
     int frameCount_;        //総フレーム数
     int currentFrame_;      //現在のフレーム
-    int frameInterval_;     //フレーム切り替え間隔
     int frameTimer_;        //フレーム更新用タイマー
-    int lastTime_;          //前回更新時刻
 };
 

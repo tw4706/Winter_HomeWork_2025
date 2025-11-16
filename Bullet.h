@@ -29,6 +29,7 @@ public:
 	// ’e‚ªÁ‚¦‚½‚©‚Ç‚¤‚©‚ğ•Ô‚·
 	void Destroy() { isAlive_ = false; }
 	bool IsAlive() const { return isAlive_; }
+	//’e‚Ìí—Ş‚ğ•Ô‚·
 	BulletType GetType() const { return type_; }
 
 

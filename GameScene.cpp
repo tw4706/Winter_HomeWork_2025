@@ -62,6 +62,8 @@ void GameScene::Init()
 	//ŠeƒNƒ‰ƒX‚Ì‰Šú‰»
 	bg_->Init();
 	player_->Init();
+	player_->SetBg(bg_);
+
 	for (auto& enemy : enemies_)
 	{
 		enemy->Init();
