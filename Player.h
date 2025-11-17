@@ -34,9 +34,6 @@ public:
 	void SetAnimationState(PlayerState state,std::shared_ptr<Animation>anim);
 	//アニメーションの更新
 	void UpdateAnimation();
-	//アニメーションの描画
-	void DrawAnimation();
-
 
 private:
 	int idleH_;//プレイヤーの画像ハンドル
@@ -53,5 +50,6 @@ private:
 	std::shared_ptr<Animation>attackAnim_;
 	//状態とアニメーションのマップ
 	std::map<PlayerState, std::shared_ptr<Animation>>animMap_;
+	std::map<PlayerState, Animation::AnimationSetting>playerSetting_;
 };
 

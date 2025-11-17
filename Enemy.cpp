@@ -2,17 +2,24 @@
 #include"Animation.h"
 #include<Dxlib.h>
 
+std::map<std::string, std::map<EnemyState, Animation::AnimationSetting>>Enemy::enemySettings_ = 
+{
+	//敵の種類ごとのアニメーション設定
+	{"Zombie",{
+		{EnemyState::Idle,{6,7}}
+	}},
+	{"WordDog",{
+		{EnemyState::Idle,{11,11}}
+	}}
+};
 
 Enemy::Enemy(Vector2 pos,Vector2 vel):
 	GameObject(pos,vel),
 	isTurn_(false),
 	isDead_(false),
-	idleH_(-1),
-	jumpH_(-1),
 	attackH_(-1)
 {
-	pos_ = pos;
-	vel_ = vel;
+
 }
 
 Enemy::~Enemy()
@@ -30,19 +37,37 @@ void Enemy::Draw()
 	if (isDead_)return;
 }
 
-void Enemy::SetAnimationState(EnemyState state, std::shared_ptr<Animation> anim)
+//アニメーションの初期化
+void Enemy::InitAnimation(const std::string& enemyType, int handle, int frameW, int frameH)
 {
-	animMap_[state] = anim;
+	//敵のアニメーション設定を取得する
+	auto& settings = enemySettings_[enemyType];
 
-	if (animMap_.count(state))
+	//アニメーションの生成と初期化
+	for (auto id : settings)
 	{
-		//状態に応じたアニメーションを設定
-		currentAnim_ = animMap_[state];
+		//id.first: EnemyState(状態), id.second: AnimationSetting(アニメーション設定)
+		EnemyState state = id.first;
+		Animation::AnimationSetting animSetting = id.second;
+
+		//ここでアニメーションを生成
+		auto anim = std::make_shared<Animation>(handle, frameW, frameH);
+		anim->Init(animSetting);//アニメーションの初期化
+		animMap_[state] = anim;//マップに保存
 	}
+
+	//初期状態のアニメーションを設定
+	if (animMap_.count(EnemyState::Idle))
+	{
+		currentAnim_ = animMap_[EnemyState::Idle];
+	}
+
+
 }
 
 //アニメーションの更新
 void Enemy::UpdateAnimation()
 {
+	//アニメーションの更新
 	currentAnim_->Update();
 }

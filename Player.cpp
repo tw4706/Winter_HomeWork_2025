@@ -57,18 +57,24 @@ void Player::Init()
 	idleH_ = LoadGraph("data/Player/Idle.png");
 	assert(idleH_ >= 0);
 	attackH_ = LoadGraph("data/Player/Attack.png");
-	assert(idleH_ >= 0);
+	assert(attackH_ >= 0);
+
+	playerSetting_ = {
+		{PlayerState::IDLE,{7,7}},
+		{PlayerState::ATTACK,{6,6}},
+	};
 
 	//アニメーションを状態ごとに設定
 	idleAnim_ = std::make_shared<Animation>(idleH_, kGraphWidth, kGraphHeight);
-	idleAnim_->InitIdle();
+	idleAnim_->Init(playerSetting_[PlayerState::IDLE]);
 	SetAnimationState(PlayerState::IDLE, idleAnim_);
+
 	attackAnim_ = std::make_shared<Animation>(attackH_, kGraphWidth, kGraphHeight);
-	attackAnim_->InitAttack();
+	attackAnim_->Init(playerSetting_[PlayerState::ATTACK]);
 	SetAnimationState(PlayerState::ATTACK, attackAnim_);
 
-	//初期に設定するアニメーション
 	currentAnim_ = animMap_[PlayerState::IDLE];
+
 }
 
 void Player::Update()
@@ -136,8 +142,8 @@ void Player::Update(Input& input, BulletManager& bm)
 
 #ifdef _DEBUG
 	//デバッグ用
-	DrawFormatString(0, 0, GetColor(255, 255, 255), "PlayerX:%f", pos_.x);
-	DrawFormatString(0, 20, GetColor(255, 255, 255), "VelX:%f", vel_.x);
+	//DrawFormatString(0, 0, GetColor(255, 255, 255), "PlayerX:%f", pos_.x);
+	//DrawFormatString(0, 20, GetColor(255, 255, 255), "VelX:%f", vel_.x);
 #endif
 
 
@@ -146,17 +152,19 @@ void Player::Update(Input& input, BulletManager& bm)
 void Player::Draw()
 {
 	//アニメーションの描画
-	DrawAnimation();
+	float scrollX = pBg_->GetScrollX();
+	float scrollY= pBg_->GetScrollY();
+	currentAnim_->Draw(pos_, kGraphWidth, isTurn_, scrollX);
 
 #ifdef _DEBUG
 	if (isDamaged_)
 	{
 		//当たり判定の矩形の色を変える
-		colRect_.DrawScroll(pBg_->GetScrollX(), pBg_->GetScrollY(), 0x0000ff, false);
+		colRect_.DrawScroll(scrollX, scrollY, 0x0000ff, false);
 	}
 	else
 	{
-		colRect_.DrawScroll(pBg_->GetScrollX(), pBg_->GetScrollY(), 0xff0000, false);
+		colRect_.DrawScroll(scrollX, scrollY, 0xff0000, false);
 	}
 #endif
 }
@@ -247,11 +255,4 @@ void Player::SetAnimationState(PlayerState state, std::shared_ptr<Animation> ani
 void Player::UpdateAnimation()
 {
 	currentAnim_->Update();
-}
-
-//アニメーションの描画
-void Player::DrawAnimation()
-{
-	float scrollX = pBg_->GetScrollX();
-	currentAnim_->Draw(pos_,kGraphWidth,isTurn_,scrollX);
 }

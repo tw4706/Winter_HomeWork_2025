@@ -34,17 +34,14 @@ void Zombie::Init()
 	zombieH_ = LoadGraph("data/Enemy/zombie_walk.png");
 	assert(zombieH_ >= 0);
 
-	//アニメーションを状態ごとに設定する
-	idleAnim_ = std::make_shared<Animation>(zombieH_, kGraphW, kGraphH);
-	idleAnim_->InitIdle();
-	SetAnimationState(EnemyState::Idle, idleAnim_);
-	currentAnim_ = animMap_[EnemyState::Idle];
+	InitAnimation("Zombie", zombieH_, kGraphW, kGraphH);
 }
 
 void Zombie::Update()
 {
 	Enemy::Update();
 	Move();
+	if (currentAnim_) currentAnim_->Update();
 	colRect_.SetCenter(pos_.x, pos_.y+20, 32, 64);
 
 	GameObject::Gravity();
@@ -60,6 +57,11 @@ void Zombie::Update()
 
 void Zombie::Draw()
 {
+
+	DrawFormatString(0, 0, GetColor(255, 255, 255), "handle:%d", zombieH_);
+	DrawFormatString(0, 20, GetColor(255, 255, 255), "currentAnim:%p", currentAnim_);
+	DrawFormatString(0, 40, GetColor(255, 255, 255), "pos:(%.2f, %.2f)", pos_.x, pos_.y);
+
 	//if (isTurn_)
 	//{
 	//	DrawRectRotaGraph3(static_cast<int>(pos_.x),
@@ -123,7 +125,8 @@ void Zombie::Move()
 
 void Zombie::DrawAnimation()
 {
-	if (!pBg_ || !currentAnim_) return; // 安全ガード
+	if (!currentAnim_) return; // nullptrチェック
+	if (!pBg_) return;         // 背景ポインタチェック
 	float scrollX = pBg_->GetScrollX();
 	currentAnim_->Draw(pos_, kGraphW, isTurn_, scrollX);
 }

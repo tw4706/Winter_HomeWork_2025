@@ -3,6 +3,7 @@
 #include "Enemy.h"
 #include<Dxlib.h>
 #include<cmath>
+#include<cassert>
 
 namespace
 {
@@ -41,6 +42,8 @@ void Dog::Init()
 {
 	//‰æ‘œ‚Ìƒ[ƒh
 	dogH_ = LoadGraph("data/Enemy/dog.png");
+	assert(dogH_ >= 0);
+	InitAnimation("WordDog", dogH_, kGraphW, kGraphH);
 }
 
 void Dog::Update()

@@ -1,13 +1,19 @@
 #pragma once
 #include"Geometry.h"
+
 class Animation
 {
 public:
+    struct AnimationSetting
+    {
+        int frameCount;//総フレーム数
+        int frameInterval;//フレームの間隔
+    };
+
 	Animation(int handle, int frameW, int frameH);
 	~Animation();
 
-    void InitIdle();
-    void InitAttack();
+    void Init(const AnimationSetting& set);
 
 	void Update();
     void Draw(Vector2 pos, float charaSize, bool isTurn, float scrollX);
@@ -27,7 +33,8 @@ private:
     int frameH_;            //フレームの高さ
     int frameCount_;        //総フレーム数
     int currentFrame_;      //現在のフレーム
-    int frameTimer_;        //フレーム更新用タイマー
+    int frameTimer_;        //フレーム更新するためのタイマー
+	int frameInterval_;     //フレームの間隔
     float scale_;           //拡大率
 };
 
