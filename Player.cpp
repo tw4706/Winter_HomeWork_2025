@@ -40,15 +40,15 @@ Player::Player(Vector2 pos, Vector2 vel) :
 	canDoubleJumping_(false),
 	isDamaged_(false),
 	damageTimer_(0),
-	state_(PlayerState::IDLE),
-	currentAnim_(nullptr)
+	state_(PlayerState::IDLE)
 {
 	
 }
 
 Player::~Player()
 {
-
+	DeleteGraph(idleH_);
+	DeleteGraph(attackH_);
 }
 
 void Player::Init()
@@ -77,6 +77,7 @@ void Player::Update()
 
 void Player::Update(Input& input, BulletManager& bm)
 {
+	
 	Move(input);
 	// ジャンプ処理
 	if (input.IsTriggered("jump"))
@@ -86,6 +87,7 @@ void Player::Update(Input& input, BulletManager& bm)
 	pos_ += vel_;
 
 	GameObject::Update();
+	colRect_.SetCenter(pos_.x, pos_.y + 30, kGraphWidth/4, kGraphHeight/2);
 
 	//地面の接地判定
 	if (pos_.y >= kGround)
@@ -107,6 +109,7 @@ void Player::Update(Input& input, BulletManager& bm)
 		auto bullet = std::make_shared<Bullet>(pos_, bulletVel_, BulletType::Player);
 		//弾の初期化
 		bullet->Init();
+		bullet->SetBg(pBg_);
 		//弾の追加
 		bm.AddBullet(bullet);
 	}
@@ -146,11 +149,11 @@ void Player::Draw()
 	if (isDamaged_)
 	{
 		//当たり判定の矩形の色を変える
-		colRect_.Draw(0x0000ff, false);
+		colRect_.DrawScroll(pBg_->GetScrollX(), 0x0000ff, false);
 	}
 	else
 	{
-		colRect_.Draw(0xff0000, false);
+		colRect_.DrawScroll(pBg_->GetScrollX(), 0xff0000, false);
 	}
 #endif
 }

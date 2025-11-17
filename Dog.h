@@ -11,7 +11,10 @@ public:
 	void Draw()override;
 
 	void Attack()override;
-	void Move()override;	//移動処理
+	void Move()override;//移動処理
+
+	//アニメーションの描画
+	void DrawAnimation();
 
 private:
 	int dogH_;				//ドッグの画像ハンドル

@@ -1,6 +1,17 @@
 #pragma once
 #include"GameObject.h"
 #include<memory>
+
+enum class EnemyState
+{
+	IDLE,
+	WALK,
+	JUMP,
+	ATTACK,
+	DAMAGE,
+	DEATH
+};
+
 class Player;
 class Enemy:public GameObject
 {
@@ -9,6 +20,10 @@ protected:
 	std::shared_ptr<Player>pPlayer_;//プレイヤーのスマートポインタ
 	Rect colRect_;					//当たり判定の矩形
 	bool isDead_;					//死亡フラグ
+	int idleH_;
+	int jumpH_;
+	int attackH_;
+	std::map<EnemyState, std::shared_ptr<Animation>>animMap_;
 
 public:
 	Enemy(Vector2 pos,Vector2 vel);
@@ -29,7 +44,13 @@ public:
 	bool IsDead() const { return isDead_; }
 
 	//弾が当たった時の処理
-	virtual void OnHit() { isDead_ = true; colRect_.SetCenter(-9999, -9999, 0, 0); }//当たり判定を消す
+	//当たり判定を消す
+	virtual void OnHit() { isDead_ = true; colRect_.SetCenter(-9999, -9999, 0, 0); }
+
+	//アニメーションの状態をセットする関数
+	void SetAnimationState(EnemyState state, std::shared_ptr<Animation>anim);
+	//アニメーションの更新
+	void UpdateAnimation();
 
 public:
 	//地面の位置

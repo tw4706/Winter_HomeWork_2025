@@ -33,6 +33,12 @@ void Zombie::Init()
 {
 	zombieH_ = LoadGraph("data/Enemy/zombie_walk.png");
 	assert(zombieH_ >= 0);
+
+	//アニメーションを状態ごとに設定する
+	idleAnim_ = std::make_shared<Animation>(zombieH_, kGraphW, kGraphH);
+	idleAnim_->InitIdle();
+	SetAnimationState(EnemyState::IDLE, idleAnim_);
+	currentAnim_ = animMap_[EnemyState::IDLE];
 }
 
 void Zombie::Update()
@@ -54,31 +60,31 @@ void Zombie::Update()
 
 void Zombie::Draw()
 {
-	if (isTurn_)
-	{
-		DrawRectRotaGraph3(static_cast<int>(pos_.x),
-			static_cast<int>(pos_.y),				//描画位置
-			0, 0,									//左上の描画開始位置			
-			kGraphW, kGraphH,						//描画する矩形のサイズ
-			kGraphW / 2, kGraphH / 2,				//回転の中心
-			2, 2,									//縦幅と横幅の拡大率
-			0,										//回転角度(ラジアン)
-			zombieH_, true);
-	}
-	else
-	{
-		DrawRectRotaGraph3(static_cast<int>(pos_.x),
-			static_cast<int>(pos_.y),				//描画位置
-			0, 0,									//左上の描画開始位置			
-			kGraphW, kGraphH,						//描画する矩形のサイズ
-			kGraphW / 2, kGraphH / 2,				//回転の中心
-			2, 2,									//縦幅と横幅の拡大率
-			0,										//回転角度(ラジアン)
-			zombieH_, true, true);
-	}
-
+	//if (isTurn_)
+	//{
+	//	DrawRectRotaGraph3(static_cast<int>(pos_.x),
+	//		static_cast<int>(pos_.y),				//描画位置
+	//		0, 0,									//左上の描画開始位置			
+	//		kGraphW, kGraphH,						//描画する矩形のサイズ
+	//		kGraphW / 2, kGraphH / 2,				//回転の中心
+	//		2, 2,									//縦幅と横幅の拡大率
+	//		0,										//回転角度(ラジアン)
+	//		zombieH_, true);
+	//}
+	//else
+	//{
+	//	DrawRectRotaGraph3(static_cast<int>(pos_.x),
+	//		static_cast<int>(pos_.y),				//描画位置
+	//		0, 0,									//左上の描画開始位置			
+	//		kGraphW, kGraphH,						//描画する矩形のサイズ
+	//		kGraphW / 2, kGraphH / 2,				//回転の中心
+	//		2, 2,									//縦幅と横幅の拡大率
+	//		0,										//回転角度(ラジアン)
+	//		zombieH_, true, true);
+	//}
+	DrawAnimation();
 #ifdef _DEBUG
-	colRect_.Draw(0xff0000, false);
+	colRect_.DrawScroll(pBg_->GetScrollX(), 0xff0000, false);
 #endif
 }
 
@@ -113,4 +119,11 @@ void Zombie::Move()
 			isTurn_ = true;
 		}
 	}
+}
+
+void Zombie::DrawAnimation()
+{
+	if (!pBg_ || !currentAnim_) return; // 安全ガード
+	float scrollX = pBg_->GetScrollX();
+	currentAnim_->Draw(pos_, kGraphW, isTurn_, scrollX);
 }

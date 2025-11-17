@@ -27,8 +27,10 @@ GameScene::GameScene(SceneController& controller) :
 	bg_ = std::make_shared<Bg>(player_);
 }
 
-void GameScene::FadeInUpdate(Input&) {
-	if (frame_-- <= 0) {
+void GameScene::FadeInUpdate(Input&)
+{
+	if (frame_-- <= 0) 
+	{
 		update_ = &GameScene::NormalUpdate;
 		draw_ = &GameScene::NormalDraw;
 		return;
@@ -37,11 +39,11 @@ void GameScene::FadeInUpdate(Input&) {
 
 void GameScene::NormalUpdate(Input& input)
 {
-
 }
 
 
-void GameScene::FadeOutUpdate(Input&) {
+void GameScene::FadeOutUpdate(Input&) 
+{
 	if (frame_++ >= fade_interval)
 	{
 //		controller_.ChangeScene(std::make_shared<GameOverScene>(controller_));
@@ -49,12 +51,12 @@ void GameScene::FadeOutUpdate(Input&) {
 	}
 }
 
-void GameScene::FadeDraw() {
-
+void GameScene::FadeDraw() 
+{
 }
 
-void GameScene::NormalDraw() {
-
+void GameScene::NormalDraw() 
+{
 }
 
 void GameScene::Init()
@@ -68,6 +70,7 @@ void GameScene::Init()
 	{
 		enemy->Init();
 		enemy->SetPlayer(player_);
+		enemy->SetBg(bg_);
 	}
 }
 

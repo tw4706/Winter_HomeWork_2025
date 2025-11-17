@@ -47,7 +47,7 @@ void Bullet::Init()
 void Bullet::Update()
 {
 	pos_ += vel_;
-	colRect_.SetCenter(pos_.x, pos_.y, kBulletWidth, kBulletHeight);
+	colRect_.SetCenter(pos_.x, pos_.y+20, kBulletWidth, kBulletHeight);
 
 	// 画面外から出たら消える
 	if(pos_.x<0||pos_.x>Game::kScreenWidth||
@@ -66,7 +66,6 @@ void Bullet::Update(Input& input, std::vector<std::shared_ptr<Enemy>>& enemies)
 		{
 			if (enemy && colRect_.IsCollision(enemy->GetColRect()))
 			{
-				printf("Collision detected!\n");
 				OnHit();
 				break;
 			}
@@ -80,9 +79,9 @@ void Bullet::Draw()
 	if (!isAlive_)return;
 	//角度を向きに応じて変更
 	float angle = (vel_.x >= 0) ? DX_PI / 2.0f : DX_PI+ (DX_PI / 2.0f);
-	DrawRotaGraph(pos_.x,pos_.y,kScale,angle, bulletH_, true);
+	DrawRotaGraph(pos_.x,pos_.y+20,kScale,angle, bulletH_, true);
 #ifdef _DEBUG
-	colRect_.Draw(0xff0000, false);
+	colRect_.DrawScroll(pBg_->GetScrollX(),0xff0000, false);
 #endif
 }
 

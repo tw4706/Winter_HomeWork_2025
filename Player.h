@@ -4,7 +4,6 @@
 #include"Animation.h"
 #include<vector>
 #include<memory>
-#include<map>
 
 enum class PlayerState
 {
@@ -52,8 +51,6 @@ private:
 	//各アニメーションのスマートポインタ
 	std::shared_ptr<Animation>idleAnim_;
 	std::shared_ptr<Animation>attackAnim_;
-	//現在のアニメーション
-	std::shared_ptr<Animation>currentAnim_;
 	//状態とアニメーションのマップ
 	std::map<PlayerState, std::shared_ptr<Animation>>animMap_;
 };

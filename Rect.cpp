@@ -65,3 +65,10 @@ bool Rect::IsCollision(const Rect& rect)const
 	//これ以外のパターンは当たっている
 	return true;
 }
+
+void Rect::DrawScroll(int scrollX, unsigned int color, bool isFill)
+{
+	int drawL = static_cast<int>(left_) - scrollX;
+	int drawR = static_cast<int>(right_) - scrollX;
+	DrawBox(drawL, top_, drawR, bottom_, color, isFill);
+}

@@ -47,13 +47,16 @@ void Dog::Update()
 {
 	Enemy::Update();
 	Move();//移動処理
+	//ポジションに速度を追加
 	pos_ += vel_;
 
 	//当たり判定の更新
-	colRect_.SetCenter(pos_.x,pos_.y, kRectWidth, kRectHeight);
+	colRect_.SetCenter(pos_.x,pos_.y+20, kRectWidth, kRectHeight);
 
+	//重力
 	GameObject::Gravity();
 
+	//デバッグ表示
 	DrawFormatString(0, 150, 0xffffff, "Dog PosX:%f", pos_.x);
 	DrawFormatString(0, 170, 0xffffff, "Dog VelX:%f", vel_.x);
 	DrawFormatString(0, 190, 0xffffff, "Dog Dist:%f", std::abs(pPlayer_->GetPos().x - pos_.x));
@@ -70,7 +73,7 @@ void Dog::Update()
 void Dog::Draw()
 {
 	DrawRectRotaGraph3(static_cast<int>(pos_.x),
-		static_cast<int>(pos_.y),
+		static_cast<int>(pos_.y+20),
 		0, 0,
 		kGraphW,kGraphH,
 		kGraphHalf_W, kGraphHalf_H,
@@ -78,8 +81,11 @@ void Dog::Draw()
 		0,
 		dogH_, true);
 
+	//アニメーションの描画
+	//DrawAnimation();
 #ifdef _DEBUG
-	colRect_.Draw(0xff0000, false);
+	//当たり判定の描画
+	colRect_.DrawScroll(pBg_->GetScrollX(), 0xff0000, false);
 #endif
 
 }
@@ -139,6 +145,13 @@ void Dog::Move()
 		//プレイヤーが遠いときは停止
 		vel_.x = 0.0f;
 	}
+}
+
+void Dog::DrawAnimation()
+{
+	if (!pBg_ || !currentAnim_) return;
+	float scrollX = pBg_->GetScrollX();
+	currentAnim_->Draw(pos_, kGraphW, isTurn_, scrollX);
 }
 
 

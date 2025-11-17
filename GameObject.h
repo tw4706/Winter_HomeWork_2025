@@ -4,7 +4,9 @@
 #include"Bg.h"
 #include<memory>
 #include<vector>
+#include<map>
 
+class Animation;
 class GameObject
 {
 protected:
@@ -14,6 +16,8 @@ protected:
 	bool isTurn_;//反転してるかどうか
 	bool isGround_;//地面に接地しているかどうか
 	float scrollX_;//スクロール量(横スクロールゲームなので一旦横だけ)
+	std::shared_ptr<Bg>pBg_;//背景オブジェクトのポインタ
+	std::shared_ptr<Animation>currentAnim_;
 
 public:
 	GameObject(Vector2 pos,Vector2 vel);
@@ -36,10 +40,5 @@ public:
 	void SetBg(std::shared_ptr<Bg>bg) { pBg_ = bg; }
 	//Bgクラスを取得する関数
 	std::shared_ptr<Bg>GetBg() const { return pBg_; }
-
-
-
-protected:
-	std::shared_ptr<Bg>pBg_;//背景オブジェクトのポインタ
 };
 

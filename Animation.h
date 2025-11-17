@@ -28,5 +28,6 @@ private:
     int frameCount_;        //総フレーム数
     int currentFrame_;      //現在のフレーム
     int frameTimer_;        //フレーム更新用タイマー
+    float scale_;           //拡大率
 };
 

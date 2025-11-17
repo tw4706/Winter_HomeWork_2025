@@ -88,6 +88,14 @@ public:
 	/// <returns>当たっているかどうか</returns>
 	bool IsCollision(const Rect& rect)const;
 
+	/// <summary>
+	/// スクロール情報を適用した矩形の描画
+	/// </summary>
+	/// <param name="scrollX">横スクロール量</param>
+	/// <param name="color">矩形の色</param>
+	/// <param name="isFill">太さ</param>
+	void DrawScroll(int scrollX, unsigned int color, bool isFill);
+
 
 public:
 	float left_;	//左上のX座標

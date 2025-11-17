@@ -53,14 +53,12 @@ void Animation::Draw(Vector2 pos,float charaSize,bool isTurn,float scrollX)
 
 	//‰æ‘œ‚Ì•`‰æ
     DrawRectGraph(static_cast<int>(drawX), //‰æ‘œ‚Ì’†S
-        static_cast<int>(pos.y - frameH_ / 2)-20,
+        static_cast<int>(pos.y - frameH_ / 2),
         srcX, srcY,
         frameW_, frameH_,
         handle_, TRUE,!isTurn
     );
 }
-
-
 
 void Animation::Reset()
 {

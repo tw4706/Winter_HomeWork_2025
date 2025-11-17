@@ -14,7 +14,11 @@ public:
 
 	void Attack()override;	//UŒ‚ˆ—
 	void Move();			//ˆÚ“®ˆ—
+
+	void DrawAnimation();
+
 private:
 	int zombieH_;			//ƒ]ƒ“ƒr‚Ì‰æ‘œƒnƒ“ƒhƒ‹
+	std::shared_ptr<Animation>idleAnim_;
 };
 
