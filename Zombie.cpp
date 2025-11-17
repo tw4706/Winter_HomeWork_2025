@@ -37,8 +37,8 @@ void Zombie::Init()
 	//アニメーションを状態ごとに設定する
 	idleAnim_ = std::make_shared<Animation>(zombieH_, kGraphW, kGraphH);
 	idleAnim_->InitIdle();
-	SetAnimationState(EnemyState::IDLE, idleAnim_);
-	currentAnim_ = animMap_[EnemyState::IDLE];
+	SetAnimationState(EnemyState::Idle, idleAnim_);
+	currentAnim_ = animMap_[EnemyState::Idle];
 }
 
 void Zombie::Update()
@@ -84,7 +84,7 @@ void Zombie::Draw()
 	//}
 	DrawAnimation();
 #ifdef _DEBUG
-	colRect_.DrawScroll(pBg_->GetScrollX(), 0xff0000, false);
+	colRect_.DrawScroll(pBg_->GetScrollX(), pBg_->GetScrollY(), 0xff0000, false);
 #endif
 }
 

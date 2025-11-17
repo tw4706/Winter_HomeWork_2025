@@ -2,25 +2,47 @@
 
 namespace
 {
-	constexpr int kBulletMax = 3; //’e‚ÌÅ‘å”
+	constexpr int kBulletMax = 3;//’e‚ÌÅ‘å”
+	constexpr int kLanceMax = 2;//‘„‚ÌÅ‘å”
+	constexpr int kTorchMax = 1;
 }
 
-void BulletManager::AddBullet(std::shared_ptr<Bullet> bullets)
+BulletManager::BulletManager()
 {
-	//’e‚ğ’Ç‰Á(Å‘å3”­‚Ü‚Å‰æ–Êã‚Éo‚¹‚é)
-	if (bullets_.size() >= kBulletMax) return;
+	//’e‚Ì”‚ğŒˆ‚ß‚é
+	bulletLimits_ = {
+		{PlayerBulletType::Bullet,3},
+		{PlayerBulletType::Lance,2},
+		{PlayerBulletType::Torch,1}
+	};
+}
+
+BulletManager::~BulletManager()
+{
+}
+
+void BulletManager::Init(std::shared_ptr<Bullet> bullets)
+{
+	//ƒvƒŒƒCƒ„[‚Ì’e‚Ìí—Ş
+	PlayerBulletType type = bullets->GetType();
+
+	//Œ»İ‚Ì“¯‚¶’e‚Ì”‚ğƒJƒEƒ“ƒg
+
+
+	if (bullets_.size() >= bulletLimits_[type]) return;
 
 	bullets_.push_back(bullets);
 }
 
 void BulletManager::Update(std::vector<std::shared_ptr<Enemy>>&enemies, Player&player)
 {
+	//’e‚ÌXV
 	//’e‚ÆƒLƒƒƒ‰ƒNƒ^[‚Ì“–‚½‚è”»’è
 	for (auto& bullet : bullets_)
 	{
 		if (!bullet->IsAlive())continue;
 		bullet->Update();
-		if (bullet->GetType() == BulletType::Player)
+		if (bullet->GetType() == PlayerBulletType::Bullet)
 		{
 			for (auto& enemy : enemies)
 			{
@@ -48,6 +70,7 @@ void BulletManager::Update(std::vector<std::shared_ptr<Enemy>>&enemies, Player&p
 
 void BulletManager::Draw()
 {
+	//’e‚Ì•`‰æ
 	for (const auto& bullet : bullets_)
 	{
 		if (bullet->IsAlive())
@@ -55,4 +78,12 @@ void BulletManager::Draw()
 			bullet->Draw();
 		}
 	}
+}
+
+//
+bool BulletManager::IsPlayerBullet(PlayerBulletType type) const
+{
+	return	type == PlayerBulletType::Bullet||
+			type == PlayerBulletType::Lance	||
+			type == PlayerBulletType::Torch;
 }

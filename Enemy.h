@@ -4,12 +4,12 @@
 
 enum class EnemyState
 {
-	IDLE,
-	WALK,
-	JUMP,
-	ATTACK,
-	DAMAGE,
-	DEATH
+	Idle,
+	Walk,
+	Jump,
+	Attack,
+	Damage,
+	Death
 };
 
 class Player;

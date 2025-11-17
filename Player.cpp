@@ -87,7 +87,10 @@ void Player::Update(Input& input, BulletManager& bm)
 	pos_ += vel_;
 
 	GameObject::Update();
-	colRect_.SetCenter(pos_.x, pos_.y + 30, kGraphWidth/4, kGraphHeight/2);
+	colRect_.SetCenter(pos_.x + kGraphWidth / 2,
+		pos_.y - kGraphHeight / 2,
+		kGraphWidth / 4,
+		kGraphHeight / 2);
 
 	//地面の接地判定
 	if (pos_.y >= kGround)
@@ -106,12 +109,12 @@ void Player::Update(Input& input, BulletManager& bm)
 		animMap_[PlayerState::ATTACK]->Reset();
 		//三項演算子で向きに応じた弾の速度を設定
 		Vector2 bulletVel_ = isTurn_ ? Vector2{ 10.0f,0.0f } : Vector2{ -10.0f,0.0f };
-		auto bullet = std::make_shared<Bullet>(pos_, bulletVel_, BulletType::Player);
+		auto bullet = std::make_shared<Bullet>(pos_, bulletVel_, PlayerBulletType::Bullet);
 		//弾の初期化
 		bullet->Init();
 		bullet->SetBg(pBg_);
 		//弾の追加
-		bm.AddBullet(bullet);
+		bm.Init(bullet);
 	}
 	if (damageTimer_ > 0)
 	{
@@ -149,11 +152,11 @@ void Player::Draw()
 	if (isDamaged_)
 	{
 		//当たり判定の矩形の色を変える
-		colRect_.DrawScroll(pBg_->GetScrollX(), 0x0000ff, false);
+		colRect_.DrawScroll(pBg_->GetScrollX(), pBg_->GetScrollY(), 0x0000ff, false);
 	}
 	else
 	{
-		colRect_.DrawScroll(pBg_->GetScrollX(), 0xff0000, false);
+		colRect_.DrawScroll(pBg_->GetScrollX(), pBg_->GetScrollY(), 0xff0000, false);
 	}
 #endif
 }

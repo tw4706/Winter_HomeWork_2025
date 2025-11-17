@@ -85,7 +85,7 @@ void Dog::Draw()
 	//DrawAnimation();
 #ifdef _DEBUG
 	//“–‚½‚è”»’è‚Ì•`‰æ
-	colRect_.DrawScroll(pBg_->GetScrollX(), 0xff0000, false);
+	colRect_.DrawScroll(pBg_->GetScrollX(), pBg_->GetScrollY(), 0xff0000, false);
 #endif
 
 }

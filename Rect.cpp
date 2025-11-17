@@ -66,9 +66,11 @@ bool Rect::IsCollision(const Rect& rect)const
 	return true;
 }
 
-void Rect::DrawScroll(int scrollX, unsigned int color, bool isFill)
+void Rect::DrawScroll(int scrollX, int scrollY,unsigned int color, bool isFill)
 {
 	int drawL = static_cast<int>(left_) - scrollX;
+	int drawT = static_cast<int>(top_) - scrollY;
 	int drawR = static_cast<int>(right_) - scrollX;
-	DrawBox(drawL, top_, drawR, bottom_, color, isFill);
+	int drawB = static_cast<int>(bottom_) - scrollY;
+	DrawBox(drawL, drawT, drawR, drawB, color, isFill);
 }
