@@ -25,6 +25,7 @@ GameScene::GameScene(SceneController& controller) :
 	enemies_.push_back(std::make_shared<Zombie>(Vector2{ 800,500 }, Vector2{}));
 	enemies_.push_back(std::make_shared<Dog>(Vector2{ 1000,500 }, Vector2{}));
 	bg_ = std::make_shared<Bg>(player_);
+	camera_ = std::make_shared<Camera>();
 }
 
 void GameScene::FadeInUpdate(Input&)
@@ -63,6 +64,7 @@ void GameScene::Init()
 {
 	//各クラスの初期化
 	bg_->Init();
+	camera_->Init();
 	player_->Init();
 	player_->SetBg(bg_);
 
@@ -81,6 +83,8 @@ void GameScene::Update(Input& input)
 	if (update_ != &GameScene::NormalUpdate) return;
 
 	//各クラスの更新処理
+	camera_->Update(player_);
+
 	player_->Update(input,bulletManager_);
 
 	for (auto& enemy : enemies_)

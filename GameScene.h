@@ -1,5 +1,6 @@
 #pragma once
 #include "Scene.h"
+#include "Camera.h"
 #include"Geometry.h"
 #include"BulletManager.h"
 #include<memory>
@@ -33,4 +34,5 @@ private:
 	std::vector<std::shared_ptr<Enemy>>enemies_;
 	BulletManager bulletManager_;
 	std::shared_ptr<Bg>bg_;
+	std::shared_ptr<Camera>camera_;
 };

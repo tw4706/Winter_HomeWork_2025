@@ -1,4 +1,5 @@
 #include "BulletManager.h"
+#include "Camera.h"
 
 namespace
 {
@@ -27,8 +28,6 @@ void BulletManager::Init(std::shared_ptr<Bullet> bullets)
 	PlayerBulletType type = bullets->GetType();
 
 	//Œ»İ‚Ì“¯‚¶’e‚Ì”‚ğƒJƒEƒ“ƒg
-
-
 	if (bullets_.size() >= bulletLimits_[type]) return;
 
 	bullets_.push_back(bullets);
@@ -46,6 +45,7 @@ void BulletManager::Update(std::vector<std::shared_ptr<Enemy>>&enemies, Player&p
 		{
 			for (auto& enemy : enemies)
 			{
+				//ƒvƒŒƒCƒ„[‚Ì’e‚ª“G‚É“–‚½‚Á‚½‚Ìˆ—
 				if (bullet->GetColRect().IsCollision(enemy->GetColRect()))
 				{
 					bullet->OnHit();
@@ -54,7 +54,7 @@ void BulletManager::Update(std::vector<std::shared_ptr<Enemy>>&enemies, Player&p
 				}
 			}
 		}
-		else
+		else//“G‚Ì’e‚ªƒvƒŒƒCƒ„[‚É“–‚½‚Á‚½‚Ìˆ—
 		{
 			if (bullet->GetColRect().IsCollision(player.GetColRect()))
 			{
@@ -63,6 +63,7 @@ void BulletManager::Update(std::vector<std::shared_ptr<Enemy>>&enemies, Player&p
 			}
 		}
 	}
+	//’e‚Ìíœ
 	bullets_.erase(std::remove_if(bullets_.begin(), bullets_.end(),
 		[](const std::shared_ptr<Bullet>& bullet) { return !bullet->IsAlive(); }),
 		bullets_.end());
@@ -73,6 +74,7 @@ void BulletManager::Draw()
 	//’e‚Ì•`‰æ
 	for (const auto& bullet : bullets_)
 	{
+		//’e‚ª‘¶İ‚µ‚Ä‚é‚È‚ç
 		if (bullet->IsAlive())
 		{
 			bullet->Draw();
@@ -80,9 +82,9 @@ void BulletManager::Draw()
 	}
 }
 
-//
 bool BulletManager::IsPlayerBullet(PlayerBulletType type) const
 {
+	//ƒvƒŒƒCƒ„[‚Ì’e‚Ìí•Ê‚ğ•Ô‚·
 	return	type == PlayerBulletType::Bullet||
 			type == PlayerBulletType::Lance	||
 			type == PlayerBulletType::Torch;

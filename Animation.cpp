@@ -19,7 +19,8 @@ Animation::Animation(int handle, int frameW, int frameH):
     frameCount_(0),
     currentFrame_(0),
     frameTimer_(0),
-	frameInterval_(0)
+	frameInterval_(0),
+    scale_(0.0f)
 {
 }
 
