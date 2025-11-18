@@ -62,8 +62,7 @@ void Animation::Draw(Vector2 pos,float charaSize,bool isTurn,float scrollX)
         static_cast<int>(pos.y - frameH_ / 2),
         srcX, srcY,
         frameW_, frameH_,
-        handle_, TRUE,!isTurn
-    );
+        handle_, TRUE,!isTurn);
 }
 
 //アニメーションを最初のフレームにリセットする

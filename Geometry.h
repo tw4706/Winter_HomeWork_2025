@@ -16,7 +16,8 @@ struct Vector2
 };
 
 //2Dのサイズを定義する構造体
-struct Size {
+struct Size 
+{
 	int w;//幅
 	int h;//高さ
 };

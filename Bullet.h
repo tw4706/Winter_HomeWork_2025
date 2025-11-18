@@ -30,6 +30,7 @@ public:
 
 	void Init()override;
 	void Update()override;
+	void UpdateShot();
 	void Update(Input&input,std::vector<std::shared_ptr<Enemy>>& enemies);
 	void Draw()override;
 

@@ -22,9 +22,9 @@ Camera::~Camera()
 
 void Camera::Init()
 {
+	//ƒ|ƒWƒVƒ‡ƒ“‚Ì‰Šú‰»
 	pos_ = { 0,0 };
 }
-
 
 void Camera::Update(std::shared_ptr<Player> player)
 {

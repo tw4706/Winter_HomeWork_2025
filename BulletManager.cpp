@@ -5,7 +5,7 @@ namespace
 {
 	constexpr int kBulletMax = 3;//’e‚ÌÅ‘å”
 	constexpr int kLanceMax = 2;//‘„‚ÌÅ‘å”
-	constexpr int kTorchMax = 1;
+	constexpr int kTorchMax = 1;//‚½‚¢‚Ü‚Â‚ÌÅ‘å”
 }
 
 BulletManager::BulletManager()
@@ -40,7 +40,9 @@ void BulletManager::Update(std::vector<std::shared_ptr<Enemy>>&enemies, Player&p
 	for (auto& bullet : bullets_)
 	{
 		if (!bullet->IsAlive())continue;
+		//’e‚ÌXV
 		bullet->Update();
+		bullet->UpdateShot();
 		if (bullet->GetType() == PlayerBulletType::Bullet)
 		{
 			for (auto& enemy : enemies)

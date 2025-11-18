@@ -39,11 +39,31 @@ void Bullet::Init()
 
 	//“–‚½‚è”»’è‚Ì‰Šú‰»
 	colRect_.SetCenter(pos_.x, pos_.y, config.width, config.height);
-
 }
 
 void Bullet::Update()
 {
+
+}
+
+//’e‚Ìí•Ê‚²‚Æ‚ÌXVˆ—
+void Bullet::UpdateShot()
+{
+	switch (bulletType_)
+	{
+	case PlayerBulletType::Bullet:
+
+		break;
+	case PlayerBulletType::Lance:
+		break;
+	case PlayerBulletType::Torch:
+		//‰º‚É”ò‚ñ‚Å‚¢‚­
+		vel_.y += 0.3f;
+		break;
+	default:
+		break;
+	}
+
 	pos_ += vel_;
 	//’e‚Ì“–‚½‚è”»’è‚ğXV
 	colRect_.SetCenter(pos_.x, pos_.y + 20, 
@@ -60,16 +80,16 @@ void Bullet::Update()
 
 void Bullet::Update(Input& input, std::vector<std::shared_ptr<Enemy>>& enemies)
 {
-	Update();
+	UpdateShot();
 
 	//“G‚É’e‚ª“–‚½‚Á‚½‚Ìˆ—
 	for (auto& enemy : enemies)
 	{
-		//“G‚É“–‚½‚Á‚Ä‚¢‚½‚çÀs‚·‚é(1”­Œ‚‚Á‚½‚ç”²‚¯‚é)
+		//“G‚É“–‚½‚Á‚Ä‚¢‚½‚çÀs‚·‚é
 		if (enemy && colRect_.IsCollision(enemy->GetColRect()))
 		{
 			OnHit();
-			break;
+			if (!isAlive_)return;
 		}
 	}
 }
@@ -88,8 +108,21 @@ void Bullet::Draw()
 
 void Bullet::OnHit()
 {
-	//“–‚½‚Á‚½‚çÁ‚¦‚é
-	isAlive_ = false;
+	switch (bulletType_)
+	{
+	case PlayerBulletType::Bullet:
+		isAlive_ = false;
+		break;
+	case PlayerBulletType::Lance:
+		//ŠÑ’Ê‚·‚é‚Ì‚Å¶‘¶‚³‚¹‚é
+		break;
+	case PlayerBulletType::Torch:
+		isAlive_ = false;
+		break;
+	default:
+		break;
+	}
+
 	if (!isAlive_)
 	{
 		printfDx("“–‚½‚Á‚½I");
