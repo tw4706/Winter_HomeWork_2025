@@ -12,25 +12,22 @@ namespace
 	constexpr int kAttackInterval = 8;
 }
 
-Animation::Animation(int handle, int frameW, int frameH):
-    handle_(handle),
-    frameW_(frameW),
-    frameH_(frameH),
-    frameCount_(0),
+Animation::Animation(const AnimationInfo& info):
+    handle_(info.handle),
+    frameW_(info.frameWidth),
+    frameH_(info.frameHeight),
+    frameCount_(info.frameCountA),
+    frameInterval_(info.frameIntervalA),
     currentFrame_(0),
-    frameTimer_(0),
-	frameInterval_(0),
-    scale_(0.0f)
+    frameTimer_(0)
 {
 }
 
 Animation::~Animation() {}
 
-void Animation::Init(const AnimationSetting&set)
+void Animation::Init()
 {
     //初期化処理
-	frameCount_ = set.frameCount;
-	frameInterval_ = set.frameInterval;
     Reset();
 }
 
@@ -47,24 +44,6 @@ void Animation::Update()
         currentFrame_ = (currentFrame_ + 1) % frameCount_;
     }
 }
-
-void Animation::Draw(Vector2 pos,float charaSize,bool isTurn,float scrollX)
-{
-    if (handle_ < 0) return;
-    float drawX = pos.x - scrollX - charaSize * 0.5f;
-
-	//描画位置と描画するフレームを計算
-    int srcX = currentFrame_ * frameW_;
-    int srcY = 0;
-
-	//画像の描画
-    DrawRectGraph(static_cast<int>(drawX), //画像の中心
-        static_cast<int>(pos.y - frameH_ / 2),
-        srcX, srcY,
-        frameW_, frameH_,
-        handle_, TRUE,!isTurn);
-}
-
 //アニメーションを最初のフレームにリセットする
 void Animation::Reset()
 {

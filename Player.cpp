@@ -55,26 +55,18 @@ void Player::Init()
 {
 	//初期化処理
 	idleH_ = LoadGraph("data/Player/Idle.png");
-	assert(idleH_ >= 0);
 	attackH_ = LoadGraph("data/Player/Attack.png");
-	assert(attackH_ >= 0);
 
-	playerSetting_ = {
-		{PlayerState::IDLE,{7,7}},
-		{PlayerState::ATTACK,{6,6}},
-	};
+	AnimationInfo idleInfo(idleH_, kGraphWidth, kGraphHeight, 7, 7);
+	AnimationInfo attackInfo(attackH_, kGraphWidth, kGraphHeight, 6, 6);
 
-	//アニメーションを状態ごとに設定
-	idleAnim_ = std::make_shared<Animation>(idleH_, kGraphWidth, kGraphHeight);
-	idleAnim_->Init(playerSetting_[PlayerState::IDLE]);
+	idleAnim_ = std::make_shared<Animation>(idleInfo);
+	attackAnim_ = std::make_shared<Animation>(attackInfo);
+
 	SetAnimationState(PlayerState::IDLE, idleAnim_);
-
-	attackAnim_ = std::make_shared<Animation>(attackH_, kGraphWidth, kGraphHeight);
-	attackAnim_->Init(playerSetting_[PlayerState::ATTACK]);
 	SetAnimationState(PlayerState::ATTACK, attackAnim_);
 
-	currentAnim_ = animMap_[PlayerState::IDLE];
-
+	currentAnim_ = idleAnim_;
 }
 
 void Player::Update()
@@ -151,20 +143,58 @@ void Player::Update(Input& input, BulletManager& bm)
 
 void Player::Draw()
 {
-	//アニメーションの描画
-	float scrollX = pBg_->GetScrollX();
-	float scrollY= pBg_->GetScrollY();
-	currentAnim_->Draw(pos_, kGraphWidth, isTurn_, scrollX);
+	AnimationInfo info = currentAnim_->GetInfo();
+
+	int srcX = info.currentFrameA * info.frameWidth;
+
+	int srcY = 0;
+
+	// 中心座標（回転・拡大の基準）
+	float centerX = info.frameWidth / 2.0f;
+	float centerY = info.frameHeight / 2.0f;
+
+	// 描画位置
+	float drawX = pos_.x + centerX;
+	float drawY = pos_.y - centerY;
+
+	if (isTurn_)
+	{
+		DrawRectRotaGraph3(
+			(int)drawX, (int)drawY,				//描画位置
+			(int)centerX, (int)centerY,			//回転中心
+			srcX, srcY,							//切り出し開始位置
+			info.frameWidth, info.frameHeight,	//切り出しサイズ
+			1.0f, 0.0f,						//拡大率・回転角度
+			info.handle,						//画像ハンドル
+			TRUE,								//透過
+			TRUE								
+			);
+	}
+	else
+	{
+		DrawRectRotaGraph3(
+			(int)drawX, (int)drawY,				//描画位置
+			(int)centerX, (int)centerY,			//回転中心
+			srcX, srcY,							//切り出し開始位置
+			info.frameWidth, info.frameHeight,	//切り出しサイズ
+			1.0f, 0.0f,							//拡大率・回転角度（反転）
+			info.handle,						//画像ハンドル
+			TRUE,								//透過
+			FALSE								
+		);
+	}
+
+
 
 #ifdef _DEBUG
 	if (isDamaged_)
 	{
 		//当たり判定の矩形の色を変える
-		colRect_.DrawScroll(scrollX, scrollY, 0x0000ff, false);
+		colRect_.Draw(0x0000ff, false);
 	}
 	else
 	{
-		colRect_.DrawScroll(scrollX, scrollY, 0xff0000, false);
+		colRect_.Draw(0xff0000, false);
 	}
 #endif
 }

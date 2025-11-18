@@ -29,8 +29,10 @@ protected:
 	int jumpH_;
 	int attackH_;
 	std::map<EnemyState, std::shared_ptr<Animation>>animMap_;
+	std::shared_ptr<Animation> currentAnim_;
+
 	static std::map<std::string,
-		std::map<EnemyState, Animation::AnimationSetting>>enemySettings_;
+		std::map<EnemyState, std::pair<int, int>>> enemySettings_;
 
 public:
 	Enemy(Vector2 pos,Vector2 vel);

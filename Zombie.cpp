@@ -62,29 +62,28 @@ void Zombie::Draw()
 	DrawFormatString(0, 20, GetColor(255, 255, 255), "currentAnim:%p", currentAnim_);
 	DrawFormatString(0, 40, GetColor(255, 255, 255), "pos:(%.2f, %.2f)", pos_.x, pos_.y);
 
-	//if (isTurn_)
-	//{
-	//	DrawRectRotaGraph3(static_cast<int>(pos_.x),
-	//		static_cast<int>(pos_.y),				//描画位置
-	//		0, 0,									//左上の描画開始位置			
-	//		kGraphW, kGraphH,						//描画する矩形のサイズ
-	//		kGraphW / 2, kGraphH / 2,				//回転の中心
-	//		2, 2,									//縦幅と横幅の拡大率
-	//		0,										//回転角度(ラジアン)
-	//		zombieH_, true);
-	//}
-	//else
-	//{
-	//	DrawRectRotaGraph3(static_cast<int>(pos_.x),
-	//		static_cast<int>(pos_.y),				//描画位置
-	//		0, 0,									//左上の描画開始位置			
-	//		kGraphW, kGraphH,						//描画する矩形のサイズ
-	//		kGraphW / 2, kGraphH / 2,				//回転の中心
-	//		2, 2,									//縦幅と横幅の拡大率
-	//		0,										//回転角度(ラジアン)
-	//		zombieH_, true, true);
-	//}
-	DrawAnimation();
+	if (isTurn_)
+	{
+		DrawRectRotaGraph3(static_cast<int>(pos_.x),
+			static_cast<int>(pos_.y),				//描画位置
+			0, 0,									//左上の描画開始位置			
+			kGraphW, kGraphH,						//描画する矩形のサイズ
+			kGraphW / 2, kGraphH / 2,				//回転の中心
+			2, 2,									//縦幅と横幅の拡大率
+			0,										//回転角度(ラジアン)
+			zombieH_, true);
+	}
+	else
+	{
+		DrawRectRotaGraph3(static_cast<int>(pos_.x),
+			static_cast<int>(pos_.y),				//描画位置
+			0, 0,									//左上の描画開始位置			
+			kGraphW, kGraphH,						//描画する矩形のサイズ
+			kGraphW / 2, kGraphH / 2,				//回転の中心
+			2, 2,									//縦幅と横幅の拡大率
+			0,										//回転角度(ラジアン)
+			zombieH_, true, true);
+	}
 #ifdef _DEBUG
 	colRect_.DrawScroll(pBg_->GetScrollX(), pBg_->GetScrollY(), 0xff0000, false);
 #endif
@@ -121,12 +120,4 @@ void Zombie::Move()
 			isTurn_ = true;
 		}
 	}
-}
-
-void Zombie::DrawAnimation()
-{
-	if (!currentAnim_) return; // nullptrチェック
-	if (!pBg_) return;         // 背景ポインタチェック
-	float scrollX = pBg_->GetScrollX();
-	currentAnim_->Draw(pos_, kGraphW, isTurn_, scrollX);
 }

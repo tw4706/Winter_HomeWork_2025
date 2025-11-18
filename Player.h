@@ -50,6 +50,5 @@ private:
 	std::shared_ptr<Animation>attackAnim_;
 	//状態とアニメーションのマップ
 	std::map<PlayerState, std::shared_ptr<Animation>>animMap_;
-	std::map<PlayerState, Animation::AnimationSetting>playerSetting_;
 };
 

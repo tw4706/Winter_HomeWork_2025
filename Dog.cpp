@@ -88,7 +88,7 @@ void Dog::Draw()
 	//DrawAnimation();
 #ifdef _DEBUG
 	//“–‚½‚è”»’è‚Ì•`‰æ
-	colRect_.DrawScroll(pBg_->GetScrollX(), pBg_->GetScrollY(), 0xff0000, false);
+	colRect_.Draw(0xff0000, false);
 #endif
 
 }
@@ -148,13 +148,6 @@ void Dog::Move()
 		//ƒvƒŒƒCƒ„[‚ª‰“‚¢‚Æ‚«‚Í’âŽ~
 		vel_.x = 0.0f;
 	}
-}
-
-void Dog::DrawAnimation()
-{
-	if (!pBg_ || !currentAnim_) return;
-	float scrollX = pBg_->GetScrollX();
-	currentAnim_->Draw(pos_, kGraphW, isTurn_, scrollX);
 }
 
 

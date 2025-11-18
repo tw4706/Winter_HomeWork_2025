@@ -1,22 +1,26 @@
 #pragma once
 #include"Geometry.h"
 
+struct AnimationInfo
+{
+    int handle;     //画像ハンドル
+    int frameWidth;     //フレームの幅
+    int frameHeight;     //フレームの高さ
+    int frameCountA;//総フレーム数
+    int frameIntervalA;//フレームの間隔
+    int currentFrameA;
+};;
+
 class Animation
 {
 public:
-    struct AnimationSetting
-    {
-        int frameCount;//総フレーム数
-        int frameInterval;//フレームの間隔
-    };
 
-	Animation(int handle, int frameW, int frameH);
+	Animation(const AnimationInfo& info);
 	~Animation();
 
-    void Init(const AnimationSetting& set);
+    void Init();
 
 	void Update();
-    void Draw(Vector2 pos, float charaSize, bool isTurn, float scrollX);
 
 	//アニメーションを最初のフレームにリセット
     void Reset();
@@ -27,6 +31,10 @@ public:
     int GetFrameCount() const { return frameCount_; }
 
 
+    AnimationInfo GetInfo() const { return { handle_, frameW_, frameH_, frameCount_, frameInterval_, currentFrame_ };}
+
+
+
 private:
     int handle_;            //画像ハンドル
     int frameW_;            //フレームの幅
@@ -35,6 +43,5 @@ private:
     int currentFrame_;      //現在のフレーム
     int frameTimer_;        //フレーム更新するためのタイマー
 	int frameInterval_;     //フレームの間隔
-    float scale_;           //拡大率
 };
 
