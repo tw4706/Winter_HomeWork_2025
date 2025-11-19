@@ -40,9 +40,9 @@ Player::Player(Vector2 pos, Vector2 vel) :
 	canDoubleJumping_(false),
 	isDamaged_(false),
 	damageTimer_(0),
-	state_(PlayerState::IDLE)
+	state_(PlayerState::Idle)
 {
-	
+	pPlayerAnim_ = std::make_shared<Animation>();
 }
 
 Player::~Player()
@@ -55,18 +55,14 @@ void Player::Init()
 {
 	//初期化処理
 	idleH_ = LoadGraph("data/Player/Idle.png");
+	assert(idleH_ > 0);
+	if (idleH_ == -1)
+	{
+		printfDx("失敗!\n");
+	}
 	attackH_ = LoadGraph("data/Player/Attack.png");
-
-	AnimationInfo idleInfo(idleH_, kGraphWidth, kGraphHeight, 7, 7);
-	AnimationInfo attackInfo(attackH_, kGraphWidth, kGraphHeight, 6, 6);
-
-	idleAnim_ = std::make_shared<Animation>(idleInfo);
-	attackAnim_ = std::make_shared<Animation>(attackInfo);
-
-	SetAnimationState(PlayerState::IDLE, idleAnim_);
-	SetAnimationState(PlayerState::ATTACK, attackAnim_);
-
-	currentAnim_ = idleAnim_;
+	assert(attackH_ > 0);
+	pPlayerAnim_->Init(kGraphWidth, kGraphHeight, 8, 20);
 }
 
 void Player::Update()
@@ -74,8 +70,7 @@ void Player::Update()
 }
 
 void Player::Update(Input& input, BulletManager& bm)
-{
-	
+{	
 	Move(input);
 	// ジャンプ処理
 	if (input.IsTriggered("jump"))
@@ -85,10 +80,8 @@ void Player::Update(Input& input, BulletManager& bm)
 	pos_ += vel_;
 
 	GameObject::Update();
-	colRect_.SetCenter(pos_.x + kGraphWidth / 2,
-		pos_.y - kGraphHeight / 2,
-		kGraphWidth / 4,
-		kGraphHeight / 2);
+	pPlayerAnim_->Update();
+	colRect_.SetCenter(pos_.x,pos_.y,kGraphWidth/2,kGraphHeight/2 + 30);
 
 	//地面の接地判定
 	if (pos_.y >= kGround)
@@ -103,8 +96,6 @@ void Player::Update(Input& input, BulletManager& bm)
 	//弾の発射・更新
 	if (input.IsTriggered("shot"))
 	{
-		SetAnimationState(PlayerState::ATTACK, attackAnim_);
-		animMap_[PlayerState::ATTACK]->Reset();
 		//三項演算子で向きに応じた弾の速度を設定
 		Vector2 bulletVel_ = isTurn_ ? Vector2{ 10.0f,0.0f } : Vector2{ -10.0f,0.0f };
 		auto bullet = std::make_shared<Bullet>(pos_, bulletVel_, PlayerBulletType::Bullet);
@@ -125,67 +116,16 @@ void Player::Update(Input& input, BulletManager& bm)
 		}
 	}
 
-	//アニメーションの更新
-	if(state_==PlayerState::ATTACK&&currentAnim_->
-		GetCurrentFrame() == currentAnim_->GetFrameCount() - 1)
-	{
-		//攻撃アニメーションが終了したら待機状態に戻す
-		SetAnimationState(PlayerState::IDLE, idleAnim_);
-	}
-	UpdateAnimation();
-
 #ifdef _DEBUG
 	//デバッグ用
-	//DrawFormatString(0, 0, GetColor(255, 255, 255), "PlayerX:%f", pos_.x);
-	//DrawFormatString(0, 20, GetColor(255, 255, 255), "VelX:%f", vel_.x);
+	DrawFormatString(0, 0, GetColor(255, 255, 255), "PlayerX:%f", pos_.x);
+	DrawFormatString(0, 20, GetColor(255, 255, 255), "VelX:%f", vel_.x);
 #endif
 }
 
 void Player::Draw()
 {
-	AnimationInfo info = currentAnim_->GetInfo();
-
-	int srcX = info.currentFrameA * info.frameWidth;
-
-	int srcY = 0;
-
-	// 中心座標（回転・拡大の基準）
-	float centerX = info.frameWidth / 2.0f;
-	float centerY = info.frameHeight / 2.0f;
-
-	// 描画位置
-	float drawX = pos_.x + centerX;
-	float drawY = pos_.y - centerY;
-
-	if (isTurn_)
-	{
-		DrawRectRotaGraph3(
-			(int)drawX, (int)drawY,				//描画位置
-			(int)centerX, (int)centerY,			//回転中心
-			srcX, srcY,							//切り出し開始位置
-			info.frameWidth, info.frameHeight,	//切り出しサイズ
-			1.0f, 0.0f,						//拡大率・回転角度
-			info.handle,						//画像ハンドル
-			TRUE,								//透過
-			TRUE								
-			);
-	}
-	else
-	{
-		DrawRectRotaGraph3(
-			(int)drawX, (int)drawY,				//描画位置
-			(int)centerX, (int)centerY,			//回転中心
-			srcX, srcY,							//切り出し開始位置
-			info.frameWidth, info.frameHeight,	//切り出しサイズ
-			1.0f, 0.0f,							//拡大率・回転角度（反転）
-			info.handle,						//画像ハンドル
-			TRUE,								//透過
-			FALSE								
-		);
-	}
-
-
-
+	pPlayerAnim_->Draw(idleH_, pos_.x, pos_.y, 1.0f, 0.0f);
 #ifdef _DEBUG
 	if (isDamaged_)
 	{
@@ -266,23 +206,4 @@ void Player::OnDamage()
 {
 	isDamaged_ = true;
 	damageTimer_ = kDamageDuration;
-}
-
-//アニメーション状態の設定
-void Player::SetAnimationState(PlayerState state, std::shared_ptr<Animation> anim)
-{
-	animMap_[state] = anim;
-	//
-	if(animMap_.count(state))
-	{
-		//状態に応じたアニメーションを設定
-		currentAnim_ = animMap_[state];
-		state_ = state;
-	}
-}
-
-//アニメーションの更新
-void Player::UpdateAnimation()
-{
-	currentAnim_->Update();
 }

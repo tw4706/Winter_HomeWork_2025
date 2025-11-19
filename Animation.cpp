@@ -12,12 +12,12 @@ namespace
 	constexpr int kAttackInterval = 8;
 }
 
-Animation::Animation(const AnimationInfo& info):
-    handle_(info.handle),
-    frameW_(info.frameWidth),
-    frameH_(info.frameHeight),
-    frameCount_(info.frameCountA),
-    frameInterval_(info.frameIntervalA),
+Animation::Animation():
+    handle_(-1),
+    frameW_(0),
+    frameH_(0),
+    frameCount_(0),
+    frameInterval_(0),
     currentFrame_(0),
     frameTimer_(0)
 {
@@ -25,10 +25,14 @@ Animation::Animation(const AnimationInfo& info):
 
 Animation::~Animation() {}
 
-void Animation::Init()
+void Animation::Init(int frameW, int frameH, int frameCount, int interval)
 {
-    //初期化処理
-    Reset();
+    frameW_ = frameW;
+    frameH_ = frameH;
+    frameCount_ = frameCount;
+    frameInterval_ = interval;
+    currentFrame_ = 0;
+    frameTimer_ = 0;
 }
 
 void Animation::Update() 
@@ -39,15 +43,19 @@ void Animation::Update()
 	//タイマーがインターバルを超えたらフレームを進める
     if (frameTimer_ >= frameInterval_) 
     {
-        frameTimer_ = 0;
 		//フレームを進める
         currentFrame_ = (currentFrame_ + 1) % frameCount_;
+        frameTimer_ = 0;
     }
 }
-//アニメーションを最初のフレームにリセットする
-void Animation::Reset()
+
+void Animation::Draw(int handle,int x,int y,float scale,float angle)
 {
-	currentFrame_ = 0;
-	frameTimer_ = 0.0f;
+    int srcX = currentFrame_ * frameW_;
+    int srcY = 0;
+
+    //描画
+    DrawRectRotaGraph3(x, y,frameW_ / 2, frameH_ / 2,srcX,srcY,
+        frameW_,frameH_,scale, angle,handle, TRUE,FALSE);
 }
 

@@ -43,7 +43,6 @@ void Dog::Init()
 	//画像のロード
 	dogH_ = LoadGraph("data/Enemy/dog.png");
 	assert(dogH_ >= 0);
-	InitAnimation("WordDog", dogH_, kGraphW, kGraphH);
 }
 
 void Dog::Update()
@@ -75,17 +74,6 @@ void Dog::Update()
 
 void Dog::Draw()
 {
-	DrawRectRotaGraph3(static_cast<int>(pos_.x),
-		static_cast<int>(pos_.y+20),
-		0, 0,
-		kGraphW,kGraphH,
-		kGraphHalf_W, kGraphHalf_H,
-		1.5, 1.5,
-		0,
-		dogH_, true);
-
-	//アニメーションの描画
-	//DrawAnimation();
 #ifdef _DEBUG
 	//当たり判定の描画
 	colRect_.Draw(0xff0000, false);

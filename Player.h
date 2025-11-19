@@ -7,8 +7,8 @@
 
 enum class PlayerState
 {
-	IDLE,
-	ATTACK
+	Idle,
+	Attack
 };
 
 class Input;
@@ -29,12 +29,6 @@ public:
 	//ダメージを受けた時の処理
 	void OnDamage();
 
-	//アニメーション関連
-	//アニメーションの状態セットする関数
-	void SetAnimationState(PlayerState state,std::shared_ptr<Animation>anim);
-	//アニメーションの更新
-	void UpdateAnimation();
-
 private:
 	int idleH_;//プレイヤーの画像ハンドル
 	int attackH_;//プレイヤーの画像ハンドル
@@ -44,11 +38,7 @@ private:
 	int damageTimer_;//ダメージを受けてからのタイマー
 	//プレイヤーの状態
 	PlayerState state_;
-
-	//各アニメーションのスマートポインタ
-	std::shared_ptr<Animation>idleAnim_;
-	std::shared_ptr<Animation>attackAnim_;
-	//状態とアニメーションのマップ
-	std::map<PlayerState, std::shared_ptr<Animation>>animMap_;
+	//プレイヤーのスマートポインタ
+	std::shared_ptr<Animation>pPlayerAnim_;
 };
 

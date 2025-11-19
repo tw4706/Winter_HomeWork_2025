@@ -15,9 +15,7 @@ protected:
 	Rect colRect_;//当たり判定の矩形
 	bool isTurn_;//反転してるかどうか
 	bool isGround_;//地面に接地しているかどうか
-	float scrollX_;//スクロール量(横スクロールゲームなので一旦横だけ)
 	std::shared_ptr<Bg>pBg_;//背景オブジェクトのポインタ
-	std::shared_ptr<Animation>currentAnim_;
 
 public:
 	GameObject(Vector2 pos,Vector2 vel);

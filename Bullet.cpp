@@ -51,11 +51,14 @@ void Bullet::UpdateShot()
 {
 	switch (bulletType_)
 	{
+		//íZåï
 	case PlayerBulletType::Bullet:
-
 		break;
+		//ëÑ
 	case PlayerBulletType::Lance:
+		//ä—í Ç∑ÇÈÇæÇØÇ»ÇÃÇ≈âΩÇ‡ÇµÇ»Ç¢
 		break;
+		//ÇΩÇ¢Ç‹Ç¬
 	case PlayerBulletType::Torch:
 		//â∫Ç…îÚÇÒÇ≈Ç¢Ç≠
 		vel_.y += 0.3f;
@@ -102,25 +105,15 @@ void Bullet::Draw()
 	float angle = (vel_.x >= 0) ? DX_PI / 2.0f : DX_PI + (DX_PI / 2.0f);
 	DrawRotaGraph(pos_.x, pos_.y + 20, kScale, angle, bulletH_, true);
 #ifdef _DEBUG
-	colRect_.DrawScroll(pBg_->GetScrollX(), pBg_->GetScrollY(), 0xff0000, false);
+	colRect_.Draw(0xff0000, false);
 #endif
 }
 
 void Bullet::OnHit()
 {
-	switch (bulletType_)
+	if (bulletType_ == PlayerBulletType::Bullet)
 	{
-	case PlayerBulletType::Bullet:
-		isAlive_ = false;
-		break;
-	case PlayerBulletType::Lance:
-		//ä—í Ç∑ÇÈÇÃÇ≈ê∂ë∂Ç≥ÇπÇÈ
-		break;
-	case PlayerBulletType::Torch:
-		isAlive_ = false;
-		break;
-	default:
-		break;
+		isAlive_ = true;
 	}
 
 	if (!isAlive_)

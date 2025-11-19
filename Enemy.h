@@ -28,11 +28,6 @@ protected:
 	int idleH_;
 	int jumpH_;
 	int attackH_;
-	std::map<EnemyState, std::shared_ptr<Animation>>animMap_;
-	std::shared_ptr<Animation> currentAnim_;
-
-	static std::map<std::string,
-		std::map<EnemyState, std::pair<int, int>>> enemySettings_;
 
 public:
 	Enemy(Vector2 pos,Vector2 vel);
@@ -55,15 +50,5 @@ public:
 	//弾が当たった時の処理
 	//当たり判定を消す
 	virtual void OnHit() { isDead_ = true; colRect_.SetCenter(-9999, -9999, 0, 0); }
-
-protected:
-	//アニメーションの初期化
-	void InitAnimation(const std::string&enemyType,int handle,int frameW,int frameH);
-
-	//アニメーションの状態をセットする関数
-	void SetAnimationState(EnemyState state, std::shared_ptr<Animation>anim);
-
-	//アニメーションの更新
-	void UpdateAnimation();
 };
 
