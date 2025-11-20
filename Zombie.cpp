@@ -9,8 +9,8 @@
 namespace
 {
 	//グラフィックのサイズ
-	constexpr int kGraphW = 32;
-	constexpr int kGraphH = 48;
+	constexpr int kGraphWidth = 32;
+	constexpr int kGraphHeight = 48;
 
 	//エネミーの移動速度
 	constexpr float kSpeed = 0.5f;

@@ -114,7 +114,7 @@ void GameScene::Draw()
 	(this->*draw_)();
 
 	//ŠeƒNƒ‰ƒX‚Ì•`‰æˆ—
-	bg_->Draw();
+	//bg_->Draw();
 	player_->Draw();
 
 	for (auto& enemy : enemies_)

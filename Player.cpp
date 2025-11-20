@@ -125,7 +125,13 @@ void Player::Update(Input& input, BulletManager& bm)
 
 void Player::Draw()
 {
-	pPlayerAnim_->Draw(idleH_, pos_.x, pos_.y, 1.0f, 0.0f);
+	/*pPlayerAnim_->Draw(idleH_, pos_.x, pos_.y, 1.0f, 0.0f);*/
+	DrawRectRotaGraph3(pos_.x, pos_.y,
+		0, 0,
+		kGraphWidth, kGraphHeight,
+		1.0, 1.0,
+		0,
+		idleH_, TRUE,FALSE,FALSE);
 #ifdef _DEBUG
 	if (isDamaged_)
 	{

@@ -74,6 +74,14 @@ void Dog::Update()
 
 void Dog::Draw()
 {
+	DrawRectRotaGraph3(
+		pos_.x, pos_.y,
+		0, 0,
+		kGraphW, kGraphH,
+		1.0, 1.0,
+		0.0,
+		dogH_,
+		TRUE);
 #ifdef _DEBUG
 	//“–‚½‚è”»’è‚Ì•`‰æ
 	colRect_.Draw(0xff0000, false);

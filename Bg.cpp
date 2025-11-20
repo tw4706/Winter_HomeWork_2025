@@ -40,7 +40,7 @@ void Bg::DrawBg()
 
 	int scrollBg = GetScrollX() % bgSize.w;
 
-	DrawGraph(-scrollBg, pos_.y, handle_, true);
+	//DrawGraph(-scrollBg, pos_.y, handle_, true);
 	if (scrollBg > 0)
 	{
 		DrawGraph(bgSize.w - scrollBg, Game::kScreenHeight - bgSize.h, handle_, true);
