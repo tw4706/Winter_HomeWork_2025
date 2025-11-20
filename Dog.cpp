@@ -8,10 +8,8 @@
 namespace
 {
 	//画像の切り取りサイズ
-	constexpr int kGraphW = 48;
-	constexpr int kGraphH = 48;
-	constexpr int kGraphHalf_W = kGraphW-16;
-	constexpr int kGraphHalf_H = kGraphH-16;
+	constexpr int kGraphSize = 48;
+	constexpr int kGraphHalfSize = kGraphSize -16;
 
 	//当たり判定のサイズ
 	constexpr  int kRectWidth = 32;
@@ -53,7 +51,7 @@ void Dog::Update()
 	pos_ += vel_;
 
 	//当たり判定の更新
-	colRect_.SetCenter(pos_.x,pos_.y+20, kRectWidth, kRectHeight);
+	colRect_.SetCenter(pos_.x,pos_.y+10, kGraphSize+20, kGraphSize);
 
 	//重力
 	GameObject::Gravity();
@@ -74,14 +72,13 @@ void Dog::Update()
 
 void Dog::Draw()
 {
-	DrawRectRotaGraph3(
-		pos_.x, pos_.y,
+	DrawRectRotaGraph3(pos_.x, pos_.y,
 		0, 0,
-		kGraphW, kGraphH,
-		1.0, 1.0,
+		kGraphSize, kGraphSize,
+		kGraphHalfSize, kGraphHalfSize,
+		2.0, 2.0,
 		0.0,
-		dogH_,
-		TRUE);
+		dogH_, true);
 #ifdef _DEBUG
 	//当たり判定の描画
 	colRect_.Draw(0xff0000, false);

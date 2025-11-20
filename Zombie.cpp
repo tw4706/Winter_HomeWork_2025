@@ -54,6 +54,14 @@ void Zombie::Update()
 
 void Zombie::Draw()
 {
+
+	DrawRectRotaGraph3(pos_.x, pos_.y,
+		0, 0,
+		kGraphWidth, kGraphHeight,
+		kGraphWidth / 2, kGraphHeight / 2,
+		2.0,2.0,
+		0.0,
+		zombieH_, true);
 #ifdef _DEBUG
 	colRect_.Draw(0xff0000, false);
 #endif

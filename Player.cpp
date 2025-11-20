@@ -81,7 +81,8 @@ void Player::Update(Input& input, BulletManager& bm)
 
 	GameObject::Update();
 	pPlayerAnim_->Update();
-	colRect_.SetCenter(pos_.x,pos_.y,kGraphWidth/2,kGraphHeight/2 + 30);
+	colRect_.SetCenter(pos_.x,pos_.y+30,kGraphWidth/2,kGraphHeight/2+30);
+
 
 	//’n–Ê‚ÌÚ’n”»’è
 	if (pos_.y >= kGround)
@@ -126,12 +127,27 @@ void Player::Update(Input& input, BulletManager& bm)
 void Player::Draw()
 {
 	/*pPlayerAnim_->Draw(idleH_, pos_.x, pos_.y, 1.0f, 0.0f);*/
-	DrawRectRotaGraph3(pos_.x, pos_.y,
-		0, 0,
-		kGraphWidth, kGraphHeight,
-		1.0, 1.0,
-		0,
-		idleH_, TRUE,FALSE,FALSE);
+	if (isTurn_)
+	{
+		DrawRectRotaGraph3(pos_.x, pos_.y - 20,
+			0, 0,
+			kGraphWidth, kGraphHeight,
+			kGraphWidth / 2, kGraphHeight / 2,
+			1.5, 1.5,
+			0.0,
+			idleH_, true, false, false);
+	}
+	else
+	{
+		DrawRectRotaGraph3(pos_.x, pos_.y - 20,
+			0, 0,
+			kGraphWidth, kGraphHeight,
+			kGraphWidth / 2, kGraphHeight / 2,
+			1.5, 1.5,
+			0.0,
+			idleH_, true, true, false);
+	}
+
 #ifdef _DEBUG
 	if (isDamaged_)
 	{
