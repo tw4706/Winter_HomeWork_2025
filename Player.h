@@ -2,6 +2,7 @@
 #include"GameObject.h"
 #include"Enemy.h"
 #include"Animation.h"
+#include"Bullet.h"
 #include<vector>
 #include<memory>
 
@@ -36,8 +37,10 @@ private:
 	bool canDoubleJumping_;//ダブルジャンプ可能かどうか
 	bool isDamaged_;//ダメージを受けているかどうか
 	int damageTimer_;//ダメージを受けてからのタイマー
+	int shotTimer_;//弾の発射間隔タイマー
 	//プレイヤーの状態
 	PlayerState state_;
+	PlayerBulletType currentBulletType_;//現在の弾の種類
 	//プレイヤーのスマートポインタ
 	std::shared_ptr<Animation>pPlayerAnim_;
 };

@@ -2,6 +2,7 @@
 #include<cassert>
 #include "Player.h"
 #include "Input.h"
+#include"Bullet.h"
 #include"Bg.h"
 #include "BulletManager.h"
 #include"GlobalConstants.h"
@@ -40,7 +41,9 @@ Player::Player(Vector2 pos, Vector2 vel) :
 	canDoubleJumping_(false),
 	isDamaged_(false),
 	damageTimer_(0),
-	state_(PlayerState::Idle)
+	shotTimer_(0),
+	state_(PlayerState::Idle),
+	currentBulletType_(PlayerBulletType::Knife)
 {
 	pPlayerAnim_ = std::make_shared<Animation>();
 }
@@ -94,18 +97,36 @@ void Player::Update(Input& input, BulletManager& bm)
 		canDoubleJumping_ = false;
 	}
 
-	//弾の発射・更新
-	if (input.IsTriggered("shot"))
+#ifdef _DEBUG
+	if (input.IsTriggered("changeWeapon"))
 	{
+		printfDx("武器変えた!\n");
+		int weponType = (static_cast<int>(currentBulletType_) + 1) % 3;
+		currentBulletType_ = static_cast<PlayerBulletType>(weponType);
+	}
+
+#endif
+
+	//弾の発射間隔がある場合はカウントダウン
+	if (shotTimer_ > 0)shotTimer_--;
+
+	//弾の発射・更新
+	if (input.IsTriggered("shot")&&shotTimer_>=0)
+	{
+		const auto&config= kBulletConfigs[
+			static_cast<int>(currentBulletType_)];
 		//三項演算子で向きに応じた弾の速度を設定
-		Vector2 bulletVel_ = isTurn_ ? Vector2{ 10.0f,0.0f } : Vector2{ -10.0f,0.0f };
-		auto bullet = std::make_shared<Bullet>(pos_, bulletVel_, PlayerBulletType::Knife);
+		Vector2 bulletVel_ = isTurn_ ? Vector2{ config.speed,0.0f } : Vector2{ -config.speed,0.0f };
+		auto bullet = std::make_shared<Bullet>(pos_, bulletVel_, currentBulletType_);
 
 		//弾の初期化
 		bullet->Init();
 		bullet->SetBg(pBg_);
 		//弾の追加
 		bm.Init(bullet);
+
+		//発射間隔のリセット
+		shotTimer_ = config.shotInterval;
 	}
 	//無敵時間
 	if (damageTimer_ > 0)

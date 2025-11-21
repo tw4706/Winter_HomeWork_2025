@@ -1,5 +1,6 @@
 #include "BulletManager.h"
 #include "Camera.h"
+#include <Dxlib.h>
 
 namespace
 {

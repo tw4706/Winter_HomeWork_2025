@@ -7,13 +7,8 @@
 
 namespace
 {
+	constexpr int kGround = 500;
 	constexpr float kScale = 1.5f;
-	constexpr BulletConfig kBulletConfigs[] =
-	{
-		{"data/Bullet/lance.png",32,32},//槍
-		{},//ナイフ
-		{}//たいまつ
-	};
 }
 
 Bullet::Bullet(Vector2 pos, Vector2 vel,PlayerBulletType bulletType) :
@@ -36,7 +31,7 @@ void Bullet::Init()
 	const auto& config = kBulletConfigs[static_cast<int>(bulletType_)];
 	bulletH_ = LoadGraph(config.imagePath);
 	assert(bulletH_ >= 0);
-
+	printfDx("画像読み込み: %s ハンドル=%d\n", config.imagePath, bulletH_);
 	//当たり判定の初期化
 	colRect_.SetCenter(pos_.x, pos_.y, config.width, config.height);
 }
@@ -49,6 +44,9 @@ void Bullet::Update()
 //弾の種別ごとの更新処理
 void Bullet::UpdateShot()
 {
+	const auto& config = kBulletConfigs[static_cast<int>(bulletType_)];
+
+	//弾の状態に応じて処理を分岐させる
 	switch (bulletType_)
 	{
 		//短剣
@@ -64,6 +62,16 @@ void Bullet::UpdateShot()
 	case PlayerBulletType::Torch:
 		//下に飛んでいく
 		vel_.y += 0.3f;
+
+		//地面に着地したら消える(波動が出現)
+		if (pos_.y >= kGround)
+		{
+			pos_.y = kGround;
+			vel_ = { 0, 0 };
+			// Torch本体は消える
+			isAlive_ = false;
+		}
+
 		break;
 	default:
 		break;
@@ -106,6 +114,7 @@ void Bullet::Draw()
 	//角度を向きに応じて変更
 	float angle = (vel_.x >= 0) ? DX_PI / 2.0f : DX_PI + (DX_PI / 2.0f);
 	DrawRotaGraph(pos_.x, pos_.y + 20, kScale, angle, bulletH_, true);
+	printfDx("弾描画: 種類=%d x=%f y=%f Alive=%d\n", static_cast<int>(bulletType_), pos_.x, pos_.y, isAlive_);
 #ifdef _DEBUG
 	colRect_.Draw(0xff0000, false);
 #endif
@@ -113,22 +122,11 @@ void Bullet::Draw()
 
 void Bullet::OnHit()
 {
-	switch (bulletType_)
-	{
-	case PlayerBulletType::Knife:
-		isAlive_ = false;
-		break;
-	case PlayerBulletType::Lance:
-		isAlive_ = true;
-		break;
-	case PlayerBulletType::Torch:
-		break;
-	default:
-		break;
-	}
+	const auto& config = kBulletConfigs[static_cast<int>(bulletType_)];
 
-	if (!isAlive_)
+	if (!config.isPiercing)
 	{
-		printfDx("当たった！");
+		//貫通しない弾は当たったら消える
+		isAlive_ = false;
 	}
 }
