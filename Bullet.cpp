@@ -52,13 +52,15 @@ void Bullet::UpdateShot()
 	switch (bulletType_)
 	{
 		//’ZŒ•
-	case PlayerBulletType::Bullet:
+		//’ZŒ•‚Ìê‡‚Í2‰ñ“–‚Ä‚½‚ç“G‚ğ“|‚¹‚é
+	case PlayerBulletType::Knife:
 		break;
 		//‘„
 	case PlayerBulletType::Lance:
 		//ŠÑ’Ê‚·‚é‚¾‚¯‚È‚Ì‚Å‰½‚à‚µ‚È‚¢
 		break;
 		//‚½‚¢‚Ü‚Â
+		//‚½‚¢‚Ü‚Â‚Í’n–Ê‚É—‚¿‚½‚ç”g“®‚ğo‚·
 	case PlayerBulletType::Torch:
 		//‰º‚É”ò‚ñ‚Å‚¢‚­
 		vel_.y += 0.3f;
@@ -111,9 +113,18 @@ void Bullet::Draw()
 
 void Bullet::OnHit()
 {
-	if (bulletType_ == PlayerBulletType::Bullet)
+	switch (bulletType_)
 	{
+	case PlayerBulletType::Knife:
+		isAlive_ = false;
+		break;
+	case PlayerBulletType::Lance:
 		isAlive_ = true;
+		break;
+	case PlayerBulletType::Torch:
+		break;
+	default:
+		break;
 	}
 
 	if (!isAlive_)

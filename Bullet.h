@@ -7,7 +7,7 @@
 //ƒvƒŒƒCƒ„[‚Ì‹Ê‚Ìí•Ê
 enum class PlayerBulletType
 {
-	Bullet,
+	Knife,
 	Lance,
 	Torch
 };

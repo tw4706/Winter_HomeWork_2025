@@ -99,7 +99,7 @@ void Player::Update(Input& input, BulletManager& bm)
 	{
 		//O€‰‰Zq‚ÅŒü‚«‚É‰‚¶‚½’e‚Ì‘¬“x‚ğİ’è
 		Vector2 bulletVel_ = isTurn_ ? Vector2{ 10.0f,0.0f } : Vector2{ -10.0f,0.0f };
-		auto bullet = std::make_shared<Bullet>(pos_, bulletVel_, PlayerBulletType::Bullet);
+		auto bullet = std::make_shared<Bullet>(pos_, bulletVel_, PlayerBulletType::Knife);
 
 		//’e‚Ì‰Šú‰»
 		bullet->Init();

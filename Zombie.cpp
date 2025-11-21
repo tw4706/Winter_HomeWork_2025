@@ -54,14 +54,27 @@ void Zombie::Update()
 
 void Zombie::Draw()
 {
+	if (isTurn_)
+	{
+		DrawRectRotaGraph3(pos_.x, pos_.y,
+			0, 0,
+			kGraphWidth, kGraphHeight,
+			kGraphWidth / 2, kGraphHeight / 2,
+			2.0, 2.0,
+			0.0,
+			zombieH_, true,isTurn_);
+	}
+	else
+	{
+		DrawRectRotaGraph3(pos_.x, pos_.y,
+			0, 0,
+			kGraphWidth, kGraphHeight,
+			kGraphWidth / 2, kGraphHeight / 2,
+			2.0, 2.0,
+			0.0,
+			zombieH_, true,!isTurn_);
+	}
 
-	DrawRectRotaGraph3(pos_.x, pos_.y,
-		0, 0,
-		kGraphWidth, kGraphHeight,
-		kGraphWidth / 2, kGraphHeight / 2,
-		2.0,2.0,
-		0.0,
-		zombieH_, true);
 #ifdef _DEBUG
 	colRect_.Draw(0xff0000, false);
 #endif
@@ -89,13 +102,15 @@ void Zombie::Move()
 	//距離が一定以下の時はプレイヤーに向かって移動
 	if (distance < kDistance)
 	{
-		if (dx < 0) {
+		if (dx < 0) 
+		{
 			pos_.x -= kSpeed;  // 左へ移動
-			isTurn_ = false;
-		}
-		else if (dx > 0) {
-			pos_.x += kSpeed;  // 右へ移動
 			isTurn_ = true;
+		}
+		else if (dx > 0) 
+		{
+			pos_.x += kSpeed;  // 右へ移動
+			isTurn_ = false ;
 		}
 	}
 }

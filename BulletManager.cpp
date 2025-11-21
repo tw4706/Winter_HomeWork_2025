@@ -12,7 +12,7 @@ BulletManager::BulletManager()
 {
 	//弾の数を決める
 	bulletLimits_ = {
-		{PlayerBulletType::Bullet,3},
+		{PlayerBulletType::Knife,3},
 		{PlayerBulletType::Lance,2},
 		{PlayerBulletType::Torch,1}
 	};
@@ -43,7 +43,7 @@ void BulletManager::Update(std::vector<std::shared_ptr<Enemy>>&enemies, Player&p
 		//弾の更新
 		bullet->Update();
 		bullet->UpdateShot();
-		if (bullet->GetType() == PlayerBulletType::Bullet)
+		if (bullet->GetType() == PlayerBulletType::Knife)
 		{
 			for (auto& enemy : enemies)
 			{
@@ -87,7 +87,7 @@ void BulletManager::Draw()
 bool BulletManager::IsPlayerBullet(PlayerBulletType type) const
 {
 	//プレイヤーの弾の種別を返す
-	return	type == PlayerBulletType::Bullet||
+	return	type == PlayerBulletType::Knife||
 			type == PlayerBulletType::Lance	||
 			type == PlayerBulletType::Torch;
 }
