@@ -15,10 +15,12 @@ protected:
 	Rect colRect_;//当たり判定の矩形
 	bool isTurn_;//反転してるかどうか
 	bool isGround_;//地面に接地しているかどうか
+	Vector2 drawOffset_;//描画オフセット
 	std::shared_ptr<Bg>pBg_;//背景オブジェクトのポインタ
 
 public:
-	GameObject(Vector2 pos,Vector2 vel);
+	GameObject();
+	GameObject(Vector2 pos, Vector2 vel);
 	virtual~GameObject();
 
 	virtual void Init() = 0;
@@ -38,5 +40,8 @@ public:
 	void SetBg(std::shared_ptr<Bg>bg) { pBg_ = bg; }
 	//Bgクラスを取得する関数
 	std::shared_ptr<Bg>GetBg() const { return pBg_; }
+	//カメラのオフセット関連
+	void SetDrawOffset(const Vector2& offset) { drawOffset_ = offset; }
+	Vector2 SetCameraOffset(const Vector2& offset) { return drawOffset_ = offset; }
 };
 

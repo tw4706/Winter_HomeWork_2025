@@ -9,13 +9,13 @@ namespace
 	constexpr int kTorchMax = 1;//たいまつの最大数
 }
 
-BulletManager::BulletManager()
+BulletManager::BulletManager():
+	GameObject{}
 {
 	//弾の数を決める
 	bulletLimits_ = {
 		{PlayerBulletType::Knife,3},
-		{PlayerBulletType::Lance,2},
-		{PlayerBulletType::Torch,1}
+		{PlayerBulletType::Lance,2}
 	};
 }
 
@@ -29,9 +29,20 @@ void BulletManager::Init(std::shared_ptr<Bullet> bullets)
 	PlayerBulletType type = bullets->GetType();
 
 	//現在の同じ弾の数をカウント
-	if (bullets_.size() >= bulletLimits_[type]) return;
+	int bulletCount = 0;
+	for (auto& bullet : bullets_)
+	{
+		if (bullet->GetType() == type && bullet->IsAlive())
+		{
+			bulletCount++;
+		}
+	}
 
 	bullets_.push_back(bullets);
+}
+
+void BulletManager::Init()
+{
 }
 
 void BulletManager::Update(std::vector<std::shared_ptr<Enemy>>&enemies, Player&player)
@@ -42,7 +53,6 @@ void BulletManager::Update(std::vector<std::shared_ptr<Enemy>>&enemies, Player&p
 	{
 		if (!bullet->IsAlive())continue;
 		//弾の更新
-		bullet->Update();
 		bullet->UpdateShot();
 		if (bullet->GetType() == PlayerBulletType::Knife)
 		{
@@ -72,6 +82,10 @@ void BulletManager::Update(std::vector<std::shared_ptr<Enemy>>&enemies, Player&p
 		bullets_.end());
 }
 
+void BulletManager::Update()
+{
+}
+
 void BulletManager::Draw()
 {
 	//弾の描画
@@ -81,6 +95,8 @@ void BulletManager::Draw()
 		if (bullet->IsAlive())
 		{
 			bullet->Draw();
+			printfDx("Drawループ: type=%d Alive=%d\n", 
+				static_cast<int>(bullet->GetType()), bullet->IsAlive());
 		}
 	}
 }
@@ -88,7 +104,6 @@ void BulletManager::Draw()
 bool BulletManager::IsPlayerBullet(PlayerBulletType type) const
 {
 	//プレイヤーの弾の種別を返す
-	return	type == PlayerBulletType::Knife||
-			type == PlayerBulletType::Lance	||
-			type == PlayerBulletType::Torch;
+	return	type == PlayerBulletType::Knife ||
+		type == PlayerBulletType::Lance;
 }

@@ -7,28 +7,26 @@
 //ƒvƒŒƒCƒ„[‚Ì‹Ê‚Ìí•Ê
 enum class PlayerBulletType
 {
-	Knife,
 	Lance,
-	Torch
+	Knife
 };
 
 //’e‚Ìî•ñ
 struct BulletConfig
 {
-	const char* imagePath;
-	int width;
-	int height;
-	float speed;		//’e‘¬
-	float shotInterval;	//˜AËŠÔŠu
-	bool isPiercing;	//ŠÑ’Ê‚·‚é‚©‚Ç‚¤‚©
+	const char* imagePath;	//‰æ‘œ
+	int width;				//•
+	int height;				//‚‚³
+	float speed;			//’e‘¬
+	float shotInterval;		//˜AËŠÔŠu
+	bool isPiercing;		//ŠÑ’Ê‚·‚é‚©‚Ç‚¤‚©
 };
 
 //’e‚ÌÚ×î•ñ‚Ì”z—ñ
 constexpr BulletConfig kBulletConfigs[] =
 {
 	{"data/Bullet/Lance.png",32,32,8.0f,30.0f,true},	//‘„
-	{"data/Bullet/Knife.png",32,32,12.0f,10.0f,false},	//’ZŒ•
-	{"data/Bullet/Torch.png",32,32,6.0f,48.0f,false}	//‚½‚¢‚Ü‚Â
+	{"data/Bullet/Knife.png",32,32,12.0f,10.0f,false}	//’ZŒ•
 };
 
 class Input;

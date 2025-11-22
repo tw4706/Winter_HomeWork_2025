@@ -6,11 +6,18 @@ namespace
 	constexpr float kCharaSize = 32.0f;//キャラクターサイズ
 }
 
+GameObject::GameObject():
+	pos_{},
+	vel_{}
+{
+}
+
 GameObject::GameObject(Vector2 pos,Vector2 vel):
 	pos_(pos),
 	vel_(vel),
 	isTurn_(false),
-	isGround_(false)
+	isGround_(false),
+	drawOffset_{}
 {
 
 }

@@ -6,15 +6,17 @@
 #include<memory>
 #include<map>
 
-class BulletManager
+class BulletManager:public GameObject
 {
 public:
 	BulletManager();
 	~BulletManager();
 
 	void Init(std::shared_ptr<Bullet>bullets);
+	void Init()override;
 	void Update(std::vector<std::shared_ptr<Enemy>>&enemies, Player&player);
-	void Draw();
+	void Update()override;
+	void Draw()override;
 
 	//ƒvƒŒƒCƒ„[‚Ì’e‚Ìí•Ê‚ğ”»’è
 	bool IsPlayerBullet(PlayerBulletType type)const;

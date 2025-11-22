@@ -72,7 +72,10 @@ void Dog::Update()
 
 void Dog::Draw()
 {
-	DrawRectRotaGraph3(pos_.x, pos_.y,
+	float drawX = pos_.x + drawOffset_.x;
+	float drawY = pos_.y + drawOffset_.y;
+
+	DrawRectRotaGraph3(drawX, drawY,
 		0, 0,
 		kGraphSize, kGraphSize,
 		kGraphHalfSize, kGraphHalfSize,
@@ -142,7 +145,3 @@ void Dog::Move()
 		vel_.x = 0.0f;
 	}
 }
-
-
-
-

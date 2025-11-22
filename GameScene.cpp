@@ -114,16 +114,20 @@ void GameScene::Draw()
 	(this->*draw_)();
 
 	//ŠeƒNƒ‰ƒX‚Ì•`‰æˆ—
+	Vector2 cameraOffset=camera_->GetOffset();
 	//bg_->Draw();
+	player_->SetCameraOffset(cameraOffset);
 	player_->Draw();
 
 	for (auto& enemy : enemies_)
 	{
 		if (!enemy->IsDead())
 		{
+			enemy->SetCameraOffset(cameraOffset);
 			enemy->Draw();
 		}
 	}
 
+	bulletManager_.SetCameraOffset(cameraOffset);
 	bulletManager_.Draw();
 }

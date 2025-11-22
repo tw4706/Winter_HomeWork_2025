@@ -54,9 +54,13 @@ void Zombie::Update()
 
 void Zombie::Draw()
 {
+
+	float drawX = pos_.x + drawOffset_.x;
+	float drawY = pos_.y + drawOffset_.y;
+
 	if (isTurn_)
 	{
-		DrawRectRotaGraph3(pos_.x, pos_.y,
+		DrawRectRotaGraph3(drawX, drawY,
 			0, 0,
 			kGraphWidth, kGraphHeight,
 			kGraphWidth / 2, kGraphHeight / 2,
@@ -66,7 +70,7 @@ void Zombie::Draw()
 	}
 	else
 	{
-		DrawRectRotaGraph3(pos_.x, pos_.y,
+		DrawRectRotaGraph3(drawX, drawY,
 			0, 0,
 			kGraphWidth, kGraphHeight,
 			kGraphWidth / 2, kGraphHeight / 2,

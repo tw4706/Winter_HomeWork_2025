@@ -101,7 +101,7 @@ void Player::Update(Input& input, BulletManager& bm)
 	if (input.IsTriggered("changeWeapon"))
 	{
 		printfDx("ïêäÌïœÇ¶ÇΩ!\n");
-		int weponType = (static_cast<int>(currentBulletType_) + 1) % 3;
+		int weponType = (static_cast<int>(currentBulletType_) + 1) % 2;
 		currentBulletType_ = static_cast<PlayerBulletType>(weponType);
 	}
 
@@ -147,10 +147,12 @@ void Player::Update(Input& input, BulletManager& bm)
 
 void Player::Draw()
 {
+	float drawX = pos_.x + drawOffset_.x;
+	float drawY = pos_.y + drawOffset_.y;
 	/*pPlayerAnim_->Draw(idleH_, pos_.x, pos_.y, 1.0f, 0.0f);*/
 	if (isTurn_)
 	{
-		DrawRectRotaGraph3(pos_.x, pos_.y - 20,
+		DrawRectRotaGraph3(drawX, drawY - 20,
 			0, 0,
 			kGraphWidth, kGraphHeight,
 			kGraphWidth / 2, kGraphHeight / 2,
@@ -160,7 +162,7 @@ void Player::Draw()
 	}
 	else
 	{
-		DrawRectRotaGraph3(pos_.x, pos_.y - 20,
+		DrawRectRotaGraph3(drawX, drawY-20,
 			0, 0,
 			kGraphWidth, kGraphHeight,
 			kGraphWidth / 2, kGraphHeight / 2,

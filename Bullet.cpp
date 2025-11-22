@@ -44,6 +44,9 @@ void Bullet::Update()
 //弾の種別ごとの更新処理
 void Bullet::UpdateShot()
 {
+
+
+
 	const auto& config = kBulletConfigs[static_cast<int>(bulletType_)];
 
 	//弾の状態に応じて処理を分岐させる
@@ -57,22 +60,6 @@ void Bullet::UpdateShot()
 	case PlayerBulletType::Lance:
 		//貫通するだけなので何もしない
 		break;
-		//たいまつ
-		//たいまつは地面に落ちたら波動を出す
-	case PlayerBulletType::Torch:
-		//下に飛んでいく
-		vel_.y += 0.3f;
-
-		//地面に着地したら消える(波動が出現)
-		if (pos_.y >= kGround)
-		{
-			pos_.y = kGround;
-			vel_ = { 0, 0 };
-			// Torch本体は消える
-			isAlive_ = false;
-		}
-
-		break;
 	default:
 		break;
 	}
@@ -83,12 +70,12 @@ void Bullet::UpdateShot()
 		kBulletConfigs[static_cast<int>(bulletType_)].width, 
 		kBulletConfigs[static_cast<int>(bulletType_)].height);
 
-	// 画面外から出たら消える
-	if (pos_.x<0 || pos_.x>Game::kScreenWidth ||
-		pos_.y<0 || pos_.y>Game::kScreenHeight)
-	{
-		isAlive_ = false;
-	}
+	//// 画面外から出たら消える
+	//if (pos_.x<0 || pos_.x>Game::kScreenWidth ||
+	//	pos_.y<0 || pos_.y>Game::kScreenHeight)
+	//{
+	//	isAlive_ = false;
+	//}
 }
 
 void Bullet::Update(Input& input, std::vector<std::shared_ptr<Enemy>>& enemies)
@@ -111,11 +98,16 @@ void Bullet::Draw()
 {
 	//生きてなかったら描画しない
 	if (!isAlive_)return;
+
+	float drawX = pos_.x + drawOffset_.x;
+	float drawY = pos_.y + drawOffset_.y + 20;
 	//角度を向きに応じて変更
 	float angle = (vel_.x >= 0) ? DX_PI / 2.0f : DX_PI + (DX_PI / 2.0f);
-	DrawRotaGraph(pos_.x, pos_.y + 20, kScale, angle, bulletH_, true);
-	printfDx("弾描画: 種類=%d x=%f y=%f Alive=%d\n", static_cast<int>(bulletType_), pos_.x, pos_.y, isAlive_);
+	DrawRotaGraph(drawX, drawY, kScale, angle, bulletH_, true);
+	
 #ifdef _DEBUG
+	//printfDx("弾描画: 種類=%d x=%f y=%f Alive=%d\n",
+	//static_cast<int>(bulletType_), pos_.x, pos_.y, isAlive_);
 	colRect_.Draw(0xff0000, false);
 #endif
 }

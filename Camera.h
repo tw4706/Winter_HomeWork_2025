@@ -9,6 +9,9 @@ public:
 	void Init();
 	void Update(std::shared_ptr<Player>player);
 
+	//カメラのオフセットを取得
+	Vector2 GetOffset() const { return drawOffset_; }
+
 private:
 	Vector2 pos_;
 	Vector2 drawOffset_;
