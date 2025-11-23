@@ -15,6 +15,9 @@ namespace
 	constexpr  int kRectWidth = 32;
 	constexpr  int kRectHeight = 32;
 
+	constexpr float kDrawW = kGraphSize * 2.0f;
+	constexpr float kDrawH = kGraphSize * 2.0f;
+
 	//ジャンプの高さ
 	constexpr float kJumpPower = 15.0f;
 	//移動速度
@@ -51,7 +54,10 @@ void Dog::Update()
 	pos_ += vel_;
 
 	//当たり判定の更新
-	colRect_.SetCenter(pos_.x,pos_.y+10, kGraphSize+20, kGraphSize);
+	float centerX = pos_.x + drawOffset_.x;
+	float centerY = pos_.y + drawOffset_.y;
+
+	colRect_.SetCenter(centerX, centerY, kDrawW, kDrawH);
 
 	//重力
 	GameObject::Gravity();
@@ -73,7 +79,7 @@ void Dog::Update()
 void Dog::Draw()
 {
 	float drawX = pos_.x + drawOffset_.x;
-	float drawY = pos_.y + drawOffset_.y;
+	float drawY = pos_.y + drawOffset_.y+20;
 
 	DrawRectRotaGraph3(drawX, drawY,
 		0, 0,

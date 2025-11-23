@@ -12,6 +12,10 @@ namespace
 	constexpr int kGraphWidth = 32;
 	constexpr int kGraphHeight = 48;
 
+	//敵の見た目のサイズ
+	constexpr float kDrawW = kGraphWidth * 2.0f;
+	constexpr float kDrawH = kGraphHeight * 2.0f;
+
 	//エネミーの移動速度
 	constexpr float kSpeed = 0.5f;
 
@@ -39,7 +43,12 @@ void Zombie::Update()
 {
 	Enemy::Update();
 	Move();
-	colRect_.SetCenter(pos_.x, pos_.y+20, 32, 64);
+
+	////当たり判定の更新
+	//float centerX = pos_.x + drawOffset_.x;
+	//float centerY = pos_.y + drawOffset_.y;
+
+	//colRect_.SetCenter(centerX, centerY, kDrawW * 0.6f, kDrawH * 0.6f);
 
 	GameObject::Gravity();
 
@@ -50,6 +59,11 @@ void Zombie::Update()
 		vel_.y = 0.0f;
 		isGround_ = true;
 	}
+	// 当たり判定の更新（描画スケールを考慮）
+	constexpr float scale = 2.0f;
+	float centerX = pos_.x + drawOffset_.x;
+	float centerY = pos_.y + drawOffset_.y;
+	colRect_.SetCenter(centerX, centerY, kGraphWidth * scale * 0.6f, kGraphHeight * scale * 0.6f);
 }
 
 void Zombie::Draw()

@@ -60,10 +60,10 @@ void Player::Init()
 	//初期化処理
 	idleH_ = LoadGraph("data/Player/Idle.png");
 	assert(idleH_ > 0);
-	if (idleH_ == -1)
-	{
-		printfDx("失敗!\n");
-	}
+	//if (idleH_ == -1)
+	//{
+	//	printfDx("失敗!\n");
+	//}
 	attackH_ = LoadGraph("data/Player/Attack.png");
 	assert(attackH_ > 0);
 	pPlayerAnim_->Init(kGraphWidth, kGraphHeight, 8, 20);
@@ -117,20 +117,19 @@ void Player::Update(Input& input, BulletManager& bm)
 		const auto& config = kBulletConfigs[
 			static_cast<int>(currentBulletType_)];
 
-
-		// 見た目の描画基準（プレイヤーの描画で使っている値）を使う
-		float spawnBaseX = pos_.x + drawOffset_.x;
-		float spawnBaseY = pos_.y + drawOffset_.y;
-
-		//銃口オフセット：適宜調整してください（xは左右、yは上下）
+		//銃口オフセット
 		constexpr float gunOffsetX = 40.0f;
 		constexpr float gunOffsetY = 20.0f;
 
-		// 向きに応じた発射位置
-		float spawnX = spawnBaseX + (isTurn_ ? gunOffsetX : -gunOffsetX);
-		float spawnY = spawnBaseY + gunOffsetY;
+		// 描画基準座標（プレイヤーの中心）
+		float drawX = pos_.x + drawOffset_.x;
+		float drawY = pos_.y + drawOffset_.y;
 
-		Vector2 spawnPos{ spawnX, spawnY };
+		// 弾の発射位置（中心基準に揃える）
+		float spawnX = drawX + (isTurn_ ? gunOffsetX : -gunOffsetX);
+		float spawnY = drawY + gunOffsetY;
+
+		Vector2 spawnPos = { spawnX, spawnY };
 
 		// 弾の速度（向きに応じて）
 		Vector2 bulletVel = isTurn_ ? Vector2{ config.speed, 0.0f } : Vector2{ -config.speed, 0.0f };

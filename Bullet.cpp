@@ -33,7 +33,8 @@ void Bullet::Init()
 	assert(bulletH_ >= 0);
 
 	//当たり判定の初期化
-	colRect_.SetCenter(pos_.x, pos_.y, config.width, config.height);
+	colRect_.SetCenter(pos_.x + drawOffset_.x,
+		pos_.y + drawOffset_.y, config.width, config.height);
 }
 
 void Bullet::Update()
@@ -63,7 +64,8 @@ void Bullet::UpdateShot()
 
 	pos_ += vel_;
 	//弾の当たり判定を更新
-	colRect_.SetCenter(pos_.x, pos_.y-20, 
+	colRect_.SetCenter(pos_.x + drawOffset_.x,
+		pos_.y + drawOffset_.y,
 		kBulletConfigs[static_cast<int>(bulletType_)].width, 
 		kBulletConfigs[static_cast<int>(bulletType_)].height);
 
@@ -97,7 +99,7 @@ void Bullet::Draw()
 	if (!isAlive_)return;
 
 	float drawX = pos_.x + drawOffset_.x;
-	float drawY = pos_.y + drawOffset_.y-20;
+	float drawY = pos_.y + drawOffset_.y;
 	//角度を向きに応じて変更
 	float angle = (vel_.x >= 0) ? DX_PI / 2.0f : DX_PI + (DX_PI / 2.0f);
 	DrawRotaGraph(drawX, drawY, kScale, angle, bulletH_, true);

@@ -49,33 +49,40 @@ void BulletManager::Update(std::vector<std::shared_ptr<Enemy>>&enemies, Player&p
 {
 	//弾の更新
 	//弾とキャラクターの当たり判定
+
 	for (auto& bullet : bullets_)
 	{
-		if (!bullet->IsAlive())continue;
-		//弾の更新
+
+		if (!bullet->IsAlive()) continue;
+
 		bullet->UpdateShot();
-		if (bullet->GetType() == PlayerBulletType::Knife)
+
+		if (IsPlayerBullet(bullet->GetType()))
 		{
+			// プレイヤー弾 → 敵に当たる
 			for (auto& enemy : enemies)
 			{
-				//プレイヤーの弾が敵に当たった時の処理
-				if (bullet->GetColRect().IsCollision(enemy->GetColRect()))
+				if (!enemy->IsDead() && bullet->GetColRect().IsCollision(enemy->GetColRect()))
 				{
 					bullet->OnHit();
 					enemy->OnHit();
+					printfDx("EnemyHit!\n");
 					break;
 				}
 			}
 		}
-		else//敵の弾がプレイヤーに当たった時の処理
+		else
 		{
+			// 敵弾 → プレイヤーに当たる
 			if (bullet->GetColRect().IsCollision(player.GetColRect()))
 			{
 				bullet->OnHit();
-				break;
+				player.OnDamage();
+				printfDx("PlayerHit!\n");
 			}
 		}
 	}
+
 	//弾の削除
 	bullets_.erase(std::remove_if(bullets_.begin(), bullets_.end(),
 		[](const std::shared_ptr<Bullet>& bullet) { return !bullet->IsAlive(); }),
