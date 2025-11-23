@@ -31,7 +31,7 @@ void Bullet::Init()
 	const auto& config = kBulletConfigs[static_cast<int>(bulletType_)];
 	bulletH_ = LoadGraph(config.imagePath);
 	assert(bulletH_ >= 0);
-	printfDx("画像読み込み: %s ハンドル=%d\n", config.imagePath, bulletH_);
+
 	//当たり判定の初期化
 	colRect_.SetCenter(pos_.x, pos_.y, config.width, config.height);
 }
@@ -44,9 +44,6 @@ void Bullet::Update()
 //弾の種別ごとの更新処理
 void Bullet::UpdateShot()
 {
-
-
-
 	const auto& config = kBulletConfigs[static_cast<int>(bulletType_)];
 
 	//弾の状態に応じて処理を分岐させる
@@ -66,16 +63,16 @@ void Bullet::UpdateShot()
 
 	pos_ += vel_;
 	//弾の当たり判定を更新
-	colRect_.SetCenter(pos_.x, pos_.y + 20, 
+	colRect_.SetCenter(pos_.x, pos_.y-20, 
 		kBulletConfigs[static_cast<int>(bulletType_)].width, 
 		kBulletConfigs[static_cast<int>(bulletType_)].height);
 
-	//// 画面外から出たら消える
-	//if (pos_.x<0 || pos_.x>Game::kScreenWidth ||
-	//	pos_.y<0 || pos_.y>Game::kScreenHeight)
-	//{
-	//	isAlive_ = false;
-	//}
+	// 画面外から出たら消える
+	if (pos_.x<0 || pos_.x>Game::kScreenWidth ||
+		pos_.y<0 || pos_.y>Game::kScreenHeight)
+	{
+		isAlive_ = false;
+	}
 }
 
 void Bullet::Update(Input& input, std::vector<std::shared_ptr<Enemy>>& enemies)
@@ -100,15 +97,13 @@ void Bullet::Draw()
 	if (!isAlive_)return;
 
 	float drawX = pos_.x + drawOffset_.x;
-	float drawY = pos_.y + drawOffset_.y + 20;
+	float drawY = pos_.y + drawOffset_.y-20;
 	//角度を向きに応じて変更
 	float angle = (vel_.x >= 0) ? DX_PI / 2.0f : DX_PI + (DX_PI / 2.0f);
 	DrawRotaGraph(drawX, drawY, kScale, angle, bulletH_, true);
 	
 #ifdef _DEBUG
-	//printfDx("弾描画: 種類=%d x=%f y=%f Alive=%d\n",
-	//static_cast<int>(bulletType_), pos_.x, pos_.y, isAlive_);
-	colRect_.Draw(0xff0000, false);
+	colRect_.DrawAndCamera(drawOffset_, 0xff0000, false);
 #endif
 }
 

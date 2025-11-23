@@ -13,6 +13,7 @@ namespace
 	//プレイヤーの画像サイズ
 	constexpr int kGraphWidth = 128;
 	constexpr int kGraphHeight = 128;
+	constexpr float scale = 1.5f;
 
 	//移動速度 //通常:3
 	constexpr float kSpeed = 5.0f;
@@ -25,9 +26,9 @@ namespace
 	constexpr float kDoubleJumpPower = 6.0f;
 
 	//地面位置
-	constexpr float kGround = 500.0f; 
+	constexpr float kGround = 500.0f;
 	//弾の存在できる数
-	constexpr int kBulletNum = 3; 
+	constexpr int kBulletNum = 3;
 
 	//ダメージを受けたときの無敵時間
 	constexpr int kDamageDuration = 60;
@@ -73,7 +74,7 @@ void Player::Update()
 }
 
 void Player::Update(Input& input, BulletManager& bm)
-{	
+{
 	Move(input);
 	// ジャンプ処理
 	if (input.IsTriggered("jump"))
@@ -84,7 +85,7 @@ void Player::Update(Input& input, BulletManager& bm)
 
 	GameObject::Update();
 	pPlayerAnim_->Update();
-	colRect_.SetCenter(pos_.x,pos_.y+30,kGraphWidth/2,kGraphHeight/2+30);
+	colRect_.SetCenter(pos_.x, pos_.y + 30, kGraphWidth / 2, kGraphHeight / 2 + 30);
 
 
 	//地面の接地判定
@@ -111,13 +112,30 @@ void Player::Update(Input& input, BulletManager& bm)
 	if (shotTimer_ > 0)shotTimer_--;
 
 	//弾の発射・更新
-	if (input.IsTriggered("shot")&&shotTimer_>=0)
+	if (input.IsTriggered("shot") && shotTimer_ <= 0)
 	{
-		const auto&config= kBulletConfigs[
+		const auto& config = kBulletConfigs[
 			static_cast<int>(currentBulletType_)];
-		//三項演算子で向きに応じた弾の速度を設定
-		Vector2 bulletVel_ = isTurn_ ? Vector2{ config.speed,0.0f } : Vector2{ -config.speed,0.0f };
-		auto bullet = std::make_shared<Bullet>(pos_, bulletVel_, currentBulletType_);
+
+
+		// 見た目の描画基準（プレイヤーの描画で使っている値）を使う
+		float spawnBaseX = pos_.x + drawOffset_.x;
+		float spawnBaseY = pos_.y + drawOffset_.y;
+
+		//銃口オフセット：適宜調整してください（xは左右、yは上下）
+		constexpr float gunOffsetX = 40.0f;
+		constexpr float gunOffsetY = 20.0f;
+
+		// 向きに応じた発射位置
+		float spawnX = spawnBaseX + (isTurn_ ? gunOffsetX : -gunOffsetX);
+		float spawnY = spawnBaseY + gunOffsetY;
+
+		Vector2 spawnPos{ spawnX, spawnY };
+
+		// 弾の速度（向きに応じて）
+		Vector2 bulletVel = isTurn_ ? Vector2{ config.speed, 0.0f } : Vector2{ -config.speed, 0.0f };
+
+		auto bullet = std::make_shared<Bullet>(spawnPos, bulletVel, currentBulletType_);
 
 		//弾の初期化
 		bullet->Init();
@@ -138,6 +156,13 @@ void Player::Update(Input& input, BulletManager& bm)
 		}
 	}
 
+	// プレイヤーの基準点（頭）
+	DrawCircle(static_cast<int>(pos_.x + drawOffset_.x),
+		static_cast<int>(pos_.y + drawOffset_.y),
+		5, GetColor(0, 255, 0), true); // 緑丸
+
+
+
 #ifdef _DEBUG
 	//デバッグ用
 	DrawFormatString(0, 0, GetColor(255, 255, 255), "PlayerX:%f", pos_.x);
@@ -152,7 +177,7 @@ void Player::Draw()
 	/*pPlayerAnim_->Draw(idleH_, pos_.x, pos_.y, 1.0f, 0.0f);*/
 	if (isTurn_)
 	{
-		DrawRectRotaGraph3(drawX, drawY - 20,
+		DrawRectRotaGraph3(drawX, drawY,
 			0, 0,
 			kGraphWidth, kGraphHeight,
 			kGraphWidth / 2, kGraphHeight / 2,
@@ -162,7 +187,7 @@ void Player::Draw()
 	}
 	else
 	{
-		DrawRectRotaGraph3(drawX, drawY-20,
+		DrawRectRotaGraph3(drawX, drawY,
 			0, 0,
 			kGraphWidth, kGraphHeight,
 			kGraphWidth / 2, kGraphHeight / 2,
@@ -172,16 +197,22 @@ void Player::Draw()
 	}
 
 #ifdef _DEBUG
-	if (isDamaged_)
-	{
-		//当たり判定の矩形の色を変える
-		colRect_.Draw(0x0000ff, false);
-	}
-	else
-	{
-		colRect_.Draw(0xff0000, false);
-	}
+	//当たり判定の矩形の色を変える
+	colRect_.DrawAndCamera(drawOffset_, isDamaged_ ? 0x0000ff : 0xff0000, false);
+
 #endif
+
+
+#ifdef _DEBUG
+	// プレイヤーの描画範囲を矩形で表示
+	int boxLeft = static_cast<int>(drawX - (kGraphWidth / 2) * 1.5f);
+	int boxTop = static_cast<int>(drawY - (kGraphHeight / 2) * 1.5f);
+	int boxRight = static_cast<int>(drawX + (kGraphWidth / 2) * 1.5f);
+	int boxBottom = static_cast<int>(drawY + (kGraphHeight / 2) * 1.5f);
+
+	DrawBox(boxLeft, boxTop, boxRight, boxBottom, GetColor(0, 255, 255), false);
+#endif
+
 }
 
 //移動処理

@@ -95,8 +95,6 @@ void BulletManager::Draw()
 		if (bullet->IsAlive())
 		{
 			bullet->Draw();
-			printfDx("Drawƒ‹[ƒv: type=%d Alive=%d\n", 
-				static_cast<int>(bullet->GetType()), bullet->IsAlive());
 		}
 	}
 }

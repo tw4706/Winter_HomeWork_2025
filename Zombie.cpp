@@ -80,7 +80,7 @@ void Zombie::Draw()
 	}
 
 #ifdef _DEBUG
-	colRect_.Draw(0xff0000, false);
+	colRect_.DrawAndCamera(drawOffset_,0xff0000, false);
 #endif
 }
 

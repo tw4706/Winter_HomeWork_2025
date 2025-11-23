@@ -84,7 +84,7 @@ void Dog::Draw()
 		dogH_, true);
 #ifdef _DEBUG
 	//“–‚½‚è”»’è‚Ì•`‰æ
-	colRect_.Draw(0xff0000, false);
+	colRect_.DrawAndCamera(drawOffset_, 0xff0000, false);
 #endif
 
 }

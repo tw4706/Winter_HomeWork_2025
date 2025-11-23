@@ -66,11 +66,13 @@ bool Rect::IsCollision(const Rect& rect)const
 	return true;
 }
 
-void Rect::DrawScroll(int scrollX, int scrollY,unsigned int color, bool isFill)
+void Rect::DrawAndCamera(const Vector2& cameraOffset, unsigned int color, bool isFill)
 {
-	int drawL = static_cast<int>(left_) - scrollX;
-	int drawT = static_cast<int>(top_) - scrollY;
-	int drawR = static_cast<int>(right_) - scrollX;
-	int drawB = static_cast<int>(bottom_) - scrollY;
+	//カメラのオフセットを足した描画座標
+	int drawL = static_cast<int>(left_ + cameraOffset.x);
+	int drawT = static_cast<int>(top_ + cameraOffset.y);
+	int drawR = static_cast<int>(right_ + cameraOffset.x);
+	int drawB = static_cast<int>(bottom_ + cameraOffset.y);
+
 	DrawBox(drawL, drawT, drawR, drawB, color, isFill);
 }

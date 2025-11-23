@@ -50,9 +50,6 @@ void Application::Run()
 	controller.ChangeScene(std::make_shared<TitleScene>(controller));
 
 
-	int handle = LoadGraph("data/Player/Idle.png");
-
-
 	while (ProcessMessage() != -1)
 	{
 		// このフレームの開始時間を取得
