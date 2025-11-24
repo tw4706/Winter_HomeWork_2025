@@ -8,13 +8,13 @@
 
 namespace
 {
-	constexpr float kMapWidth = 1000.0f;//マップ全体の幅
+	constexpr float kMapWidth = 3000.0f;//マップ全体の幅
 	constexpr float kMapHeight = 1080.0f;//マップ全体の高さ
 
 	constexpr int kChipSize = 32;//マップチップ1つの大きさ
 
-	constexpr int kChipNumX = 100;
-	constexpr int kChipNumY = 20;
+	constexpr int kChipNumX = 46;
+	constexpr int kChipNumY = 17;
 }
 
 Bg::Bg(std::shared_ptr<Player> player):
@@ -86,7 +86,7 @@ bool Bg::IsCollision(Rect& rect, Rect& chipRect)
 
 void Bg::LoadMapData()
 {
-	std::ifstream file("data/Map/Stage1.csv");
+	std::ifstream file("data/Map/test.csv");
 	std::string line;
 
 	//1行ずつ読み込み
