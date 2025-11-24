@@ -1,7 +1,9 @@
 #pragma once
 #include"Geometry.h"
 #include<memory>
+class Rect;
 class Player;
+class Camera;
 class Bg
 {
 public:
@@ -10,28 +12,46 @@ public:
 
 	void Init();
 
-	void Draw();
+	void Draw(std::shared_ptr<Camera> pCamera);
 
 	/// <summary>
-	/// マップの描画
+	/// 指定した矩形と当たっているかを判定する
 	/// </summary>
-	void DrawBg();
-
-	/// <summary>
-	/// 横のスクロール量を決定する
-	/// </summary>
-	/// <returns>横スクロール量</returns>
-	int GetScrollX();
-
-	/// <summary>
-	/// 縦のスクロール量を決定する
-	/// </summary>
-	/// <returns>縦のスクロール量</returns>
-	int GetScrollY();
+	/// <param name="rect">指定した矩形</param>
+	/// <param name="chiprect">マップチップの矩形</param>
+	/// <returns>当たっているか</returns>
+	bool IsCollision(Rect& rect, Rect& chipRect);
 
 private:
 
-	int handle_;//画像ハンドル
+	/// <summary>
+	/// マップを読み込む
+	/// </summary>
+	void LoadMapData();
+
+	void DrawBg();
+
+	/// <summary>
+	/// マップチップ表示
+	/// </summary>
+	void DrawMapChip(std::shared_ptr<Camera>pCamera);
+
+	int bgHandle_;//背景の画像ハンドル
+	int mapHandle_;//マップチップのハンドル
+	int mapData;//マップデータのハンドル
+	// 画像に含まれるマップチップの数
+	int graphChipNumX_;
+	int graphChipNumY_;
+
+	int mapChipData_[100][20];//マップデータ
+
+	// マップデータのサイズ
+	struct Size
+	{
+		int width;
+		int height;
+	};
+
 	Vector2 pos_;//座標
 	std::shared_ptr<Player>pPlayer_;
 };

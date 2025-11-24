@@ -115,7 +115,7 @@ void GameScene::Draw()
 
 	//ŠeƒNƒ‰ƒX‚Ì•`‰æˆ—
 	Vector2 cameraOffset=camera_->GetOffset();
-	//bg_->Draw();
+	bg_->Draw(camera_);
 	player_->SetCameraOffset(cameraOffset);
 	player_->Draw();
 
