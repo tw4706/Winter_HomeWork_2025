@@ -1,4 +1,0 @@
-個人製作メモ
-
-Torchの放物線 → Update() 内で if (bulletType_ == PlayerBulletType::Torch) を追加し、vel_.y += gravity;。
-Lanceの貫通 → OnHit() で isAlive_ を false にしない。
