@@ -22,7 +22,7 @@ Bg::Bg(std::shared_ptr<Player> player):
 	pPlayer_(player)
 {
 	pPlayer_ = player;
-	mapHandle_ = LoadGraph("Resources/Map/mapChip.png");
+	mapHandle_ = LoadGraph("data/Map/mapChip.png");
 	int graphWidth = 0;
 	int graphHeight = 0;
 	GetGraphSize(mapHandle_, &graphWidth, &graphHeight);
@@ -161,13 +161,13 @@ void Bg::DrawMapChip(std::shared_ptr<Camera>pCamera)
 				mapHandle_, true);
 
 #ifdef _DEBUG
-			//“–‚½‚è”»’è
-			DrawBoxAA(
-				static_cast<int>(x * kChipSize - pCamera->GetOffset().x),
-				static_cast<int>(y * kChipSize - pCamera->GetOffset().y),
-				static_cast<int>(x * kChipSize + kChipSize - pCamera->GetOffset().x),
-				static_cast<int>(y * kChipSize + kChipSize - pCamera->GetOffset().y),
-				GetColor(255, 255, 0), false);
+			////“–‚½‚è”»’è
+			//DrawBoxAA(
+			//	static_cast<int>(x * kChipSize - pCamera->GetOffset().x),
+			//	static_cast<int>(y * kChipSize - pCamera->GetOffset().y),
+			//	static_cast<int>(x * kChipSize + kChipSize - pCamera->GetOffset().x),
+			//	static_cast<int>(y * kChipSize + kChipSize - pCamera->GetOffset().y),
+			//	GetColor(255, 255, 0), false);
 #endif
 		}
 	}

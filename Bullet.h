@@ -50,7 +50,7 @@ public:
 	void Destroy() { isAlive_ = false; }
 	bool IsAlive() const { return isAlive_; }
 	//’e‚ÌŽí—Þ‚ð•Ô‚·
-	PlayerBulletType GetType() const { return bulletType_; }
+	const PlayerBulletType& GetType() const { return bulletType_; }
 
 private:
 	Vector2 pos_;		//ˆÊ’u
