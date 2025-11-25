@@ -13,8 +13,8 @@ namespace
 
 	constexpr int kChipSize = 32;//マップチップ1つの大きさ
 
-	constexpr int kChipNumX = 46;
-	constexpr int kChipNumY = 17;
+	constexpr int kChipNumX = 50;
+	constexpr int kChipNumY = 20;
 }
 
 Bg::Bg(std::shared_ptr<Player> player):
@@ -86,7 +86,16 @@ bool Bg::IsCollision(Rect& rect, Rect& chipRect)
 
 void Bg::LoadMapData()
 {
-	std::ifstream file("data/Map/test.csv");
+	//配列を初期化
+	for (int x = 0; x < kChipNumX; ++x)
+	{
+		for (int y = 0; y < kChipNumY; ++y)
+		{
+			mapChipData_[x][y] = 0;
+		}
+	}
+
+	std::ifstream file("data/Map/Stage1.csv");
 	std::string line;
 
 	//1行ずつ読み込み
@@ -103,17 +112,8 @@ void Bg::LoadMapData()
 		int x = 0;
 		while (std::getline(stream, field, ',') && x < kChipNumX)
 		{
-			if (!field.empty()) {
-				try {
-					mapChipData_[x][y] = std::stoi(field);
-				}
-				catch (...) {
-					mapChipData_[x][y] = 0; // エラー時は0
-				}
-			}
-			else {
-				mapChipData_[x][y] = 0;
-			}
+			// 文字列をint型に変換してm_chipDataに追加する
+			mapChipData_[x][y] = std::stoi(field);
 			x++;
 		}
 		y++;
@@ -125,7 +125,6 @@ void Bg::DrawBg()
 {
 	Size bgSize = { 0,0 };
 	GetGraphSize(mapHandle_, &bgSize.width, &bgSize.height);
-	printfDx("Graph size: %d x %d\n", bgSize.width, bgSize.height);
 }
 
 void Bg::DrawMapChip(std::shared_ptr<Camera>pCamera)
@@ -135,8 +134,8 @@ void Bg::DrawMapChip(std::shared_ptr<Camera>pCamera)
 		for (int x = 0; x < kChipNumX; x++)
 		{
 
-			int posX = static_cast<int>(x * kChipSize +pCamera->GetOffset().x);
-			int posY = static_cast<int>(y * kChipSize +pCamera->GetOffset().y);
+			int posX = static_cast<int>(x * kChipSize + pCamera->GetOffset().x);
+			int posY = static_cast<int>(y * kChipSize + pCamera->GetOffset().y);
 
 			//画面外のものは描画しない
 			if (posX < 0 - kChipSize)continue;
@@ -149,7 +148,7 @@ void Bg::DrawMapChip(std::shared_ptr<Camera>pCamera)
 
 			//マップチップの切り出し座標
 			int srcX = kChipSize * (chipNum % graphChipNumX_);
-			int srcY = kChipSize * (chipNum / graphChipNumY_);
+			int srcY = kChipSize * (chipNum / graphChipNumX_);
 
 			//マップチップの描画
 			DrawRectRotaGraph(
@@ -161,13 +160,13 @@ void Bg::DrawMapChip(std::shared_ptr<Camera>pCamera)
 				mapHandle_, true);
 
 #ifdef _DEBUG
-			////当たり判定
-			//DrawBoxAA(
-			//	static_cast<int>(x * kChipSize - pCamera->GetOffset().x),
-			//	static_cast<int>(y * kChipSize - pCamera->GetOffset().y),
-			//	static_cast<int>(x * kChipSize + kChipSize - pCamera->GetOffset().x),
-			//	static_cast<int>(y * kChipSize + kChipSize - pCamera->GetOffset().y),
-			//	GetColor(255, 255, 0), false);
+			//当たり判定
+			DrawBoxAA(
+				static_cast<int>(x * kChipSize - pCamera->GetOffset().x),
+				static_cast<int>(y * kChipSize - pCamera->GetOffset().y),
+				static_cast<int>(x * kChipSize + kChipSize - pCamera->GetOffset().x),
+				static_cast<int>(y * kChipSize + kChipSize - pCamera->GetOffset().y),
+				GetColor(255, 255, 0), false);
 #endif
 		}
 	}
