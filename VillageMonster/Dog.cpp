@@ -42,7 +42,7 @@ Dog::~Dog()
 void Dog::Init()
 {
 	//‰æ‘œ‚Ìƒ[ƒh
-	dogH_ = LoadGraph("../data/Enemy/dog.png");
+	dogH_ = LoadGraph("data/Enemy/dog.png");
 	assert(dogH_ >= 0);
 }
 
@@ -92,7 +92,6 @@ void Dog::Draw()
 	//“–‚½‚è”»’è‚Ì•`‰æ
 	colRect_.DrawAndCamera(drawOffset_, 0xff0000, false);
 #endif
-
 }
 
 void Dog::Attack()
@@ -121,7 +120,6 @@ void Dog::Move()
 		{
 			vel_.y = -kJumpPower;
 			timer_ = 0.0f;
-
 
 			if (dx > 0)
 			{

@@ -34,7 +34,7 @@ private:
 	int idleH_;//プレイヤーの画像ハンドル
 	int attackH_;//プレイヤーの画像ハンドル
 	bool isJumping_;//ジャンプしているかどうか
-	bool canDoubleJumping_;//ダブルジャンプ可能かどうか
+	bool isDoubleJumping_;//ダブルジャンプ可能かどうか
 	bool isDamaged_;//ダメージを受けているかどうか
 	int damageTimer_;//ダメージを受けてからのタイマー
 	int shotTimer_;//弾の発射間隔タイマー

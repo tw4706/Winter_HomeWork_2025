@@ -12,11 +12,6 @@ public:
 	void Update();
     void Draw(int handle, int x, int y, float scale, float angle);
 
-	//現在のフレームを取得
-    int GetCurrentFrame() const { return currentFrame_; }
-	//総フレーム数を取得
-    int GetFrameCount() const { return frameCount_; }
-
 private:
     int handle_;            //画像ハンドル
     int frameW_;            //フレームの幅

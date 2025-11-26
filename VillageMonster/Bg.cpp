@@ -12,6 +12,7 @@ namespace
 	constexpr float kMapHeight = 1080.0f;//マップ全体の高さ
 
 	constexpr int kChipSize = 16;//マップチップ1つの大きさ
+	constexpr float kScale = 1.5f;
 
 	constexpr int kChipNumX = 100;
 	constexpr int kChipNumY = 20;
@@ -22,7 +23,7 @@ Bg::Bg(std::shared_ptr<Player> player):
 	pPlayer_(player)
 {
 	pPlayer_ = player;
-	mapHandle_ = LoadGraph("../data/Map/mapChip.png");
+	mapHandle_ = LoadGraph("data/Map/mapChip.png");
 	int graphWidth = 0;
 	int graphHeight = 0;
 	GetGraphSize(mapHandle_, &graphWidth, &graphHeight);
@@ -95,7 +96,7 @@ void Bg::LoadMapData()
 		}
 	}
 
-	std::ifstream file("../data/Map/Stage1.csv");
+	std::ifstream file("data/Map/Stage1.csv");
 	std::string line;
 
 	//1行ずつ読み込み
@@ -150,21 +151,21 @@ void Bg::DrawMapChip(std::shared_ptr<Camera>pCamera)
 
 			//マップチップの描画
 			DrawRectRotaGraph(
-				static_cast<int>(posX + kChipSize* 0.5f),
-				static_cast<int>(posY + kChipSize* 0.5f),
+				static_cast<int>(posX + kChipSize * 0.5f),
+				static_cast<int>(posY + kChipSize * 0.5f),
 				srcX, srcY,
 				kChipSize, kChipSize,
-				1.0f, 0.0f,
+				2.0f, 0.0f,
 				mapHandle_, true);
 
 #ifdef _DEBUG
 			//当たり判定
-			DrawBoxAA(
-				static_cast<int>(x * kChipSize - pCamera->GetOffset().x),
-				static_cast<int>(y * kChipSize - pCamera->GetOffset().y),
-				static_cast<int>(x * kChipSize + kChipSize - pCamera->GetOffset().x),
-				static_cast<int>(y * kChipSize + kChipSize - pCamera->GetOffset().y),
-				GetColor(255, 255, 0), false);
+			//DrawBoxAA(
+			//	static_cast<int>(x * kChipSize - pCamera->GetOffset().x),
+			//	static_cast<int>(y * kChipSize - pCamera->GetOffset().y),
+			//	static_cast<int>(x * kChipSize + kChipSize - pCamera->GetOffset().x),
+			//	static_cast<int>(y * kChipSize + kChipSize - pCamera->GetOffset().y),
+			//	GetColor(255, 255, 0), false);
 #endif
 		}
 	}

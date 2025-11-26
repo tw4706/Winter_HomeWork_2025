@@ -39,7 +39,7 @@ Player::Player(Vector2 pos, Vector2 vel) :
 	idleH_(-1),
 	attackH_(-1),
 	isJumping_(false),
-	canDoubleJumping_(false),
+	isDoubleJumping_(false),
 	isDamaged_(false),
 	damageTimer_(0),
 	shotTimer_(0),
@@ -58,13 +58,13 @@ Player::~Player()
 void Player::Init()
 {
 	//初期化処理
-	idleH_ = LoadGraph("../data/Player/Idle.png");
+	idleH_ = LoadGraph("data/Player/Idle.png");
 	assert(idleH_ >0);
 	//if (idleH_ == -1)
 	//{
 	//	printfDx("失敗!\n");
 	//}
-	attackH_ = LoadGraph("../data/Player/Attack.png");
+	attackH_ = LoadGraph("data/Player/Attack.png");
 	assert(attackH_ > 0);
 	pPlayerAnim_->Init(kGraphWidth, kGraphHeight, 8, 20);
 }
@@ -95,7 +95,7 @@ void Player::Update(Input& input, BulletManager& bm)
 		vel_.y = 0.0f;//速度を0に
 		isGround_ = true;
 		isJumping_ = false;
-		canDoubleJumping_ = false;
+		isDoubleJumping_ = false;
 	}
 
 #ifdef _DEBUG
@@ -220,7 +220,7 @@ void Player::Move(Input& input)
 	//スクロールに応じた移動制限
 
 	//地面にいるときかつダブルジャンプが可能な時
-	if (isGround_ || canDoubleJumping_)
+	if (isGround_ || isDoubleJumping_)
 	{
 		if (input.IsPressed("left"))
 		{
@@ -264,15 +264,15 @@ void Player::Jump(Input& input)
 	{
 		vel_.y = -kJumpPower;
 		isGround_ = false;
-		canDoubleJumping_ = true;
+		isDoubleJumping_ = true;
 		return;
 	}
 
 	// 二段ジャンプ
-	if (canDoubleJumping_)
+	if (isDoubleJumping_)
 	{
 		vel_.y = -kDoubleJumpPower;
-		canDoubleJumping_ = false;
+		isDoubleJumping_ = false;
 	}
 }
 
