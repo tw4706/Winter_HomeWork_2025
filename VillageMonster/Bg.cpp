@@ -11,7 +11,7 @@ namespace
 	constexpr float kMapWidth = 3000.0f;//マップ全体の幅
 	constexpr float kMapHeight = 1080.0f;//マップ全体の高さ
 
-	constexpr int kChipSize = 32;//マップチップ1つの大きさ
+	constexpr int kChipSize = 16;//マップチップ1つの大きさ
 
 	constexpr int kChipNumX = 100;
 	constexpr int kChipNumY = 20;
@@ -22,7 +22,7 @@ Bg::Bg(std::shared_ptr<Player> player):
 	pPlayer_(player)
 {
 	pPlayer_ = player;
-	mapHandle_ = LoadGraph("data/Map/mapChip.png");
+	mapHandle_ = LoadGraph("../data/Map/mapChip.png");
 	int graphWidth = 0;
 	int graphHeight = 0;
 	GetGraphSize(mapHandle_, &graphWidth, &graphHeight);
@@ -95,7 +95,7 @@ void Bg::LoadMapData()
 		}
 	}
 
-	std::ifstream file("data/Map/Stage1.csv");
+	std::ifstream file("../data/Map/Stage1.csv");
 	std::string line;
 
 	//1行ずつ読み込み

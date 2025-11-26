@@ -58,13 +58,13 @@ Player::~Player()
 void Player::Init()
 {
 	//‰Šú‰»ˆ—
-	idleH_ = LoadGraph("data/Player/Idle.png");
+	idleH_ = LoadGraph("../data/Player/Idle.png");
 	assert(idleH_ >0);
 	//if (idleH_ == -1)
 	//{
 	//	printfDx("Ž¸”s!\n");
 	//}
-	attackH_ = LoadGraph("data/Player/Attack.png");
+	attackH_ = LoadGraph("../data/Player/Attack.png");
 	assert(attackH_ > 0);
 	pPlayerAnim_->Init(kGraphWidth, kGraphHeight, 8, 20);
 }

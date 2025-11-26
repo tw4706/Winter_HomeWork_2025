@@ -42,7 +42,7 @@ Dog::~Dog()
 void Dog::Init()
 {
 	//‰æ‘œ‚Ìƒ[ƒh
-	dogH_ = LoadGraph("data/Enemy/dog.png");
+	dogH_ = LoadGraph("../data/Enemy/dog.png");
 	assert(dogH_ >= 0);
 }
 
