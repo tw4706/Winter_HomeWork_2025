@@ -14,8 +14,8 @@ namespace
 	constexpr int kChipSize = 16;//マップチップ1つの大きさ
 	constexpr float kScale = 1.5f;
 
-	constexpr int kChipNumX = 100;
-	constexpr int kChipNumY = 20;
+	constexpr int kChipNumX = 200;
+	constexpr int kChipNumY = 40;
 }
 
 Bg::Bg(std::shared_ptr<Player> player):
