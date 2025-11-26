@@ -11,9 +11,9 @@ namespace
 	constexpr float kMapWidth = 3000.0f;//マップ全体の幅
 	constexpr float kMapHeight = 1080.0f;//マップ全体の高さ
 
-	constexpr int kChipSize = 16;//マップチップ1つの大きさ
+	constexpr int kChipSize = 32;//マップチップ1つの大きさ
 
-	constexpr int kChipNumX = 50;
+	constexpr int kChipNumX = 100;
 	constexpr int kChipNumY = 20;
 }
 
@@ -84,42 +84,35 @@ bool Bg::IsCollision(Rect& rect, Rect& chipRect)
 	return false;
 }
 
-
 void Bg::LoadMapData()
 {
-	// まずサイズを確保
-	mapChipData_.resize(kChipNumX);
-	for (int x = 0; x < kChipNumX; ++x) {
-		mapChipData_[x].resize(kChipNumY, 0);
+	//配列を初期化
+	for (int x = 0; x < kChipNumX; ++x)
+	{
+		for (int y = 0; y < kChipNumY; ++y)
+		{
+			mapChipData_[x][y] = 0;
+		}
 	}
 
 	std::ifstream file("data/Map/Stage1.csv");
-	if (!file.is_open()) {
-		printf("CSVファイルが開けませんでした\n");
-		return;
-	}
-
 	std::string line;
-	int y = 0;
 
+	//1行ずつ読み込み
+	int y = 0;
 	while (std::getline(file, line) && y < kChipNumY)
 	{
 		if (line.find_first_not_of("0123456789,") != std::string::npos) {
-			continue; // 不正な行はスキップ
+			continue;
 		}
 
 		std::stringstream stream(line);
 		std::string field;
 		int x = 0;
-
 		while (std::getline(stream, field, ',') && x < kChipNumX)
 		{
-			try {
-				mapChipData_[x][y] = std::stoi(field);
-			}
-			catch (...) {
-				mapChipData_[x][y] = 0; // 変換失敗時は0
-			}
+			// 文字列をint型に変換してm_chipDataに追加する
+			mapChipData_[x][y] = std::stoi(field);
 			x++;
 		}
 		y++;
@@ -134,41 +127,36 @@ void Bg::DrawBg()
 
 void Bg::DrawMapChip(std::shared_ptr<Camera>pCamera)
 {
-	float scale = 2.0f; // 16px → 32px（見やすくする）
-	float camLeft = -pCamera->GetOffset().x;
-	float camRight = camLeft + Game::kScreenWidth;
-	float camTop = -pCamera->GetOffset().y;
-	float camBottom = camTop + Game::kScreenHeight;
-
-	for (int y = 0; y < kChipNumY; y++)
+	for(int y = 0; y < kChipNumY; y++)
 	{
 		for (int x = 0; x < kChipNumX; x++)
 		{
-			float chipLeft = x * kChipSize * scale;
-			float chipRight = chipLeft + kChipSize * scale;
-			float chipTop = y * kChipSize * scale;
-			float chipBottom = chipTop + kChipSize * scale;
 
-			if (chipRight < camLeft || chipLeft > camRight ||
-				chipBottom < camTop || chipTop > camBottom)
-			{
-				continue;
-			}
+			int posX = static_cast<int>(x * kChipSize + pCamera->GetOffset().x);
+			int posY = static_cast<int>(y * kChipSize + pCamera->GetOffset().y);
 
-			int posX = static_cast<int>(chipLeft + pCamera->GetOffset().x);
-			int posY = static_cast<int>(chipTop + pCamera->GetOffset().y);
+			//画面外のものは描画しない
+			if (posX < 0 - kChipSize)continue;
+			if (posX > Game::kScreenWidth)continue;
+			if (posY < 0 - kChipSize)continue;
+			if (posY > Game::kScreenHeight)continue;
 
+			//マップチップ番号を取得
 			int chipNum = mapChipData_[x][y];
+
+			//マップチップの切り出し座標
 			int srcX = kChipSize * (chipNum % graphChipNumX_);
 			int srcY = kChipSize * (chipNum / graphChipNumX_);
 
+			//マップチップの描画
 			DrawRectRotaGraph(
-				posX + (kChipSize * scale) / 2,
-				posY + (kChipSize * scale) / 2,
+				static_cast<int>(posX + kChipSize* 0.5f),
+				static_cast<int>(posY + kChipSize* 0.5f),
 				srcX, srcY,
 				kChipSize, kChipSize,
-				scale, 0.0f,
+				1.0f, 0.0f,
 				mapHandle_, true);
+
 #ifdef _DEBUG
 			//当たり判定
 			DrawBoxAA(

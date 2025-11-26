@@ -63,7 +63,7 @@ void GameScene::NormalDraw()
 void GameScene::Init()
 {
 	//各クラスの初期化
-	bg_->Init();
+	//bg_->Init();
 	camera_->Init();
 	player_->Init();
 	player_->SetBg(bg_);
@@ -115,7 +115,7 @@ void GameScene::Draw()
 
 	//各クラスの描画処理
 	Vector2 cameraOffset=camera_->GetOffset();
-	bg_->Draw(camera_);
+	//bg_->Draw(camera_);
 	player_->SetCameraOffset(cameraOffset);
 	player_->Draw();
 

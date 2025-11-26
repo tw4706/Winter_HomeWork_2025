@@ -1,7 +1,6 @@
 #pragma once
 #include"Geometry.h"
 #include<memory>
-#include<vector>
 class Rect;
 class Player;
 class Camera;
@@ -44,8 +43,7 @@ private:
 	int graphChipNumX_;
 	int graphChipNumY_;
 
-	//int mapChipData_[100][20];//マップデータ
-	std::vector<std::vector<int>>mapChipData_;//マップデータ
+	int mapChipData_[100][20];//マップデータ
 
 	// マップデータのサイズ
 	struct Size

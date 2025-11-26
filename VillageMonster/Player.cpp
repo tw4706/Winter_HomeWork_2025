@@ -59,7 +59,7 @@ void Player::Init()
 {
 	//‰Šú‰»ˆ—
 	idleH_ = LoadGraph("data/Player/Idle.png");
-	assert(idleH_ > 0);
+	assert(idleH_ >0);
 	//if (idleH_ == -1)
 	//{
 	//	printfDx("Ž¸”s!\n");
