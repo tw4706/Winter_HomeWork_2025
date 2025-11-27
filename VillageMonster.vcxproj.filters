@@ -48,123 +48,123 @@
     <ClCompile Include="main.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Player.cpp">
+    <ClCompile Include="Actor\Player.cpp">
       <Filter>ソース ファイル\ActorCPP</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject.cpp">
+    <ClCompile Include="Actor\GameObject.cpp">
       <Filter>ソース ファイル\BaseClassCPP</Filter>
     </ClCompile>
-    <ClCompile Include="Geometry.cpp">
+    <ClCompile Include="Physics\Geometry.cpp">
       <Filter>ソース ファイル\SystemCPP</Filter>
     </ClCompile>
-    <ClCompile Include="Input.cpp">
+    <ClCompile Include="System\Input.cpp">
       <Filter>ソース ファイル\SystemCPP</Filter>
     </ClCompile>
-    <ClCompile Include="Rect.cpp">
+    <ClCompile Include="Physics\Rect.cpp">
       <Filter>ソース ファイル\SystemCPP</Filter>
     </ClCompile>
-    <ClCompile Include="Application.cpp">
+    <ClCompile Include="System\Application.cpp">
       <Filter>ソース ファイル\ApplicationCPP</Filter>
     </ClCompile>
-    <ClCompile Include="Scene.cpp">
+    <ClCompile Include="Scene\Scene.cpp">
       <Filter>ソース ファイル\ScenesCPP</Filter>
     </ClCompile>
-    <ClCompile Include="TitleScene.cpp">
+    <ClCompile Include="Scene\TitleScene.cpp">
       <Filter>ソース ファイル\ScenesCPP</Filter>
     </ClCompile>
-    <ClCompile Include="SceneController.cpp">
+    <ClCompile Include="Scene\SceneController.cpp">
       <Filter>ソース ファイル\ScenesCPP</Filter>
     </ClCompile>
-    <ClCompile Include="GameScene.cpp">
+    <ClCompile Include="Scene\GameScene.cpp">
       <Filter>ソース ファイル\ScenesCPP</Filter>
     </ClCompile>
-    <ClCompile Include="Bullet.cpp">
+    <ClCompile Include="Actor\Bullet.cpp">
       <Filter>ソース ファイル\ActorCPP</Filter>
     </ClCompile>
-    <ClCompile Include="Enemy.cpp">
+    <ClCompile Include="Actor\Enemy.cpp">
       <Filter>ソース ファイル\BaseClassCPP</Filter>
     </ClCompile>
-    <ClCompile Include="Dog.cpp">
+    <ClCompile Include="Actor\Dog.cpp">
       <Filter>ソース ファイル\ActorCPP</Filter>
     </ClCompile>
-    <ClCompile Include="Skull.cpp">
+    <ClCompile Include="Actor\Skull.cpp">
       <Filter>ソース ファイル\ActorCPP</Filter>
     </ClCompile>
-    <ClCompile Include="Zombie.cpp">
+    <ClCompile Include="Actor\Zombie.cpp">
       <Filter>ソース ファイル\ActorCPP</Filter>
     </ClCompile>
-    <ClCompile Include="BulletManager.cpp">
+    <ClCompile Include="Manager\BulletManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Animation.cpp">
+    <ClCompile Include="System\Animation.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Bg.cpp">
+    <ClCompile Include="System\Bg.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
+    <ClCompile Include="System\Camera.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Player.h">
+    <ClInclude Include="Actor\Player.h">
       <Filter>ヘッダー ファイル\ActorH</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject.h">
+    <ClInclude Include="Actor\GameObject.h">
       <Filter>ヘッダー ファイル\BaseClassH</Filter>
     </ClInclude>
-    <ClInclude Include="Geometry.h">
+    <ClInclude Include="Physics\Geometry.h">
       <Filter>ヘッダー ファイル\SystemH</Filter>
     </ClInclude>
     <ClInclude Include="GlobalConstants.h">
       <Filter>ヘッダー ファイル\SystemH</Filter>
     </ClInclude>
-    <ClInclude Include="Input.h">
+    <ClInclude Include="System\Input.h">
       <Filter>ヘッダー ファイル\SystemH</Filter>
     </ClInclude>
-    <ClInclude Include="Rect.h">
+    <ClInclude Include="Physics\Rect.h">
       <Filter>ヘッダー ファイル\SystemH</Filter>
     </ClInclude>
-    <ClInclude Include="Application.h">
+    <ClInclude Include="System\Application.h">
       <Filter>ヘッダー ファイル\ApplicationH</Filter>
     </ClInclude>
-    <ClInclude Include="Scene.h">
+    <ClInclude Include="Scene\Scene.h">
       <Filter>ヘッダー ファイル\ScenesH</Filter>
     </ClInclude>
-    <ClInclude Include="SceneController.h">
+    <ClInclude Include="Scene\SceneController.h">
       <Filter>ヘッダー ファイル\ScenesH</Filter>
     </ClInclude>
-    <ClInclude Include="TitleScene.h">
+    <ClInclude Include="Scene\TitleScene.h">
       <Filter>ヘッダー ファイル\ScenesH</Filter>
     </ClInclude>
-    <ClInclude Include="GameScene.h">
+    <ClInclude Include="Scene\GameScene.h">
       <Filter>ヘッダー ファイル\ScenesH</Filter>
     </ClInclude>
-    <ClInclude Include="Bullet.h">
+    <ClInclude Include="Actor\Bullet.h">
       <Filter>ヘッダー ファイル\ActorH</Filter>
     </ClInclude>
-    <ClInclude Include="Enemy.h">
+    <ClInclude Include="Actor\Enemy.h">
       <Filter>ヘッダー ファイル\BaseClassH</Filter>
     </ClInclude>
-    <ClInclude Include="Dog.h">
+    <ClInclude Include="Actor\Dog.h">
       <Filter>ヘッダー ファイル\ActorH</Filter>
     </ClInclude>
-    <ClInclude Include="Skull.h">
+    <ClInclude Include="Actor\Skull.h">
       <Filter>ヘッダー ファイル\ActorH</Filter>
     </ClInclude>
-    <ClInclude Include="Zombie.h">
+    <ClInclude Include="Actor\Zombie.h">
       <Filter>ヘッダー ファイル\ActorH</Filter>
     </ClInclude>
-    <ClInclude Include="BulletManager.h">
+    <ClInclude Include="Manager\BulletManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Animation.h">
+    <ClInclude Include="System\Animation.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Bg.h">
+    <ClInclude Include="System\Bg.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Camera.h">
+    <ClInclude Include="System\Camera.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

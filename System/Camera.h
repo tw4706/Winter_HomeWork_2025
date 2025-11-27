@@ -1,5 +1,5 @@
 #pragma once
-#include"Player.h"
+#include"../Actor/Player.h"
 class Camera
 {
 public:

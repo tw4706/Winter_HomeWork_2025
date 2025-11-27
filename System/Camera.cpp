@@ -1,5 +1,5 @@
 #include "Camera.h"
-#include "GlobalConstants.h"
+#include "../GlobalConstants.h"
 #include<cmath>
 
 Vector2 VLerp(Vector2 start, Vector2 end, float t)
