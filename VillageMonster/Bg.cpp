@@ -12,7 +12,7 @@ namespace
 	constexpr float kMapHeight = 1080.0f;//マップ全体の高さ
 
 	constexpr int kChipSize = 16;//マップチップ1つの大きさ
-	constexpr float kScale = 1.5f;
+	constexpr float kScale = 3.0f;
 
 	constexpr int kChipNumX = 200;
 	constexpr int kChipNumY = 40;
@@ -92,7 +92,7 @@ void Bg::LoadMapData()
 	{
 		for (int y = 0; y < kChipNumY; ++y)
 		{
-			mapChipData_[x][y] = 0;
+			mapChipData_[x][y];
 		}
 	}
 
@@ -112,7 +112,7 @@ void Bg::LoadMapData()
 		int x = 0;
 		while (std::getline(stream, field, ',') && x < kChipNumX)
 		{
-			// 文字列をint型に変換してm_chipDataに追加する
+			// 文字列をint型に変換してmapChipDataに追加する
 			mapChipData_[x][y] = std::stoi(field);
 			x++;
 		}
@@ -160,12 +160,6 @@ void Bg::DrawMapChip(std::shared_ptr<Camera>pCamera)
 
 #ifdef _DEBUG
 			//当たり判定
-			//DrawBoxAA(
-			//	static_cast<int>(x * kChipSize - pCamera->GetOffset().x),
-			//	static_cast<int>(y * kChipSize - pCamera->GetOffset().y),
-			//	static_cast<int>(x * kChipSize + kChipSize - pCamera->GetOffset().x),
-			//	static_cast<int>(y * kChipSize + kChipSize - pCamera->GetOffset().y),
-			//	GetColor(255, 255, 0), false);
 #endif
 		}
 	}

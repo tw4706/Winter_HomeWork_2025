@@ -43,7 +43,7 @@ private:
 	int graphChipNumX_;
 	int graphChipNumY_;
 
-	std::vector<std::vector<int>>mapChipData_;//マップデータ
+	int mapChipData_[200][40];//マップデータ
 
 	// マップデータのサイズ
 	struct Size
