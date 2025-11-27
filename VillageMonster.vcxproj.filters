@@ -51,7 +51,7 @@
     <ClCompile Include="Actor\Player.cpp">
       <Filter>ソース ファイル\ActorCPP</Filter>
     </ClCompile>
-    <ClCompile Include="Actor\GameObject.cpp">
+    <ClCompile Include="Base\GameObject.cpp">
       <Filter>ソース ファイル\BaseClassCPP</Filter>
     </ClCompile>
     <ClCompile Include="Physics\Geometry.cpp">
@@ -63,7 +63,7 @@
     <ClCompile Include="Physics\Rect.cpp">
       <Filter>ソース ファイル\SystemCPP</Filter>
     </ClCompile>
-    <ClCompile Include="System\Application.cpp">
+    <ClCompile Include="Application.cpp">
       <Filter>ソース ファイル\ApplicationCPP</Filter>
     </ClCompile>
     <ClCompile Include="Scene\Scene.cpp">
@@ -81,7 +81,7 @@
     <ClCompile Include="Actor\Bullet.cpp">
       <Filter>ソース ファイル\ActorCPP</Filter>
     </ClCompile>
-    <ClCompile Include="Actor\Enemy.cpp">
+    <ClCompile Include="Base\Enemy.cpp">
       <Filter>ソース ファイル\BaseClassCPP</Filter>
     </ClCompile>
     <ClCompile Include="Actor\Dog.cpp">
@@ -110,7 +110,7 @@
     <ClInclude Include="Actor\Player.h">
       <Filter>ヘッダー ファイル\ActorH</Filter>
     </ClInclude>
-    <ClInclude Include="Actor\GameObject.h">
+    <ClInclude Include="Base\GameObject.h">
       <Filter>ヘッダー ファイル\BaseClassH</Filter>
     </ClInclude>
     <ClInclude Include="Physics\Geometry.h">
@@ -125,7 +125,7 @@
     <ClInclude Include="Physics\Rect.h">
       <Filter>ヘッダー ファイル\SystemH</Filter>
     </ClInclude>
-    <ClInclude Include="System\Application.h">
+    <ClInclude Include="Application.h">
       <Filter>ヘッダー ファイル\ApplicationH</Filter>
     </ClInclude>
     <ClInclude Include="Scene\Scene.h">
@@ -143,7 +143,7 @@
     <ClInclude Include="Actor\Bullet.h">
       <Filter>ヘッダー ファイル\ActorH</Filter>
     </ClInclude>
-    <ClInclude Include="Actor\Enemy.h">
+    <ClInclude Include="Base\Enemy.h">
       <Filter>ヘッダー ファイル\BaseClassH</Filter>
     </ClInclude>
     <ClInclude Include="Actor\Dog.h">

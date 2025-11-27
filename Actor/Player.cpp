@@ -1,15 +1,32 @@
-#include<Dxlib.h>
-#include<cassert>
 #include "Player.h"
 #include "Input.h"
 #include"Bullet.h"
 #include"Bg.h"
 #include "BulletManager.h"
 #include"GlobalConstants.h"
+#include<Dxlib.h>
+#include<cassert>
+#include<string>
 
 // プレイヤーに関する定数
 namespace
 {
+
+	enum Graph
+	{
+		kIdleGraph,
+		kAttackgraph,
+
+		kGraphNum
+	};
+
+	const std::string kGraphName[kGraphNum] =
+	{
+		"data/Player/Idle.png",
+		"data/Player/Attack.png"
+	};
+	static_assert(static_cast<int>(kGraphNum) == _countof(kGraphName));
+
 	//プレイヤーの画像サイズ
 	constexpr int kGraphWidth = 128;
 	constexpr int kGraphHeight = 128;
@@ -36,8 +53,6 @@ namespace
 
 Player::Player(Vector2 pos, Vector2 vel) :
 	GameObject(pos, Vector2()),
-	idleH_(-1),
-	attackH_(-1),
 	isJumping_(false),
 	isDoubleJumping_(false),
 	isDamaged_(false),
@@ -46,27 +61,23 @@ Player::Player(Vector2 pos, Vector2 vel) :
 	state_(PlayerState::Idle),
 	currentBulletType_(PlayerBulletType::Knife)
 {
-	pPlayerAnim_ = std::make_shared<Animation>();
 }
 
 Player::~Player()
 {
-	DeleteGraph(idleH_);
-	DeleteGraph(attackH_);
+	for (auto& handle : graphHandles_)
+	{
+		DeleteGraph(handle);
+	}
 }
 
 void Player::Init()
 {
-	//初期化処理
-	idleH_ = LoadGraph("data/Player/Idle.png");
-	assert(idleH_ >0);
-	//if (idleH_ == -1)
-	//{
-	//	printfDx("失敗!\n");
-	//}
-	attackH_ = LoadGraph("data/Player/Attack.png");
-	assert(attackH_ > 0);
-	pPlayerAnim_->Init(kGraphWidth, kGraphHeight, 8, 20);
+	graphHandles_.resize(kGraphNum);
+	for (int i = 0; i < kGraphNum; i++)
+	{
+		graphHandles_[i] = LoadGraph(kGraphName[i].c_str());
+	}
 }
 
 void Player::Update()
@@ -84,7 +95,6 @@ void Player::Update(Input& input, BulletManager& bm)
 	pos_ += vel_;
 
 	GameObject::Update();
-	pPlayerAnim_->Update();
 	colRect_.SetCenter(pos_.x, pos_.y + 30, kGraphWidth / 2, kGraphHeight / 2 + 30);
 
 
@@ -102,8 +112,8 @@ void Player::Update(Input& input, BulletManager& bm)
 	if (input.IsTriggered("changeWeapon"))
 	{
 		printfDx("武器変えた!\n");
-		int weponType = (static_cast<int>(currentBulletType_) + 1) % 2;
-		currentBulletType_ = static_cast<PlayerBulletType>(weponType);
+		int weaponType = (static_cast<int>(currentBulletType_) + 1) % 2;
+		currentBulletType_ = static_cast<PlayerBulletType>(weaponType);
 	}
 
 #endif
@@ -114,8 +124,7 @@ void Player::Update(Input& input, BulletManager& bm)
 	//弾の発射・更新
 	if (input.IsTriggered("shot") && shotTimer_ <= 0)
 	{
-		const auto& config = kBulletConfigs[
-			static_cast<int>(currentBulletType_)];
+		const auto& config = kBulletConfigs[static_cast<int>(currentBulletType_)];
 
 		//銃口オフセット
 		constexpr float gunOffsetX = 40.0f;
@@ -182,7 +191,7 @@ void Player::Draw()
 			kGraphWidth / 2, kGraphHeight / 2,
 			1.5, 1.5,
 			0.0,
-			idleH_, true, false, false);
+			graphHandles_[kIdleGraph], true, false, false);
 	}
 	else
 	{
@@ -192,7 +201,7 @@ void Player::Draw()
 			kGraphWidth / 2, kGraphHeight / 2,
 			1.5, 1.5,
 			0.0,
-			idleH_, true, true, false);
+			graphHandles_[kIdleGraph], true, true, false);
 	}
 
 #ifdef _DEBUG

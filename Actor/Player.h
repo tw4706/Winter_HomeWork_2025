@@ -31,8 +31,7 @@ public:
 	void OnDamage();
 
 private:
-	int idleH_;//プレイヤーの画像ハンドル
-	int attackH_;//プレイヤーの画像ハンドル
+	std::vector<int>graphHandles_;
 	bool isJumping_;//ジャンプしているかどうか
 	bool isDoubleJumping_;//ダブルジャンプ可能かどうか
 	bool isDamaged_;//ダメージを受けているかどうか
@@ -41,7 +40,5 @@ private:
 	//プレイヤーの状態
 	PlayerState state_;
 	PlayerBulletType currentBulletType_;//現在の弾の種類
-	//プレイヤーのスマートポインタ
-	std::shared_ptr<Animation>pPlayerAnim_;
 };
 
