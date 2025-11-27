@@ -97,16 +97,49 @@ void Player::Update(Input& input, BulletManager& bm)
 	GameObject::Update();
 	colRect_.SetCenter(pos_.x, pos_.y + 30, kGraphWidth / 2, kGraphHeight / 2 + 30);
 
+	//重力処理
+	if (!isGround_)
+	{
+		GameObject::Gravity();
+	}
+
+	//マップチップとの当たり判定
+	Rect chipRect;
+	if (pBg_->IsCollision(colRect_, chipRect))
+	{
+
+		if (vel_.y > 0) // 下方向のみ
+		{
+			float overlap = colRect_.GetBottom() - chipRect.top_;
+			if (overlap > 0)
+			{
+				pos_.y -= overlap; // めり込み分だけ押し戻す
+			}
+
+			vel_.y = 0;
+			isGround_ = true;
+			isJumping_ = false;
+			isDoubleJumping_ = false;
+
+			colRect_.SetCenter(pos_.x, pos_.y + 30, kGraphWidth / 2, kGraphHeight / 2 + 30);
+		}
+	}
+	else
+	{
+		isGround_ = false;
+	}
+
+
 
 	//地面の接地判定
-	if (pos_.y >= kGround)
-	{
-		pos_.y = kGround;//地面の位置に固定
-		vel_.y = 0.0f;//速度を0に
-		isGround_ = true;
-		isJumping_ = false;
-		isDoubleJumping_ = false;
-	}
+	//if (pos_.y >= kGround)
+	//{
+	//	pos_.y = kGround;//地面の位置に固定
+	//	vel_.y = 0.0f;//速度を0に
+	//	isGround_ = true;
+	//	isJumping_ = false;
+	//	isDoubleJumping_ = false;
+	//}
 
 #ifdef _DEBUG
 	if (input.IsTriggered("changeWeapon"))
@@ -226,10 +259,9 @@ void Player::Draw()
 //移動処理
 void Player::Move(Input& input)
 {
-	//スクロールに応じた移動制限
-
+	bool CanJumpMove = isGround_ || isDoubleJumping_;
 	//地面にいるときかつダブルジャンプが可能な時
-	if (isGround_ || isDoubleJumping_)
+	if (CanJumpMove)
 	{
 		if (input.IsPressed("left"))
 		{

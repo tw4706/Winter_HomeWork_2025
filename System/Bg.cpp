@@ -92,7 +92,7 @@ void Bg::LoadMapData()
 	{
 		for (int y = 0; y < kChipNumY; ++y)
 		{
-			mapChipData_[x][y];
+			mapChipData_[x][y] = 0;
 		}
 	}
 
@@ -155,11 +155,21 @@ void Bg::DrawMapChip(std::shared_ptr<Camera>pCamera)
 				static_cast<int>(posY + kChipSize * 0.5f),
 				srcX, srcY,
 				kChipSize, kChipSize,
-				2.0f, 0.0f,
+				kScale, 0.0f,
 				mapHandle_, true);
 
 #ifdef _DEBUG
-			//当たり判定
+
+			// 当たり判定のあるチップだけ矩形を描画
+			if (chipNum != 0)
+			{
+				int left = posX;
+				int top = posY;
+				int right = posX + static_cast<int>(kChipSize * kScale);
+				int bottom = posY + static_cast<int>(kChipSize * kScale);
+
+				DrawBox(left, top, right, bottom, GetColor(255, 0, 0), false); // 赤枠
+			}
 #endif
 		}
 	}
