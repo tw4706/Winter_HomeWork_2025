@@ -3,6 +3,7 @@
 #include"Bullet.h"
 #include"Bg.h"
 #include "BulletManager.h"
+#include "CollisionManager.h"
 #include"GlobalConstants.h"
 #include<Dxlib.h>
 #include<cassert>
@@ -30,7 +31,7 @@ namespace
 	//プレイヤーの画像サイズ
 	constexpr int kGraphWidth = 128;
 	constexpr int kGraphHeight = 128;
-	constexpr float scale = 1.5f;
+	constexpr float kScale = 1.5f;
 
 	//移動速度 //通常:3
 	constexpr float kSpeed = 5.0f;
@@ -107,22 +108,9 @@ void Player::Update(Input& input, BulletManager& bm)
 	Rect chipRect;
 	if (pBg_->IsCollision(colRect_, chipRect))
 	{
-
-		if (vel_.y > 0) // 下方向のみ
-		{
-			float overlap = colRect_.GetBottom() - chipRect.top_;
-			if (overlap > 0)
-			{
-				pos_.y -= overlap; // めり込み分だけ押し戻す
-			}
-
-			vel_.y = 0;
-			isGround_ = true;
-			isJumping_ = false;
-			isDoubleJumping_ = false;
-
-			colRect_.SetCenter(pos_.x, pos_.y + 30, kGraphWidth / 2, kGraphHeight / 2 + 30);
-		}
+		//めり込みや押し戻しを直す処理
+		CollisionManager::ResolveCollision(colRect_, pos_, vel_, chipRect);
+		colRect_.SetCenter(pos_.x, pos_.y, (kGraphWidth * kScale), (kGraphHeight * kScale));
 	}
 	else
 	{

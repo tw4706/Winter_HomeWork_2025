@@ -61,10 +61,10 @@ bool Bg::IsCollision(Rect& rect, Rect& chipRect)
 			//当たり判定のあるマップチップとのみ判定を行う
 			if (mapChipData_[x][y] == 0)continue;
 
-			int chipLeft = static_cast<int>(x * kChipSize);
-			int chipRight = static_cast<int>(chipLeft + kChipSize);
-			int chipTop = static_cast<int>(y * kChipSize);
-			int chipBottom = static_cast<int>(chipTop + kChipSize);
+			int chipLeft = static_cast<int>(x * kChipSize*kScale);
+			int chipRight = static_cast<int>(chipLeft + kChipSize * kScale);
+			int chipTop = static_cast<int>(y * kChipSize * kScale);
+			int chipBottom = static_cast<int>(chipTop + kChipSize * kScale);
 
 			//絶対に当たらないパターン
 			if (chipLeft > rect.GetRight()) continue;
@@ -133,8 +133,8 @@ void Bg::DrawMapChip(std::shared_ptr<Camera>pCamera)
 		for (int x = 0; x < kChipNumX; x++)
 		{
 
-			int posX = static_cast<int>(x * kChipSize + pCamera->GetOffset().x);
-			int posY = static_cast<int>(y * kChipSize + pCamera->GetOffset().y);
+			int posX = static_cast<int>(x * kChipSize * kScale + pCamera->GetOffset().x);
+			int posY = static_cast<int>(y * kChipSize*kScale + pCamera->GetOffset().y);
 
 			//画面外のものは描画しない
 			if (posX < 0 - kChipSize)continue;
@@ -151,8 +151,8 @@ void Bg::DrawMapChip(std::shared_ptr<Camera>pCamera)
 
 			//マップチップの描画
 			DrawRectRotaGraph(
-				static_cast<int>(posX + kChipSize * 0.5f),
-				static_cast<int>(posY + kChipSize * 0.5f),
+				posX + static_cast<int>(kChipSize * kScale * 0.5f),
+				posY + static_cast<int>(kChipSize * kScale * 0.5f),
 				srcX, srcY,
 				kChipSize, kChipSize,
 				kScale, 0.0f,
