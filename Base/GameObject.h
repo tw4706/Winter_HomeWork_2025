@@ -15,12 +15,17 @@ protected:
 	Rect colRect_;//当たり判定の矩形
 	bool isTurn_;//反転してるかどうか
 	bool isGround_;//地面に接地しているかどうか
+
+	float graphW_;//グラフィックの幅
+	float graphH_;//グラフィックの高さ
+	float colSize_;//当たり判定のサイズ
 	Vector2 drawOffset_;//描画オフセット
 	std::shared_ptr<Bg>pBg_;//背景オブジェクトのポインタ
 
 public:
 	GameObject();
 	GameObject(Vector2 pos, Vector2 vel);
+	GameObject(Vector2 pos, Vector2 vel,float graphW,float graphH,float colSize);
 	virtual~GameObject();
 
 	virtual void Init()=0{};
@@ -45,7 +50,6 @@ public:
 	//カメラのオフセット関連
 	void SetDrawOffset(const Vector2& offset) { drawOffset_ = offset; }
 	Vector2 SetCameraOffset(const Vector2& offset) { return drawOffset_ = offset; }
-
 	void CheckHitMap(Rect& chipRect);
 };
 

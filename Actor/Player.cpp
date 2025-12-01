@@ -55,7 +55,7 @@ namespace
 }
 
 Player::Player(Vector2 pos, Vector2 vel) :
-	GameObject(pos, Vector2()),
+	GameObject(pos, vel,kGraphWidth,kGraphHeight,64.0f),
 	isJumping_(false),
 	isDoubleJumping_(false),
 	isDamaged_(false),
@@ -90,6 +90,8 @@ void Player::Update()
 
 void Player::Update(Input& input, BulletManager& bm)
 {
+	GameObject::Update();
+
 	Move(input);
 	// ジャンプ処理
 	if (input.IsTriggered("jump"))
@@ -97,35 +99,7 @@ void Player::Update(Input& input, BulletManager& bm)
 		Jump(input);
 	}
 
-
-	if (!isGround_)
-	{
-		GameObject::Update();
-	}
-
-	pos_ += vel_;
-
-	colRect_.SetCenter(pos_.x, pos_.y, kGraphWidth/2, kGraphHeight/2+30);
-
-	Rect chipRect;
-	if (pBg_->IsCollision(colRect_, chipRect))
-	{
-		CollisionManager::ResolveCollision(colRect_, pos_, vel_, chipRect);
-		if (vel_.y == 0)
-		{
-			isGround_ = true;
-			isJumping_ = false;
-			isDoubleJumping_ = false;
-		}
-		else
-		{
-			isGround_ = false;
-		}
-	}
-	else
-	{
-		isGround_ = false;
-	}
+	//colRect_.SetCenter(pos_.x, pos_.y, kGraphWidth/2, kGraphHeight/2+30);
 
 	//地面の接地判定
 	//if (pos_.y >= kGround)
@@ -197,10 +171,7 @@ void Player::Update(Input& input, BulletManager& bm)
 	//プレイヤーの基準点
 	DrawCircle(static_cast<int>(pos_.x + drawOffset_.x),
 		static_cast<int>(pos_.y + drawOffset_.y),
-		5, GetColor(0, 255, 0), true); // 緑丸
-
-
-
+		5, GetColor(0, 255, 0), true);
 #ifdef _DEBUG
 	//デバッグ用
 	DrawFormatString(0, 0, GetColor(255, 255, 255), "PlayerX:%f", pos_.x);

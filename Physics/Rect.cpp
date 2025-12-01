@@ -35,6 +35,16 @@ void Rect::SetCenter(float x, float y, float width, float height)
 	bottom_ = y + height / 2;
 }
 
+float Rect::GetCenterX() const
+{
+	return (left_ + right_) / 2.0f;
+}
+
+float Rect::GetCenterY() const
+{
+	return (top_ + bottom_) / 2.0f;
+}
+
 float Rect::GetWidth() const
 {
 	assert(right_ >= left_);//左右の座標の入れ替わりチェック

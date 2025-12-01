@@ -39,6 +39,18 @@ public:
 	void SetCenter(float x, float y, float width, float height);
 
 	/// <summary>
+	/// X座標の中心を取得
+	/// </summary>
+	/// <returns>中心のX座標</returns>
+	float GetCenterX()const;
+
+	/// <summary>
+	/// Y座標の中心値を取得
+	/// </summary>
+	/// <returns>中心のY座標</returns>
+	float GetCenterY()const;
+
+	/// <summary>
 	/// 矩形の幅を取得
 	/// </summary>
 	/// <returns>矩形の幅</returns>

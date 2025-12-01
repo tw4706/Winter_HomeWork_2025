@@ -10,7 +10,7 @@ namespace
 }
 
 BulletManager::BulletManager():
-	GameObject{}
+	GameObject()
 {
 	//’e‚Ì”‚ğŒˆ‚ß‚é
 	bulletLimits_ = {

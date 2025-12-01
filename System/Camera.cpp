@@ -2,6 +2,12 @@
 #include "../GlobalConstants.h"
 #include<cmath>
 
+namespace
+{
+	constexpr float kMapWidth = 3000.0f;//マップ全体の幅
+	constexpr float kMapHeight = 1080.0f;//マップ全体の高さ
+}
+
 Vector2 VLerp(Vector2 start, Vector2 end, float t)
 {
 	Vector2 ret;
@@ -38,4 +44,5 @@ void Camera::Update(std::shared_ptr<Player> player)
 	//画面の中央にプレイヤーが来るようにする
 	drawOffset_.x =drawOffset_.x + (Game::kScreenWidth * 0.5f);
 	drawOffset_.y = drawOffset_.y + (Game::kScreenHeight * 0.5f);
+
 }
