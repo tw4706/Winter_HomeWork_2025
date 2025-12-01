@@ -26,17 +26,6 @@ GameObject::~GameObject()
 {
 }
 
-void GameObject::Init()
-{
-
-}
-
-void GameObject::Update()
-{
-	Gravity();
-	colRect_.SetCenter(pos_.x, pos_.y, kCharaSize, kCharaSize);
-}
-
 void GameObject::Draw()
 {
 #ifdef _DEBUG
@@ -46,6 +35,7 @@ void GameObject::Draw()
 
 }
 
-void GameObject::Gravity() {
+void GameObject::Gravity() 
+{
 	vel_.y += kGravity;
 }

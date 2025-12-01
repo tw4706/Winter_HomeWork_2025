@@ -50,6 +50,8 @@ namespace
 
 	//ダメージを受けたときの無敵時間
 	constexpr int kDamageDuration = 60;
+
+	constexpr float kGravity = 1.0f;
 }
 
 Player::Player(Vector2 pos, Vector2 vel) :
@@ -93,30 +95,36 @@ void Player::Update(Input& input, BulletManager& bm)
 	{
 		Jump(input);
 	}
-	pos_ += vel_;
-
 	GameObject::Update();
-	colRect_.SetCenter(pos_.x, pos_.y + 30, kGraphWidth / 2, kGraphHeight / 2 + 30);
 
-	//重力処理
 	if (!isGround_)
 	{
 		GameObject::Gravity();
 	}
 
-	//マップチップとの当たり判定
+	pos_ += vel_;
+
+	colRect_.SetCenter(pos_.x, pos_.y, kGraphWidth, kGraphHeight);
+
 	Rect chipRect;
 	if (pBg_->IsCollision(colRect_, chipRect))
 	{
-		//めり込みや押し戻しを直す処理
 		CollisionManager::ResolveCollision(colRect_, pos_, vel_, chipRect);
-		colRect_.SetCenter(pos_.x, pos_.y, (kGraphWidth * kScale), (kGraphHeight * kScale));
+		if (vel_.y == 0)
+		{
+			isGround_ = true;
+			isJumping_ = false;
+			isDoubleJumping_ = false;
+		}
+		else
+		{
+			isGround_ = false;
+		}
 	}
 	else
 	{
 		isGround_ = false;
 	}
-
 
 
 	//地面の接地判定
@@ -169,6 +177,7 @@ void Player::Update(Input& input, BulletManager& bm)
 		//弾の初期化
 		bullet->Init();
 		bullet->SetBg(pBg_);
+
 		//弾の追加
 		bm.Init(bullet);
 
@@ -185,7 +194,7 @@ void Player::Update(Input& input, BulletManager& bm)
 		}
 	}
 
-	// プレイヤーの基準点（頭）
+	//プレイヤーの基準点
 	DrawCircle(static_cast<int>(pos_.x + drawOffset_.x),
 		static_cast<int>(pos_.y + drawOffset_.y),
 		5, GetColor(0, 255, 0), true); // 緑丸
