@@ -24,7 +24,7 @@ public:
 	virtual~GameObject();
 
 	virtual void Init()=0{};
-	virtual void Update()=0{};
+	virtual void Update();
 	virtual void Draw() = 0;
 
 	//重力
@@ -38,10 +38,14 @@ public:
 
 	//Bgクラスを設定する関数
 	void SetBg(std::shared_ptr<Bg>bg) { pBg_ = bg; }
+
 	//Bgクラスを取得する関数
 	std::shared_ptr<Bg>GetBg() const { return pBg_; }
+
 	//カメラのオフセット関連
 	void SetDrawOffset(const Vector2& offset) { drawOffset_ = offset; }
 	Vector2 SetCameraOffset(const Vector2& offset) { return drawOffset_ = offset; }
+
+	void CheckHitMap(Rect& chipRect);
 };
 

@@ -59,6 +59,7 @@ Player::Player(Vector2 pos, Vector2 vel) :
 	isJumping_(false),
 	isDoubleJumping_(false),
 	isDamaged_(false),
+	isTouching_(false),
 	damageTimer_(0),
 	shotTimer_(0),
 	state_(PlayerState::Idle),
@@ -95,16 +96,16 @@ void Player::Update(Input& input, BulletManager& bm)
 	{
 		Jump(input);
 	}
-	GameObject::Update();
+
 
 	if (!isGround_)
 	{
-		GameObject::Gravity();
+		GameObject::Update();
 	}
 
 	pos_ += vel_;
 
-	colRect_.SetCenter(pos_.x, pos_.y, kGraphWidth, kGraphHeight);
+	colRect_.SetCenter(pos_.x, pos_.y, kGraphWidth/2, kGraphHeight/2+30);
 
 	Rect chipRect;
 	if (pBg_->IsCollision(colRect_, chipRect))
@@ -125,7 +126,6 @@ void Player::Update(Input& input, BulletManager& bm)
 	{
 		isGround_ = false;
 	}
-
 
 	//地面の接地判定
 	//if (pos_.y >= kGround)
@@ -157,7 +157,7 @@ void Player::Update(Input& input, BulletManager& bm)
 
 		//銃口オフセット
 		constexpr float gunOffsetX = 40.0f;
-		constexpr float gunOffsetY = 20.0f;
+		constexpr float gunOffsetY = 10.0f;
 
 		// 描画基準座標（プレイヤーの中心）
 		float drawX = pos_.x + drawOffset_.x;
@@ -215,7 +215,7 @@ void Player::Draw()
 	/*pPlayerAnim_->Draw(idleH_, pos_.x, pos_.y, 1.0f, 0.0f);*/
 	if (isTurn_)
 	{
-		DrawRectRotaGraph3(drawX, drawY,
+		DrawRectRotaGraph3(drawX, drawY-50,
 			0, 0,
 			kGraphWidth, kGraphHeight,
 			kGraphWidth / 2, kGraphHeight / 2,
@@ -225,7 +225,7 @@ void Player::Draw()
 	}
 	else
 	{
-		DrawRectRotaGraph3(drawX, drawY,
+		DrawRectRotaGraph3(drawX, drawY-50,
 			0, 0,
 			kGraphWidth, kGraphHeight,
 			kGraphWidth / 2, kGraphHeight / 2,
@@ -243,12 +243,12 @@ void Player::Draw()
 
 #ifdef _DEBUG
 	// プレイヤーの描画範囲を矩形で表示
-	int boxLeft = static_cast<int>(drawX - (kGraphWidth / 2) * 1.5f);
-	int boxTop = static_cast<int>(drawY - (kGraphHeight / 2) * 1.5f);
-	int boxRight = static_cast<int>(drawX + (kGraphWidth / 2) * 1.5f);
-	int boxBottom = static_cast<int>(drawY + (kGraphHeight / 2) * 1.5f);
+	//int boxLeft = static_cast<int>(drawX - (kGraphWidth / 2) * 1.5f);
+	//int boxTop = static_cast<int>(drawY - (kGraphHeight / 2) * 1.5f);
+	//int boxRight = static_cast<int>(drawX + (kGraphWidth / 2) * 1.5f);
+	//int boxBottom = static_cast<int>(drawY + (kGraphHeight / 2) * 1.5f);
 
-	DrawBox(boxLeft, boxTop, boxRight, boxBottom, GetColor(0, 255, 255), false);
+	//DrawBox(boxLeft, boxTop, boxRight, boxBottom, GetColor(0, 255, 255), false);
 #endif
 
 }

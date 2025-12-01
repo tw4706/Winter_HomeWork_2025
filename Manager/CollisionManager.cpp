@@ -13,25 +13,37 @@ void CollisionManager::ResolveCollision(Rect& rect, Vector2& pos,Vector2& vel,
     const Rect& chipRect)
 {
 
-        // è’ìÀîªíË
-    if (rect.right_ > chipRect.left_ && rect.left_ < chipRect.right_ &&
-        rect.bottom_ > chipRect.top_ && rect.top_ < chipRect.bottom_)
+    bool overlapX = (rect.right_ > chipRect.left_ && rect.left_ < chipRect.right_);
+    bool overlapY = (rect.bottom_ > chipRect.top_ && rect.top_ < chipRect.bottom_);
+
+    //ï«ÇÃìñÇΩÇËîªíË
+    if (overlapY && vel.x != 0 && !(vel.y > 0))
     {
-        // Xï˚å¸ï‚ê≥
         if (vel.x > 0) 
         {
             pos.x = chipRect.left_ - (rect.GetWidth() / 2.0f);
+            vel.x = 0;
         }
         else if (vel.x < 0) 
         {
             pos.x = chipRect.right_ + (rect.GetWidth() / 2.0f);
+            vel.x = 0;
         }
+    }
 
-        // Yï˚å¸ï‚ê≥
+    rect.SetCenter(pos.x, pos.y, rect.GetWidth(), rect.GetHeight());
+
+    //è∞Ç‚ìVà‰ÇÃîªíË
+    if (overlapX && vel.y != 0)
+    {
         if (vel.y > 0) 
         {
             pos.y = chipRect.top_ - (rect.GetHeight() / 2.0f);
-            vel.y = 0; // è∞Ç…íÖínÇµÇΩÇÁí‚é~
+            vel.y = 0;
+        }
+        else if (vel.y < 0) 
+        {
+            pos.y = chipRect.bottom_ + (rect.GetHeight() / 2.0f);
         }
     }
 }

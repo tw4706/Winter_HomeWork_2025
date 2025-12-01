@@ -26,6 +26,11 @@ GameObject::~GameObject()
 {
 }
 
+void GameObject::Update()
+{
+	Gravity();
+}
+
 void GameObject::Draw()
 {
 #ifdef _DEBUG
@@ -38,4 +43,40 @@ void GameObject::Draw()
 void GameObject::Gravity() 
 {
 	vel_.y += kGravity;
+}
+
+void GameObject::CheckHitMap(Rect& chipRect)
+{
+	pos_.x += vel_.x;
+	colRect_.SetCenter(pos_.x, pos_.y, kCharaSize - 1, kCharaSize - 1);
+
+	if (pBg_->IsCollision(colRect_, chipRect))
+	{
+		if (vel_.x > 0.0f)
+		{
+			pos_.x = chipRect.GetLeft() - kCharaSize * 0.5f;
+		}
+		else if(vel_.x < 0.0f)
+		{
+			pos_.x = chipRect.GetRight() - kCharaSize * 0.5f;
+		}
+		vel_.x = 0.0f;
+	}
+
+	pos_.y = vel_.y;
+	colRect_.SetCenter(pos_.x, pos_.y, kCharaSize - 1, kCharaSize - 1);
+	if (pBg_->IsCollision(colRect_, chipRect))
+	{
+		if (vel_.y > 0.0f)
+		{
+			pos_.y = chipRect.GetTop() - kCharaSize * 0.5f;
+			vel_.y = 0.0f;
+			isGround_ = true;
+		}
+		else if (vel_.y > 0.0f)
+		{
+			pos_.y = chipRect.GetBottom() + kCharaSize * 0.5f;
+			vel_.y *= -1.0f;
+		}
+	}
 }
