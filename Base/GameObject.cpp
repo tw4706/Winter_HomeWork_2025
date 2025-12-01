@@ -40,10 +40,13 @@ GameObject::~GameObject()
 
 void GameObject::Update()
 {
+	isGround_ = false;
+
 	if (!isGround_)
 	{
 		Gravity();
 	}
+
 	Rect chipRect;
 	CheckHitMap(chipRect);
 }
@@ -65,11 +68,12 @@ void GameObject::Gravity()
 void GameObject::CheckHitMap(Rect& chipRect) {
 	// Xï˚å¸ÇÃà⁄ìÆ
 	pos_.x += vel_.x;
-	colRect_.SetCenter(pos_.x, pos_.y, colSize_, colSize_);
+	colRect_.SetCenter(pos_.x, pos_.y, colSize_-1, colSize_-1);
 
 	if (pBg_->IsCollision(colRect_, chipRect)) {
 
-		if (vel_.x > 0.0f) {
+		if (vel_.x > 0.0f) 
+		{
 
 			pos_.x = chipRect.GetLeft() - (colSize_ / 2.0f); // âEÇ…ÇﬂÇËçûÇ›ñhé~
 		}
@@ -82,14 +86,17 @@ void GameObject::CheckHitMap(Rect& chipRect) {
 
 	// Yï˚å¸ÇÃà⁄ìÆ
 	pos_.y += vel_.y;
-	colRect_.SetCenter(pos_.x, pos_.y, colSize_, colSize_);
+	colRect_.SetCenter(pos_.x, pos_.y, colSize_-1, colSize_-1);
 
-	if (pBg_->IsCollision(colRect_, chipRect)) {
-		if (vel_.y > 0.0f) {
+	if (pBg_->IsCollision(colRect_, chipRect)) 
+	{
+		if (vel_.y > 0.0f) 
+		{
 			pos_.y = chipRect.GetTop() - (colSize_ / 2.0f); // ínñ Ç…èÊÇÈ
 			isGround_ = true;
 		}
-		else if (vel_.y < 0.0f) {
+		else if (vel_.y < 0.0f) 
+		{
 			pos_.y = chipRect.GetBottom() + (colSize_ / 2.0f); // ìVà‰Ç…ìñÇΩÇÈ
 		}
 		vel_.y = 0.0f; // ècï˚å¸ÇÃë¨ìxÇé~ÇﬂÇÈÅiíµÇÀï‘ÇËÇ»ÇµÅj

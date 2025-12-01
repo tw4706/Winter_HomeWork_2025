@@ -122,7 +122,10 @@ void Player::Update(Input& input, BulletManager& bm)
 #endif
 
 	//弾の発射間隔がある場合はカウントダウン
-	if (shotTimer_ > 0)shotTimer_--;
+	if (shotTimer_ > 0)
+	{
+		shotTimer_--;
+	}
 
 	//弾の発射・更新
 	if (input.IsTriggered("shot") && shotTimer_ <= 0)
@@ -157,6 +160,7 @@ void Player::Update(Input& input, BulletManager& bm)
 
 		//発射間隔のリセット
 		shotTimer_ = config.shotInterval;
+		printfDx("Bullet Spawn: X=%f, Y=%f\n", spawnX, spawnY);
 	}
 	//無敵時間
 	if (damageTimer_ > 0)
