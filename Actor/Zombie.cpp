@@ -50,15 +50,13 @@ void Zombie::Update()
 
 	colRect_.SetCenter(centerX, centerY, kDrawW, kDrawH);
 
-	GameObject::Gravity();
-
-	//地面の接地判定
-	if (pos_.y >= kGround)
-	{
-		pos_.y = kGround;
-		vel_.y = 0.0f;
-		isGround_ = true;
-	}
+	////地面の接地判定
+	//if (pos_.y >= kGround)
+	//{
+	//	pos_.y = kGround;
+	//	vel_.y = 0.0f;
+	//	isGround_ = true;
+	//}
 	// 当たり判定の更新（描画スケールを考慮）
 	////constexpr float scale = 2.0f;
 	////float centerX = pos_.x + drawOffset_.x;

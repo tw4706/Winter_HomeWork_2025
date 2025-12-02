@@ -26,6 +26,7 @@ GameObject::GameObject(Vector2 pos, Vector2 vel,
 	vel_(vel),
 	isTurn_(false),
 	isGround_(false),
+	chipRect_(),
 	graphW_(graphW),
 	graphH_(graphH),
 	colSize_(colSize),
@@ -40,15 +41,13 @@ GameObject::~GameObject()
 
 void GameObject::Update()
 {
-	isGround_ = false;
+	Gravity();
 
+	CheckHitMap(chipRect_);
 	if (!isGround_)
 	{
-		Gravity();
+		isGround_ = IsOnGround();
 	}
-
-	Rect chipRect;
-	CheckHitMap(chipRect);
 }
 
 void GameObject::Draw()
@@ -66,7 +65,7 @@ void GameObject::Gravity()
 }
 
 void GameObject::CheckHitMap(Rect& chipRect) {
-	// Xï˚å¸ÇÃà⁄ìÆ
+	//Xï˚å¸ÇÃà⁄ìÆ
 	pos_.x += vel_.x;
 	colRect_.SetCenter(pos_.x, pos_.y, colSize_-1, colSize_-1);
 
@@ -75,16 +74,16 @@ void GameObject::CheckHitMap(Rect& chipRect) {
 		if (vel_.x > 0.0f) 
 		{
 
-			pos_.x = chipRect.GetLeft() - (colSize_ / 2.0f); // âEÇ…ÇﬂÇËçûÇ›ñhé~
+			pos_.x = chipRect.GetLeft() - (colSize_ / 2.0f); //âEÇ…ÇﬂÇËçûÇ›ñhé~
 		}
 		else if (vel_.x < 0.0f)
 		{
-			pos_.x = chipRect.GetRight() + (colSize_ / 2.0f); // ç∂Ç…ÇﬂÇËçûÇ›ñhé~
+			pos_.x = chipRect.GetRight() + (colSize_ / 2.0f); //ç∂Ç…ÇﬂÇËçûÇ›ñhé~
 		}
-		vel_.x = 0.0f; // â°ï˚å¸ÇÃë¨ìxÇé~ÇﬂÇÈ
+		vel_.x = 0.0f; //â°ï˚å¸ÇÃë¨ìxÇé~ÇﬂÇÈ
 	}
 
-	// Yï˚å¸ÇÃà⁄ìÆ
+	//Yï˚å¸ÇÃà⁄ìÆ
 	pos_.y += vel_.y;
 	colRect_.SetCenter(pos_.x, pos_.y, colSize_-1, colSize_-1);
 
@@ -92,13 +91,24 @@ void GameObject::CheckHitMap(Rect& chipRect) {
 	{
 		if (vel_.y > 0.0f) 
 		{
-			pos_.y = chipRect.GetTop() - (colSize_ / 2.0f); // ínñ Ç…èÊÇÈ
+			pos_.y = chipRect.GetTop() - (colSize_ / 2.0f); //ínñ Ç…èÊÇÈ
 			isGround_ = true;
 		}
 		else if (vel_.y < 0.0f) 
 		{
-			pos_.y = chipRect.GetBottom() + (colSize_ / 2.0f); // ìVà‰Ç…ìñÇΩÇÈ
+			pos_.y = chipRect.GetBottom() + (colSize_ / 2.0f); //ìVà‰Ç…ìñÇΩÇÈ
 		}
-		vel_.y = 0.0f; // ècï˚å¸ÇÃë¨ìxÇé~ÇﬂÇÈÅiíµÇÀï‘ÇËÇ»ÇµÅj
+		vel_.y = 0.0f; //ècï˚å¸ÇÃë¨ìxÇé~ÇﬂÇÈÅiíµÇÀï‘ÇËÇ»ÇµÅj
 	}
+}
+
+bool GameObject::IsOnGround()
+{
+	//ë´å≥Ç…è≠Çµâ∫ÇÃãÈå`ÇçÏÇÈ
+	Rect footRect = colRect_;
+	//â∫ï˚å¸Ç…ÉIÉtÉZÉbÉg
+	footRect.top_ += 4.0f;    
+	footRect.bottom_ += 4.0f;
+
+	return pBg_->IsCollision(footRect, chipRect_);
 }

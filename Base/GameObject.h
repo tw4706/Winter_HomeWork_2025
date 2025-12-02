@@ -15,6 +15,7 @@ protected:
 	Rect colRect_;//当たり判定の矩形
 	bool isTurn_;//反転してるかどうか
 	bool isGround_;//地面に接地しているかどうか
+	Rect chipRect_;
 
 	float graphW_;//グラフィックの幅
 	float graphH_;//グラフィックの高さ
@@ -50,6 +51,11 @@ public:
 	//カメラのオフセット関連
 	void SetDrawOffset(const Vector2& offset) { drawOffset_ = offset; }
 	Vector2 SetCameraOffset(const Vector2& offset) { return drawOffset_ = offset; }
+
+	//マップチップとの当たり判定
 	void CheckHitMap(Rect& chipRect);
+	//マップチップとの足元の判定処理
+	bool IsOnGround();
+
 };
 

@@ -67,13 +67,13 @@ void Dog::Update()
 	DrawFormatString(0, 170, 0xffffff, "Dog VelX:%f", vel_.x);
 	DrawFormatString(0, 190, 0xffffff, "Dog Dist:%f", std::abs(pPlayer_->GetPos().x - pos_.x));
 
-	//地面の接地判定
-	if (pos_.y >= kGround)
-	{
-		pos_.y = kGround;
-		vel_.y = 0.0f;
-		isGround_ = true;
-	}
+	////地面の接地判定
+	//if (pos_.y >= kGround)
+	//{
+	//	pos_.y = kGround;
+	//	vel_.y = 0.0f;
+	//	isGround_ = true;
+	//}
 }
 
 void Dog::Draw()

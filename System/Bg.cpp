@@ -160,7 +160,7 @@ void Bg::DrawMapChip(std::shared_ptr<Camera>pCamera)
 
 #ifdef _DEBUG
 
-			// 当たり判定のあるチップだけ矩形を描画
+			//当たり判定のあるチップだけ矩形を描画
 			if (chipNum != 0)
 			{
 				int left = posX;
@@ -168,7 +168,7 @@ void Bg::DrawMapChip(std::shared_ptr<Camera>pCamera)
 				int right = posX + static_cast<int>(kChipSize * kScale);
 				int bottom = posY + static_cast<int>(kChipSize * kScale);
 
-				DrawBox(left, top, right, bottom, GetColor(255, 0, 0), false); // 赤枠
+				DrawBox(left, top, right, bottom, GetColor(255, 0, 0), false);
 			}
 #endif
 		}

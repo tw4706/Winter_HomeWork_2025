@@ -27,11 +27,17 @@ public:
 
 	void Move(Input& input);
 	void Jump(Input& input);
+	//弾の発射処理
+	void Shot(Input& input, BulletManager& bm);
+
 	//ダメージを受けた時の処理
 	void OnDamage();
+	//リスポーン処理
+	void ReSpawn();
 
 private:
-	std::vector<int>graphHandles_;
+	std::vector<int>graphHandles_;//画像ハンドルの配列
+	Vector2 initializePos_;//リスポーンしたときの初期位置保存用
 	bool isJumping_;//ジャンプしているかどうか
 	bool isDoubleJumping_;//ダブルジャンプ可能かどうか
 	bool isDamaged_;//ダメージを受けているかどうか

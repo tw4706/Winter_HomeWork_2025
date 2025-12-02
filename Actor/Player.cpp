@@ -43,19 +43,24 @@ namespace
 	//ダブルジャンプの高さ
 	constexpr float kDoubleJumpPower = 6.0f;
 
-	//地面位置
-	constexpr float kGround = 500.0f;
+	//落下判定となる座標
+	constexpr float kFallLimit = 800.0f;
+
 	//弾の存在できる数
 	constexpr int kBulletNum = 3;
+	//弾がプレイヤーから出る位置のオフセット
+	constexpr float kGunOffsetX = 40.0f;
+	constexpr float kGunOffsetY = 10.0f;
 
 	//ダメージを受けたときの無敵時間
 	constexpr int kDamageDuration = 60;
-
+	//重力
 	constexpr float kGravity = 1.0f;
 }
 
 Player::Player(Vector2 pos, Vector2 vel) :
-	GameObject(pos, vel,kGraphWidth,kGraphHeight,64.0f),
+	GameObject(pos, vel, kGraphWidth, kGraphHeight, 64.0f),
+	initializePos_{ pos },
 	isJumping_(false),
 	isDoubleJumping_(false),
 	isDamaged_(false),
@@ -94,22 +99,12 @@ void Player::Update(Input& input, BulletManager& bm)
 
 	Move(input);
 	// ジャンプ処理
-	if (input.IsTriggered("jump"))
+	Jump(input);
+
+	if (input.IsTriggered("respawn"))
 	{
-		Jump(input);
+		ReSpawn();
 	}
-
-	//colRect_.SetCenter(pos_.x, pos_.y, kGraphWidth/2, kGraphHeight/2+30);
-
-	//地面の接地判定
-	//if (pos_.y >= kGround)
-	//{
-	//	pos_.y = kGround;//地面の位置に固定
-	//	vel_.y = 0.0f;//速度を0に
-	//	isGround_ = true;
-	//	isJumping_ = false;
-	//	isDoubleJumping_ = false;
-	//}
 
 #ifdef _DEBUG
 	if (input.IsTriggered("changeWeapon"))
@@ -121,47 +116,8 @@ void Player::Update(Input& input, BulletManager& bm)
 
 #endif
 
-	//弾の発射間隔がある場合はカウントダウン
-	if (shotTimer_ > 0)
-	{
-		shotTimer_--;
-	}
+	Shot(input,bm);
 
-	//弾の発射・更新
-	if (input.IsTriggered("shot") && shotTimer_ <= 0)
-	{
-		const auto& config = kBulletConfigs[static_cast<int>(currentBulletType_)];
-
-		//銃口オフセット
-		constexpr float gunOffsetX = 40.0f;
-		constexpr float gunOffsetY = 10.0f;
-
-		// 描画基準座標（プレイヤーの中心）
-		float drawX = pos_.x + drawOffset_.x;
-		float drawY = pos_.y + drawOffset_.y;
-
-		// 弾の発射位置（中心基準に揃える）
-		float spawnX = drawX + (isTurn_ ? gunOffsetX : -gunOffsetX);
-		float spawnY = drawY + gunOffsetY;
-
-		Vector2 spawnPos = { spawnX, spawnY };
-
-		// 弾の速度（向きに応じて）
-		Vector2 bulletVel = isTurn_ ? Vector2{ config.speed, 0.0f } : Vector2{ -config.speed, 0.0f };
-
-		auto bullet = std::make_shared<Bullet>(spawnPos, bulletVel, currentBulletType_);
-
-		//弾の初期化
-		bullet->Init();
-		bullet->SetBg(pBg_);
-
-		//弾の追加
-		bm.Init(bullet);
-
-		//発射間隔のリセット
-		shotTimer_ = config.shotInterval;
-		printfDx("Bullet Spawn: X=%f, Y=%f\n", spawnX, spawnY);
-	}
 	//無敵時間
 	if (damageTimer_ > 0)
 	{
@@ -190,7 +146,7 @@ void Player::Draw()
 	/*pPlayerAnim_->Draw(idleH_, pos_.x, pos_.y, 1.0f, 0.0f);*/
 	if (isTurn_)
 	{
-		DrawRectRotaGraph3(drawX, drawY-50,
+		DrawRectRotaGraph3(drawX, drawY - 50,
 			0, 0,
 			kGraphWidth, kGraphHeight,
 			kGraphWidth / 2, kGraphHeight / 2,
@@ -200,7 +156,7 @@ void Player::Draw()
 	}
 	else
 	{
-		DrawRectRotaGraph3(drawX, drawY-50,
+		DrawRectRotaGraph3(drawX, drawY - 50,
 			0, 0,
 			kGraphWidth, kGraphHeight,
 			kGraphWidth / 2, kGraphHeight / 2,
@@ -272,20 +228,62 @@ void Player::Move(Input& input)
 //ジャンプ処理
 void Player::Jump(Input& input)
 {
-	// 通常ジャンプ
-	if (isGround_)
+	if (input.IsTriggered("jump")) {
+		// 通常ジャンプ
+		if (isGround_)
+		{
+			vel_.y = -kJumpPower;
+			isGround_ = false;
+			isDoubleJumping_ = true;
+			return;
+		}
+
+		// 二段ジャンプ
+		if (isDoubleJumping_)
+		{
+			vel_.y = -kDoubleJumpPower;
+			isDoubleJumping_ = false;
+		}
+	}
+}
+
+void Player::Shot(Input&input,BulletManager&bm)
+{
+	//弾の発射間隔がある場合はカウントダウン
+	if (shotTimer_ > 0)
 	{
-		vel_.y = -kJumpPower;
-		isGround_ = false;
-		isDoubleJumping_ = true;
-		return;
+		shotTimer_--;
 	}
 
-	// 二段ジャンプ
-	if (isDoubleJumping_)
+	//弾の発射・更新
+	if (input.IsTriggered("shot") && shotTimer_ <= 0)
 	{
-		vel_.y = -kDoubleJumpPower;
-		isDoubleJumping_ = false;
+		const auto& config = kBulletConfigs[static_cast<int>(currentBulletType_)];
+
+		// 描画基準座標（プレイヤーの中心）
+		float drawX = pos_.x + drawOffset_.x;
+		float drawY = pos_.y + drawOffset_.y;
+
+		// 弾の発射位置（中心基準に揃える）
+		float spawnX = drawX + (isTurn_ ? kGunOffsetX : -kGunOffsetX);
+		float spawnY = drawY + kGunOffsetY;
+
+		Vector2 spawnPos = { spawnX, spawnY };
+
+		// 弾の速度（向きに応じて）
+		Vector2 bulletVel = isTurn_ ? Vector2{ config.speed, 0.0f } : Vector2{ -config.speed, 0.0f };
+
+		auto bullet = std::make_shared<Bullet>(spawnPos, bulletVel, currentBulletType_);
+
+		//弾の初期化
+		bullet->Init();
+		bullet->SetBg(pBg_);
+
+		//弾の追加
+		bm.Init(bullet);
+		//発射間隔のリセット
+		shotTimer_ = config.shotInterval;
+		printfDx("Bullet Spawn: X=%f, Y=%f\n", spawnX, spawnY);
 	}
 }
 
@@ -294,4 +292,16 @@ void Player::OnDamage()
 {
 	isDamaged_ = true;
 	damageTimer_ = kDamageDuration;
+}
+
+void Player::ReSpawn()
+{
+	if (pos_.y >= kFallLimit)
+	{
+		pos_ = initializePos_;
+		vel_ = {};
+		isGround_ = false;
+		isJumping_ = false;
+		isDoubleJumping_ = false;
+	}
 }
