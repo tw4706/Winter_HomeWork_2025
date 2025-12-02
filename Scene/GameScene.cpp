@@ -14,6 +14,8 @@ namespace
 {
 	//フェードまでの間隔
 	constexpr int fade_interval = 60;
+
+
 }
 
 GameScene::GameScene(SceneController& controller) :
@@ -21,6 +23,7 @@ GameScene::GameScene(SceneController& controller) :
 	update_(&GameScene::FadeInUpdate),
 	draw_(&GameScene::FadeDraw)
 {
+
 	player_ = std::make_shared<Player>(Vector2{ 100,500 }, Vector2{});
 	enemies_.push_back(std::make_shared<Zombie>(Vector2{ 800,500 }, Vector2{}));
 	enemies_.push_back(std::make_shared<Dog>(Vector2{ 1000,500 }, Vector2{}));

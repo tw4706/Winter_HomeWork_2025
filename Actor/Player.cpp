@@ -101,12 +101,16 @@ void Player::Update(Input& input, BulletManager& bm)
 	// ジャンプ処理
 	Jump(input);
 
+	//発射処理
+	Shot(input,bm);
+
+#ifdef _DEBUG
+	//デバッグでリスポーン
 	if (input.IsTriggered("respawn"))
 	{
 		ReSpawn();
 	}
-
-#ifdef _DEBUG
+	//武器の切り替え
 	if (input.IsTriggered("changeWeapon"))
 	{
 		printfDx("武器変えた!\n");
@@ -116,7 +120,6 @@ void Player::Update(Input& input, BulletManager& bm)
 
 #endif
 
-	Shot(input,bm);
 
 	//無敵時間
 	if (damageTimer_ > 0)
@@ -143,7 +146,8 @@ void Player::Draw()
 {
 	float drawX = pos_.x + drawOffset_.x;
 	float drawY = pos_.y + drawOffset_.y;
-	/*pPlayerAnim_->Draw(idleH_, pos_.x, pos_.y, 1.0f, 0.0f);*/
+
+	//描画
 	if (isTurn_)
 	{
 		DrawRectRotaGraph3(drawX, drawY - 50,
@@ -168,12 +172,11 @@ void Player::Draw()
 #ifdef _DEBUG
 	//当たり判定の矩形の色を変える
 	colRect_.DrawAndCamera(drawOffset_, isDamaged_ ? 0x0000ff : 0xff0000, false);
-
 #endif
 
 
 #ifdef _DEBUG
-	// プレイヤーの描画範囲を矩形で表示
+	//プレイヤーの描画範囲を矩形で表示
 	//int boxLeft = static_cast<int>(drawX - (kGraphWidth / 2) * 1.5f);
 	//int boxTop = static_cast<int>(drawY - (kGraphHeight / 2) * 1.5f);
 	//int boxRight = static_cast<int>(drawX + (kGraphWidth / 2) * 1.5f);
@@ -238,7 +241,7 @@ void Player::Jump(Input& input)
 			return;
 		}
 
-		// 二段ジャンプ
+		//二段ジャンプ
 		if (isDoubleJumping_)
 		{
 			vel_.y = -kDoubleJumpPower;
@@ -260,17 +263,17 @@ void Player::Shot(Input&input,BulletManager&bm)
 	{
 		const auto& config = kBulletConfigs[static_cast<int>(currentBulletType_)];
 
-		// 描画基準座標（プレイヤーの中心）
+		//描画基準座標
 		float drawX = pos_.x + drawOffset_.x;
 		float drawY = pos_.y + drawOffset_.y;
 
-		// 弾の発射位置（中心基準に揃える）
+		//弾の発射位置
 		float spawnX = drawX + (isTurn_ ? kGunOffsetX : -kGunOffsetX);
 		float spawnY = drawY + kGunOffsetY;
 
 		Vector2 spawnPos = { spawnX, spawnY };
 
-		// 弾の速度（向きに応じて）
+		//弾の速度
 		Vector2 bulletVel = isTurn_ ? Vector2{ config.speed, 0.0f } : Vector2{ -config.speed, 0.0f };
 
 		auto bullet = std::make_shared<Bullet>(spawnPos, bulletVel, currentBulletType_);
@@ -281,6 +284,7 @@ void Player::Shot(Input&input,BulletManager&bm)
 
 		//弾の追加
 		bm.Init(bullet);
+
 		//発射間隔のリセット
 		shotTimer_ = config.shotInterval;
 		printfDx("Bullet Spawn: X=%f, Y=%f\n", spawnX, spawnY);
@@ -294,6 +298,7 @@ void Player::OnDamage()
 	damageTimer_ = kDamageDuration;
 }
 
+//リスポーン処理
 void Player::ReSpawn()
 {
 	if (pos_.y >= kFallLimit)
