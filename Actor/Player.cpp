@@ -50,7 +50,7 @@ namespace
 	constexpr int kBulletNum = 3;
 	//弾がプレイヤーから出る位置のオフセット
 	constexpr float kGunOffsetX = 40.0f;
-	constexpr float kGunOffsetY = 10.0f;
+	constexpr float kGunOffsetY = 5.0f;
 
 	//ダメージを受けたときの無敵時間
 	constexpr int kDamageDuration = 60;
@@ -154,7 +154,7 @@ void Player::Draw()
 	}
 	else
 	{
-		DrawRectRotaGraph3(drawX, drawY - 50,
+		DrawRectRotaGraph3(drawX, drawY - 60,
 			0, 0,
 			kGraphWidth, kGraphHeight,
 			kGraphWidth / 2, kGraphHeight / 2,
@@ -245,7 +245,7 @@ void Player::Shot(Input&input,BulletManager&bm)
 
 		// 弾の発射位置（描画offsetなし）
 		float spawnX = pos_.x + (isTurn_ ? kGunOffsetX : -kGunOffsetX);
-		float spawnY = pos_.y + kGunOffsetY;
+		float spawnY = pos_.y;
 		Vector2 spawnPos = { spawnX, spawnY };
 
 		// 弾の速度
@@ -272,6 +272,7 @@ void Player::OnDamage()
 //リスポーン処理
 void Player::ReSpawn()
 {
+
 	if (pos_.y >= kFallLimit)
 	{
 		pos_ = initializePos_;
@@ -279,5 +280,15 @@ void Player::ReSpawn()
 		isGround_ = false;
 		isJumping_ = false;
 		isDoubleJumping_ = false;
+
+		// 必要なら向きや状態もリセット
+		isTurn_ = true;
+		state_ = PlayerState::Idle;
+
+		// 無敵やショットのクールダウンを初期化したい場合はここで調整
+		isDamaged_ = false;
+		damageTimer_ = 0;
+		shotTimer_ = 0;
 	}
+
 }
