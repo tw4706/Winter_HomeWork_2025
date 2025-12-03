@@ -19,6 +19,9 @@ namespace
 	//エネミーの移動速度
 	constexpr float kSpeed = 0.5f;
 
+	//拡大率
+	constexpr float kScale = 2.0f;
+
 	//プレイヤーとの距離
 	const float kDistance = 200.0f;
 }
@@ -35,6 +38,7 @@ Zombie::~Zombie()
 
 void Zombie::Init()
 {
+	isTurn_ = true;
 	zombieH_ = LoadGraph("data/Enemy/zombie_walk.png");
 	assert(zombieH_ >= 0);
 	////当たり判定の更新
@@ -43,9 +47,16 @@ void Zombie::Init()
 
 void Zombie::Update()
 {
+	if (isDead_)return;
+	
+	//移動処理
 	Move();
-	Enemy::Update();
-	colRect_.SetCenter(pos_.x, pos_.y, kDrawW, kDrawH);
+	GameObject::Update();
+
+	//当たり判定の更新
+	colRect_.SetCenter(pos_.x, pos_.y-30, kDrawW, kDrawH);
+
+	//DrawFormatString(0, 120, GetColor(255, 255, 255), "Zombie posY:%f velY:%f", pos_.y, vel_.y);
 }
 
 void Zombie::Draw()
@@ -53,34 +64,21 @@ void Zombie::Draw()
 	float drawX = pos_.x + cameraOffset_.x;
 	float drawY = pos_.y + cameraOffset_.y;
 
-	if (isTurn_)
-	{
-		DrawRectRotaGraph3(drawX, drawY,
-			0, 0,
-			kGraphWidth, kGraphHeight,
-			kGraphWidth / 2, kGraphHeight / 2,
-			2.0, 2.0,
-			0.0,
-			zombieH_, true,isTurn_);
-	}
-	else
-	{
-		DrawRectRotaGraph3(drawX, drawY,
-			0, 0,
-			kGraphWidth, kGraphHeight,
-			kGraphWidth / 2, kGraphHeight / 2,
-			2.0, 2.0,
-			0.0,
-			zombieH_, true,!isTurn_);
-	}
+	DrawRectRotaGraph3(
+		drawX, drawY-30,
+		0, 0,
+		kGraphWidth, kGraphHeight,
+		kGraphWidth / 2, kGraphHeight / 2,
+		kScale, kScale,
+		0.0,
+		zombieH_,
+		true,
+		isTurn_
+	);
 
 #ifdef _DEBUG
 	colRect_.DrawAndCamera(cameraOffset_,0xff0000, false);
 #endif
-}
-
-void Zombie::Attack()
-{
 }
 
 void Zombie::Move()

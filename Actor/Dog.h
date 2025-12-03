@@ -10,7 +10,6 @@ public:
 	void Update()override;
 	void Draw()override;
 
-	void Attack()override;
 	void Move()override;//ˆÚ“®ˆ—
 
 private:

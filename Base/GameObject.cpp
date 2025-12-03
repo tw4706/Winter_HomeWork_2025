@@ -71,7 +71,8 @@ void GameObject::Gravity()
 	vel_.y += kGravity;
 }
 
-void GameObject::CheckHitMap(Rect& chipRect) {
+void GameObject::CheckHitMap(Rect& chipRect) 
+{
 	//X•ûŒü‚ÌˆÚ“®
 	pos_.x += vel_.x;
 	colRect_.SetCenter(pos_.x, pos_.y, colSize_-1, colSize_-1);

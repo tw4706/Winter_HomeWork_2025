@@ -89,14 +89,10 @@ void Player::Init()
 	}
 }
 
-void Player::Update()
-{
-}
-
 void Player::Update(Input& input, BulletManager& bm)
 {
 	GameObject::Update();
-
+	colRect_.SetCenter(pos_.x, pos_.y-10, kGraphWidth/2, kGraphHeight-32);
 	Move(input);
 	// ƒWƒƒƒ“ƒvˆ—
 	Jump(input);
@@ -148,7 +144,7 @@ void Player::Draw()
 	//•`‰æ
 	if (isTurn_)
 	{
-		DrawRectRotaGraph3(drawX, drawY - 50,
+		DrawRectRotaGraph3(drawX, drawY - 60,
 			0, 0,
 			kGraphWidth, kGraphHeight,
 			kGraphWidth / 2, kGraphHeight / 2,

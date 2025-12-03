@@ -22,6 +22,8 @@ public:
 	/// <returns>“–‚½‚Á‚Ä‚¢‚é‚©</returns>
 	bool IsCollision(Rect& rect, Rect& chipRect);
 
+	float GetMapHeight();
+
 private:
 
 	/// <summary>

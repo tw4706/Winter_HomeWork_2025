@@ -20,7 +20,9 @@ Enemy::~Enemy()
 void Enemy::Update()
 {
 	if (isDead_)return;
+	Move();
 	GameObject::Update();
+	colRect_.SetCenter(pos_.x, pos_.y, colSize_, colSize_);
 }
 
 void Enemy::Draw()

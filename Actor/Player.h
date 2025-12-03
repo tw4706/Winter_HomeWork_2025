@@ -21,7 +21,7 @@ public:
 	~Player()override;
 
 	void Init()override;
-	void Update()override;
+	void Update()override {};
 	void Update(Input& input, BulletManager& bm);
 	void Draw()override;
 

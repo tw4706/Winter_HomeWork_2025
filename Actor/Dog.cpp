@@ -52,14 +52,12 @@ void Dog::Update()
 
 	//移動処理
 	Move();
-
-	Enemy::Update();
+	GameObject::Update();
 
 	//当たり判定の更新
-	colRect_.SetCenter(pos_.x, pos_.y, kDrawW, kDrawH);
+	colRect_.SetCenter(pos_.x, pos_.y-5, kGraphSize, kGraphSize);
 
-	//重力
-	GameObject::Gravity();
+
 
 	//デバッグ表示
 	DrawFormatString(0, 150, 0xffffff, "Dog PosX:%f", pos_.x);
@@ -72,7 +70,7 @@ void Dog::Draw()
 	float drawX = pos_.x + cameraOffset_.x;
 	float drawY = pos_.y + cameraOffset_.y;
 
-	DrawRectRotaGraph3(drawX, drawY,
+	DrawRectRotaGraph3(drawX, drawY-15,
 		0, 0,
 		kGraphSize, kGraphSize,
 		kGraphHalfSize, kGraphHalfSize,
@@ -85,44 +83,29 @@ void Dog::Draw()
 #endif
 }
 
-void Dog::Attack()
-{
-
-}
-
 void Dog::Move()
 {
 	timer_++;
-	// プレイヤーがセットされていない場合は何もしない
 	if (!pPlayer_) return;
 
-	//プレイヤーとの距離を見て移動する処理を追加
-	float playerX = pPlayer_->GetPos().x;
-	float enemyX = pos_.x;
-	float dx = playerX - enemyX;
+	float dx = pPlayer_->GetPos().x - pos_.x;
 	float distance = std::abs(dx);
 
-	//距離が一定以下の時はプレイヤーに向かって移動
 	if (distance < kDistance)
 	{
-		//y軸の位置が地面にいるときかつ
-		// ジャンプ間隔を超えたときにジャンプする
 		if (isGround_ && timer_ > kJumpInterval)
 		{
 			vel_.y = -kJumpPower;
+			vel_.x = (dx > 0) ? kSpeed : -kSpeed;
 			timer_ = 0.0f;
-
-			vel_.x = (dx > 0) ? kSpeed : (dx < 0 ? -kSpeed : 0);
 		}
 		else if (isGround_)
 		{
-			//地面にいるがジャンプ条件を満たしていない場合は停止
 			vel_.x = 0.0f;
 		}
 	}
 	else
 	{
-		//プレイヤーが遠いときは停止
 		vel_.x = 0.0f;
 	}
 }
