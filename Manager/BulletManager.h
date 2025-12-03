@@ -18,6 +18,8 @@ public:
 	void Update()override;
 	void Draw()override;
 
+	void SetCameraOffset(Vector2 offset);
+
 	//ƒvƒŒƒCƒ„[‚Ì’e‚Ìí•Ê‚ğ”»’è
 	bool IsPlayerBullet(PlayerBulletType type)const;
 

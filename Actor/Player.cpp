@@ -119,8 +119,6 @@ void Player::Update(Input& input, BulletManager& bm)
 	}
 
 #endif
-
-
 	//無敵時間
 	if (damageTimer_ > 0)
 	{
@@ -132,8 +130,8 @@ void Player::Update(Input& input, BulletManager& bm)
 	}
 
 	//プレイヤーの基準点
-	DrawCircle(static_cast<int>(pos_.x + drawOffset_.x),
-		static_cast<int>(pos_.y + drawOffset_.y),
+	DrawCircle(static_cast<int>(pos_.x + cameraOffset_.x),
+		static_cast<int>(pos_.y + cameraOffset_.y),
 		5, GetColor(0, 255, 0), true);
 #ifdef _DEBUG
 	//デバッグ用
@@ -144,8 +142,8 @@ void Player::Update(Input& input, BulletManager& bm)
 
 void Player::Draw()
 {
-	float drawX = pos_.x + drawOffset_.x;
-	float drawY = pos_.y + drawOffset_.y;
+	float drawX = pos_.x + cameraOffset_.x;
+	float drawY = pos_.y + cameraOffset_.y;
 
 	//描画
 	if (isTurn_)
@@ -171,20 +169,8 @@ void Player::Draw()
 
 #ifdef _DEBUG
 	//当たり判定の矩形の色を変える
-	colRect_.DrawAndCamera(drawOffset_, isDamaged_ ? 0x0000ff : 0xff0000, false);
+	colRect_.DrawAndCamera(cameraOffset_, isDamaged_ ? 0x0000ff : 0xff0000, false);
 #endif
-
-
-#ifdef _DEBUG
-	//プレイヤーの描画範囲を矩形で表示
-	//int boxLeft = static_cast<int>(drawX - (kGraphWidth / 2) * 1.5f);
-	//int boxTop = static_cast<int>(drawY - (kGraphHeight / 2) * 1.5f);
-	//int boxRight = static_cast<int>(drawX + (kGraphWidth / 2) * 1.5f);
-	//int boxBottom = static_cast<int>(drawY + (kGraphHeight / 2) * 1.5f);
-
-	//DrawBox(boxLeft, boxTop, boxRight, boxBottom, GetColor(0, 255, 255), false);
-#endif
-
 }
 
 //移動処理
@@ -252,42 +238,31 @@ void Player::Jump(Input& input)
 
 void Player::Shot(Input&input,BulletManager&bm)
 {
-	//弾の発射間隔がある場合はカウントダウン
 	if (shotTimer_ > 0)
 	{
 		shotTimer_--;
 	}
 
-	//弾の発射・更新
 	if (input.IsTriggered("shot") && shotTimer_ <= 0)
 	{
 		const auto& config = kBulletConfigs[static_cast<int>(currentBulletType_)];
 
-		//描画基準座標
-		float drawX = pos_.x + drawOffset_.x;
-		float drawY = pos_.y + drawOffset_.y;
-
-		//弾の発射位置
-		float spawnX = drawX + (isTurn_ ? kGunOffsetX : -kGunOffsetX);
-		float spawnY = drawY + kGunOffsetY;
-
+		// 弾の発射位置（描画offsetなし）
+		float spawnX = pos_.x + (isTurn_ ? kGunOffsetX : -kGunOffsetX);
+		float spawnY = pos_.y + kGunOffsetY;
 		Vector2 spawnPos = { spawnX, spawnY };
 
-		//弾の速度
-		Vector2 bulletVel = isTurn_ ? Vector2{ config.speed, 0.0f } : Vector2{ -config.speed, 0.0f };
+		// 弾の速度
+		Vector2 bulletVel = isTurn_ ?
+			Vector2{ config.speed, 0.0f } : Vector2{ -config.speed, 0.0f };
 
+		// 弾の生成
 		auto bullet = std::make_shared<Bullet>(spawnPos, bulletVel, currentBulletType_);
-
-		//弾の初期化
 		bullet->Init();
 		bullet->SetBg(pBg_);
-
-		//弾の追加
 		bm.Init(bullet);
 
-		//発射間隔のリセット
 		shotTimer_ = config.shotInterval;
-		printfDx("Bullet Spawn: X=%f, Y=%f\n", spawnX, spawnY);
 	}
 }
 

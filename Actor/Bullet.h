@@ -38,7 +38,7 @@ public:
 	~Bullet()override;
 
 	void Init()override;
-	void Update()override;
+	void Update() override {};
 	void UpdateShot();
 	void Update(Input&input,std::vector<std::shared_ptr<Enemy>>& enemies);
 	void Draw()override;
@@ -47,14 +47,11 @@ public:
 	void OnHit();
 
 	// ’e‚ªÁ‚¦‚½‚©‚Ç‚¤‚©‚ğ•Ô‚·
-	void Destroy() { isAlive_ = false; }
 	bool IsAlive() const { return isAlive_; }
 	//’e‚Ìí—Ş‚ğ•Ô‚·
 	const PlayerBulletType& GetType() const { return bulletType_; }
 
 private:
-	Vector2 pos_;		//ˆÊ’u
-	Vector2 vel_;		//‘¬“x
 	bool isAlive_;		//’e‚ª‘¶İ‚µ‚Ä‚¢‚é‚©‚Ç‚¤‚©
 	int bulletH_;		//’e‚Ì‰æ‘œƒnƒ“ƒhƒ‹
 	PlayerBulletType bulletType_;

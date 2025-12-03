@@ -19,8 +19,8 @@ Enemy::~Enemy()
 
 void Enemy::Update()
 {
-	GameObject::Update();
 	if (isDead_)return;
+	GameObject::Update();
 }
 
 void Enemy::Draw()

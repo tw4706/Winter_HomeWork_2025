@@ -11,12 +11,19 @@ GameObject::GameObject() :
 	isGround_(false),
 	graphW_(kCharaSize),
 	graphH_(kCharaSize),
-	colSize_(kCharaSize), drawOffset_{}
+	colSize_(kCharaSize), cameraOffset_{}
 {
 }
 
 GameObject::GameObject(Vector2 pos, Vector2 vel):
-	pos_{}, vel_{}
+	pos_(pos),
+	vel_(vel),
+	isTurn_(false),
+	isGround_(false),
+	graphW_(kCharaSize),
+	graphH_(kCharaSize),
+	colSize_(kCharaSize),
+	cameraOffset_{}
 {
 }
 
@@ -30,7 +37,7 @@ GameObject::GameObject(Vector2 pos, Vector2 vel,
 	graphW_(graphW),
 	graphH_(graphH),
 	colSize_(colSize),
-	drawOffset_{}
+	cameraOffset_{}
 {
 
 }
@@ -98,7 +105,7 @@ void GameObject::CheckHitMap(Rect& chipRect) {
 		{
 			pos_.y = chipRect.GetBottom() + (colSize_ / 2.0f); //天井に当たる
 		}
-		vel_.y = 0.0f; //縦方向の速度を止める（跳ね返りなし）
+		vel_.y = 0.0f; //縦方向の速度を止める
 	}
 }
 

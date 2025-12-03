@@ -48,16 +48,15 @@ void Dog::Init()
 
 void Dog::Update()
 {
+	if (isDead_)return;
+
+	//移動処理
+	Move();
+
 	Enemy::Update();
-	Move();//移動処理
-	//ポジションに速度を追加
-	pos_ += vel_;
 
 	//当たり判定の更新
-	float centerX = pos_.x + drawOffset_.x;
-	float centerY = pos_.y + drawOffset_.y;
-
-	colRect_.SetCenter(centerX, centerY, kDrawW, kDrawH);
+	colRect_.SetCenter(pos_.x, pos_.y, kDrawW, kDrawH);
 
 	//重力
 	GameObject::Gravity();
@@ -66,20 +65,12 @@ void Dog::Update()
 	DrawFormatString(0, 150, 0xffffff, "Dog PosX:%f", pos_.x);
 	DrawFormatString(0, 170, 0xffffff, "Dog VelX:%f", vel_.x);
 	DrawFormatString(0, 190, 0xffffff, "Dog Dist:%f", std::abs(pPlayer_->GetPos().x - pos_.x));
-
-	////地面の接地判定
-	//if (pos_.y >= kGround)
-	//{
-	//	pos_.y = kGround;
-	//	vel_.y = 0.0f;
-	//	isGround_ = true;
-	//}
 }
 
 void Dog::Draw()
 {
-	float drawX = pos_.x + drawOffset_.x;
-	float drawY = pos_.y + drawOffset_.y+20;
+	float drawX = pos_.x + cameraOffset_.x;
+	float drawY = pos_.y + cameraOffset_.y;
 
 	DrawRectRotaGraph3(drawX, drawY,
 		0, 0,
@@ -90,7 +81,7 @@ void Dog::Draw()
 		dogH_, true);
 #ifdef _DEBUG
 	//当たり判定の描画
-	colRect_.DrawAndCamera(drawOffset_, 0xff0000, false);
+	colRect_.DrawAndCamera(cameraOffset_, 0xff0000, false);
 #endif
 }
 
@@ -116,28 +107,14 @@ void Dog::Move()
 	{
 		//y軸の位置が地面にいるときかつ
 		// ジャンプ間隔を超えたときにジャンプする
-		if (pos_.y >= kGround && timer_ > kJumpInterval)
+		if (isGround_ && timer_ > kJumpInterval)
 		{
 			vel_.y = -kJumpPower;
 			timer_ = 0.0f;
 
-			if (dx > 0)
-			{
-				//プレイヤーが右だと右にジャンプ
-				vel_.x = kSpeed;
-			}
-			else if (dx < 0)
-			{
-				//プレイヤーが左だと左にジャンプ
-				vel_.x = -kSpeed;
-			}
-			else
-			{
-				//上にジャンプ
-				vel_.x = 0.0f;
-			}
+			vel_.x = (dx > 0) ? kSpeed : (dx < 0 ? -kSpeed : 0);
 		}
-		else if (pos_.y >= kGround)
+		else if (isGround_)
 		{
 			//地面にいるがジャンプ条件を満たしていない場合は停止
 			vel_.x = 0.0f;

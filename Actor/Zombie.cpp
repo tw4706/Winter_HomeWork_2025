@@ -37,38 +37,21 @@ void Zombie::Init()
 {
 	zombieH_ = LoadGraph("data/Enemy/zombie_walk.png");
 	assert(zombieH_ >= 0);
+	////当たり判定の更新
+	colRect_.SetCenter(pos_.x, pos_.y, kDrawW, kDrawH);
 }
 
 void Zombie::Update()
 {
-	Enemy::Update();
 	Move();
-
-	////当たり判定の更新
-	float centerX = pos_.x + drawOffset_.x;
-	float centerY = pos_.y + drawOffset_.y;
-
-	colRect_.SetCenter(centerX, centerY, kDrawW, kDrawH);
-
-	////地面の接地判定
-	//if (pos_.y >= kGround)
-	//{
-	//	pos_.y = kGround;
-	//	vel_.y = 0.0f;
-	//	isGround_ = true;
-	//}
-	// 当たり判定の更新（描画スケールを考慮）
-	////constexpr float scale = 2.0f;
-	////float centerX = pos_.x + drawOffset_.x;
-	////float centerY = pos_.y + drawOffset_.y;
-	////colRect_.SetCenter(centerX, centerY, kGraphWidth * scale * 0.6f, kGraphHeight * scale * 0.6f);
+	Enemy::Update();
+	colRect_.SetCenter(pos_.x, pos_.y, kDrawW, kDrawH);
 }
 
 void Zombie::Draw()
 {
-
-	float drawX = pos_.x + drawOffset_.x;
-	float drawY = pos_.y + drawOffset_.y;
+	float drawX = pos_.x + cameraOffset_.x;
+	float drawY = pos_.y + cameraOffset_.y;
 
 	if (isTurn_)
 	{
@@ -92,7 +75,7 @@ void Zombie::Draw()
 	}
 
 #ifdef _DEBUG
-	colRect_.DrawAndCamera(drawOffset_,0xff0000, false);
+	colRect_.DrawAndCamera(cameraOffset_,0xff0000, false);
 #endif
 }
 
@@ -106,27 +89,18 @@ void Zombie::Move()
 	if (!pPlayer_) return;
 
 	//プレイヤーとの距離を見て移動する処理を追加
-	float playerX = pPlayer_->GetPos().x;
-	float enemyX = pos_.x;
-	float dx = playerX - enemyX;
+	float dx = pPlayer_->GetPos().x - pos_.x;
 	float distance = std::abs(dx);
 
-	DrawFormatString(0, 80, GetColor(255, 255, 255), "ZombieDx:%f", dx);
-	DrawFormatString(0, 100, GetColor(255, 255, 255), "ZombieDistance:%f", distance);
-
-
-	//距離が一定以下の時はプレイヤーに向かって移動
 	if (distance < kDistance)
 	{
-		if (dx < 0) 
-		{
-			pos_.x -= kSpeed;  // 左へ移動
-			isTurn_ = true;
-		}
-		else if (dx > 0) 
-		{
-			pos_.x += kSpeed;  // 右へ移動
-			isTurn_ = false ;
-		}
+		vel_.x = (dx > 0) ? kSpeed : (dx < 0 ? -kSpeed : 0);
+		isTurn_ = dx < 0;
 	}
+	else
+	{
+		vel_.x = 0.0f;
+	}
+	DrawFormatString(0, 80, GetColor(255, 255, 255), "ZombieDx:%f", dx);
+	DrawFormatString(0, 100, GetColor(255, 255, 255), "ZombieDistance:%f", distance);
 }

@@ -13,8 +13,6 @@ namespace
 
 Bullet::Bullet(Vector2 pos, Vector2 vel,PlayerBulletType bulletType) :
 	GameObject(pos, vel),
-	pos_(pos),
-	vel_(vel),
 	isAlive_(true),
 	bulletH_(-1),
 	bulletType_(bulletType)
@@ -33,13 +31,8 @@ void Bullet::Init()
 	assert(bulletH_ >= 0);
 
 	//当たり判定の初期化
-	colRect_.SetCenter(pos_.x + drawOffset_.x,
-		pos_.y + drawOffset_.y, config.width, config.height);
-}
-
-void Bullet::Update()
-{
-
+	colRect_.SetCenter(pos_.x+cameraOffset_.x,
+		pos_.y + cameraOffset_.y, config.width, config.height);
 }
 
 //弾の種別ごとの更新処理
@@ -61,20 +54,14 @@ void Bullet::UpdateShot()
 	default:
 		break;
 	}
-
+	
 	pos_ += vel_;
+
 	//弾の当たり判定を更新
-	colRect_.SetCenter(pos_.x + drawOffset_.x,
-		pos_.y + drawOffset_.y,
+	colRect_.SetCenter(pos_.x,
+		pos_.y,
 		kBulletConfigs[static_cast<int>(bulletType_)].width, 
 		kBulletConfigs[static_cast<int>(bulletType_)].height);
-
-	// 画面外から出たら消える
-	if (pos_.x<0 || pos_.x>Game::kScreenWidth ||
-		pos_.y<0 || pos_.y>Game::kScreenHeight)
-	{
-		isAlive_ = false;
-	}
 }
 
 void Bullet::Update(Input& input, std::vector<std::shared_ptr<Enemy>>& enemies)
@@ -98,14 +85,15 @@ void Bullet::Draw()
 	//生きてなかったら描画しない
 	if (!isAlive_)return;
 
-	float drawX = pos_.x + drawOffset_.x;
-	float drawY = pos_.y + drawOffset_.y;
+	float drawX = pos_.x + cameraOffset_.x;
+	float drawY = pos_.y + cameraOffset_.y;
+
 	//角度を向きに応じて変更
 	float angle = (vel_.x >= 0) ? DX_PI / 2.0f : DX_PI + (DX_PI / 2.0f);
 	DrawRotaGraph(drawX, drawY, kScale, angle, bulletH_, true);
 	
 #ifdef _DEBUG
-	colRect_.DrawAndCamera(drawOffset_, 0xff0000, false);
+	colRect_.DrawAndCamera(cameraOffset_, 0xff0000, false);
 #endif
 }
 

@@ -49,10 +49,8 @@ void BulletManager::Update(std::vector<std::shared_ptr<Enemy>>&enemies, Player&p
 {
 	//弾の更新
 	//弾とキャラクターの当たり判定
-
 	for (auto& bullet : bullets_)
 	{
-
 		if (!bullet->IsAlive()) continue;
 
 		bullet->UpdateShot();
@@ -103,6 +101,14 @@ void BulletManager::Draw()
 		{
 			bullet->Draw();
 		}
+	}
+}
+
+void BulletManager::SetCameraOffset(Vector2 offset)
+{
+	for (auto& bullet : bullets_)
+	{
+		bullet->SetCameraOffset(offset);
 	}
 }
 

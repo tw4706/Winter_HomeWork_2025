@@ -6,7 +6,6 @@
 #include<vector>
 #include<map>
 
-class Animation;
 class GameObject
 {
 protected:
@@ -20,7 +19,7 @@ protected:
 	float graphW_;//グラフィックの幅
 	float graphH_;//グラフィックの高さ
 	float colSize_;//当たり判定のサイズ
-	Vector2 drawOffset_;//描画オフセット
+	Vector2 cameraOffset_;//描画オフセット
 	std::shared_ptr<Bg>pBg_;//背景オブジェクトのポインタ
 
 public:
@@ -49,8 +48,8 @@ public:
 	std::shared_ptr<Bg>GetBg() const { return pBg_; }
 
 	//カメラのオフセット関連
-	void SetDrawOffset(const Vector2& offset) { drawOffset_ = offset; }
-	Vector2 SetCameraOffset(const Vector2& offset) { return drawOffset_ = offset; }
+	void SetDrawOffset(const Vector2& offset) { cameraOffset_ = offset; }
+	Vector2 SetCameraOffset(const Vector2& offset) { return cameraOffset_ = offset; }
 
 	//マップチップとの当たり判定
 	void CheckHitMap(Rect& chipRect);
