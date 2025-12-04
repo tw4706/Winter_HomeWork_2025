@@ -111,11 +111,6 @@ void Player::Update(Input& input, BulletManager& bm)
 	}
 
 #ifdef _DEBUG
-	//デバッグでリスポーン
-	if (input.IsTriggered("respawn"))
-	{
-		ReSpawn();
-	}
 	//武器の切り替え
 	if (input.IsTriggered("changeWeapon"))
 	{
