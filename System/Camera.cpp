@@ -26,10 +26,12 @@ Camera::~Camera()
 {
 }
 
-void Camera::Init()
+void Camera::Init(std::shared_ptr<Player> player)
 {
-	//ƒ|ƒWƒVƒ‡ƒ“‚Ì‰Šú‰»
-	pos_ = { 0,0 };
+	pos_ = player->GetPos();
+
+	drawOffset_.x = -pos_.x + (Game::kScreenWidth * 0.5f);
+	drawOffset_.y = -pos_.y + (Game::kScreenHeight * 0.5f);
 }
 
 void Camera::Update(std::shared_ptr<Player> player)

@@ -170,7 +170,7 @@ void Player::Draw()
 			kGraphWidth / 2, kGraphHeight / 2,
 			1.5, 1.5,
 			0.0,
-			graphHandles_[kIdleGraph], true, true, false);
+			graphHandles_[kIdleGraph], true,!isTurn_);
 	}
 
 #ifdef _DEBUG

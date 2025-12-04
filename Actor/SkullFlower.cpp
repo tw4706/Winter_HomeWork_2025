@@ -61,7 +61,7 @@ void SkullFlower::Draw()
         64, 64,           // 切り取り開始
         32, 32,               // 切り取りサイズ
         2.0, 2.0, 0.0,
-        flowerH_, TRUE,isTurn_
+        flowerH_, TRUE,!isTurn_
     );
 
     // デバッグ用に座標表示

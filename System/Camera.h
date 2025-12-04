@@ -6,7 +6,7 @@ public:
 	Camera();
 	~Camera();
 
-	void Init();
+	void Init(std::shared_ptr<Player> player);
 	void Update(std::shared_ptr<Player>player);
 
 	//カメラのオフセットを取得

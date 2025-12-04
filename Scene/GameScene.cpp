@@ -75,7 +75,7 @@ void GameScene::Init()
 {
 	//ŠeƒNƒ‰ƒX‚Ì‰Šú‰»
 	bg_->Init();
-	camera_->Init();
+
 
 	float spawnPosX = 50.0f;
 	float spawnPosY = 1744.0f;
@@ -83,6 +83,8 @@ void GameScene::Init()
 	player_ = std::make_shared<Player>(Vector2{ spawnPosX,spawnPosY }, Vector2{});
 	player_->Init();
 	player_->SetBg(bg_);
+
+	camera_->Init(player_);
 
 	for (auto& enemy : enemies_)
 	{
