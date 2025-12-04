@@ -5,10 +5,7 @@
 Enemy::Enemy(Vector2 pos,Vector2 vel):
 	GameObject(pos,vel),
 	isTurn_(false),
-	isDead_(false),
-	idleH_(-1),
-	jumpH_(-1),
-	attackH_(-1)
+	isDead_(false)
 {
 
 }

@@ -57,8 +57,6 @@ void Dog::Update()
 	//当たり判定の更新
 	colRect_.SetCenter(pos_.x, pos_.y-5, kGraphSize, kGraphSize);
 
-
-
 	//デバッグ表示
 	DrawFormatString(0, 150, 0xffffff, "Dog PosX:%f", pos_.x);
 	DrawFormatString(0, 170, 0xffffff, "Dog VelX:%f", vel_.x);
@@ -97,6 +95,7 @@ void Dog::Move()
 		{
 			vel_.y = -kJumpPower;
 			vel_.x = (dx > 0) ? kSpeed : -kSpeed;
+			isGround_ = false;
 			timer_ = 0.0f;
 		}
 		else if (isGround_)

@@ -2,7 +2,7 @@
 
 namespace
 {
-	constexpr float kGravity = 0.3f;  // 重力
+	constexpr float kGravity = 0.5f;  // 重力
 	constexpr float kCharaSize = 32.0f;//キャラクターサイズ
 }
 

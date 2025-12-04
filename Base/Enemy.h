@@ -25,9 +25,6 @@ protected:
 	std::shared_ptr<Player>pPlayer_;//プレイヤーのスマートポインタ
 	Rect colRect_;					//当たり判定の矩形
 	bool isDead_;					//死亡フラグ
-	int idleH_;
-	int jumpH_;
-	int attackH_;
 
 public:
 	Enemy(Vector2 pos,Vector2 vel);

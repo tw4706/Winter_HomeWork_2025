@@ -39,7 +39,7 @@ namespace
 	//ジャンプ時の横移動速度
 	constexpr float kHalfSpeed = 1.5f;
 	//ジャンプの高さ
-	constexpr float kJumpPower = 8.0f;
+	constexpr float kJumpPower = 10.0f;
 	//ダブルジャンプの高さ
 	constexpr float kDoubleJumpPower = 6.0f;
 
