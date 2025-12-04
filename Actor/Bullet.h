@@ -5,10 +5,11 @@
 #include<vector>
 
 //ƒvƒŒƒCƒ„[‚Ì‹Ê‚Ìí•Ê
-enum class PlayerBulletType
+enum class BulletType
 {
 	Lance,
-	Knife
+	Knife,
+	EnemyBullet
 };
 
 //’e‚Ìî•ñ
@@ -26,7 +27,9 @@ struct BulletConfig
 constexpr BulletConfig kBulletConfigs[] =
 {
 	{"data/Bullet/Lance.png",32,32,8.0f,30.0f,true},	//‘„
-	{"data/Bullet/Knife.png",32,32,12.0f,10.0f,false}	//’ZŒ•
+	{"data/Bullet/Knife.png",32,32,12.0f,10.0f,false},	//’ZŒ•
+
+	{"data/Bullet/EnemyBullet.png",32,32,6.0f,0.0f,false}
 };
 
 class Input;
@@ -34,7 +37,7 @@ class Enemy;
 class Bullet:public GameObject
 {
 public:
-	Bullet(Vector2 pos,Vector2 vel,PlayerBulletType bulletType);
+	Bullet(Vector2 pos,Vector2 vel,BulletType bulletType);
 	~Bullet()override;
 
 	void Init()override;
@@ -49,11 +52,11 @@ public:
 	// ’e‚ªÁ‚¦‚½‚©‚Ç‚¤‚©‚ğ•Ô‚·
 	bool IsAlive() const { return isAlive_; }
 	//’e‚Ìí—Ş‚ğ•Ô‚·
-	const PlayerBulletType& GetType() const { return bulletType_; }
+	const BulletType& GetType() const { return bulletType_; }
 
 private:
 	bool isAlive_;		//’e‚ª‘¶İ‚µ‚Ä‚¢‚é‚©‚Ç‚¤‚©
 	int bulletH_;		//’e‚Ì‰æ‘œƒnƒ“ƒhƒ‹
-	PlayerBulletType bulletType_;
+	BulletType bulletType_;
 };
 

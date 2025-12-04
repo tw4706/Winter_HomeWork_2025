@@ -18,11 +18,9 @@ namespace
 	constexpr int kChipNumY = 40;
 }
 
-Bg::Bg(std::shared_ptr<Player> player):
-	pos_{},
-	pPlayer_(player)
+Bg::Bg():
+	pos_{}
 {
-	pPlayer_ = player;
 	mapHandle_ = LoadGraph("data/Map/mapChip.png");
 	int graphWidth = 0;
 	int graphHeight = 0;
@@ -137,7 +135,7 @@ void Bg::DrawMapChip(std::shared_ptr<Camera>pCamera)
 			int posY = static_cast<int>(y * kChipSize*kScale + pCamera->GetOffset().y);
 
 			//‰æ–ÊŠO‚Ì‚à‚Ì‚Í•`‰æ‚µ‚È‚¢
-			if (posX < 0 - kChipSize)continue;
+			if (posX < 0 - kChipSize*2)continue;
 			if (posX > Game::kScreenWidth)continue;
 			if (posY < 0 - kChipSize)continue;
 			if (posY > Game::kScreenHeight)continue;

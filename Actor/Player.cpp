@@ -44,7 +44,7 @@ namespace
 	constexpr float kDoubleJumpPower = 6.0f;
 
 	//落下判定となる座標
-	constexpr float kFallLimit = 800.0f;
+	constexpr float kFallLimit = 2100.0f;
 
 	//弾の存在できる数
 	constexpr int kBulletNum = 3;
@@ -68,7 +68,7 @@ Player::Player(Vector2 pos, Vector2 vel) :
 	damageTimer_(0),
 	shotTimer_(0),
 	state_(PlayerState::Idle),
-	currentBulletType_(PlayerBulletType::Knife)
+	currentBulletType_(BulletType::Knife)
 {
 }
 
@@ -100,6 +100,16 @@ void Player::Update(Input& input, BulletManager& bm)
 	//発射処理
 	Shot(input,bm);
 
+	//落下判定
+	if (pos_.y > kFallLimit)
+	{
+		if (onGameOver_)
+		{
+			onGameOver_();
+		}
+		return;
+	}
+
 #ifdef _DEBUG
 	//デバッグでリスポーン
 	if (input.IsTriggered("respawn"))
@@ -111,7 +121,7 @@ void Player::Update(Input& input, BulletManager& bm)
 	{
 		printfDx("武器変えた!\n");
 		int weaponType = (static_cast<int>(currentBulletType_) + 1) % 2;
-		currentBulletType_ = static_cast<PlayerBulletType>(weaponType);
+		currentBulletType_ = static_cast<BulletType>(weaponType);
 	}
 
 #endif

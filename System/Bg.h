@@ -7,7 +7,7 @@ class Camera;
 class Bg
 {
 public:
-	Bg(std::shared_ptr<Player> player);
+	Bg();
 	~Bg();
 
 	void Init();
@@ -21,8 +21,6 @@ public:
 	/// <param name="chiprect">マップチップの矩形</param>
 	/// <returns>当たっているか</returns>
 	bool IsCollision(Rect& rect, Rect& chipRect);
-
-	float GetMapHeight();
 
 private:
 

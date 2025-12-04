@@ -5,6 +5,7 @@
 #include"Bullet.h"
 #include<vector>
 #include<memory>
+#include<functional>
 
 enum class PlayerState
 {
@@ -17,6 +18,9 @@ class BulletManager;
 class Player :public GameObject
 {
 public:
+	//ゲームオーバーを通知する
+	std::function<void()>onGameOver_;
+
 	Player(Vector2 pos, Vector2 vel);
 	~Player()override;
 
@@ -46,6 +50,6 @@ private:
 	int shotTimer_;//弾の発射間隔タイマー
 	//プレイヤーの状態
 	PlayerState state_;
-	PlayerBulletType currentBulletType_;//現在の弾の種類
+	BulletType currentBulletType_;//現在の弾の種類
 };
 

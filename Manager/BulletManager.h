@@ -21,10 +21,14 @@ public:
 	void SetCameraOffset(Vector2 offset);
 
 	//ƒvƒŒƒCƒ„[‚Ì’e‚Ìí•Ê‚ğ”»’è
-	bool IsPlayerBullet(PlayerBulletType type)const;
+	bool IsPlayerBullet(BulletType type)const;
+
+	//“G‚Ì’e‚ğ’Ç‰Á
+	void AddEnemyBullet(Vector2& pos,Vector2& vel);
+
 
 private:
 	std::vector<std::shared_ptr<Bullet>>bullets_;
-	std::map<PlayerBulletType, int>bulletLimits_;
+	std::map<BulletType, int>bulletLimits_;
 };
 

@@ -137,7 +137,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Scene\GameOverScene.cpp" />
     <ClCompile Include="Manager\CollisionManager.cpp" />
+    <ClCompile Include="Actor\SkullFlower.cpp" />
     <ClCompile Include="System\Animation.cpp" />
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="System\Bg.cpp" />
@@ -160,7 +162,9 @@
     <ClCompile Include="Actor\Zombie.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Scene\GameOverScene.h" />
     <ClInclude Include="Manager\CollisionManager.h" />
+    <ClInclude Include="Actor\SkullFlower.h" />
     <ClInclude Include="System\Animation.h" />
     <ClInclude Include="Application.h" />
     <ClInclude Include="System\Bg.h" />

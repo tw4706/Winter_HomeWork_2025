@@ -11,7 +11,7 @@ namespace
 	constexpr float kScale = 1.5f;
 }
 
-Bullet::Bullet(Vector2 pos, Vector2 vel,PlayerBulletType bulletType) :
+Bullet::Bullet(Vector2 pos, Vector2 vel,BulletType bulletType) :
 	GameObject(pos, vel),
 	isAlive_(true),
 	bulletH_(-1),
@@ -45,10 +45,10 @@ void Bullet::UpdateShot()
 	{
 		//短剣
 		//短剣の場合は2回当てたら敵を倒せる
-	case PlayerBulletType::Knife:
+	case BulletType::Knife:
 		break;
 		//槍
-	case PlayerBulletType::Lance:
+	case BulletType::Lance:
 		//貫通するだけなので何もしない
 		break;
 	default:
@@ -82,15 +82,34 @@ void Bullet::Update(Input& input, std::vector<std::shared_ptr<Enemy>>& enemies)
 
 void Bullet::Draw()
 {
-	//生きてなかったら描画しない
-	if (!isAlive_)return;
+	if (!isAlive_) return;
+
+	const auto& config = kBulletConfigs[static_cast<int>(bulletType_)];
 
 	float drawX = pos_.x + cameraOffset_.x;
 	float drawY = pos_.y + cameraOffset_.y;
 
-	//角度を向きに応じて変更
-	float angle = (vel_.x >= 0) ? DX_PI / 2.0f : DX_PI + (DX_PI / 2.0f);
-	DrawRotaGraph(drawX, drawY, kScale, angle, bulletH_, true);
+	// スプライトシートの切り取り位置
+	int srcX =0;
+	int srcY = 0;
+	int frameW = config.width;
+	int frameH = config.height;
+
+	float angle = 0.0f;
+
+	if (bulletType_ != BulletType::EnemyBullet)
+	{
+		angle = (vel_.x >= 0) ? DX_PI / 2.0f : DX_PI + (DX_PI / 2.0f);
+	}
+
+	DrawRectRotaGraph(
+		drawX, drawY,
+		srcX, srcY,        // 切り取り開始位置
+		frameW, frameH,    // 切り取りサイズ
+		kScale, angle,
+		bulletH_,
+		TRUE               // 透明色使用
+	);
 	
 #ifdef _DEBUG
 	colRect_.DrawAndCamera(cameraOffset_, 0xff0000, false);

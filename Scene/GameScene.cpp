@@ -1,10 +1,12 @@
 #include "GameScene.h"
+#include"Bg.h"
+#include"Dog.h"
 #include"Input.h"
 #include"Player.h"
 #include"Zombie.h"
-#include"Dog.h"
-#include"Bg.h"
 #include"Application.h"
+#include "SkullFlower.h"
+#include "GameOverScene.h"
 #include"SceneController.h"
 #include<cmath>
 #include<cassert>
@@ -15,7 +17,8 @@ namespace
 	//フェードまでの間隔
 	constexpr int fade_interval = 60;
 
-
+	//落下判定となる座標
+	constexpr float kFallLimit = 1900.0f;
 }
 
 GameScene::GameScene(SceneController& controller) :
@@ -25,7 +28,8 @@ GameScene::GameScene(SceneController& controller) :
 {
 	enemies_.push_back(std::make_shared<Zombie>(Vector2{ 800,500 }, Vector2{}));
 	enemies_.push_back(std::make_shared<Dog>(Vector2{ 1000,500 }, Vector2{}));
-	bg_ = std::make_shared<Bg>(player_);
+	enemies_.push_back(std::make_shared<SkullFlower>(Vector2{ 1400, 500 },Vector2{},&bulletManager_));
+	bg_ = std::make_shared<Bg>();
 	camera_ = std::make_shared<Camera>();
 }
 
@@ -39,16 +43,22 @@ void GameScene::FadeInUpdate(Input&)
 	}
 }
 
-void GameScene::NormalUpdate(Input& input)
+void GameScene::NormalUpdate(Input&input)
 {
+	if (player_->GetPos().y > kFallLimit)
+	{
+		update_ = &GameScene::FadeOutUpdate;
+		draw_ = &GameScene::FadeDraw;
+		frame_ = 0;
+		return;
+	}
 }
-
 
 void GameScene::FadeOutUpdate(Input&) 
 {
 	if (frame_++ >= fade_interval)
 	{
-//		controller_.ChangeScene(std::make_shared<GameOverScene>(controller_));
+		controller_.ChangeScene(std::make_shared<GameOverScene>(controller_));
 		return;
 	}
 }
@@ -111,6 +121,10 @@ void GameScene::Update(Input& input)
 		{
 			player_->OnDamage();
 			printfDx("PlayerHit\n");
+
+			update_ = &GameScene::FadeOutUpdate;
+			draw_ = &GameScene::FadeDraw;
+			frame_ = 0;
 		}
 	}
 }

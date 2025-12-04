@@ -14,8 +14,8 @@ BulletManager::BulletManager():
 {
 	//弾の数を決める
 	bulletLimits_ = {
-		{PlayerBulletType::Knife,3},
-		{PlayerBulletType::Lance,2}
+		{BulletType::Knife,3},
+		{BulletType::Lance,2}
 	};
 }
 
@@ -26,7 +26,7 @@ BulletManager::~BulletManager()
 void BulletManager::Init(std::shared_ptr<Bullet> bullets)
 {
 	//プレイヤーの弾の種類
-	PlayerBulletType type = bullets->GetType();
+	BulletType type = bullets->GetType();
 
 	//現在の同じ弾の数をカウント
 	int bulletCount = 0;
@@ -112,9 +112,16 @@ void BulletManager::SetCameraOffset(Vector2 offset)
 	}
 }
 
-bool BulletManager::IsPlayerBullet(PlayerBulletType type) const
+bool BulletManager::IsPlayerBullet(BulletType type) const
 {
 	//プレイヤーの弾の種別を返す
-	return	type == PlayerBulletType::Knife ||
-		type == PlayerBulletType::Lance;
+	return	type == BulletType::Knife ||
+		type == BulletType::Lance;
+}
+
+void BulletManager::AddEnemyBullet(Vector2& pos, Vector2& vel)
+{
+	auto bullet = std::make_shared<Bullet>(pos, vel,BulletType::EnemyBullet);
+	bullet->Init();
+	bullets_.push_back(bullet);
 }
