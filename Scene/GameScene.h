@@ -3,6 +3,7 @@
 #include "Camera.h"
 #include"Geometry.h"
 #include"BulletManager.h"
+#include"EnemyFactory.h"
 #include<memory>
 class Player;
 class Bg;
@@ -31,8 +32,8 @@ public:
 
 private:
 	std::shared_ptr<Player>player_;
-	std::vector<std::shared_ptr<Enemy>>enemies_;
 	BulletManager bulletManager_;
+	EnemyFactory enemyFactory_;
 	std::shared_ptr<Bg>bg_;
 	std::shared_ptr<Camera>camera_;
 };

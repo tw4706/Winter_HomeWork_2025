@@ -26,9 +26,6 @@ GameScene::GameScene(SceneController& controller) :
 	update_(&GameScene::FadeInUpdate),
 	draw_(&GameScene::FadeDraw)
 {
-	enemies_.push_back(std::make_shared<Zombie>(Vector2{ 800,500 }, Vector2{}));
-	enemies_.push_back(std::make_shared<Dog>(Vector2{ 1000,500 }, Vector2{}));
-	enemies_.push_back(std::make_shared<SkullFlower>(Vector2{ 1400, 500 },Vector2{},&bulletManager_));
 	bg_ = std::make_shared<Bg>();
 	camera_ = std::make_shared<Camera>();
 }
@@ -86,12 +83,9 @@ void GameScene::Init()
 
 	camera_->Init(player_);
 
-	for (auto& enemy : enemies_)
-	{
-		enemy->Init();
-		enemy->SetPlayer(player_);
-		enemy->SetBg(bg_);
-	}
+	enemyFactory_.LoadFromCSV("data/Enemy/enemyData.csv", &bulletManager_);
+	printfDx("Loaded %zu enemies\n", enemyFactory_.GetEnemies().size());
+	enemyFactory_.Init(player_, bg_);
 }
 
 void GameScene::Update(Input& input)
@@ -105,19 +99,13 @@ void GameScene::Update(Input& input)
 
 	player_->Update(input,bulletManager_);
 
-	for (auto& enemy : enemies_)
-	{
-		if (!enemy->IsDead())
-		{
-			enemy->Update();
-		}
-	}
+	enemyFactory_.Update();
 
 	//弾の更新処理
-	bulletManager_.Update(enemies_, *player_);
+	bulletManager_.Update(enemyFactory_.GetEnemies(), *player_);
 
 	//プレイヤーと敵の当たり判定
-	for (auto& enemy : enemies_)
+	for (auto& enemy : enemyFactory_.GetEnemies())
 	{
 		if (!enemy->IsDead() && player_->GetColRect().IsCollision(enemy->GetColRect()))
 		{
@@ -141,15 +129,7 @@ void GameScene::Draw()
 	player_->SetCameraOffset(cameraOffset);
 	player_->Draw();
 
-	for (auto& enemy : enemies_)
-	{
-		if (!enemy->IsDead())
-		{
-			enemy->SetCameraOffset(cameraOffset);
-			enemy->Draw();
-			enemy->SetBg(bg_);
-		}
-	}
+	enemyFactory_.Draw(cameraOffset);
 
 	bulletManager_.SetCameraOffset(cameraOffset);
 	bulletManager_.Draw();

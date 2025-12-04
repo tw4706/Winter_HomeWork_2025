@@ -41,7 +41,8 @@ void Zombie::Init()
 	isTurn_ = true;
 	zombieH_ = LoadGraph("data/Enemy/zombie_walk.png");
 	assert(zombieH_ >= 0);
-	////当たり判定の更新
+
+	//当たり判定の更新
 	colRect_.SetCenter(pos_.x, pos_.y, kDrawW, kDrawH);
 }
 
@@ -55,8 +56,6 @@ void Zombie::Update()
 
 	//当たり判定の更新
 	colRect_.SetCenter(pos_.x, pos_.y-30, kDrawW, kDrawH);
-
-	//DrawFormatString(0, 120, GetColor(255, 255, 255), "Zombie posY:%f velY:%f", pos_.y, vel_.y);
 }
 
 void Zombie::Draw()
