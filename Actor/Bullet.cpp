@@ -31,16 +31,13 @@ void Bullet::Init()
 	assert(bulletH_ >= 0);
 
 	//当たり判定の初期化
-	colRect_.SetCenter(pos_.x+cameraOffset_.x,
-		pos_.y + cameraOffset_.y, config.width, config.height);
+	colRect_.SetCenter(pos_.x,pos_.y, config.width, config.height);
 }
 
 //弾の種別ごとの更新処理
 void Bullet::UpdateShot()
 {
 	const auto& config = kBulletConfigs[static_cast<int>(bulletType_)];
-
-	float gravity = 0.5f;
 
 	//弾の状態に応じて処理を分岐させる
 	switch (bulletType_)
@@ -55,12 +52,6 @@ void Bullet::UpdateShot()
 		break;
 	case BulletType::Torch:
 		//地面に落下したら波動を出す
-		vel_.y += gravity;
-		if (pos_.y >= kGround)
-		{
-			pos_.y = kGround;
-			isAlive_ = false;
-		}
 		break;
 	default:
 		break;
@@ -105,9 +96,9 @@ void Bullet::Draw()
 
 	float angle = 0.0f;
 
-	if (bulletType_ != BulletType::EnemyBullet)
+	if (bulletType_ == BulletType::Knife || bulletType_ == BulletType::Lance)
 	{
-		angle = (vel_.x >= 0) ? DX_PI / 2.0f : DX_PI + (DX_PI / 2.0f);
+		angle = (vel_.x >= 0) ? DX_PI / 2.0f : DX_PI + DX_PI / 2.0f;
 	}
 
 	DrawRectRotaGraph(
@@ -118,6 +109,15 @@ void Bullet::Draw()
 		bulletH_,
 		TRUE);
 	
+#ifdef _DEBUG
+	// ★ここで位置を表示する
+	DrawFormatString(
+		drawX + 20, drawY - 20,
+		GetColor(255, 255, 0),
+		"pos(%.1f, %.1f)", pos_.x, pos_.y
+	);
+#endif
+
 #ifdef _DEBUG
 	colRect_.DrawAndCamera(cameraOffset_, 0xff0000, false);
 #endif
@@ -132,9 +132,4 @@ void Bullet::OnHit()
 		//貫通しない弾は当たったら消える
 		isAlive_ = false;
 	}
-}
-
-void Bullet::SpawnHadou()
-{
-
 }

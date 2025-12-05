@@ -17,6 +17,10 @@ namespace
 	{
 		kIdleGraph,
 		kAttackgraph,
+		kWalkGraph,
+		kJumpGraph,
+		kHurtGraph,
+		kDeathGraph,
 
 		kGraphNum
 	};
@@ -24,10 +28,16 @@ namespace
 	const std::string kGraphName[kGraphNum] =
 	{
 		"data/Player/Idle.png",
-		"data/Player/Attack.png"
+		"data/Player/Attack.png",
+		"data/Player/Walk.png",
+		"data/Player/Jump.png",
+		"data/Player/Hurt.png",
+		"data/Player/Dead.png"
+
 	};
 	static_assert(static_cast<int>(kGraphNum) == _countof(kGraphName));
 
+	
 	//プレイヤーの画像サイズ
 	constexpr int kGraphWidth = 128;
 	constexpr int kGraphHeight = 128;
@@ -50,12 +60,14 @@ namespace
 
 	//弾の存在できる数
 	constexpr int kBulletNum = 3;
+
 	//弾がプレイヤーから出る位置のオフセット
 	constexpr float kGunOffsetX = 40.0f;
 	constexpr float kGunOffsetY = 5.0f;
 
 	//ダメージを受けたときの無敵時間
 	constexpr int kDamageDuration = 60;
+
 	//重力
 	constexpr float kGravity = 1.0f;
 
@@ -63,6 +75,27 @@ namespace
 	constexpr int kPosXMargin = 10;
 	constexpr int kPosYMargin = 60;
 
+	//各状態遷移の総フレーム数
+	constexpr int kIdleFrameCount = 8;
+	constexpr int kAttackFrameCount = 7;
+	constexpr int kWalkFrameCount = 7;
+	constexpr int kJumpFrameCount = 8;
+	constexpr int kHurtFrameCount = 4;
+	constexpr int kDeathFrameCount = 4;
+
+	//各状態遷移のフレーム間隔
+	constexpr int kIdleFrameInterval = 6;
+	constexpr int kAttackFrameInterval = 6;
+	constexpr int kWalkFrameInterval = 4;
+	constexpr int kJumpFrameInterval = 5;
+	constexpr int kHurtFrameInterval = 6;
+	constexpr int kDeathFrameInterval = 6;
+
+
+	//状態ごとのフレーム数とフレーム間隔
+	const int frameCounts[kGraphNum] = { kIdleFrameCount,kAttackFrameCount,kWalkFrameCount, kJumpFrameCount, kHurtFrameCount, kDeathFrameCount };
+	const int frameIntervals[kGraphNum] = { kIdleFrameInterval, 
+		kAttackFrameInterval, kWalkFrameInterval, kJumpFrameInterval, kHurtFrameInterval, kDeathFrameInterval }; // 更新速度
 }
 
 Player::Player(Vector2 pos, Vector2 vel) :
@@ -74,6 +107,7 @@ Player::Player(Vector2 pos, Vector2 vel) :
 	isTouching_(false),
 	damageTimer_(0),
 	shotTimer_(0),
+	isAlive_(true),
 	state_(PlayerState::Idle),
 	currentBulletType_(BulletType::Knife)
 {
@@ -90,9 +124,19 @@ Player::~Player()
 void Player::Init()
 {
 	graphHandles_.resize(kGraphNum);
+	animations_.resize(kGraphNum);
+
 	for (int i = 0; i < kGraphNum; i++)
 	{
 		graphHandles_[i] = LoadGraph(kGraphName[i].c_str());
+		animations_[i] = std::make_shared<Animation>(
+			graphHandles_[i],
+			kGraphWidth,
+			kGraphHeight,
+			frameCounts[i],
+			frameIntervals[i],
+			kScale
+		);
 	}
 }
 
@@ -106,6 +150,12 @@ void Player::Update(Input& input, BulletManager& bm)
 
 	//発射処理
 	Shot(input,bm);
+
+	//状態遷移の更新
+	UpdateState(input);
+
+	//アニメーションの更新
+	animations_[static_cast<int>(state_)]->Update();
 
 	//落下判定
 	if (pos_.y > kFallLimit)
@@ -122,7 +172,7 @@ void Player::Update(Input& input, BulletManager& bm)
 	if (input.IsTriggered("changeWeapon"))
 	{
 		//printfDx("武器変えた!\n");
-		int weaponType = (static_cast<int>(currentBulletType_) + 1) % 2;
+		int weaponType = (static_cast<int>(currentBulletType_) + 1) % 3;
 		currentBulletType_ = static_cast<BulletType>(weaponType);
 	}
 
@@ -154,26 +204,29 @@ void Player::Draw()
 	float drawY = pos_.y + cameraOffset_.y;
 
 	//描画
-	if (isTurn_)
-	{
-		DrawRectRotaGraph3(drawX, drawY - kPosYMargin,
-			0, 0,
-			kGraphWidth, kGraphHeight,
-			kGraphHalfWidth, kGraphHalfHeight,
-			kScale, kScale,
-			0.0,
-			graphHandles_[kIdleGraph], true, false, false);
-	}
-	else
-	{
-		DrawRectRotaGraph3(drawX, drawY - kPosYMargin,
-			0, 0,
-			kGraphWidth, kGraphHeight,
-			kGraphHalfWidth, kGraphHalfHeight,
-			kScale, kScale,
-			0.0,
-			graphHandles_[kIdleGraph], true,!isTurn_);
-	}
+	int animIndex = static_cast<int>(state_);
+	animations_[animIndex]->Draw(drawX, drawY - kPosYMargin, !isTurn_);
+
+	//if (isTurn_)
+	//{
+	//	DrawRectRotaGraph3(drawX, drawY - kPosYMargin,
+	//		0, 0,
+	//		kGraphWidth, kGraphHeight,
+	//		kGraphHalfWidth, kGraphHalfHeight,
+	//		kScale, kScale,
+	//		0.0,
+	//		graphHandles_[kIdleGraph], true, false, false);
+	//}
+	//else
+	//{
+	//	DrawRectRotaGraph3(drawX, drawY - kPosYMargin,
+	//		0, 0,
+	//		kGraphWidth, kGraphHeight,
+	//		kGraphHalfWidth, kGraphHalfHeight,
+	//		kScale, kScale,
+	//		0.0,
+	//		graphHandles_[kIdleGraph], true,!isTurn_);
+	//}
 
 #ifdef _DEBUG
 	//当たり判定の矩形の色を変える
@@ -279,28 +332,39 @@ void Player::OnDamage()
 {
 	isDamaged_ = true;
 	damageTimer_ = kDamageDuration;
+	isAlive_ = false;
 }
 
-//リスポーン処理
-void Player::ReSpawn()
+void Player::UpdateState(Input& input)
 {
-
-	if (pos_.y >= kFallLimit)
+	if (!isAlive_)
 	{
-		pos_ = initializePos_;
-		vel_ = {};
-		isGround_ = false;
-		isJumping_ = false;
-		isDoubleJumping_ = false;
-
-		// 必要なら向きや状態もリセット
-		isTurn_ = true;
-		state_ = PlayerState::Idle;
-
-		// 無敵やショットのクールダウンを初期化したい場合はここで調整
-		isDamaged_ = false;
-		damageTimer_ = 0;
-		shotTimer_ = 0;
+		state_ = PlayerState::Death;
+		return;
 	}
 
+	if (isDamaged_)
+	{
+		state_ = PlayerState::Hurt;
+		return;
+	}
+
+	if (!isGround_)
+	{
+		state_ = PlayerState::Jump;
+		return;
+	}
+
+	if (input.IsPressed("shot"))
+	{
+		state_ = PlayerState::Attack;
+	}
+	else if (vel_.x != 0)
+	{
+		state_ = PlayerState::Walk;
+	}
+	else
+	{
+		state_ = PlayerState::Idle;
+	}
 }

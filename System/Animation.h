@@ -4,13 +4,14 @@
 class Animation
 {
 public:
-
-	Animation();
+    Animation(int handle, int frameW, int frameH,
+        int frameCount, int frameInterval, float scale);
 	~Animation();
 
-    void Init(int frameW,int frameH,int frameCount,int interval);
-	void Update();
-    void Draw(int handle, int x, int y, float scale, float angle);
+    void Update();
+    void Draw(float x, float y, bool flip);
+
+	int GetFrameCount() const { return frameCount_; }
 
 private:
     int handle_;            //画像ハンドル
@@ -20,5 +21,6 @@ private:
     int currentFrame_;      //現在のフレーム
     int frameTimer_;        //フレーム更新するためのタイマー
 	int frameInterval_;     //フレームの間隔
+	float scale_;          //描画スケール
 };
 

@@ -1,61 +1,46 @@
 #include "Animation.h"
 #include<Dxlib.h>
 
-namespace
-{
-	//待機アニメーションのフレーム数・切り替え間隔
-    constexpr int kIdleCount = 7;
-    constexpr int kIdleInterval = 7;
 
-	//攻撃アニメーションのフレーム数点切り替え間隔
-	constexpr int kAttackCount = 8;
-	constexpr int kAttackInterval = 8;
-}
-
-Animation::Animation():
-    handle_(-1),
-    frameW_(0),
-    frameH_(0),
-    frameCount_(0),
-    frameInterval_(0),
-    currentFrame_(0),
-    frameTimer_(0)
+Animation::Animation(int handle, int frameW, int frameH, 
+    int frameCount, int frameInterval,float scale) :
+    handle_(handle), frameW_(frameW), frameH_(frameH),
+    frameCount_(frameCount), frameInterval_(frameInterval),
+    currentFrame_(0), frameTimer_(0),scale_(scale)
 {
 }
 
 Animation::~Animation() {}
 
-void Animation::Init(int frameW, int frameH, int frameCount, int interval)
+void Animation::Update()
 {
-    frameW_ = frameW;
-    frameH_ = frameH;
-    frameCount_ = frameCount;
-    frameInterval_ = interval;
-    currentFrame_ = 0;
-    frameTimer_ = 0;
-}
-
-void Animation::Update() 
-{
-	//タイマーを進める
     frameTimer_++;
-
-	//タイマーがインターバルを超えたらフレームを進める
-    if (frameTimer_ >= frameInterval_) 
+    if (frameTimer_ >= frameInterval_)
     {
-		//フレームを進める
-        currentFrame_ = (currentFrame_ + 1) % frameCount_;
         frameTimer_ = 0;
+        currentFrame_++;
+        if (currentFrame_ >= frameCount_)
+        {
+            currentFrame_ = 0;
+        }
     }
 }
 
-void Animation::Draw(int handle,int x,int y,float scale,float angle)
+void Animation::Draw(float x, float y, bool flip)
 {
-    int srcX = currentFrame_ * frameW_;
-    int srcY = 0;
+    int sx = currentFrame_ * frameW_;
+    int sy = 0;
 
-    //描画
-    DrawRectRotaGraph3(x, y,frameW_ / 2, frameH_ / 2,srcX,srcY,
-        frameW_,frameH_,scale, angle,handle, TRUE,FALSE);
+    DrawRectRotaGraph3(
+        (int)x, (int)y,   // 描画位置
+        sx, sy,           // 切り取り開始座標
+        frameW_, frameH_, // 切り取りサイズ
+        frameW_ / 2, frameH_ / 2, // 回転中心
+        scale_, scale_,   // 拡大縮小
+        0.0,              // 回転角
+        handle_,          // 画像ハンドル
+        TRUE,             // 半透明
+        flip               // 左右反転
+    );
 }
 

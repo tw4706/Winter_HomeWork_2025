@@ -4,9 +4,9 @@
 
 namespace
 {
-	constexpr int kBulletMax = 3;//’e‚ÌÅ‘å”
-	constexpr int kLanceMax = 2;//‘„‚ÌÅ‘å”
-	constexpr int kTorchMax = 1;//‚½‚¢‚Ü‚Â‚ÌÅ‘å”
+	constexpr int kBulletLimit = 3;//’e‚ÌÅ‘å”
+	constexpr int kLanceLimit = 2;//‘„‚ÌÅ‘å”
+	constexpr int kTorchLimit = 1;//‚½‚¢‚Ü‚Â‚ÌÅ‘å”
 }
 
 BulletManager::BulletManager():
@@ -14,8 +14,9 @@ BulletManager::BulletManager():
 {
 	//’e‚Ì”‚ğŒˆ‚ß‚é
 	bulletLimits_ = {
-		{BulletType::Knife,3},
-		{BulletType::Lance,2}
+		{BulletType::Knife,kBulletLimit},
+		{BulletType::Lance,kLanceLimit},
+		{BulletType::Torch,kTorchLimit}
 	};
 }
 
@@ -116,7 +117,8 @@ bool BulletManager::IsPlayerBullet(BulletType type) const
 {
 	//ƒvƒŒƒCƒ„[‚Ì’e‚Ìí•Ê‚ğ•Ô‚·
 	return	type == BulletType::Knife ||
-		type == BulletType::Lance;
+		type == BulletType::Lance||
+		type == BulletType::Torch;
 }
 
 void BulletManager::AddEnemyBullet(Vector2& pos, Vector2& vel)

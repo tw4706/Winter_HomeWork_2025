@@ -83,7 +83,6 @@ void GameScene::Init()
 	//ŠeƒNƒ‰ƒX‚Ì‰Šú‰»
 	bg_->Init();
 
-
 	float spawnPosX = 50.0f;
 	float spawnPosY = 1744.0f;
 

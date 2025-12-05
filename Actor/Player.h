@@ -10,7 +10,11 @@
 enum class PlayerState
 {
 	Idle,
-	Attack
+	Attack,
+	Walk,
+	Jump,
+	Hurt,
+	Death
 };
 
 class Input;
@@ -36,8 +40,10 @@ public:
 
 	//ダメージを受けた時の処理
 	void OnDamage();
-	//リスポーン処理
-	void ReSpawn();
+
+	bool IsDead()const { return isAlive_; }
+
+	void UpdateState(Input& input);
 
 private:
 	std::vector<int>graphHandles_;//画像ハンドルの配列
@@ -48,8 +54,10 @@ private:
 	bool isTouching_;
 	int damageTimer_;//ダメージを受けてからのタイマー
 	int shotTimer_;//弾の発射間隔タイマー
+	bool isAlive_;//生存しているかどうか
 	//プレイヤーの状態
 	PlayerState state_;
 	BulletType currentBulletType_;//現在の弾の種類
+	std::vector<std::shared_ptr<Animation>>animations_;//アニメーションの配列
 };
 

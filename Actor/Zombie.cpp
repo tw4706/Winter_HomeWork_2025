@@ -16,7 +16,7 @@ namespace
 
 	//敵の見た目のサイズ
 	constexpr float kDrawW = kGraphWidth * 2.0f;
-	constexpr float kDrawH = kGraphHeight * 2.0f;
+	constexpr float kDrawH = kGraphHeight * 2.0f-24;
 
 	//エネミーの移動速度
 	constexpr float kSpeed = 0.5f;
@@ -27,7 +27,8 @@ namespace
 	//プレイヤーとの距離
 	const float kDistance = 200.0f;
 
-	constexpr int kPosYMargin = 30;
+	constexpr int kPosYMargin = 20;
+	constexpr int kPosYDrawOffset = 30;
 }
 
 Zombie::Zombie(Vector2 pos,Vector2 vel) :
@@ -68,7 +69,7 @@ void Zombie::Draw()
 	float drawY = pos_.y + cameraOffset_.y;
 
 	DrawRectRotaGraph3(
-		drawX, drawY- kPosYMargin,
+		drawX, drawY- kPosYDrawOffset,
 		0, 0,
 		kGraphWidth, kGraphHeight,
 		kGraphHalfWidth, kGraphHalfHeight,
