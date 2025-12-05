@@ -114,6 +114,13 @@ void GameScene::Update(Input& input)
 	//弾の更新処理
 	bulletManager_.Update(enemyFactory_.GetEnemies(), *player_);
 
+	if (!player_->IsDead())
+	{
+		update_ = &GameScene::FadeOutUpdate;
+		draw_ = &GameScene::FadeDraw;
+		frame_ = 0;
+	}
+
 	//プレイヤーと敵の当たり判定
 	for (auto& enemy : enemyFactory_.GetEnemies())
 	{

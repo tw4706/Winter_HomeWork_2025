@@ -332,7 +332,6 @@ void Player::OnDamage()
 {
 	isDamaged_ = true;
 	damageTimer_ = kDamageDuration;
-	isAlive_ = false;
 }
 
 void Player::UpdateState(Input& input)
