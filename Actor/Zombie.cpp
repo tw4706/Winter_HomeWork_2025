@@ -11,6 +11,8 @@ namespace
 	//グラフィックのサイズ
 	constexpr int kGraphWidth = 32;
 	constexpr int kGraphHeight = 48;
+	constexpr int kGraphHalfWidth = 32/2;
+	constexpr int kGraphHalfHeight = 48/2;
 
 	//敵の見た目のサイズ
 	constexpr float kDrawW = kGraphWidth * 2.0f;
@@ -24,6 +26,8 @@ namespace
 
 	//プレイヤーとの距離
 	const float kDistance = 200.0f;
+
+	constexpr int kPosYMargin = 30;
 }
 
 Zombie::Zombie(Vector2 pos,Vector2 vel) :
@@ -55,7 +59,7 @@ void Zombie::Update()
 	GameObject::Update();
 
 	//当たり判定の更新
-	colRect_.SetCenter(pos_.x, pos_.y-30, kDrawW, kDrawH);
+	colRect_.SetCenter(pos_.x, pos_.y- kPosYMargin, kDrawW, kDrawH);
 }
 
 void Zombie::Draw()
@@ -64,10 +68,10 @@ void Zombie::Draw()
 	float drawY = pos_.y + cameraOffset_.y;
 
 	DrawRectRotaGraph3(
-		drawX, drawY-30,
+		drawX, drawY- kPosYMargin,
 		0, 0,
 		kGraphWidth, kGraphHeight,
-		kGraphWidth / 2, kGraphHeight / 2,
+		kGraphHalfWidth, kGraphHalfHeight,
 		kScale, kScale,
 		0.0,
 		zombieH_,

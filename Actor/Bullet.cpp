@@ -40,6 +40,8 @@ void Bullet::UpdateShot()
 {
 	const auto& config = kBulletConfigs[static_cast<int>(bulletType_)];
 
+	float gravity = 0.5f;
+
 	//弾の状態に応じて処理を分岐させる
 	switch (bulletType_)
 	{
@@ -51,6 +53,15 @@ void Bullet::UpdateShot()
 	case BulletType::Lance:
 		//貫通するだけなので何もしない
 		break;
+	case BulletType::Torch:
+		//地面に落下したら波動を出す
+		vel_.y += gravity;
+		if (pos_.y >= kGround)
+		{
+			pos_.y = kGround;
+			isAlive_ = false;
+		}
+		break;
 	default:
 		break;
 	}
@@ -58,10 +69,7 @@ void Bullet::UpdateShot()
 	pos_ += vel_;
 
 	//弾の当たり判定を更新
-	colRect_.SetCenter(pos_.x,
-		pos_.y,
-		kBulletConfigs[static_cast<int>(bulletType_)].width, 
-		kBulletConfigs[static_cast<int>(bulletType_)].height);
+	colRect_.SetCenter(pos_.x,pos_.y,config.width, config.height);
 }
 
 void Bullet::Update(Input& input, std::vector<std::shared_ptr<Enemy>>& enemies)
@@ -89,7 +97,7 @@ void Bullet::Draw()
 	float drawX = pos_.x + cameraOffset_.x;
 	float drawY = pos_.y + cameraOffset_.y;
 
-	// スプライトシートの切り取り位置
+	//切り取り位置
 	int srcX =0;
 	int srcY = 0;
 	int frameW = config.width;
@@ -108,8 +116,7 @@ void Bullet::Draw()
 		frameW, frameH,    // 切り取りサイズ
 		kScale, angle,
 		bulletH_,
-		TRUE               // 透明色使用
-	);
+		TRUE);
 	
 #ifdef _DEBUG
 	colRect_.DrawAndCamera(cameraOffset_, 0xff0000, false);
@@ -125,4 +132,9 @@ void Bullet::OnHit()
 		//貫通しない弾は当たったら消える
 		isAlive_ = false;
 	}
+}
+
+void Bullet::SpawnHadou()
+{
+
 }

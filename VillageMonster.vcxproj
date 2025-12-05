@@ -158,7 +158,6 @@
     <ClCompile Include="Physics\Rect.cpp" />
     <ClCompile Include="Scene\Scene.cpp" />
     <ClCompile Include="Scene\SceneController.cpp" />
-    <ClCompile Include="Actor\Skull.cpp" />
     <ClCompile Include="Scene\TitleScene.cpp" />
     <ClCompile Include="Actor\Zombie.cpp" />
   </ItemGroup>
@@ -184,7 +183,6 @@
     <ClInclude Include="Physics\Rect.h" />
     <ClInclude Include="Scene\Scene.h" />
     <ClInclude Include="Scene\SceneController.h" />
-    <ClInclude Include="Actor\Skull.h" />
     <ClInclude Include="Scene\TitleScene.h" />
     <ClInclude Include="Actor\Zombie.h" />
   </ItemGroup>

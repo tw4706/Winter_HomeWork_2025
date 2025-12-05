@@ -31,6 +31,8 @@ namespace
 	//プレイヤーの画像サイズ
 	constexpr int kGraphWidth = 128;
 	constexpr int kGraphHeight = 128;
+	constexpr int kGraphHalfWidth = 128/2;
+	constexpr int kGraphHalfHeight = 128/2;
 	constexpr float kScale = 1.5f;
 
 	//移動速度 //通常:3
@@ -56,6 +58,11 @@ namespace
 	constexpr int kDamageDuration = 60;
 	//重力
 	constexpr float kGravity = 1.0f;
+
+	//描画の調整用
+	constexpr int kPosXMargin = 10;
+	constexpr int kPosYMargin = 60;
+
 }
 
 Player::Player(Vector2 pos, Vector2 vel) :
@@ -92,7 +99,7 @@ void Player::Init()
 void Player::Update(Input& input, BulletManager& bm)
 {
 	GameObject::Update();
-	colRect_.SetCenter(pos_.x, pos_.y-10, kGraphWidth/2, kGraphHeight-32);
+	colRect_.SetCenter(pos_.x, pos_.y- kPosXMargin, kGraphWidth/2, kGraphHeight-32);
 	Move(input);
 	// ジャンプ処理
 	Jump(input);
@@ -149,21 +156,21 @@ void Player::Draw()
 	//描画
 	if (isTurn_)
 	{
-		DrawRectRotaGraph3(drawX, drawY - 60,
+		DrawRectRotaGraph3(drawX, drawY - kPosYMargin,
 			0, 0,
 			kGraphWidth, kGraphHeight,
-			kGraphWidth / 2, kGraphHeight / 2,
-			1.5, 1.5,
+			kGraphHalfWidth, kGraphHalfHeight,
+			kScale, kScale,
 			0.0,
 			graphHandles_[kIdleGraph], true, false, false);
 	}
 	else
 	{
-		DrawRectRotaGraph3(drawX, drawY - 60,
+		DrawRectRotaGraph3(drawX, drawY - kPosYMargin,
 			0, 0,
 			kGraphWidth, kGraphHeight,
-			kGraphWidth / 2, kGraphHeight / 2,
-			1.5, 1.5,
+			kGraphHalfWidth, kGraphHalfHeight,
+			kScale, kScale,
 			0.0,
 			graphHandles_[kIdleGraph], true,!isTurn_);
 	}

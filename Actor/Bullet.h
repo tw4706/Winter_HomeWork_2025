@@ -9,6 +9,7 @@ enum class BulletType
 {
 	Lance,
 	Knife,
+	Torch,
 	EnemyBullet
 };
 
@@ -27,7 +28,8 @@ struct BulletConfig
 constexpr BulletConfig kBulletConfigs[] =
 {
 	{"data/Bullet/Lance.png",32,32,8.0f,30.0f,true},	//‘„
-	{"data/Bullet/Knife.png",32,32,12.0f,10.0f,false},	//’ZŒ•
+	{"data/Bullet/Knife.png",32,32,12.0f,15.0f,false},	//’ZŒ•
+	{"data/Bullet/Torch.png",32,32,6.0f,30.0f,false},	//‚½‚¢‚Ü‚Â
 
 	{"data/Bullet/EnemyBullet.png",32,32,6.0f,0.0f,false}
 };
@@ -48,6 +50,8 @@ public:
 
 	//“–‚½‚Á‚½‚Ìˆ—‚ğs‚¤ŠÖ”
 	void OnHit();
+
+	void SpawnHadou();
 
 	// ’e‚ªÁ‚¦‚½‚©‚Ç‚¤‚©‚ğ•Ô‚·
 	bool IsAlive() const { return isAlive_; }

@@ -87,9 +87,6 @@
     <ClCompile Include="Actor\Dog.cpp">
       <Filter>ソース ファイル\ActorCPP</Filter>
     </ClCompile>
-    <ClCompile Include="Actor\Skull.cpp">
-      <Filter>ソース ファイル\ActorCPP</Filter>
-    </ClCompile>
     <ClCompile Include="Actor\Zombie.cpp">
       <Filter>ソース ファイル\ActorCPP</Filter>
     </ClCompile>
@@ -159,9 +156,6 @@
       <Filter>ヘッダー ファイル\BaseClassH</Filter>
     </ClInclude>
     <ClInclude Include="Actor\Dog.h">
-      <Filter>ヘッダー ファイル\ActorH</Filter>
-    </ClInclude>
-    <ClInclude Include="Actor\Skull.h">
       <Filter>ヘッダー ファイル\ActorH</Filter>
     </ClInclude>
     <ClInclude Include="Actor\Zombie.h">
