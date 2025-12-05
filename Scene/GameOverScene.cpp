@@ -3,6 +3,7 @@
 #include "TitleScene.h"
 #include "Input.h"
 #include <DxLib.h>
+#include "ClearScene.h"
 
 namespace
 {
@@ -15,12 +16,12 @@ void GameOverScene::FadeInUpdate(Input&)
 	if (frame_ <= 0)
 	{
 		frame_ = 0;
-		update_ = &GameOverScene::NormelUpdate;
-		draw_ = &GameOverScene::NormelDraw;
+		update_ = &GameOverScene::NormalUpdate;
+		draw_ = &GameOverScene::NormalDraw;
 	}
 }
 
-void GameOverScene::NormelUpdate(Input&input)
+void GameOverScene::NormalUpdate(Input&input)
 {
 	if (input.IsTriggered("shot") ||
 		input.IsTriggered("jump") ||
@@ -44,17 +45,16 @@ void GameOverScene::FadeOutUpdate(Input& input)
 
 void GameOverScene::FadeDraw()
 {
-	// GAME OVER の文字
 	DrawString(400, 300, "GAME OVER", GetColor(255, 0, 0));
 
-	// フェードをかける（黒い板を重ねる）
+	//フェード
 	int alpha = (frame_ * 255) / kFadeDuration;
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
 	DrawBox(0, 0, 1280, 720, GetColor(0, 0, 0), true);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 }
 
-void GameOverScene::NormelDraw()
+void GameOverScene::NormalDraw()
 {
 	DrawString(400, 300, "GAME OVER", GetColor(255, 0, 0));
 	DrawString(360, 360, "Press any key to continue...", GetColor(255, 255, 255));

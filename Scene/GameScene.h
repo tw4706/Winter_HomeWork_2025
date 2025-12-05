@@ -16,6 +16,7 @@ private:
 	void FadeInUpdate(Input&);
 	void NormalUpdate(Input& input);
 	void FadeOutUpdate(Input&);
+	void GoalFadeOutUpdate(Input&);
 	using UpdateFunc_t = void (GameScene::*)(Input&);
 	UpdateFunc_t update_;//update系を受け取るメンバ関数ポインタ
 
@@ -36,4 +37,7 @@ private:
 	EnemyFactory enemyFactory_;
 	std::shared_ptr<Bg>bg_;
 	std::shared_ptr<Camera>camera_;
+
+	//実験用のゴールオブジェクト
+	Rect goalRect_;
 };

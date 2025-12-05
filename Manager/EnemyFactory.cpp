@@ -19,7 +19,7 @@ void EnemyFactory::LoadFromCSV(const std::string& path, BulletManager* bulletMan
     std::string line;
     int row = 0;
 
-    // “G¶¬—pƒtƒ@ƒNƒgƒŠ
+    //“G¶¬—pƒtƒ@ƒNƒgƒŠ
     std::map<int, std::function<std::shared_ptr<Enemy>(Vector2)>> enemyFactory = 
     {
         {1, [](Vector2 pos) { return std::make_shared<Zombie>(pos, Vector2{}); }},
@@ -49,7 +49,7 @@ void EnemyFactory::LoadFromCSV(const std::string& path, BulletManager* bulletMan
 
 void EnemyFactory::Init(std::shared_ptr<Player> player, std::shared_ptr<Bg> bg)
 {
-	// “G‚Ì‰Šú‰»
+	//“G‚Ì‰Šú‰»
     for (auto& enemy : enemies_) 
     {
         enemy->Init();
@@ -60,7 +60,7 @@ void EnemyFactory::Init(std::shared_ptr<Player> player, std::shared_ptr<Bg> bg)
 
 void EnemyFactory::Update()
 {
-	// “G‚ÌXV
+	//“G‚ÌXV
     for (auto& enemy : enemies_) 
     {
         if (!enemy->IsDead()) 
@@ -75,9 +75,8 @@ void EnemyFactory::Draw(const Vector2& cameraOffset)
     for (auto& enemy : enemies_)
     {
         Vector2 pos = enemy->GetPos();
-        printfDx("Enemy pos: %f, %f\n", pos.x, pos.y);
     }
-	// “G‚Ì•`‰æ
+	//“G‚Ì•`‰æ
     for (auto& enemy : enemies_) 
     {
         if (!enemy->IsDead()) 

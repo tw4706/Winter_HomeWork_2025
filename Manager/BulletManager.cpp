@@ -64,7 +64,7 @@ void BulletManager::Update(std::vector<std::shared_ptr<Enemy>>&enemies, Player&p
 				{
 					bullet->OnHit();
 					enemy->OnHit();
-					printfDx("EnemyHit!\n");
+					//printfDx("EnemyHit!\n");
 					break;
 				}
 			}
@@ -76,7 +76,7 @@ void BulletManager::Update(std::vector<std::shared_ptr<Enemy>>&enemies, Player&p
 			{
 				bullet->OnHit();
 				player.OnDamage();
-				printfDx("PlayerHit!\n");
+				//printfDx("PlayerHit!\n");
 			}
 		}
 	}

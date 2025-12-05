@@ -1,12 +1,14 @@
 #include "GameScene.h"
 #include"Bg.h"
 #include"Dog.h"
+#include"Rect.h"
 #include"Input.h"
 #include"Player.h"
 #include"Zombie.h"
 #include"Application.h"
 #include "SkullFlower.h"
 #include "GameOverScene.h"
+#include "ClearScene.h"
 #include"SceneController.h"
 #include<cmath>
 #include<cassert>
@@ -60,6 +62,14 @@ void GameScene::FadeOutUpdate(Input&)
 	}
 }
 
+void GameScene::GoalFadeOutUpdate(Input&)
+{
+	if (frame_++ >= fade_interval)
+	{
+		controller_.ChangeScene(std::make_shared<ClearScene>(controller_));
+	}
+}
+
 void GameScene::FadeDraw() 
 {
 }
@@ -84,8 +94,9 @@ void GameScene::Init()
 	camera_->Init(player_);
 
 	enemyFactory_.LoadFromCSV("data/Enemy/enemyData.csv", &bulletManager_);
-	printfDx("Loaded %zu enemies\n", enemyFactory_.GetEnemies().size());
 	enemyFactory_.Init(player_, bg_);
+
+	goalRect_.SetLT(8500, 1744, 100, 200);
 }
 
 void GameScene::Update(Input& input)
@@ -110,12 +121,23 @@ void GameScene::Update(Input& input)
 		if (!enemy->IsDead() && player_->GetColRect().IsCollision(enemy->GetColRect()))
 		{
 			player_->OnDamage();
-			printfDx("PlayerHit\n");
+			//printfDx("PlayerHit\n");
 
-			update_ = &GameScene::FadeOutUpdate;
+			update_ = &GameScene::GoalFadeOutUpdate;
 			draw_ = &GameScene::FadeDraw;
 			frame_ = 0;
 		}
+	}
+
+	//ƒS[ƒ‹‚Æ‚Ì“–‚½‚è”»’è
+	if (player_->GetColRect().IsCollision(goalRect_))
+	{
+		printfDx("GoalHit!\n");
+
+		update_ = &GameScene::GoalFadeOutUpdate;
+		draw_ = &GameScene::FadeDraw;
+		frame_ = 0;
+		return;
 	}
 }
 

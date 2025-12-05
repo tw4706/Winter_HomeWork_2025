@@ -121,7 +121,7 @@ void Player::Update(Input& input, BulletManager& bm)
 	//武器の切り替え
 	if (input.IsTriggered("changeWeapon"))
 	{
-		printfDx("武器変えた!\n");
+		//printfDx("武器変えた!\n");
 		int weaponType = (static_cast<int>(currentBulletType_) + 1) % 2;
 		currentBulletType_ = static_cast<BulletType>(weaponType);
 	}
@@ -141,11 +141,11 @@ void Player::Update(Input& input, BulletManager& bm)
 	DrawCircle(static_cast<int>(pos_.x + cameraOffset_.x),
 		static_cast<int>(pos_.y + cameraOffset_.y),
 		5, GetColor(0, 255, 0), true);
-#ifdef _DEBUG
+
 	//デバッグ用
 	DrawFormatString(0, 0, GetColor(255, 255, 255), "PlayerX:%f", pos_.x);
 	DrawFormatString(0, 20, GetColor(255, 255, 255), "VelX:%f", vel_.x);
-#endif
+
 }
 
 void Player::Draw()
