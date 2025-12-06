@@ -1,4 +1,5 @@
 #include "BulletManager.h"
+#include "GlobalConstants.h"
 #include "Camera.h"
 #include <Dxlib.h>
 
@@ -46,7 +47,7 @@ void BulletManager::Init()
 {
 }
 
-void BulletManager::Update(std::vector<std::shared_ptr<Enemy>>&enemies, Player&player)
+void BulletManager::Update(Input& input, std::vector<std::shared_ptr<Enemy>>&enemies, Player&player)
 {
 	//’e‚ÌXV
 	//’e‚ÆƒLƒƒƒ‰ƒNƒ^[‚Ì“–‚½‚è”»’è
@@ -54,30 +55,16 @@ void BulletManager::Update(std::vector<std::shared_ptr<Enemy>>&enemies, Player&p
 	{
 		if (!bullet->IsAlive()) continue;
 
-		bullet->UpdateShot();
+		// Bullet ‘¤‚É‘S‚Ä‚Ìˆ—‚ğ”C‚¹‚é
+		bullet->Update(input, enemies);
 
-		if (IsPlayerBullet(bullet->GetType()))
+		// “G’e‚Ìê‡‚¾‚¯ƒvƒŒƒCƒ„[”»’è
+		if (!IsPlayerBullet(bullet->GetType()))
 		{
-			// ƒvƒŒƒCƒ„[’e ¨ “G‚É“–‚½‚é
-			for (auto& enemy : enemies)
-			{
-				if (!enemy->IsDead() && bullet->GetColRect().IsCollision(enemy->GetColRect()))
-				{
-					bullet->OnHit();
-					enemy->OnHit();
-					//printfDx("EnemyHit!\n");
-					break;
-				}
-			}
-		}
-		else
-		{
-			// “G’e ¨ ƒvƒŒƒCƒ„[‚É“–‚½‚é
 			if (bullet->GetColRect().IsCollision(player.GetColRect()))
 			{
 				bullet->OnHit();
 				player.OnDamage();
-				//printfDx("PlayerHit!\n");
 			}
 		}
 	}
@@ -88,21 +75,20 @@ void BulletManager::Update(std::vector<std::shared_ptr<Enemy>>&enemies, Player&p
 		bullets_.end());
 }
 
-void BulletManager::Update()
-{
-}
-
 void BulletManager::Draw()
 {
 	//’e‚Ì•`‰æ
 	for (const auto& bullet : bullets_)
 	{
-		//’e‚ª‘¶İ‚µ‚Ä‚é‚È‚ç
-		if (bullet->IsAlive())
-		{
-			bullet->Draw();
-		}
+		//’e‚ª‘¶İ‚µ‚È‚¢‚È‚ç•`‰æ‚µ‚È‚¢
+		if (!bullet->IsAlive()) continue;
+
+		bullet->Draw();
 	}
+#ifdef _DEBUG
+	// ƒfƒoƒbƒO—pF‰æ–Ê‹éŒ`‚ğÔ˜g‚Å•`‰æ
+	screenRect_.DrawAndCamera(Vector2{ 0,0 }, 0xff0000, false);
+#endif
 }
 
 void BulletManager::SetCameraOffset(Vector2 offset)

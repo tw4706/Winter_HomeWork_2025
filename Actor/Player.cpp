@@ -43,6 +43,9 @@ namespace
 	constexpr int kGraphHeight = 128;
 	constexpr int kGraphHalfWidth = 128/2;
 	constexpr int kGraphHalfHeight = 128/2;
+	constexpr float kGraphColSize = 64.0f;
+
+	//拡大率
 	constexpr float kScale = 1.5f;
 
 	//移動速度 //通常:3
@@ -60,7 +63,7 @@ namespace
 	//落下判定となる座標
 	constexpr float kFallLimit = 2100.0f;
 
-	//弾の存在できる数
+	//弾の種類
 	constexpr int kBulletNum = 3;
 
 	//弾がプレイヤーから出る位置のオフセット
@@ -74,11 +77,12 @@ namespace
 	constexpr float kGravity = 1.0f;
 
 	//当たり判定の調整用
-	constexpr int kColYMargin = 32;
+	constexpr int kColYOffset = 32;
 
 	//描画の調整用
-	constexpr int kPosXMargin = 10;
-	constexpr int kPosYMargin = 60;
+	constexpr int kPosXOffset = 10;
+	constexpr int kPosYOffset = 60;
+	constexpr float kWalkColXOffset = 15.0f;
 
 	//各状態遷移の総フレーム数
 	constexpr int kIdleFrameCount = 8;
@@ -108,7 +112,7 @@ namespace
 }
 
 Player::Player(Vector2 pos, Vector2 vel) :
-	GameObject(pos, vel, kGraphWidth, kGraphHeight, 64.0f),
+	GameObject(pos, vel, kGraphWidth, kGraphHeight, kGraphColSize),
 	initializePos_{ pos },
 	isJumping_(false),
 	isDoubleJumping_(false),
@@ -154,7 +158,17 @@ void Player::Init()
 void Player::Update(Input& input, BulletManager& bm)
 {
 	GameObject::Update();
-	colRect_.SetCenter(pos_.x, pos_.y- kPosXMargin, kGraphHalfWidth, kGraphHeight- kColYMargin);
+
+	float colOffsetX = 0.0f;
+
+	if (state_ == PlayerState::Walk)
+	{
+		colOffsetX = isTurn_?-kWalkColXOffset:kWalkColXOffset;
+	}
+
+	float colX = pos_.x + colOffsetX;
+
+	colRect_.SetCenter(colX, pos_.y- kPosXOffset, kGraphHalfWidth, kGraphHeight- kColYOffset);
 	Move(input);
 	// ジャンプ処理
 	Jump(input);
@@ -183,7 +197,7 @@ void Player::Update(Input& input, BulletManager& bm)
 	if (input.IsTriggered("changeWeapon"))
 	{
 		//printfDx("武器変えた!\n");
-		int weaponType = (static_cast<int>(currentBulletType_) + 1) % 3;
+		int weaponType = (static_cast<int>(currentBulletType_) + 1) % kBulletNum;
 		currentBulletType_ = static_cast<BulletType>(weaponType);
 	}
 
@@ -219,12 +233,12 @@ void Player::Draw()
 		// コアフレームだけ描画
 		if (frame >= kAttackStartFrame && frame <= kAttackEndFrame)
 		{
-			animations_[animIndex]->Draw(drawX, drawY - kPosYMargin, !isTurn_);
+			animations_[animIndex]->Draw(drawX, drawY - kPosYOffset, !isTurn_);
 		}
 	}
 	else
 	{
-		animations_[animIndex]->Draw(drawX, drawY - kPosYMargin, !isTurn_);
+		animations_[animIndex]->Draw(drawX, drawY - kPosYOffset, !isTurn_);
 	}
 
 	//if (isTurn_)

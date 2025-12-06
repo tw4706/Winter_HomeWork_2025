@@ -14,8 +14,8 @@ public:
 
 	void Init(std::shared_ptr<Bullet>bullets);
 	void Init()override;
-	void Update(std::vector<std::shared_ptr<Enemy>>&enemies, Player&player);
-	void Update()override;
+	void Update(Input& input, std::vector<std::shared_ptr<Enemy>>&enemies, Player&player);
+	void Update()override {};
 	void Draw()override;
 
 	void SetCameraOffset(Vector2 offset);
@@ -30,5 +30,6 @@ public:
 private:
 	std::vector<std::shared_ptr<Bullet>>bullets_;
 	std::map<BulletType, int>bulletLimits_;
+	Rect screenRect_;
 };
 

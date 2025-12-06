@@ -2,6 +2,7 @@
 #include "Rect.h"
 #include "Enemy.h"
 #include "GlobalConstants.h"
+#include "BulletManager.h"
 #include<Dxlib.h>
 #include<cassert>
 
@@ -15,6 +16,7 @@ Bullet::Bullet(Vector2 pos, Vector2 vel,BulletType bulletType) :
 	GameObject(pos, vel),
 	isAlive_(true),
 	bulletH_(-1),
+	hitCount_(0),
 	bulletType_(bulletType)
 {
 }
@@ -51,7 +53,6 @@ void Bullet::UpdateShot()
 		//ä—í Ç∑ÇÈÇæÇØÇ»ÇÃÇ≈âΩÇ‡ÇµÇ»Ç¢
 		break;
 	case BulletType::Torch:
-		//ínñ Ç…óéâ∫ÇµÇΩÇÁîgìÆÇèoÇ∑
 		break;
 	default:
 		break;
@@ -67,14 +68,23 @@ void Bullet::Update(Input& input, std::vector<std::shared_ptr<Enemy>>& enemies)
 {
 	UpdateShot();
 
-	//ìGÇ…íeÇ™ìñÇΩÇ¡ÇΩéûÇÃèàóù
 	for (auto& enemy : enemies)
 	{
-		//ìGÇ…ìñÇΩÇ¡ÇƒÇ¢ÇΩÇÁé¿çsÇ∑ÇÈ
-		if (enemy && colRect_.IsCollision(enemy->GetColRect()))
+		if (enemy->IsDead()) continue;
+
+		if (colRect_.IsCollision(enemy->GetColRect()))
 		{
+			int damage = 1;
+
+			if (bulletType_ == BulletType::Lance) damage = 3;
+			if (bulletType_ == BulletType::Torch) damage = 3;
+
+			enemy->OnHit(damage);
+
+			// íeë§ÇÃèàóù
 			OnHit();
-			if (!isAlive_)return;
+
+			break;
 		}
 	}
 }
@@ -108,15 +118,6 @@ void Bullet::Draw()
 		kScale, angle,
 		bulletH_,
 		TRUE);
-	
-#ifdef _DEBUG
-	// ÅöÇ±Ç±Ç≈à íuÇï\é¶Ç∑ÇÈ
-	DrawFormatString(
-		drawX + 20, drawY - 20,
-		GetColor(255, 255, 0),
-		"pos(%.1f, %.1f)", pos_.x, pos_.y
-	);
-#endif
 
 #ifdef _DEBUG
 	colRect_.DrawAndCamera(cameraOffset_, 0xff0000, false);
@@ -127,9 +128,7 @@ void Bullet::OnHit()
 {
 	const auto& config = kBulletConfigs[static_cast<int>(bulletType_)];
 
-	if (!config.isPiercing)
-	{
-		//ä—í ÇµÇ»Ç¢íeÇÕìñÇΩÇ¡ÇΩÇÁè¡Ç¶ÇÈ
-		isAlive_ = false;
-	}
+	if (!isAlive_) return;
+
+	isAlive_ = false;// íeÇè¡Ç∑
 }

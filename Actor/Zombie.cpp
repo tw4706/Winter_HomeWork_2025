@@ -27,7 +27,7 @@ namespace
 	//プレイヤーとの距離
 	const float kDistance = 200.0f;
 
-	constexpr int kPosYMargin = 20;
+	constexpr int kPosYOffset = 20;
 	constexpr int kPosYDrawOffset = 30;
 }
 
@@ -60,7 +60,7 @@ void Zombie::Update()
 	GameObject::Update();
 
 	//当たり判定の更新
-	colRect_.SetCenter(pos_.x, pos_.y- kPosYMargin, kDrawW, kDrawH);
+	colRect_.SetCenter(pos_.x, pos_.y- kPosYOffset, kDrawW, kDrawH);
 }
 
 void Zombie::Draw()

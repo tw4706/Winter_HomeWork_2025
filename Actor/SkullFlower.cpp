@@ -7,9 +7,9 @@
 namespace
 {
     constexpr int  kGraphSize = 64;
-    constexpr int  kGraphHalfSize = 64/2;
+    constexpr int  kGraphColSize = 64/2;
     constexpr float kScale = 2.0f;
-    constexpr int kPosYMargin = 15;
+    constexpr int kPosYOffset = 15;
     constexpr float kSpeed = 5.0f;
     constexpr float kDistance = 300.0f;
 }
@@ -55,7 +55,7 @@ void SkullFlower::Update()
 
     Enemy::Update();// 移動＋衝突更新
     // 当たり判定の更新
-    colRect_.SetCenter(pos_.x,pos_.y- kPosYMargin, kGraphSize, kGraphSize);
+    colRect_.SetCenter(pos_.x,pos_.y- kPosYOffset, kGraphSize, kGraphSize);
 }
 
 void SkullFlower::Draw()
@@ -66,10 +66,10 @@ void SkullFlower::Draw()
 
     //描画
     DrawRectRotaGraph3(
-        static_cast<int>(drawX), static_cast<int>(drawY)- kPosYMargin,
+        static_cast<int>(drawX), static_cast<int>(drawY)- kPosYOffset,
         0,192,                                          // 描画中心
         kGraphSize, kGraphSize,                         // 切り取り開始
-        kGraphHalfSize, kGraphHalfSize,                 // 切り取りサイズ
+        kGraphColSize, kGraphColSize,                 // 切り取りサイズ
         kScale, kScale, 0.0,
         flowerH_, TRUE,!isTurn_
     );

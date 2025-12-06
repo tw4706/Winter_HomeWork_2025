@@ -60,6 +60,7 @@ public:
 private:
 	bool isAlive_;		//’e‚ª‘¶İ‚µ‚Ä‚¢‚é‚©‚Ç‚¤‚©
 	int bulletH_;		//’e‚Ì‰æ‘œƒnƒ“ƒhƒ‹
+	int hitCount_;		//“–‚½‚Á‚½”
 	BulletType bulletType_;
 };
 

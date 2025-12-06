@@ -2,10 +2,16 @@
 #include"Animation.h"
 #include<Dxlib.h>
 
+namespace
+{
+	constexpr int kMaxHp = 3;
+}
+
 Enemy::Enemy(Vector2 pos,Vector2 vel):
 	GameObject(pos,vel),
 	isTurn_(false),
-	isDead_(false)
+	isDead_(false),
+	hp_(kMaxHp)
 {
 
 }
@@ -25,4 +31,15 @@ void Enemy::Update()
 void Enemy::Draw()
 {
 	if (isDead_)return;
+}
+
+void Enemy::OnHit(int damage)
+{
+	hp_-=damage;
+	if(hp_ <= 0)
+	{
+		isDead_ = true;
+		colRect_.SetCenter(-9999, -9999, 0, 0);
+	}
+
 }

@@ -16,6 +16,6 @@ public:
 
 private:
 	int zombieH_;			//ƒ]ƒ“ƒr‚Ì‰æ‘œƒnƒ“ƒhƒ‹
-	std::shared_ptr<Animation>idleAnim_;
+	std::shared_ptr<Animation>animations_;
 };
 

@@ -25,6 +25,7 @@ protected:
 	std::shared_ptr<Player>pPlayer_;//プレイヤーのスマートポインタ
 	Rect colRect_;					//当たり判定の矩形
 	bool isDead_;					//死亡フラグ
+	int hp_;						//体力
 
 public:
 	Enemy(Vector2 pos,Vector2 vel);
@@ -45,6 +46,6 @@ public:
 
 	//弾が当たった時の処理
 	//当たり判定を消す
-	virtual void OnHit() { isDead_ = true; colRect_.SetCenter(-9999, -9999, 0, 0); }
+	virtual void OnHit(int damage);
 };
 

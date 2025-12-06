@@ -112,7 +112,7 @@ void GameScene::Update(Input& input)
 	enemyFactory_.Update();
 
 	//’e‚ÌXVˆ—
-	bulletManager_.Update(enemyFactory_.GetEnemies(), *player_);
+	bulletManager_.Update(input,enemyFactory_.GetEnemies(), *player_);
 
 	if (!player_->IsDead())
 	{

@@ -9,7 +9,7 @@ namespace
 {
 	//画像の切り取りサイズ
 	constexpr int kGraphSize = 48;
-	constexpr int kGraphHalfSize = kGraphSize -16;
+	constexpr int kGraphColSize = kGraphSize -16;
 
 	//当たり判定のサイズ
 	constexpr  int kRectWidth = 32;
@@ -71,7 +71,7 @@ void Dog::Draw()
 	DrawRectRotaGraph3(drawX, drawY-15,
 		0, 0,
 		kGraphSize, kGraphSize,
-		kGraphHalfSize, kGraphHalfSize,
+		kGraphColSize, kGraphColSize,
 		2.0, 2.0,
 		0.0,
 		dogH_, true);
