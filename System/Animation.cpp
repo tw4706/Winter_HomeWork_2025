@@ -3,10 +3,10 @@
 
 
 Animation::Animation(int handle, int frameW, int frameH, 
-    int frameCount, int frameInterval,float scale) :
+    int frameCount, int frameInterval,float scale,bool loop) :
     handle_(handle), frameW_(frameW), frameH_(frameH),
     frameCount_(frameCount), frameInterval_(frameInterval),
-    currentFrame_(0), frameTimer_(0),scale_(scale)
+	currentFrame_(0), frameTimer_(0), scale_(scale), isLoop_(loop)
 {
 }
 
@@ -19,6 +19,10 @@ void Animation::Update()
     {
         frameTimer_ = 0;
         currentFrame_++;
+        if (isLoop_)
+        {
+            currentFrame_ %= frameCount_;
+        }
         if (currentFrame_ >= frameCount_)
         {
             currentFrame_ = 0;
@@ -42,5 +46,11 @@ void Animation::Draw(float x, float y, bool flip)
         TRUE,             // îºìßñæ
         flip               // ç∂âEîΩì]
     );
+}
+
+void Animation::Reset()
+{
+    currentFrame_ = 0;
+	frameTimer_ = 0;
 }
 

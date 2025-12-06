@@ -50,8 +50,10 @@ namespace
 
 	//ジャンプ時の横移動速度
 	constexpr float kHalfSpeed = 1.5f;
+
 	//ジャンプの高さ
 	constexpr float kJumpPower = 12.0f;
+
 	//ダブルジャンプの高さ
 	constexpr float kDoubleJumpPower = 8.0f;
 
@@ -71,6 +73,9 @@ namespace
 	//重力
 	constexpr float kGravity = 1.0f;
 
+	//当たり判定の調整用
+	constexpr int kColYMargin = 32;
+
 	//描画の調整用
 	constexpr int kPosXMargin = 10;
 	constexpr int kPosYMargin = 60;
@@ -78,16 +83,20 @@ namespace
 	//各状態遷移の総フレーム数
 	constexpr int kIdleFrameCount = 8;
 	constexpr int kAttackFrameCount = 7;
-	constexpr int kWalkFrameCount = 7;
+	constexpr int kWalkFrameCount = 8;
 	constexpr int kJumpFrameCount = 8;
 	constexpr int kHurtFrameCount = 4;
 	constexpr int kDeathFrameCount = 4;
 
+	//攻撃のアニメーションはさらに攻撃部分だけ切り取る
+	constexpr int kAttackStartFrame = 3;
+	constexpr int kAttackEndFrame = 7;
+
 	//各状態遷移のフレーム間隔
 	constexpr int kIdleFrameInterval = 6;
 	constexpr int kAttackFrameInterval = 6;
-	constexpr int kWalkFrameInterval = 4;
-	constexpr int kJumpFrameInterval = 5;
+	constexpr int kWalkFrameInterval = 5;
+	constexpr int kJumpFrameInterval = 10;
 	constexpr int kHurtFrameInterval = 6;
 	constexpr int kDeathFrameInterval = 6;
 
@@ -105,6 +114,7 @@ Player::Player(Vector2 pos, Vector2 vel) :
 	isDoubleJumping_(false),
 	isDamaged_(false),
 	isTouching_(false),
+	isAttacking_(false),
 	damageTimer_(0),
 	shotTimer_(0),
 	isAlive_(true),
@@ -135,7 +145,8 @@ void Player::Init()
 			kGraphHeight,
 			frameCounts[i],
 			frameIntervals[i],
-			kScale
+			kScale,
+			false
 		);
 	}
 }
@@ -143,7 +154,7 @@ void Player::Init()
 void Player::Update(Input& input, BulletManager& bm)
 {
 	GameObject::Update();
-	colRect_.SetCenter(pos_.x, pos_.y- kPosXMargin, kGraphWidth/2, kGraphHeight-32);
+	colRect_.SetCenter(pos_.x, pos_.y- kPosXMargin, kGraphHalfWidth, kGraphHeight- kColYMargin);
 	Move(input);
 	// ジャンプ処理
 	Jump(input);
@@ -186,15 +197,11 @@ void Player::Update(Input& input, BulletManager& bm)
 			isDamaged_ = false;
 		}
 	}
-
-	//プレイヤーの基準点
-	DrawCircle(static_cast<int>(pos_.x + cameraOffset_.x),
-		static_cast<int>(pos_.y + cameraOffset_.y),
-		5, GetColor(0, 255, 0), true);
-
+#ifdef _DEBUG
 	//デバッグ用
 	DrawFormatString(0, 0, GetColor(255, 255, 255), "PlayerX:%f", pos_.x);
 	DrawFormatString(0, 20, GetColor(255, 255, 255), "VelX:%f", vel_.x);
+#endif
 
 }
 
@@ -205,7 +212,20 @@ void Player::Draw()
 
 	//描画
 	int animIndex = static_cast<int>(state_);
-	animations_[animIndex]->Draw(drawX, drawY - kPosYMargin, !isTurn_);
+	if (state_ == PlayerState::Attack)
+	{
+		int frame = animations_[animIndex]->GetFrameCount();
+
+		// コアフレームだけ描画
+		if (frame >= kAttackStartFrame && frame <= kAttackEndFrame)
+		{
+			animations_[animIndex]->Draw(drawX, drawY - kPosYMargin, !isTurn_);
+		}
+	}
+	else
+	{
+		animations_[animIndex]->Draw(drawX, drawY - kPosYMargin, !isTurn_);
+	}
 
 	//if (isTurn_)
 	//{
@@ -278,7 +298,8 @@ void Player::Move(Input& input)
 //ジャンプ処理
 void Player::Jump(Input& input)
 {
-	if (input.IsTriggered("jump")) {
+	if (input.IsTriggered("jump")) 
+	{
 		// 通常ジャンプ
 		if (isGround_)
 		{
@@ -323,6 +344,12 @@ void Player::Shot(Input&input,BulletManager&bm)
 		bullet->SetBg(pBg_);
 		bm.Init(bullet);
 
+
+		// 攻撃開始
+		isAttacking_ = true;
+		animations_[static_cast<int>(PlayerState::Attack)]->Reset();
+
+		shotTimer_ = kBulletConfigs[static_cast<int>(currentBulletType_)].shotInterval;
 		shotTimer_ = config.shotInterval;
 	}
 }
@@ -334,35 +361,61 @@ void Player::OnDamage()
 	damageTimer_ = kDamageDuration;
 }
 
+//各アニメーションの処理
 void Player::UpdateState(Input& input)
 {
+	//死亡
 	if (!isAlive_)
 	{
 		state_ = PlayerState::Death;
 		return;
 	}
 
+	//ダメージを受けているならダメージ状態
 	if (isDamaged_)
 	{
 		state_ = PlayerState::Hurt;
 		return;
 	}
 
+	//攻撃のアニメーションをループさせないための処理
+	if (isAttacking_)
+	{
+		state_ = PlayerState::Attack;
+
+		auto attackAnim = animations_[static_cast<int>(PlayerState::Attack)];
+
+		//アニメーションが終了したら攻撃状態を解除
+		if (attackAnim->IsAnimFinished())
+		{
+			isAttacking_ = false;
+		}
+		return;
+	}
+
+	//攻撃入力があったら攻撃状態へ
+	if (input.IsTriggered("shot"))
+	{
+		isAttacking_ = true;
+		animations_[static_cast<int>(PlayerState::Attack)]->Reset();
+		state_ = PlayerState::Attack;
+		return;
+	}
+
+
+	//ジャンプ中ならジャンプ状態
 	if (!isGround_)
 	{
 		state_ = PlayerState::Jump;
 		return;
 	}
 
-	if (input.IsPressed("shot"))
-	{
-		state_ = PlayerState::Attack;
-	}
-	else if (vel_.x != 0)
+	//移動状態の更新
+	if (vel_.x != 0)
 	{
 		state_ = PlayerState::Walk;
 	}
-	else
+	else//そうでないなら待機状態
 	{
 		state_ = PlayerState::Idle;
 	}

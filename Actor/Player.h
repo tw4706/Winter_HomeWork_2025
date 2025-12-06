@@ -51,7 +51,8 @@ private:
 	bool isJumping_;//ジャンプしているかどうか
 	bool isDoubleJumping_;//ダブルジャンプ可能かどうか
 	bool isDamaged_;//ダメージを受けているかどうか
-	bool isTouching_;
+	bool isTouching_;//地面に接触しているかどうか
+	bool isAttacking_;//攻撃しているかどうか
 	int damageTimer_;//ダメージを受けてからのタイマー
 	int shotTimer_;//弾の発射間隔タイマー
 	bool isAlive_;//生存しているかどうか
