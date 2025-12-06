@@ -96,7 +96,7 @@ namespace
 	constexpr int kDeathFrameCount = 4;
 
 	//攻撃のアニメーションはさらに攻撃部分だけ切り取る
-	constexpr int kAttackStartFrame = 3;
+	constexpr int kAttackStartFrame = 4;
 	constexpr int kAttackEndFrame = 7;
 
 	//各状態遷移のフレーム間隔
