@@ -68,7 +68,10 @@ namespace
 
 	//弾がプレイヤーから出る位置のオフセット
 	constexpr float kGunOffsetX = 40.0f;
-	constexpr float kGunOffsetY = 5.0f;
+	constexpr float kGunOffsetY = 10.0f;
+
+	//たいまつの投げる位置のオフセット(特例)
+	constexpr float kTorchFireOffsetY = 50.0f;
 
 	//ダメージを受けたときの無敵時間
 	constexpr int kDamageDuration = 60;
@@ -345,7 +348,13 @@ void Player::Shot(Input&input,BulletManager&bm)
 
 		// 弾の発射位置（描画offsetなし）
 		float spawnX = pos_.x + (isTurn_ ? kGunOffsetX : -kGunOffsetX);
-		float spawnY = pos_.y;
+		float spawnY = pos_.y-kGunOffsetY;
+
+		if (currentBulletType_ == BulletType::Torch)
+		{
+			spawnY -= kTorchFireOffsetY;
+		}
+
 		Vector2 spawnPos = { spawnX, spawnY };
 
 		// 弾の速度

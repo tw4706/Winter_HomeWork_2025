@@ -8,7 +8,7 @@
 
 namespace
 {
-	constexpr int kGround = 500;
+	constexpr float kGround = 1764.0f;
 	constexpr float kScale = 1.5f;
 }
 
@@ -19,6 +19,7 @@ Bullet::Bullet(Vector2 pos, Vector2 vel,BulletType bulletType) :
 	hitCount_(0),
 	bulletType_(bulletType)
 {
+	GameObject::SetUseGravity(false);
 }
 
 Bullet::~Bullet()
@@ -53,6 +54,14 @@ void Bullet::UpdateShot()
 		//ŠÑ’Ê‚·‚é‚¾‚¯‚È‚Ì‚Å‰½‚à‚µ‚È‚¢
 		break;
 	case BulletType::Torch:
+		vel_.y += 0.2f;
+
+		if (pos_.y >= kGround)
+		{
+			pos_.y = kGround;
+			isAlive_ = false;
+			return;
+		}
 		break;
 	default:
 		break;

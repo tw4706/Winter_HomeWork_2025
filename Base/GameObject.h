@@ -11,14 +11,15 @@ class GameObject
 protected:
 	Vector2 pos_;
 	Vector2 vel_;
-	Rect colRect_;//当たり判定の矩形
-	bool isTurn_;//反転してるかどうか
-	bool isGround_;//地面に接地しているかどうか
+	Rect colRect_;		//当たり判定の矩形
+	bool isTurn_;		//反転してるかどうか
+	bool isGround_;		//地面に接地しているかどうか
 	Rect chipRect_;
+	bool useGravity_;	//重力を使用するかどうか
 
-	float graphW_;//グラフィックの幅
-	float graphH_;//グラフィックの高さ
-	float colSize_;//当たり判定のサイズ
+	float graphW_;		//グラフィックの幅
+	float graphH_;		//グラフィックの高さ
+	float colSize_;		//当たり判定のサイズ
 	Vector2 cameraOffset_;//描画オフセット
 	std::shared_ptr<Bg>pBg_;//背景オブジェクトのポインタ
 
@@ -41,20 +42,26 @@ public:
 	//位置を取得する関数(ゲッター関数)
 	const Vector2& GetPos()const { return pos_; }
 
+	//Bg関連
 	//Bgクラスを設定する関数
 	void SetBg(std::shared_ptr<Bg>bg) { pBg_ = bg; }
-
 	//Bgクラスを取得する関数
 	std::shared_ptr<Bg>GetBg() const { return pBg_; }
 
+	//カメラ関連
 	//カメラのオフセット関連
 	void SetDrawOffset(const Vector2& offset) { cameraOffset_ = offset; }
 	Vector2 SetCameraOffset(const Vector2& offset) { return cameraOffset_ = offset; }
 
+	//マップチップ関連
 	//マップチップとの当たり判定
 	void CheckHitMap(Rect& chipRect);
 	//マップチップとの足元の判定処理
 	bool IsOnGround();
+
+	//重力の使用設定
+	void SetUseGravity(bool enable);
+	bool IsUsingGravity() { return useGravity_; }
 
 };
 

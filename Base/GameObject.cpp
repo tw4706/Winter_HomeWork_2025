@@ -68,6 +68,10 @@ void GameObject::Draw()
 
 void GameObject::Gravity() 
 {
+	//d—Í‚ª–³Œø‚È‚çˆ—‚µ‚È‚¢
+	if (!useGravity_) return;
+
+	//d—Í‚ð‰ÁŽZ
 	vel_.y += kGravity;
 }
 
@@ -119,4 +123,9 @@ bool GameObject::IsOnGround()
 	footRect.bottom_ += 4.0f;
 
 	return pBg_->IsCollision(footRect, chipRect_);
+}
+
+void GameObject::SetUseGravity(bool enable)
+{
+	useGravity_ = enable;
 }
