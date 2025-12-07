@@ -57,7 +57,7 @@ bool Bg::IsCollision(Rect& rect, Rect& chipRect)
 		for (int x = 0; x < kChipNumX; x++)
 		{
 			//当たり判定のあるマップチップとのみ判定を行う
-			if (mapChipData_[x][y] == 0)continue;
+			if (mapChipData_[y][x] == 0)continue;
 
 			int chipLeft = static_cast<int>(x * kChipSize*kScale);
 			int chipRight = static_cast<int>(chipLeft + kChipSize * kScale);
@@ -90,7 +90,7 @@ void Bg::LoadMapData()
 	{
 		for (int y = 0; y < kChipNumY; ++y)
 		{
-			mapChipData_[x][y] = 0;
+			mapChipData_[y][x] = 0;
 		}
 	}
 
@@ -111,7 +111,7 @@ void Bg::LoadMapData()
 		while (std::getline(stream, field, ',') && x < kChipNumX)
 		{
 			// 文字列をint型に変換してmapChipDataに追加する
-			mapChipData_[x][y] = std::stoi(field);
+			mapChipData_[y][x] = std::stoi(field);
 			x++;
 		}
 		y++;
@@ -141,7 +141,7 @@ void Bg::DrawMapChip(std::shared_ptr<Camera>pCamera)
 			if (posY > Game::kScreenHeight)continue;
 
 			//マップチップ番号を取得
-			int chipNum = mapChipData_[x][y];
+			int chipNum = mapChipData_[y][x];
 
 			//マップチップの切り出し座標
 			int srcX = kChipSize * (chipNum % graphChipNumX_);

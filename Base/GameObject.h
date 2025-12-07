@@ -59,7 +59,7 @@ public:
 	//マップチップとの足元の判定処理
 	bool IsOnGround();
 
-	void CheckTorchAndMapCollision();
+
 
 	//重力の使用設定
 	void SetUseGravity(bool enable);

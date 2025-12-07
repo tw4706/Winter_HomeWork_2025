@@ -125,30 +125,6 @@ bool GameObject::IsOnGround()
 	return pBg_->IsCollision(footRect, chipRect_);
 }
 
-void GameObject::CheckTorchAndMapCollision()
-{
-	isGround_ = false;
-
-	// Ç‹Ç∏êÇíºï˚å¸Ç…à⁄ìÆ
-	pos_.y += vel_.y;
-	colRect_.SetCenter(pos_.x, pos_.y, colSize_, colSize_);
-
-	// ë´å≥ÇæÇØîªíËÇ∑ÇÈ
-	Rect foot = colRect_;
-	foot.top_ += 2;
-	foot.bottom_ += 2;
-
-	Rect nextRect;
-
-	if (pBg_->IsCollision(foot, chipRect_))
-	{
-		// ínñ ÇÃè„Ç…èÊÇÈ
-		pos_.y = chipRect_.GetTop() - colSize_ / 2.0f;
-		vel_.y = 0;
-		isGround_ = true;
-	}
-}
-
 void GameObject::SetUseGravity(bool enable)
 {
 	useGravity_ = enable;

@@ -385,7 +385,7 @@ void Player::Shot(Input&input,BulletManager&bm)
 			Vector2{ config.speed, 0.0f } : Vector2{ -config.speed, 0.0f };
 
 		//íeÇÃê∂ê¨
-		auto bullet = std::make_shared<Bullet>(spawnPos, bulletVel, currentBulletType_);
+		auto bullet = std::make_shared<Bullet>(spawnPos, bulletVel, currentBulletType_,pBg_);
 		bullet->Init();
 		bullet->SetBg(pBg_);
 		bm.Init(bullet);

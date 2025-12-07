@@ -109,7 +109,7 @@ bool BulletManager::IsPlayerBullet(BulletType type) const
 
 void BulletManager::AddEnemyBullet(Vector2& pos, Vector2& vel)
 {
-	auto bullet = std::make_shared<Bullet>(pos, vel,BulletType::EnemyBullet);
+	auto bullet = std::make_shared<Bullet>(pos, vel,BulletType::EnemyBullet,pBg_);
 	bullet->Init();
 	bullets_.push_back(bullet);
 }

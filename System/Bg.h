@@ -43,7 +43,7 @@ private:
 	int graphChipNumX_;
 	int graphChipNumY_;
 
-	int mapChipData_[200][40];//マップデータ
+	int mapChipData_[40][200];//マップデータ
 
 	// マップデータのサイズ
 	struct Size

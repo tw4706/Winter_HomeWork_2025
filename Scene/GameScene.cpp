@@ -119,6 +119,8 @@ void GameScene::Update(Input& input)
 		update_ = &GameScene::FadeOutUpdate;
 		draw_ = &GameScene::FadeDraw;
 		frame_ = 0;
+
+		return;
 	}
 
 	//ƒvƒŒƒCƒ„[‚Æ“G‚Ì“–‚½‚è”»’è

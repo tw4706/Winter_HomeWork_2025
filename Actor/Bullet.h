@@ -46,7 +46,7 @@ class Enemy;
 class Bullet:public GameObject
 {
 public:
-	Bullet(Vector2 pos,Vector2 vel,BulletType bulletType);
+	Bullet(Vector2 pos,Vector2 vel,BulletType bulletType, std::shared_ptr<Bg>bg);
 	~Bullet()override;
 
 	void Init()override;
@@ -69,6 +69,9 @@ public:
 	//’e‚Ìí—Ş‚ğ•Ô‚·
 	const BulletType& GetType() const { return bulletType_; }
 
+	//‚½‚¢‚Ü‚Â‚Ì”g“®‚Æƒ}ƒbƒv‚Ì“–‚½‚è”»’è‚ğs‚¤ŠÖ”
+	void CheckBulletAndMapCollision();
+
 private:
 	bool isAlive_;		//’e‚ª‘¶İ‚µ‚Ä‚¢‚é‚©‚Ç‚¤‚©
 	int bulletH_;		//’e‚Ì‰æ‘œƒnƒ“ƒhƒ‹
@@ -76,6 +79,7 @@ private:
 	int hitCount_;		//“–‚½‚Á‚½”
 	std::vector<int>hadouTimers_;
 	BulletType bulletType_;
+	std::shared_ptr<Bg> pBg_;
 	
 	//”g“®ŠÖ˜A
 	bool isHadouSpawned_;			//”g“®‚ğ¶¬‚µ‚½‚©‚Ç‚¤‚©
