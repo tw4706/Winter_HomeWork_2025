@@ -83,12 +83,12 @@ void GameObject::CheckMapCollision(Rect& chipRect)
 
 	if (pBg_->IsCollision(colRect_, chipRect)) {
 
-		if (vel_.x > 0.0f) 
+		if (vel_.x >= 0.0f) 
 		{
 
 			pos_.x = chipRect.GetLeft() - (colSize_ / 2.0f); //âEÇ…ÇﬂÇËçûÇ›ñhé~
 		}
-		else if (vel_.x < 0.0f)
+		else if (vel_.x <= 0.0f)
 		{
 			pos_.x = chipRect.GetRight() + (colSize_ / 2.0f); //ç∂Ç…ÇﬂÇËçûÇ›ñhé~
 		}
@@ -101,12 +101,12 @@ void GameObject::CheckMapCollision(Rect& chipRect)
 
 	if (pBg_->IsCollision(colRect_, chipRect)) 
 	{
-		if (vel_.y > 0.0f) 
+		if (vel_.y >= 0.0f) 
 		{
 			pos_.y = chipRect.GetTop() - (colSize_ / 2.0f); //ínñ Ç…èÊÇÈ
 			isGround_ = true;
 		}
-		else if (vel_.y < 0.0f) 
+		else if (vel_.y <= 0.0f) 
 		{
 			pos_.y = chipRect.GetBottom() + (colSize_ / 2.0f); //ìVà‰Ç…ìñÇΩÇÈ
 		}
@@ -123,6 +123,30 @@ bool GameObject::IsOnGround()
 	footRect.bottom_ += 4.0f;
 
 	return pBg_->IsCollision(footRect, chipRect_);
+}
+
+void GameObject::CheckTorchAndMapCollision()
+{
+	isGround_ = false;
+
+	// Ç‹Ç∏êÇíºï˚å¸Ç…à⁄ìÆ
+	pos_.y += vel_.y;
+	colRect_.SetCenter(pos_.x, pos_.y, colSize_, colSize_);
+
+	// ë´å≥ÇæÇØîªíËÇ∑ÇÈ
+	Rect foot = colRect_;
+	foot.top_ += 2;
+	foot.bottom_ += 2;
+
+	Rect nextRect;
+
+	if (pBg_->IsCollision(foot, chipRect_))
+	{
+		// ínñ ÇÃè„Ç…èÊÇÈ
+		pos_.y = chipRect_.GetTop() - colSize_ / 2.0f;
+		vel_.y = 0;
+		isGround_ = true;
+	}
 }
 
 void GameObject::SetUseGravity(bool enable)

@@ -19,6 +19,12 @@ Bullet::Bullet(Vector2 pos, Vector2 vel,BulletType bulletType) :
 	damage_(1),
 	hitCount_(0),
 	isHadouSpawned_(false),
+	hadouNum_(0),
+	hadouSpacing_(0.0f),
+	hadouWidth_(0.0f),
+	hadouHeight_(0.0f),
+	hadouDirection_(1.0f),
+	hadouSpawnInterval_(0),
 	bulletType_(bulletType)
 {
 	GameObject::SetUseGravity(false);
@@ -66,20 +72,15 @@ void Bullet::UpdateShot()
 		break;
 	case BulletType::Torch:
 		vel_.y += 0.2f;
-		colRect_.SetCenter(pos_.x, pos_.y, config.width, config.height);
 
-		CheckMapCollision(chipRect_);
+		CheckTorchAndMapCollision();
+
 		// 松明の下端がマップチップの上面に触れたら波動発生
 		if (isGround_ && !isHadouSpawned_)
 		{
 			SpawnHadou();
 			isHadouSpawned_ = true;
-			isAlive_ = false;  // 本体の松明は消すならここで
 			return;
-		}
-		if (isGround_)
-		{
-			printfDx("Torch Ground!\n");
 		}
 		break;
 	case BulletType::EnemyBullet:
@@ -189,10 +190,9 @@ void Bullet::SpawnHadou()
 	{
 		Hadou h;
 		h.rect.SetLT(pos_.x + hadouDirection_ * (i + 1) * hadouSpacing_,
-			pos_.y - hadouHeight_ / 2,
-			hadouWidth_, hadouHeight_);
-		h.appearTimer = i * hadouSpawnInterval_; // 出現タイミングをずらす
-		h.lifetime = 10;                         // 出現後の寿命
+			pos_.y - hadouHeight_ / 2,hadouWidth_, hadouHeight_);
+		h.appearTimer = i * hadouSpawnInterval_; //タイミングをずらす
+		h.lifetime = 10;                         //出現時間
 		hadouRects_.push_back(h);
 	}
 }
@@ -209,7 +209,7 @@ void Bullet::UpdateHadou(std::vector<std::shared_ptr<Enemy>>& enemies)
 			continue;
 		}
 
-		// 敵判定
+		//敵との判定
 		for (auto& enemy : enemies)
 		{
 			if (enemy->IsDead()) continue;
@@ -217,18 +217,20 @@ void Bullet::UpdateHadou(std::vector<std::shared_ptr<Enemy>>& enemies)
 				enemy->OnHit(damage_*3);
 		}
 
-		// 出現後の寿命を減らす
+		//波動の持続減らす
 		h.lifetime--;
 	}
 
-	// 寿命が尽きた波動を削除
+	//波動を削除
 	hadouRects_.erase(
 		std::remove_if(hadouRects_.begin(), hadouRects_.end(),
 			[](const Hadou& h) { return h.appearTimer <= 0 && h.lifetime <= 0; }),
 		hadouRects_.end()
 	);
 
-	// すべて消えたら弾も消す
+	//波動がすべて消えたら弾も消す
 	if (hadouRects_.empty())
+	{
 		isAlive_ = false;
+	}
 }

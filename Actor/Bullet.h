@@ -74,6 +74,8 @@ private:
 	int bulletH_;		//弾の画像ハンドル
 	int damage_;		//弾のダメージ量
 	int hitCount_;		//当たった数
+	std::vector<int>hadouTimers_;
+	BulletType bulletType_;
 	
 	//波動関連
 	bool isHadouSpawned_;			//波動を生成したかどうか
@@ -84,10 +86,5 @@ private:
 	float hadouHeight_;
 	float hadouDirection_;
 	int hadouSpawnInterval_;
-
-
-	
-	std::vector<int>hadouTimers_;
-	BulletType bulletType_;
 };
 
