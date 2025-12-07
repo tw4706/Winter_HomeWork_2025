@@ -114,7 +114,7 @@ void GameScene::Update(Input& input)
 	//’e‚ÌXVˆ—
 	bulletManager_.Update(input,enemyFactory_.GetEnemies(), *player_);
 
-	if (!player_->IsDead())
+	if (player_->IsDead()&&player_->IsDeadAnimFinished())
 	{
 		update_ = &GameScene::FadeOutUpdate;
 		draw_ = &GameScene::FadeDraw;
@@ -126,12 +126,11 @@ void GameScene::Update(Input& input)
 	{
 		if (!enemy->IsDead() && player_->GetColRect().IsCollision(enemy->GetColRect()))
 		{
-			player_->OnDamage();
-			//printfDx("PlayerHit\n");
-
-			update_ = &GameScene::GoalFadeOutUpdate;
-			draw_ = &GameScene::FadeDraw;
-			frame_ = 0;
+			if (!player_->IsDead())
+			{
+				player_->Dead();
+			}
+			break;
 		}
 	}
 

@@ -98,12 +98,14 @@ namespace
 	//攻撃のアニメーションはさらに攻撃部分だけ切り取る
 	constexpr int kAttackStartFrame = 4;
 	constexpr int kAttackEndFrame = 7;
+	constexpr int kJumpStartFrame = 2;
+	constexpr int kJumpEndFrame = 8;
 
 	//各状態遷移のフレーム間隔
 	constexpr int kIdleFrameInterval = 6;
 	constexpr int kAttackFrameInterval = 6;
 	constexpr int kWalkFrameInterval = 5;
-	constexpr int kJumpFrameInterval = 10;
+	constexpr int kJumpFrameInterval = 6;
 	constexpr int kHurtFrameInterval = 6;
 	constexpr int kDeathFrameInterval = 6;
 
@@ -125,6 +127,7 @@ Player::Player(Vector2 pos, Vector2 vel) :
 	damageTimer_(0),
 	shotTimer_(0),
 	isAlive_(true),
+	isDeathAnimFinished_(false),
 	state_(PlayerState::Idle),
 	currentBulletType_(BulletType::Knife)
 {
@@ -172,15 +175,29 @@ void Player::Update(Input& input, BulletManager& bm)
 	float colX = pos_.x + colOffsetX;
 
 	colRect_.SetCenter(colX, pos_.y- kPosXOffset, kGraphHalfWidth, kGraphHeight- kColYOffset);
+	
+
+	//状態遷移の更新
+	UpdateState(input);
+
+	if (!isAlive_)
+	{
+		animations_[static_cast<int>(PlayerState::Death)]->Update();
+		if (animations_[static_cast<int>(PlayerState::Death)]->IsAnimFinished() && onGameOver_)
+		{
+			onGameOver_();
+		}
+		return;
+	}
+
+	//移動処理
 	Move(input);
+
 	// ジャンプ処理
 	Jump(input);
 
 	//発射処理
 	Shot(input,bm);
-
-	//状態遷移の更新
-	UpdateState(input);
 
 	//アニメーションの更新
 	animations_[static_cast<int>(state_)]->Update();
@@ -229,12 +246,18 @@ void Player::Draw()
 
 	//描画
 	int animIndex = static_cast<int>(state_);
+	int frame = animations_[animIndex]->GetFrameCount();
+
 	if (state_ == PlayerState::Attack)
 	{
-		int frame = animations_[animIndex]->GetFrameCount();
-
-		// コアフレームだけ描画
 		if (frame >= kAttackStartFrame && frame <= kAttackEndFrame)
+		{
+			animations_[animIndex]->Draw(drawX, drawY - kPosYOffset, !isTurn_);
+		}
+	}
+	if (state_ == PlayerState::Jump)
+	{
+		if (frame >= kJumpStartFrame && frame <= kJumpEndFrame)
 		{
 			animations_[animIndex]->Draw(drawX, drawY - kPosYOffset, !isTurn_);
 		}
@@ -346,7 +369,7 @@ void Player::Shot(Input&input,BulletManager&bm)
 	{
 		const auto& config = kBulletConfigs[static_cast<int>(currentBulletType_)];
 
-		// 弾の発射位置（描画offsetなし）
+		//弾の発射される位置
 		float spawnX = pos_.x + (isTurn_ ? kGunOffsetX : -kGunOffsetX);
 		float spawnY = pos_.y-kGunOffsetY;
 
@@ -357,11 +380,11 @@ void Player::Shot(Input&input,BulletManager&bm)
 
 		Vector2 spawnPos = { spawnX, spawnY };
 
-		// 弾の速度
+		//弾の速度
 		Vector2 bulletVel = isTurn_ ?
 			Vector2{ config.speed, 0.0f } : Vector2{ -config.speed, 0.0f };
 
-		// 弾の生成
+		//弾の生成
 		auto bullet = std::make_shared<Bullet>(spawnPos, bulletVel, currentBulletType_);
 		bullet->Init();
 		bullet->SetBg(pBg_);
@@ -384,6 +407,15 @@ void Player::OnDamage()
 	damageTimer_ = kDamageDuration;
 }
 
+void Player::Dead()
+{
+	if (!isAlive_)return;
+
+	isAlive_ = false;
+	state_ = PlayerState::Death;
+	animations_[static_cast<int>(state_)]->Reset();
+}
+
 //各アニメーションの処理
 void Player::UpdateState(Input& input)
 {
@@ -391,6 +423,8 @@ void Player::UpdateState(Input& input)
 	if (!isAlive_)
 	{
 		state_ = PlayerState::Death;
+		auto deathAnim = animations_[static_cast<int>(PlayerState::Death)];
+		isDeathAnimFinished_ = deathAnim->IsAnimFinished();
 		return;
 	}
 

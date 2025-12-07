@@ -50,7 +50,7 @@ void GameObject::Update()
 {
 	Gravity();
 
-	CheckHitMap(chipRect_);
+	CheckMapCollision(chipRect_);
 	if (!isGround_)
 	{
 		isGround_ = IsOnGround();
@@ -75,7 +75,7 @@ void GameObject::Gravity()
 	vel_.y += kGravity;
 }
 
-void GameObject::CheckHitMap(Rect& chipRect) 
+void GameObject::CheckMapCollision(Rect& chipRect) 
 {
 	//X•ûŒü‚ÌˆÚ“®
 	pos_.x += vel_.x;

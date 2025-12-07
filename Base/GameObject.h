@@ -55,7 +55,7 @@ public:
 
 	//マップチップ関連
 	//マップチップとの当たり判定
-	void CheckHitMap(Rect& chipRect);
+	void CheckMapCollision(Rect& chipRect);
 	//マップチップとの足元の判定処理
 	bool IsOnGround();
 

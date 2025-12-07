@@ -24,6 +24,14 @@ struct BulletConfig
 	bool isPiercing;		//貫通するかどうか
 };
 
+//波動の情報
+struct Hadou
+{
+	Rect rect;
+	int appearTimer; // 出現までの待機フレーム
+	int lifetime;    // 出現後の寿命
+};
+
 //弾の詳細情報の配列
 constexpr BulletConfig kBulletConfigs[] =
 {
@@ -50,7 +58,11 @@ public:
 	//当たった時の処理を行う関数
 	void OnHit();
 
+	//波動の生成
 	void SpawnHadou();
+
+	//波動の更新処理
+	void UpdateHadou(std::vector<std::shared_ptr<Enemy>>& enemies);
 
 	// 弾が消えたかどうかを返す
 	bool IsAlive() const { return isAlive_; }
@@ -60,7 +72,22 @@ public:
 private:
 	bool isAlive_;		//弾が存在しているかどうか
 	int bulletH_;		//弾の画像ハンドル
+	int damage_;		//弾のダメージ量
 	int hitCount_;		//当たった数
+	
+	//波動関連
+	bool isHadouSpawned_;			//波動を生成したかどうか
+	std::vector<Hadou> hadouRects_;	//波動の当たり判定用の矩形
+	int hadouNum_;
+	float hadouSpacing_;
+	float hadouWidth_;
+	float hadouHeight_;
+	float hadouDirection_;
+	int hadouSpawnInterval_;
+
+
+	
+	std::vector<int>hadouTimers_;
 	BulletType bulletType_;
 };
 

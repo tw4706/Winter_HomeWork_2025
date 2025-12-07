@@ -58,7 +58,7 @@ void BulletManager::Update(Input& input, std::vector<std::shared_ptr<Enemy>>&ene
 		// Bullet ‘¤‚É‘S‚Ä‚Ìˆ—‚ð”C‚¹‚é
 		bullet->Update(input, enemies);
 
-		// “G’e‚Ìê‡‚¾‚¯ƒvƒŒƒCƒ„[”»’è
+		//“G‚Ì’e‚Ìê‡‚¾‚¯ƒvƒŒƒCƒ„[‚Æ‚Ì”»’è‚ðs‚¤
 		if (!IsPlayerBullet(bullet->GetType()))
 		{
 			if (bullet->GetColRect().IsCollision(player.GetColRect()))

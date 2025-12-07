@@ -41,7 +41,9 @@ public:
 	//ダメージを受けた時の処理
 	void OnDamage();
 
-	bool IsDead()const { return isAlive_; }
+	void Dead();
+	bool IsDead()const { return !isAlive_; }
+	bool IsDeadAnimFinished()const { return isDeathAnimFinished_; }
 
 	void UpdateState(Input& input);
 
@@ -56,6 +58,7 @@ private:
 	int damageTimer_;//ダメージを受けてからのタイマー
 	int shotTimer_;//弾の発射間隔タイマー
 	bool isAlive_;//生存しているかどうか
+	bool isDeathAnimFinished_;//死亡アニメーションが終了したかどうか
 	//プレイヤーの状態
 	PlayerState state_;
 	BulletType currentBulletType_;//現在の弾の種類
