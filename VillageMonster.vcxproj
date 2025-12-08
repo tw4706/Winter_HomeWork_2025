@@ -137,6 +137,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Actor\Boss.cpp" />
     <ClCompile Include="Scene\ClearScene.cpp" />
     <ClCompile Include="Manager\EnemyFactory.cpp" />
     <ClCompile Include="Scene\GameOverScene.cpp" />
@@ -163,6 +164,7 @@
     <ClCompile Include="Actor\Zombie.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Actor\Boss.h" />
     <ClInclude Include="Scene\ClearScene.h" />
     <ClInclude Include="Manager\EnemyFactory.h" />
     <ClInclude Include="Scene\GameOverScene.h" />

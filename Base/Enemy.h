@@ -35,7 +35,7 @@ public:
 	virtual void Update()=0;
 	virtual void Draw() = 0;
 
-	virtual void Move() = 0;  //移動
+	virtual void Move() = 0;//移動
 	//プレイヤーのポインタをセットする関数(セッター関数)
 	void SetPlayer(std::shared_ptr<Player> player) { pPlayer_ = player; }
 

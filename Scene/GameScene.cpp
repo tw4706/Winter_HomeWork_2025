@@ -80,7 +80,7 @@ void GameScene::NormalDraw()
 {
 	Vector2 cameraOffset = camera_->GetOffset();
 
-	//Œ®‰æ‘œ‚ğ•`‰æ
+	//Œ®‰æ‘œ‚ğ•`‰æ magicNumber
 	DrawGraph(8500, 1724, keyH_, TRUE);
 
 	//ŠeƒNƒ‰ƒX‚Ì•`‰æˆ—
