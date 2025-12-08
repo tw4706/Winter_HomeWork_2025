@@ -4,6 +4,7 @@
 #include"Input.h"
 #include"Application.h"
 #include "GameScene.h"
+#include "SelectScene.h"
 #include "SceneController.h"
 #include"GlobalConstants.h"
 
@@ -32,7 +33,7 @@ void TitleScene::NormalUpdate(Input&input)
 void TitleScene::FadeOutUpdate(Input&input)
 {
 	if (frame_++ >= fade_interval) {
-		controller_.ChangeScene(std::make_shared<GameScene>(controller_));
+		controller_.ChangeScene(std::make_shared<SelectScene>(controller_));
 		return;
 	}
 }

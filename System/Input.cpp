@@ -8,6 +8,10 @@ Input::Input() :inputData_{}, lastInputData_{}, inputTable_{}
 							{ PeripheralType::pad1, PAD_INPUT_L } };
 	inputTable_["shot"] = {{ PeripheralType::keyboard, KEY_INPUT_Z },
 							{ PeripheralType::pad1, PAD_INPUT_B } };
+	inputTable_["up"] = {{ PeripheralType::keyboard, KEY_INPUT_UP },
+							{ PeripheralType::pad1, PAD_INPUT_UP } };
+	inputTable_["down"] = {{ PeripheralType::keyboard, KEY_INPUT_DOWN },
+							{ PeripheralType::pad1, PAD_INPUT_DOWN } };
 	inputTable_["left"] = { { PeripheralType::keyboard,KEY_INPUT_LEFT },
 							{ PeripheralType::pad1,PAD_INPUT_LEFT} };
 	inputTable_["right"] = { { PeripheralType::keyboard,KEY_INPUT_RIGHT },

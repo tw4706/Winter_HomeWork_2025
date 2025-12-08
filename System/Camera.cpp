@@ -4,7 +4,7 @@
 
 namespace
 {
-	constexpr float kMapWidth = 3000.0f;//マップ全体の幅
+	constexpr float kMapWidth = 9000.0f;//マップ全体の幅
 	constexpr float kMapHeight = 1080.0f;//マップ全体の高さ
 }
 

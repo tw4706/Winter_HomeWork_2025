@@ -10,7 +10,11 @@
 
 namespace
 {
-	const int cellSize = 48; //セルのサイズ
+    //セルのサイズ
+	const int cellSize = 48;
+
+	//敵の描画オフセット
+    constexpr float kEnemyOffsetY = 32.0f;
 }
 
 void EnemyFactory::LoadFromCSV(const std::string& path, BulletManager* bulletManager)
@@ -37,7 +41,7 @@ void EnemyFactory::LoadFromCSV(const std::string& path, BulletManager* bulletMan
         {
             int id = std::stoi(cell);
             if (id != 0 && enemyFactory.count(id)) {
-                Vector2 pos{ col * cellSize, row * cellSize };
+                Vector2 pos{ col * cellSize, row * cellSize+kEnemyOffsetY };
                 enemies_.push_back(enemyFactory[id](pos));
             }
             col++;

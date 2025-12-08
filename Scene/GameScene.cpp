@@ -86,9 +86,6 @@ void GameScene::NormalDraw()
 {
 	Vector2 cameraOffset = camera_->GetOffset();
 
-	//Œ®‰æ‘œ‚ð•`‰æ magicNumber
-	DrawGraph(8500, 1724, keyH_, TRUE);
-
 	//ŠeƒNƒ‰ƒX‚Ì•`‰æˆ—
 	bg_->Draw(camera_);
 	player_->SetCameraOffset(cameraOffset);
@@ -98,6 +95,14 @@ void GameScene::NormalDraw()
 
 	bulletManager_.SetCameraOffset(cameraOffset);
 	bulletManager_.Draw();
+
+	//Œ®‰æ‘œ‚ð•`‰æ magicNumber
+	DrawGraph(
+		static_cast<int>(8500 - cameraOffset.x),
+		static_cast<int>(1724 - cameraOffset.y),
+		keyH_, TRUE
+	);
+
 #ifdef _DEBUG
 	Rect goalRectScreen = goalRect_;
 	goalRectScreen.left_ -= cameraOffset.x;
