@@ -54,7 +54,7 @@ void ClearScene::FadeDraw()
 	//フェード
 	int alpha = (frame_ * 255) / kFadeDuration;
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
-	DrawBox(0, 0, 1280, 720, GetColor(0, 0, 0), true);
+	DrawBox(0, 0, 1280, 720, GetColor(255, 255, 255), true);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 }
 

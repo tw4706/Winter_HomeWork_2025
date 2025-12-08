@@ -3,6 +3,16 @@
 class Boss :public Enemy
 {
 public:
+	enum class BossState
+	{
+		Idle,
+		Walk,
+		Fly,
+		Attack,
+		Spawn,
+		Hurt,
+		Dead
+	};
 	Boss(Vector2 pos, Vector2 vel);
 	~Boss();
 
@@ -12,7 +22,12 @@ public:
 
 	void Move()override;
 	void Attack();
-private:
 
+	void UpdateState();
+	void ChangeState();
+
+private:
+	BossState state_;
+	int stateTimer_;
 };
 

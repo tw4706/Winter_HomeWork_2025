@@ -10,6 +10,7 @@
 #include "GameOverScene.h"
 #include "ClearScene.h"
 #include"SceneController.h"
+#include"GlobalConstants.h"
 #include<cmath>
 #include<cassert>
 #include<Dxlib.h>
@@ -74,6 +75,11 @@ void GameScene::GoalFadeOutUpdate(Input&)
 
 void GameScene::FadeDraw() 
 {
+	// 値の範囲を一旦0.0~1.0にしておくといろいろと扱いやすくなります
+	auto rate = static_cast<float>(frame_) / static_cast<float>(fade_interval);
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255 * rate);// αブレンド
+	DrawBox(0, 0, Game::kScreenWidth, Game::kScreenHeight, 0x000000, true);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);// ブレンドしない
 }
 
 void GameScene::NormalDraw() 
