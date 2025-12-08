@@ -26,7 +26,9 @@ namespace
 GameScene::GameScene(SceneController& controller) :
 	Scene(controller),
 	update_(&GameScene::FadeInUpdate),
-	draw_(&GameScene::FadeDraw)
+	draw_(&GameScene::FadeDraw),
+	keyH_(-1),
+	frame_(0)
 {
 	bg_ = std::make_shared<Bg>();
 	camera_ = std::make_shared<Camera>();
@@ -76,6 +78,28 @@ void GameScene::FadeDraw()
 
 void GameScene::NormalDraw() 
 {
+	Vector2 cameraOffset = camera_->GetOffset();
+
+	//Œ®‰æ‘œ‚ð•`‰æ
+	DrawGraph(8500, 1724, keyH_, TRUE);
+
+	//ŠeƒNƒ‰ƒX‚Ì•`‰æˆ—
+	bg_->Draw(camera_);
+	player_->SetCameraOffset(cameraOffset);
+	player_->Draw();
+
+	enemyFactory_.Draw(cameraOffset);
+
+	bulletManager_.SetCameraOffset(cameraOffset);
+	bulletManager_.Draw();
+#ifdef _DEBUG
+	Rect goalRectScreen = goalRect_;
+	goalRectScreen.left_ -= cameraOffset.x;
+	goalRectScreen.top_ -= cameraOffset.y;
+	goalRectScreen.right_ -= cameraOffset.x;
+	goalRectScreen.bottom_ -= cameraOffset.y;
+	goalRectScreen.Draw(0xff0000, false);
+#endif
 }
 
 void GameScene::Init()
@@ -95,7 +119,10 @@ void GameScene::Init()
 	enemyFactory_.LoadFromCSV("data/Enemy/enemyData.csv", &bulletManager_);
 	enemyFactory_.Init(player_, bg_);
 
-	goalRect_.SetLT(8500, 1744, 100, 200);
+	keyH_ = LoadGraph("data/map/Key.png");
+	assert(keyH_ >= 0);
+
+	goalRect_.SetLT(8500, 1724, 32, 32);
 }
 
 void GameScene::Update(Input& input)
@@ -140,7 +167,6 @@ void GameScene::Update(Input& input)
 	if (player_->GetColRect().IsCollision(goalRect_))
 	{
 		printfDx("GoalHit!\n");
-
 		update_ = &GameScene::GoalFadeOutUpdate;
 		draw_ = &GameScene::FadeDraw;
 		frame_ = 0;
@@ -151,15 +177,4 @@ void GameScene::Update(Input& input)
 void GameScene::Draw()
 {
 	(this->*draw_)();
-
-	//ŠeƒNƒ‰ƒX‚Ì•`‰æˆ—
-	Vector2 cameraOffset=camera_->GetOffset();
-	bg_->Draw(camera_);
-	player_->SetCameraOffset(cameraOffset);
-	player_->Draw();
-
-	enemyFactory_.Draw(cameraOffset);
-
-	bulletManager_.SetCameraOffset(cameraOffset);
-	bulletManager_.Draw();
 }

@@ -105,7 +105,7 @@ namespace
 	constexpr int kIdleFrameInterval = 6;
 	constexpr int kAttackFrameInterval = 6;
 	constexpr int kWalkFrameInterval = 5;
-	constexpr int kJumpFrameInterval = 6;
+	constexpr int kJumpFrameInterval = 5;
 	constexpr int kHurtFrameInterval = 6;
 	constexpr int kDeathFrameInterval = 6;
 
@@ -131,6 +131,7 @@ Player::Player(Vector2 pos, Vector2 vel) :
 	state_(PlayerState::Idle),
 	currentBulletType_(BulletType::Knife)
 {
+	isTurn_ = true;
 }
 
 Player::~Player()
@@ -266,27 +267,6 @@ void Player::Draw()
 	{
 		animations_[animIndex]->Draw(drawX, drawY - kPosYOffset, !isTurn_);
 	}
-
-	//if (isTurn_)
-	//{
-	//	DrawRectRotaGraph3(drawX, drawY - kPosYMargin,
-	//		0, 0,
-	//		kGraphWidth, kGraphHeight,
-	//		kGraphHalfWidth, kGraphHalfHeight,
-	//		kScale, kScale,
-	//		0.0,
-	//		graphHandles_[kIdleGraph], true, false, false);
-	//}
-	//else
-	//{
-	//	DrawRectRotaGraph3(drawX, drawY - kPosYMargin,
-	//		0, 0,
-	//		kGraphWidth, kGraphHeight,
-	//		kGraphHalfWidth, kGraphHalfHeight,
-	//		kScale, kScale,
-	//		0.0,
-	//		graphHandles_[kIdleGraph], true,!isTurn_);
-	//}
 
 #ifdef _DEBUG
 	//“–‚½‚è”»’è‚Ì‹éŒ`‚ÌF‚ğ•Ï‚¦‚é

@@ -44,7 +44,7 @@ void Animation::Draw(float x, float y, bool flip)
         0.0,              // ‰ñ“]Šp
         handle_,          // ‰æ‘œƒnƒ“ƒhƒ‹
         TRUE,             // ”¼“§–¾
-        flip               // ¶‰E”½“]
+       flip               // ¶‰E”½“]
     );
 }
 
