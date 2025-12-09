@@ -84,11 +84,6 @@ private:
 	//”g“®ŠÖ˜A
 	bool isHadouSpawned_;			//”g“®‚ğ¶¬‚µ‚½‚©‚Ç‚¤‚©
 	std::vector<Hadou> hadouRects_;	//”g“®‚Ì“–‚½‚è”»’è—p‚Ì‹éŒ`
-	int hadouNum_;
-	float hadouSpacing_;
-	float hadouWidth_;
-	float hadouHeight_;
-	float hadouDirection_;
-	int hadouSpawnInterval_;
+	int hadouDirection_;
 };
 

@@ -15,8 +15,8 @@ namespace
 	constexpr int kGraphHalfHeight = 48/2;
 
 	//敵の見た目のサイズ
-	constexpr float kDrawW = kGraphWidth * 2.0f;
-	constexpr float kDrawH = kGraphHeight * 2.0f-24;
+	constexpr float kDrawW = kGraphWidth * 1.5f;
+	constexpr float kDrawH = kGraphHeight*1.5f;
 
 	//エネミーの移動速度
 	constexpr float kSpeed = 0.5f;

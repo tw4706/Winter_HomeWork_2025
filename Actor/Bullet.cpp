@@ -10,6 +10,20 @@ namespace
 {
 	constexpr float kGround = 1764.0f;
 	constexpr float kScale = 1.5f;
+
+	//弾のダメージ設定
+	constexpr int kMaxDamage = 3;
+
+	//重力加速度
+	constexpr float kGravity = 0.2f;
+
+	//波動関連の定数
+	constexpr int kHadouNum = 3;
+	constexpr float kHadouSpacing = 40.0f;
+	constexpr float kHadouW = 40.0f;
+	constexpr float kHadouH = 40.0f;
+	constexpr float kHadouSpawnInterval = 10;
+	constexpr int kHadouLifetime = 30;
 }
 
 Bullet::Bullet(Vector2 pos, Vector2 vel,BulletType bulletType, std::shared_ptr<Bg>bg) :
@@ -19,12 +33,6 @@ Bullet::Bullet(Vector2 pos, Vector2 vel,BulletType bulletType, std::shared_ptr<B
 	damage_(1),
 	hitCount_(0),
 	isHadouSpawned_(false),
-	hadouNum_(0),
-	hadouSpacing_(0.0f),
-	hadouWidth_(0.0f),
-	hadouHeight_(0.0f),
-	hadouDirection_(1.0f),
-	hadouSpawnInterval_(0),
 	bulletType_(bulletType),
 	pBg_(bg)
 {
@@ -37,12 +45,8 @@ Bullet::~Bullet()
 
 void Bullet::Init()
 {
-	hadouNum_ = 3;
-	hadouSpacing_ = 40.0f;
-	hadouWidth_ = 40.0f;
-	hadouHeight_=40.0f;
-	hadouDirection_ = 1.0f;
-	hadouSpawnInterval_=10;
+
+	hadouDir_ = 1.0f;
 
 	//画像の初期化(弾の種別によって画像を読み込む)
 	const auto& config = kBulletConfigs[static_cast<int>(bulletType_)];
@@ -74,7 +78,7 @@ void Bullet::UpdateShot()
 		//貫通するだけで何もしない
 		break;
 	case BulletType::Torch:
-		vel_.y += 0.2f;
+		vel_.y += kGravity;
 
 		//松明の下端がマップチップの上面に触れたら波動発生
 		if (isGround_ && !isHadouSpawned_)
@@ -121,7 +125,7 @@ void Bullet::Update(Input& input, std::vector<std::shared_ptr<Enemy>>& enemies)
 			bool otherBullet_ = (bulletType_ == BulletType::Lance) || (bulletType_ == BulletType::Torch);
 			if (otherBullet_)
 			{
-				damage_ = 3;
+				damage_ = kMaxDamage;
 			}
 
 			enemy->OnHit(damage_);
@@ -141,7 +145,7 @@ void Bullet::Draw()
 #ifdef _DEBUG
 		for (auto& hadou : hadouRects_)
 		{
-			// ★出現タイマーが残っているものはまだ描画しない！
+			//タイマーが残っているものは描画しない
 			if (hadou.appearTimer > 0) continue;
 
 			hadou.rect.DrawAndCamera(cameraOffset_, 0x00ffff, false);
@@ -197,15 +201,15 @@ void Bullet::SpawnHadou()
 
 	isHadouSpawned_ = true;
 	hadouRects_.clear();
-	hadouDirection_ = (vel_.x >= 0) ? 1.0f : -1.0f;
+	hadouDir_ = (vel_.x >= 0) ? 1.0f : -1.0f;
 
-	for (int i = 0; i < hadouNum_; ++i)
+	for (int i = 0; i < kHadouNum; ++i)
 	{
 		Hadou h;
-		h.rect.SetLT(pos_.x + hadouDirection_ * (i + 1) * hadouSpacing_,
-			pos_.y - hadouHeight_ / 2,hadouWidth_, hadouHeight_);
-		h.appearTimer = i * hadouSpawnInterval_; //タイミングをずらす
-		h.lifetime = 30;                         //出現時間
+		h.rect.SetLT(pos_.x + hadouDir_ * (i + 1) * kHadouSpacing,
+			pos_.y - kHadouH / 2, kHadouW, kHadouH);
+		h.appearTimer = i * kHadouSpawnInterval;			//タイミングをずらす
+		h.lifetime = kHadouLifetime;                        //出現時間
 		hadouRects_.push_back(h);
 	}
 }
@@ -226,11 +230,13 @@ void Bullet::UpdateHadou(std::vector<std::shared_ptr<Enemy>>& enemies)
 		for (auto& enemy : enemies)
 		{
 			if (enemy->IsDead()) continue;
-			if (h.rect.IsCollision(enemy->GetColRect()))
-				enemy->OnHit(damage_*3);
-		}
 
-		//波動の持続減らす
+			if (h.rect.IsCollision(enemy->GetColRect()))
+			{
+				enemy->OnHit(damage_ * 3);
+			}
+		}
+		//波動の出現時間を減らす
 		h.lifetime--;
 	}
 
