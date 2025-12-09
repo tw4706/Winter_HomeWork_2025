@@ -9,10 +9,9 @@
 #include<cassert>
 #include<string>
 
-// プレイヤーに関する定数
+//プレイヤーに関する定数
 namespace
 {
-
 	enum Graph
 	{
 		kIdleGraph,

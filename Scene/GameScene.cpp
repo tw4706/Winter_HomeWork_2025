@@ -24,8 +24,9 @@ namespace
 	constexpr float kFallLimit = 1900.0f;
 }
 
-GameScene::GameScene(SceneController& controller) :
+GameScene::GameScene(SceneController& controller, StageType stage) :
 	Scene(controller),
+	stageType_(stage),
 	update_(&GameScene::FadeInUpdate),
 	draw_(&GameScene::FadeDraw),
 	keyH_(-1),
@@ -121,19 +122,34 @@ void GameScene::Init()
 	float spawnPosX = 50.0f;
 	float spawnPosY = 1744.0f;
 
-	player_ = std::make_shared<Player>(Vector2{ spawnPosX,spawnPosY }, Vector2{});
+	switch (stageType_)
+	{
+	case StageType::Stage1:
+
+
+		player_ = std::make_shared<Player>(Vector2{ spawnPosX,spawnPosY }, Vector2{});
+
+		enemyFactory_.LoadFromCSV("data/Enemy/enemyData.csv", &bulletManager_);
+		goalRect_.SetLT(8500, 1724, 32, 32);
+
+		break;
+	case StageType::BossDebugStage:
+		player_ = std::make_shared<Player>(Vector2{ 100,300 }, Vector2{});
+		enemyFactory_.AddBoss(Vector2{ 300,300 },player_,bg_);
+		break;
+	default:
+		break;
+	}
+
 	player_->Init();
 	player_->SetBg(bg_);
 
 	camera_->Init(player_);
 
-	enemyFactory_.LoadFromCSV("data/Enemy/enemyData.csv", &bulletManager_);
 	enemyFactory_.Init(player_, bg_);
 
 	keyH_ = LoadGraph("data/map/Key.png");
 	assert(keyH_ >= 0);
-
-	goalRect_.SetLT(8500, 1724, 32, 32);
 }
 
 void GameScene::Update(Input& input)

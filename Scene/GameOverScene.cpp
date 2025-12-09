@@ -1,9 +1,10 @@
 #include "GameOverScene.h"
 #include "SceneController.h"
 #include "TitleScene.h"
+#include "SelectScene.h"
+#include "ClearScene.h"
 #include "Input.h"
 #include <DxLib.h>
-#include "ClearScene.h"
 
 namespace
 {
@@ -39,7 +40,7 @@ void GameOverScene::FadeOutUpdate(Input& input)
 	frame_++;
 	if (frame_ >= kFadeDuration)
 	{
-		controller_.ChangeScene(std::make_shared<TitleScene>(controller_));
+		controller_.ChangeScene(std::make_shared<SelectScene>(controller_));
 	}
 }
 

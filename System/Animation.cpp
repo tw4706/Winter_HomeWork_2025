@@ -36,16 +36,14 @@ void Animation::Draw(float x, float y, bool flip)
     int sy = 0;
 
     DrawRectRotaGraph3(
-        (int)x, (int)y,   // 描画位置
-        sx, sy,           // 切り取り開始座標
-        frameW_, frameH_, // 切り取りサイズ
-        frameW_ / 2, frameH_ / 2, // 回転中心
-        scale_, scale_,   // 拡大縮小
-        0.0,              // 回転角
-        handle_,          // 画像ハンドル
-        TRUE,             // 半透明
-       flip               // 左右反転
-    );
+        (int)x, (int)y,             //描画位置
+        sx, sy,                     //切り取り開始座標
+        frameW_, frameH_,           //切り取りサイズ
+        frameW_ / 2, frameH_ / 2,   //回転中心
+        scale_, scale_,             //拡大縮小
+        0.0,                        //角度
+        handle_,                    //画像ハンドル
+        TRUE,flip);
 }
 
 void Animation::Reset()

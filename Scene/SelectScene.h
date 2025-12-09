@@ -1,11 +1,18 @@
 #pragma once
 #include "Scene.h"
+#include<vector>
+#include<string>
+
 class SelectScene :public Scene
 {
-private:
-	int frame_;
-	int selectIndex_;
+public:
+	SelectScene(SceneController& controller);
 
+	void Init()override;
+	void Update(Input& input)override;
+	void Draw()override;
+
+private:
 	void FadeInUpdate(Input&);
 	void NormalUpdate(Input& input);
 	void FadeOutUpdate(Input&);
@@ -16,11 +23,9 @@ private:
 	void NormalDraw();
 	using DrawFunc_t = void(SelectScene::*)();
 	DrawFunc_t draw_;
-public:
-	SelectScene(SceneController& controller);
 
-	void Init()override;
-	void Update(Input& input)override;
-	void Draw()override;
+	int frame_;
+	int selectIndex_;
+	std::vector<std::string>stageMenu_;
 };
 

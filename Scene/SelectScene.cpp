@@ -8,15 +8,23 @@
 namespace
 {
 	constexpr int kFadeDuration = 60;
+	constexpr int kSelectIdxX = 20;
+	constexpr int kDrawOffsetX = 40;
 }
 
-SelectScene::SelectScene(SceneController& controller):
+SelectScene::SelectScene(SceneController& controller) :
 	Scene(controller),
 	frame_(0),
 	selectIndex_(0)
 {
 	update_ = &SelectScene::FadeInUpdate;
 	draw_ = &SelectScene::FadeDraw;
+	stageMenu_ =
+	{
+		"STAGE 1",
+		"BOSS DEBUG",
+		"TITLE"
+	};
 }
 
 void SelectScene::FadeInUpdate(Input&)
@@ -32,16 +40,24 @@ void SelectScene::FadeInUpdate(Input&)
 
 void SelectScene::NormalUpdate(Input& input)
 {
+	int maxIndex = (int)stageMenu_.size();
+
 	//選択肢の移動
 	if (input.IsTriggered("up"))
 	{
 		selectIndex_--;
-		if (selectIndex_ < 0) selectIndex_ = 1;
+		if (selectIndex_ < 0)
+		{
+			selectIndex_ = maxIndex-1;
+		}
 	}
 	if (input.IsTriggered("down"))
 	{
 		selectIndex_++;
-		if (selectIndex_ > 1) selectIndex_ = 0;
+		if (selectIndex_ >= maxIndex)
+		{
+			selectIndex_ = 0;
+		}
 	}
 
 	//決定
@@ -56,13 +72,19 @@ void SelectScene::FadeOutUpdate(Input&)
 	frame_++;
 	if (frame_ >= kFadeDuration)
 	{
-		if (selectIndex_ == 0) 
-		{
-			controller_.ChangeScene(std::make_shared<GameScene>(controller_));
-		}
-		else 
+		std::string item = stageMenu_[selectIndex_];
+
+		if (item == "TITLE")
 		{
 			controller_.ChangeScene(std::make_shared<TitleScene>(controller_));
+		}
+		else if (item == "BOSS DEBUG")
+		{
+			controller_.ChangeScene(std::make_shared<GameScene>(controller_, StageType::BossDebugStage));
+		}
+		else if (item == "STAGE 1")
+		{
+			controller_.ChangeScene(std::make_shared<GameScene>(controller_, StageType::Stage1));
 		}
 	}
 }
@@ -77,29 +99,26 @@ void SelectScene::FadeDraw()
 
 void SelectScene::NormalDraw()
 {
-	int baseX = 100;
-	int y = 300;
+	int drawX = 100;
+	int drawY = 100;
+	int pitch = 30;
 
-	//Stage1
-	int offsetStage1 = (selectIndex_ == 0) ? 20 : 0;   //選択中は右へずらす
-	int colorStage1 = (selectIndex_ == 0) ? GetColor(255, 255, 0) : GetColor(255, 255, 255);
-
-	if (selectIndex_ == 0)
+	for (int i = 0; i < stageMenu_.size(); i++)
 	{
-		DrawString(baseX - 40, y, "→", GetColor(255, 255, 0)); //矢印
+		bool isSelected = (i == selectIndex_);
+
+		int y = drawY + pitch * i;
+
+		int offsetX = isSelected ? kSelectIdxX : 0;
+
+		int color = isSelected ? 0x00ffff : 0xffffff;
+
+		if (isSelected)
+		{
+			DrawString(drawX - kDrawOffsetX, y, "→", 0x00ffff);
+		}
+		DrawString(drawX + offsetX, y,stageMenu_[i].c_str(), color);
 	}
-	DrawString(baseX + offsetStage1, y, "STAGE 1", colorStage1);
-
-
-	//Title
-	int offsetTitle = (selectIndex_ == 1) ? 20 : 0;    //選択中は右へずらす
-	int colorTitle = (selectIndex_ == 1) ? GetColor(255, 255, 0) : GetColor(255, 255, 255);
-
-	if (selectIndex_ == 1)
-	{
-		DrawString(baseX - 40, y + 60, "→", GetColor(255, 255, 0)); //矢印
-	}
-	DrawString(baseX + offsetTitle, y + 60, "TITLE", colorTitle);
 }
 
 void SelectScene::Init()

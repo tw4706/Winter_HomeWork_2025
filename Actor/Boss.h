@@ -20,14 +20,20 @@ public:
 	void Update()override;
 	void Draw()override;
 
-	void Move()override;
-	void Attack();
+	void Move()override {};
 
-	void UpdateState();
-	void ChangeState();
+	void ChangeState(BossState nextState);
+
+	void UpdateIdle();
+	void UpdateAttack();
+	void UpdateFly();
+	void UpdateHurt();
+	void UpdateDead();
 
 private:
 	BossState state_;
 	int stateTimer_;
+	int handle_;
+	std::vector<int>graphHandles_;
 };
 

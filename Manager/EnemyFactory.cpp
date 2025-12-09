@@ -2,6 +2,7 @@
 #include "Zombie.h"
 #include "SkullFlower.h"
 #include "Dog.h"
+#include "Boss.h"
 #include<Dxlib.h>
 #include <fstream>
 #include <sstream>
@@ -76,10 +77,6 @@ void EnemyFactory::Update()
 
 void EnemyFactory::Draw(const Vector2& cameraOffset)
 {
-    for (auto& enemy : enemies_)
-    {
-        Vector2 pos = enemy->GetPos();
-    }
 	//“G‚Ì•`‰æ
     for (auto& enemy : enemies_) 
     {
@@ -89,5 +86,16 @@ void EnemyFactory::Draw(const Vector2& cameraOffset)
             enemy->Draw();
         }
     }
+}
+
+void EnemyFactory::AddBoss(Vector2 pos, 
+    std::shared_ptr<Player>player,
+    std::shared_ptr<Bg>bg)
+{
+    auto boss = std::make_shared<Boss>(pos, Vector2{});
+    boss->Init();
+    boss->SetPlayer(player);
+    boss->SetBg(bg);
+    enemies_.push_back(boss);
 }
 

@@ -135,7 +135,7 @@ void Bg::DrawMapChip(std::shared_ptr<Camera>pCamera)
 			int posY = static_cast<int>(y * kChipSize*kScale + pCamera->GetOffset().y);
 
 			//画面外のものは描画しない
-			if (posX < 0 - kChipSize*2)continue;
+			if (posX < 0 - kChipSize*3)continue;
 			if (posX > Game::kScreenWidth)continue;
 			if (posY < 0 - kChipSize)continue;
 			if (posY > Game::kScreenHeight)continue;
@@ -155,9 +155,7 @@ void Bg::DrawMapChip(std::shared_ptr<Camera>pCamera)
 				kChipSize, kChipSize,
 				kScale, 0.0f,
 				mapHandle_, true);
-
 #ifdef _DEBUG
-
 			//当たり判定のあるチップだけ矩形を描画
 			if (chipNum != 0)
 			{
