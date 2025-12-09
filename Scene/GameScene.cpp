@@ -135,7 +135,7 @@ void GameScene::Init()
 		break;
 	case StageType::BossDebugStage:
 		player_ = std::make_shared<Player>(Vector2{ 100,300 }, Vector2{});
-		enemyFactory_.AddBoss(Vector2{ 300,300 },player_,bg_);
+		enemyFactory_.AddBoss(Vector2{ 1000,1600 },player_,bg_);
 		break;
 	default:
 		break;

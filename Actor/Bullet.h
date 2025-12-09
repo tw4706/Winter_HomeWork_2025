@@ -84,6 +84,6 @@ private:
 	//”g“®ŠÖ˜A
 	bool isHadouSpawned_;			//”g“®‚ğ¶¬‚µ‚½‚©‚Ç‚¤‚©
 	std::vector<Hadou> hadouRects_;	//”g“®‚Ì“–‚½‚è”»’è—p‚Ì‹éŒ`
-	int hadouDirection_;
+	int hadouDir_;
 };
 

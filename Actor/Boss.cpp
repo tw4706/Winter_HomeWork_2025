@@ -31,16 +31,21 @@ namespace
 	constexpr int kGraphH = 32;
 	constexpr int kGraphHalfW = 32/2;
 	constexpr int kGraphHalfH = 32/2;
-	constexpr float kScale = 2.0f;
+	constexpr float kScale = 4.0f;
+
+	constexpr float kGround = 1764.0f;
 }
 
 Boss::Boss(Vector2 pos, Vector2 vel):
 	Enemy(pos,vel),
 	state_(BossState::Idle),
 	stateTimer_(0),
-	handle_(-1)
+	handle_(-1),
+	hp_(10),
+	backPos_(pos)
 {
 	colSize_ = 64.0f;
+	SetUseGravity(false);
 }
 
 Boss::~Boss()
@@ -69,6 +74,25 @@ void Boss::Update()
 	if (isDead_)return;
 	Enemy::Update();
 	colRect_.SetCenter(pos_.x,pos_.y,colSize_,colSize_);
+
+	switch (state_)
+	{
+	case BossState::Idle:
+		UpdateIdle();
+		break;
+	case BossState::Attack:
+		UpdateAttack();
+		break;
+	case BossState::Fly:
+		UpdateFly();
+		break;
+	case BossState::Hurt:
+		UpdateHurt();
+		break;
+	case BossState::Dead:
+		UpdateDead();
+		break;
+	}
 }
 
 void Boss::Draw()
@@ -140,9 +164,14 @@ void Boss::UpdateIdle()
 {
 	stateTimer_++;
 
+	//ノックバックしても元の位置に戻る
+	pos_.x += (backPos_.x - pos_.x) * 0.05f;
+	pos_.y += (backPos_.y - pos_.y) * 0.05f;
+
+	//ゆっくり上下移動
 	pos_.y += sin(stateTimer_ * 0.1f) * 0.5f;
 
-	if (stateTimer_ > 120) 
+	if (stateTimer_ > 120)
 	{
 		ChangeState(BossState::Attack);
 	}
@@ -150,26 +179,28 @@ void Boss::UpdateIdle()
 
 void Boss::UpdateAttack()
 {
-	stateTimer_++;
-	if (stateTimer_ > 180) 
-	{
-		ChangeState(BossState::Fly);
-	}
 }
 
 void Boss::UpdateFly()
 {
-	vel_.x = (isTurn_ ? -3.0f : 3.0f);
-
-	pos_.x += vel_.x;
-
-	// 壁にぶつかったら反転
-	if (pos_.x < 200)  isTurn_ = false;
-	if (pos_.x > 1000) isTurn_ = true;
-
 	stateTimer_++;
 
-	if (stateTimer_ > 240) {
+	//左右移動
+	vel_.x = (isTurn_ ? -3.0f : 3.0f);
+	pos_.x += vel_.x;
+
+	//壁で反転
+	if (pos_.x < 200)
+	{
+		isTurn_ = false;
+	}
+	else if (pos_.x > 1000)
+	{
+		isTurn_ = true;
+	}
+
+	if (stateTimer_ > 150)
+	{
 		ChangeState(BossState::Idle);
 	}
 }
@@ -178,21 +209,42 @@ void Boss::UpdateHurt()
 {
 	stateTimer_++;
 
-	// ノックバックなど
-	pos_.x += (isTurn_ ? 2.0f : -2.0f);
+	// ノックバック
+	pos_.x += (isTurn_ ? -2.0f : 2.0f);
 
-	if (stateTimer_ > 30) {
+	// 浮いているので軽く上下揺れも追加
+	pos_.y += sin(stateTimer_ * 0.3f) * 0.3f;
+
+	// 30f で Idle 状態に戻る
+	if (stateTimer_ > 30)
+	{
 		ChangeState(BossState::Idle);
 	}
 }
 
 void Boss::UpdateDead()
 {
-	vel_.y += 0.5f;
+	vel_.y += 0.5f; //重力
 	pos_.y += vel_.y;
 
-	// 地面へ落下 → 消滅
-	if (pos_.y > 1000) {
+	if (pos_.y > kGround)
+	{
+		pos_.y = kGround;
 		isDead_ = true;
 	}
+}
+
+void Boss::OnHit(int damage)
+{
+	if (state_ == BossState::Dead) return;
+
+	hp_ -= damage;
+
+	if (hp_ <= 0)
+	{
+		ChangeState(BossState::Dead);
+		return;
+	}
+
+	ChangeState(BossState::Hurt);
 }

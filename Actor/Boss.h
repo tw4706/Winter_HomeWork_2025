@@ -30,10 +30,14 @@ public:
 	void UpdateHurt();
 	void UpdateDead();
 
+	void OnHit(int damage);
+
 private:
+	int hp_;
 	BossState state_;
 	int stateTimer_;
 	int handle_;
+	Vector2 backPos_;
 	std::vector<int>graphHandles_;
 };
 
