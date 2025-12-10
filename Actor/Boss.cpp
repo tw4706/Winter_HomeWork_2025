@@ -1,5 +1,6 @@
 #include "Boss.h"
 #include "Player.h"
+#include"Camera.h"
 #include "BulletManager.h"
 #include<Dxlib.h>
 #include<cassert>
@@ -29,8 +30,8 @@ namespace
 
 	static_assert(static_cast<int>(kGraphNum)== _countof(kGraphName));
 
-	constexpr int kGraphW = 32;
-	constexpr int kGraphH = 32;
+	constexpr int kGraphWidth = 32;
+	constexpr int kGraphHeight = 32;
 	constexpr int kGraphHalfW = 32/2;
 	constexpr int kGraphHalfH = 32/2;
 	constexpr float kScale = 4.0f;
@@ -45,19 +46,43 @@ namespace
 	constexpr float kGravity = 0.5f;
 	constexpr float kDistance = 400.0f;
 	constexpr float kGround = 1764.0f;
+
+	constexpr int kCameraDuration = 10;
+	constexpr int kCameraMagnitude = 8;
+
+	//状態ごとの総フレーム数
+	constexpr int kIdleFrameCount = 4;
+	constexpr int kAttackFrameCount = 8;
+	constexpr int kFlyFrameCount = 4;
+	constexpr int kHurtFrameCount = 4;
+	constexpr int kDeathFrameCount = 7;
+
+	constexpr int kIdleFrameInterval = 6;
+	constexpr int kAttackFrameInterval = 6;
+	constexpr int kFlyFrameInterval = 6;
+	constexpr int kHurtFrameInterval = 6;
+	constexpr int kDeathFrameInterval = 12;
+
+	//状態ごとのフレーム数とフレーム間隔
+	const int frameCounts[kGraphNum] = { kIdleFrameCount,kAttackFrameCount,
+		kFlyFrameCount, kHurtFrameCount, kDeathFrameCount };
+	const int frameIntervals[kGraphNum] = { kIdleFrameInterval,
+		kAttackFrameInterval, kFlyFrameInterval, kHurtFrameInterval, kDeathFrameInterval };
 }
 
-Boss::Boss(Vector2 pos, Vector2 vel, std::shared_ptr<Player>player, BulletManager*bm):
+Boss::Boss(Vector2 pos, Vector2 vel, std::shared_ptr<Player>player, BulletManager*bm,std::shared_ptr<Camera>camera):
 	Enemy(pos,vel),
 	pPlayer_(player),
 	pBm_(bm),
-	state_(BossState::Idle),
+	pCamera_(camera),
+	currentState_(BossState::Idle),
 	stateTimer_(0),
 	handle_(-1),
 	shotTimer_(0.0f),
 	shotInterval_(kShotInterval),
 	hp_(KMaxHp),
-	backPos_(pos)
+	backPos_(pos),
+	hasShot_(false)
 {
 	colSize_ = kColSize;
 	SetUseGravity(false);
@@ -74,12 +99,22 @@ Boss::~Boss()
 void Boss::Init()
 {
 	graphHandles_.resize(kGraphNum);
+	animations_.resize(kGraphNum);
 
 	for (int i = 0; i < kGraphNum; i++)
 	{
 		graphHandles_[i] = LoadGraph(kGraphName[i].c_str());
+		animations_[i] = std::make_shared<Animation>(
+			graphHandles_[i],
+			kGraphWidth,
+			kGraphHeight,
+			frameCounts[i],
+			frameIntervals[i],
+			kScale,
+			false
+		);
 	}
-	state_ = BossState::Idle;
+	currentState_ = BossState::Idle;
 	stateTimer_ = 0;
 	handle_ = graphHandles_[kIdleGraph];
 }
@@ -90,7 +125,10 @@ void Boss::Update()
 	Enemy::Update();
 	colRect_.SetCenter(pos_.x,pos_.y,colSize_,colSize_);
 
-	switch (state_)
+	//アニメーションの更新
+	animations_[static_cast<int>(currentState_)]->Update();
+
+	switch (currentState_)
 	{
 	case BossState::Idle:
 		UpdateIdle();
@@ -114,7 +152,7 @@ void Boss::Draw()
 {
 	if (isDead_)return;
 
-	switch (state_)
+	switch (currentState_)
 	{
 	case BossState::Idle:
 		handle_ = graphHandles_[kIdleGraph];
@@ -135,15 +173,20 @@ void Boss::Draw()
 
 	float drawX = pos_.x + cameraOffset_.x;
 	float drawY = pos_.y + cameraOffset_.y;
+	//描画
+	int animIndex = static_cast<int>(currentState_);
+	int frame = animations_[animIndex]->GetFrameCount();
 
-	DrawRectRotaGraph3(
-		drawX, drawY,
-		0, 0,
-		kGraphW, kGraphH,
-		kGraphHalfW, kGraphHalfH,
-		kScale, kScale,
-		0.0,
-		handle_, true);
+	animations_[animIndex]->Draw(drawX, drawY, isTurn_);
+
+	//DrawRectRotaGraph3(
+	//	drawX, drawY,
+	//	0, 0,
+	//	kGraphWidth, kGraphHeight,
+	//	kGraphHalfW, kGraphHalfH,
+	//	kScale, kScale,
+	//	0.0,
+	//	handle_, true);
 #ifdef _DEBUG
 	colRect_.DrawAndCamera(cameraOffset_, 0xff0000, false);
 #endif
@@ -151,25 +194,12 @@ void Boss::Draw()
 
 void Boss::ChangeState(BossState nextState)
 {
-	state_ = nextState;
+	currentState_ = nextState;
 	stateTimer_ = 0;
-	switch (nextState)
+	
+	if (nextState == BossState::Attack)
 	{
-	case BossState::Idle:
-		UpdateIdle();
-		break;
-	case BossState::Attack:
-		UpdateAttack();
-		break;
-	case BossState::Fly:
-		UpdateFly();
-		break;
-	case BossState::Hurt:
-		UpdateHurt();
-		break;
-	case BossState::Dead:
-		UpdateDead();
-		break;
+		hasShot_ = false;
 	}
 }
 
@@ -181,30 +211,54 @@ void Boss::UpdateIdle()
 	pos_.x += (backPos_.x - pos_.x) * kComeBackPos;
 	pos_.y += (backPos_.y - pos_.y) * kComeBackPos;
 
-	//ゆっくり上下移動
-	pos_.y += sin(stateTimer_ * 0.1f) * 0.5f;
+	float distance = std::abs(pos_.x - pPlayer_->GetPos().x);
 
-	if (stateTimer_ > 120)
+	//プレイヤーが近いと攻撃アニメーション
+	if (distance < kDistance)
 	{
 		ChangeState(BossState::Attack);
+		return;
 	}
+
+	//一定時間経過で飛行アニメーション
+	if (stateTimer_ > 60 && rand() % 100 < 2)
+	{
+		ChangeState(BossState::Fly);
+		return;
+	}
+
+	//ゆっくり上下移動
+	pos_.y += sin(stateTimer_ * 0.1f) * 0.5f;
 }
 
 void Boss::UpdateAttack()
 {
+	stateTimer_++;
+
+	int currentFrame = animations_[static_cast<int>(BossState::Attack)]->GetFrameCount();
+
 	shotTimer_ += 1.0f / 60.0f;
 	float distance = std::abs(pos_.x - pPlayer_->GetPos().x);
 	if (distance < kDistance)
 	{
-		if (shotTimer_ >= shotInterval_) {
-			shotTimer_ = 0.0f;
+		if (!hasShot_ && currentFrame == 4)
+		{
+			if (shotTimer_ >= shotInterval_)
+			{
+				shotTimer_ = 0.0f;
+				hasShot_ = true;
 
-			//弾を発射
-			Vector2 bulletPos = pos_;
-			Vector2 bulletVel = { -kSpeed, 0.0f };
+				//弾を発射
+				Vector2 bulletPos = pos_;
+				Vector2 bulletVel = { -kSpeed, 0.0f };
 
-			pBm_->AddEnemyBullet(bulletPos, bulletVel);
+				pBm_->AddEnemyBullet(bulletPos, bulletVel);
+			}
 		}
+	}
+	if (animations_[static_cast<int>(BossState::Attack)]->IsAnimFinished())
+	{
+		ChangeState(BossState::Idle);
 	}
 }
 
@@ -261,9 +315,11 @@ void Boss::UpdateDead()
 
 void Boss::OnHit(int damage)
 {
-	if (state_ == BossState::Dead) return;
+	if (currentState_ == BossState::Dead) return;
 
 	hp_ -= damage;
+
+	pCamera_->Shake(kCameraDuration, kCameraMagnitude);
 
 	if (hp_ <= 0)
 	{

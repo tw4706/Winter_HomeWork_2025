@@ -41,11 +41,11 @@ public:
 	void Draw()override;
 
 private:
-	std::shared_ptr<Player>player_;
+	std::shared_ptr<Player>pPlayer_;
 	BulletManager bulletManager_;
 	EnemyFactory enemyFactory_;
 	std::shared_ptr<Bg>bg_;
-	std::shared_ptr<Camera>camera_;
+	std::shared_ptr<Camera>pCamera_;
 
 	//実験用のゴールオブジェクト
 	int keyH_;//鍵のハンドル

@@ -12,8 +12,14 @@ public:
 	//カメラのオフセットを取得
 	const Vector2& GetOffset() const { return drawOffset_; }
 
+	//カメラを揺らす
+	void Shake(int duration, float magnitude);
+
 private:
 	Vector2 pos_;
 	Vector2 drawOffset_;
+	int shakeDuration_; //揺れの残り時間
+	float shakeMagnitude_; //揺れの大きさ
+	int shakeTimer_; //揺れのタイマー
 };
 

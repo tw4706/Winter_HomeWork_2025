@@ -7,14 +7,13 @@ public:
 	enum class BossState
 	{
 		Idle,
-		Walk,
-		Fly,
 		Attack,
-		Spawn,
+		Fly,
 		Hurt,
 		Dead
 	};
-	Boss(Vector2 pos, Vector2 vel,std::shared_ptr<Player>player,BulletManager*bm);
+	Boss(Vector2 pos, Vector2 vel,std::shared_ptr<Player>player,
+		BulletManager*bm,std::shared_ptr<Camera>camera);
 	~Boss();
 
 	void Init()override;
@@ -34,15 +33,28 @@ public:
 	void OnHit(int damage);
 
 private:
-	int hp_;
-	BossState state_;
-	int stateTimer_;
-	int handle_;
-	float shotTimer_;
-	float shotInterval_;
-	Vector2 backPos_;
+	int hp_;//体力
+	BossState currentState_;//現在の状態
+	int stateTimer_;//状態遷移用タイマー
+	int handle_;//画像ハンドル
+	float shotTimer_;//弾を撃つまでの時間
+	float shotInterval_;//弾を撃つ間隔
+	Vector2 backPos_;//戻る位置を保存する変数
+	bool hasShot_;//弾を撃ったかどうかのフラグ
+
+	//グラフィックハンドルの配列
 	std::vector<int>graphHandles_;
+
+	//プレイヤーのポインタ
 	std::shared_ptr<Player>pPlayer_;
+
+	//弾管理クラスのポインタ
 	BulletManager* pBm_;
+
+	//カメラのポインタ
+	std::shared_ptr<Camera>pCamera_;
+
+	//アニメーションの配列
+	std::vector<std::shared_ptr<Animation>>animations_;
 };
 

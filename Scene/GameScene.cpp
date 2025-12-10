@@ -35,7 +35,7 @@ GameScene::GameScene(SceneController& controller, StageType stage) :
 	frame_(0)
 {
 	bg_ = std::make_shared<Bg>();
-	camera_ = std::make_shared<Camera>();
+	pCamera_ = std::make_shared<Camera>();
 }
 
 void GameScene::FadeInUpdate(Input&)
@@ -58,7 +58,7 @@ void GameScene::NormalUpdate(Input&input)
 		return;
 	}
 
-	if (player_->GetPos().y > kFallLimit)
+	if (pPlayer_->GetPos().y > kFallLimit)
 	{
 		update_ = &GameScene::FadeOutUpdate;
 		draw_ = &GameScene::FadeDraw;
@@ -67,16 +67,16 @@ void GameScene::NormalUpdate(Input&input)
 	}
 
 	//各クラスの更新処理
-	camera_->Update(player_);
+	pCamera_->Update(pPlayer_);
 
-	player_->Update(input, bulletManager_);
+	pPlayer_->Update(input, bulletManager_);
 
 	enemyFactory_.Update();
 
 	//弾の更新処理
-	bulletManager_.Update(input, enemyFactory_.GetEnemies(), *player_);
+	bulletManager_.Update(input, enemyFactory_.GetEnemies(), *pPlayer_);
 
-	if (player_->IsDead() && player_->IsDeadAnimFinished())
+	if (pPlayer_->IsDead() && pPlayer_->IsDeadAnimFinished())
 	{
 		update_ = &GameScene::FadeOutUpdate;
 		draw_ = &GameScene::FadeDraw;
@@ -88,18 +88,18 @@ void GameScene::NormalUpdate(Input&input)
 	//プレイヤーと敵の当たり判定
 	for (auto& enemy : enemyFactory_.GetEnemies())
 	{
-		if (!enemy->IsDead() && player_->GetColRect().IsCollision(enemy->GetColRect()))
+		if (!enemy->IsDead() && pPlayer_->GetColRect().IsCollision(enemy->GetColRect()))
 		{
-			if (!player_->IsDead())
+			if (!pPlayer_->IsDead())
 			{
-				player_->Dead();
+				pPlayer_->Dead();
 			}
 			break;
 		}
 	}
 
 	//ゴールとの当たり判定
-	if (player_->GetColRect().IsCollision(goalRect_))
+	if (pPlayer_->GetColRect().IsCollision(goalRect_))
 	{
 		printfDx("GoalHit!\n");
 		update_ = &GameScene::GoalFadeOutUpdate;
@@ -137,12 +137,12 @@ void GameScene::FadeDraw()
 
 void GameScene::NormalDraw() 
 {
-	Vector2 cameraOffset = camera_->GetOffset();
+	Vector2 cameraOffset = pCamera_->GetOffset();
 
 	//各クラスの描画処理
-	bg_->Draw(camera_);
-	player_->SetCameraOffset(cameraOffset);
-	player_->Draw();
+	bg_->Draw(pCamera_);
+	pPlayer_->SetCameraOffset(cameraOffset);
+	pPlayer_->Draw();
 
 	enemyFactory_.Draw(cameraOffset);
 
@@ -184,26 +184,26 @@ void GameScene::Init()
 	case StageType::Stage1:
 
 
-		player_ = std::make_shared<Player>(Vector2{ spawnPosX,spawnPosY }, Vector2{});
+		pPlayer_ = std::make_shared<Player>(Vector2{ spawnPosX,spawnPosY }, Vector2{});
 
 		enemyFactory_.LoadFromCSV("data/Enemy/enemyData.csv", &bulletManager_);
 		goalRect_.SetLT(8500, 1724, kColSize, kColSize);
 
 		break;
 	case StageType::BossDebugStage:
-		player_ = std::make_shared<Player>(Vector2{ spawnPosX,spawnPosY }, Vector2{});
-		enemyFactory_.AddBoss(Vector2{ 1000,1600 }, Vector2{0,0},player_, &bulletManager_);
+		pPlayer_ = std::make_shared<Player>(Vector2{ spawnPosX,spawnPosY }, Vector2{});
+		enemyFactory_.AddBoss(Vector2{ 1000,1600 }, Vector2{0,0},pPlayer_, &bulletManager_, pCamera_);
 		break;
 	default:
 		break;
 	}
 
-	player_->Init();
-	player_->SetBg(bg_);
+	pPlayer_->Init();
+	pPlayer_->SetBg(bg_);
 
-	camera_->Init(player_);
+	pCamera_->Init(pPlayer_);
 
-	enemyFactory_.Init(player_, bg_);
+	enemyFactory_.Init(pPlayer_, bg_);
 
 	keyH_ = LoadGraph("data/map/Key.png");
 	assert(keyH_ >= 0);

@@ -18,7 +18,10 @@ Vector2 VLerp(Vector2 start, Vector2 end, float t)
 
 Camera::Camera():
 	pos_{},
-	drawOffset_{}
+	drawOffset_{},
+	shakeDuration_(0),
+	shakeMagnitude_(0.0f),
+	shakeTimer_(0)
 {
 }
 
@@ -47,4 +50,22 @@ void Camera::Update(std::shared_ptr<Player> player)
 	drawOffset_.x =drawOffset_.x + (Game::kScreenWidth * 0.5f);
 	drawOffset_.y = drawOffset_.y + (Game::kScreenHeight * 0.5f);
 
+	if (shakeTimer_ < shakeDuration_)
+	{
+		shakeTimer_++;
+
+		float offsetX = ((rand() % 200) / 100.0f - 1.0f) * shakeMagnitude_;
+		float offsetY = ((rand() % 200) / 100.0f - 1.0f) * shakeMagnitude_;
+
+		drawOffset_.x += offsetX;
+		drawOffset_.y += offsetY;
+	}
+
+}
+
+void Camera::Shake(int duration, float magnitude)
+{
+	shakeDuration_ = duration;
+	shakeMagnitude_ = magnitude;
+	shakeTimer_ = 0;
 }
