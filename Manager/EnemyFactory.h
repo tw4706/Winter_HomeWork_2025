@@ -15,7 +15,7 @@ public:
     void Draw(const Vector2& cameraOffset);
     std::vector<std::shared_ptr<Enemy>>& GetEnemies() { return enemies_; }
 
-    void AddBoss(Vector2 pos,std::shared_ptr<Player>player,std::shared_ptr<Bg>bg);
+    void AddBoss(Vector2 pos, Vector2 vel, std::shared_ptr<Player>player, BulletManager* bm);
 
 private:
     std::vector<std::shared_ptr<Enemy>> enemies_;

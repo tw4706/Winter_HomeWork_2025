@@ -22,7 +22,7 @@ void TitleScene::FadeInUpdate(Input&input)
 
 void TitleScene::NormalUpdate(Input&input)
 {
-	if (input.IsTriggered("ok")) {
+	if (input.IsTriggered("next")) {
 		update_ = &TitleScene::FadeOutUpdate;
 		draw_ = &TitleScene::FadeDraw;
 		frame_ = 0;// フェードアウトの最初

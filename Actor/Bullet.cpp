@@ -10,6 +10,7 @@ namespace
 {
 	constexpr float kGround = 1764.0f;
 	constexpr float kScale = 1.5f;
+	constexpr float KEnemyBulletScale = 3.0f;
 
 	//弾のダメージ設定
 	constexpr int kMaxDamage = 3;
@@ -24,6 +25,9 @@ namespace
 	constexpr float kHadouH = 40.0f;
 	constexpr float kHadouSpawnInterval = 10;
 	constexpr int kHadouLifetime = 30;
+
+	constexpr int kColOffsetX = 20;
+	constexpr int kColOffsetY = 20;
 }
 
 Bullet::Bullet(Vector2 pos, Vector2 vel,BulletType bulletType, std::shared_ptr<Bg>bg) :
@@ -32,6 +36,7 @@ Bullet::Bullet(Vector2 pos, Vector2 vel,BulletType bulletType, std::shared_ptr<B
 	bulletH_(-1),
 	damage_(1),
 	hitCount_(0),
+	hadouDir_(0),
 	isHadouSpawned_(false),
 	bulletType_(bulletType),
 	pBg_(bg)
@@ -107,7 +112,7 @@ void Bullet::Update(Input& input, std::vector<std::shared_ptr<Enemy>>& enemies)
 	if (bulletType_ == BulletType::EnemyBullet)
 	{
 		pos_ += vel_;
-		colRect_.SetCenter(pos_.x, pos_.y, colSize_, colSize_);
+		colRect_.SetCenter(pos_.x+ kColOffsetX, pos_.y+ kColOffsetY, colSize_*kScale, colSize_* kScale);
 		UpdateShot();
 		return;
 	}
@@ -172,14 +177,26 @@ void Bullet::Draw()
 		{
 			angle = (vel_.x >= 0) ? DX_PI / 2.0f : DX_PI + DX_PI / 2.0f;
 		}
-
-		DrawRectRotaGraph(
-			drawX, drawY,
-			srcX, srcY,        // 切り取り開始位置
-			frameW, frameH,    // 切り取りサイズ
-			kScale, angle,
-			bulletH_,
-			TRUE);
+		if (bulletType_ == BulletType::EnemyBullet)
+		{
+			DrawRectRotaGraph(
+				drawX, drawY,
+				srcX, srcY,        // 切り取り開始位置
+				frameW, frameH,    // 切り取りサイズ
+				KEnemyBulletScale, angle,
+				bulletH_,
+				TRUE);
+		}
+		else
+		{
+			DrawRectRotaGraph(
+				drawX, drawY,
+				srcX, srcY,        // 切り取り開始位置
+				frameW, frameH,    // 切り取りサイズ
+				kScale, angle,
+				bulletH_,
+				TRUE);
+		}
 	}
 #ifdef _DEBUG
 	colRect_.DrawAndCamera(cameraOffset_, 0xff0000, false);

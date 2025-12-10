@@ -14,9 +14,9 @@ namespace
     constexpr float kDistance = 300.0f;
 }
 
-SkullFlower::SkullFlower(Vector2 pos, Vector2 vel, BulletManager* bulletManager)
+SkullFlower::SkullFlower(Vector2 pos, Vector2 vel, BulletManager* bm)
     : Enemy(pos, vel),
-    bulletManager_(bulletManager),
+    pBm_(bm),
     shotInterval_(2.0f),
     shotTimer_(0.0f),
     flowerH_(-1)
@@ -49,7 +49,7 @@ void SkullFlower::Update()
             Vector2 bulletPos = pos_;
             Vector2 bulletVel = { -kSpeed, 0.0f };
 
-            bulletManager_->AddEnemyBullet(bulletPos, bulletVel);
+            pBm_->AddEnemyBullet(bulletPos, bulletVel);
         }
     }
 

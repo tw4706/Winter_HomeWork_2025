@@ -1,5 +1,6 @@
 #pragma once
 #include "Enemy.h"
+class BulletManager;
 class Boss :public Enemy
 {
 public:
@@ -13,7 +14,7 @@ public:
 		Hurt,
 		Dead
 	};
-	Boss(Vector2 pos, Vector2 vel);
+	Boss(Vector2 pos, Vector2 vel,std::shared_ptr<Player>player,BulletManager*bm);
 	~Boss();
 
 	void Init()override;
@@ -37,7 +38,11 @@ private:
 	BossState state_;
 	int stateTimer_;
 	int handle_;
+	float shotTimer_;
+	float shotInterval_;
 	Vector2 backPos_;
 	std::vector<int>graphHandles_;
+	std::shared_ptr<Player>pPlayer_;
+	BulletManager* pBm_;
 };
 

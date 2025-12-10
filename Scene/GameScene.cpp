@@ -9,6 +9,7 @@
 #include "SkullFlower.h"
 #include "GameOverScene.h"
 #include "ClearScene.h"
+#include "SelectScene.h"
 #include"SceneController.h"
 #include"GlobalConstants.h"
 #include<cmath>
@@ -48,6 +49,12 @@ void GameScene::FadeInUpdate(Input&)
 
 void GameScene::NormalUpdate(Input&input)
 {
+	if (input.IsTriggered("next"))
+	{
+		controller_.ChangeScene(std::make_shared<SelectScene>(controller_));
+		return;
+	}
+
 	if (player_->GetPos().y > kFallLimit)
 	{
 		update_ = &GameScene::FadeOutUpdate;
@@ -76,11 +83,11 @@ void GameScene::GoalFadeOutUpdate(Input&)
 
 void GameScene::FadeDraw() 
 {
-	// 値の範囲を一旦0.0~1.0にしておくといろいろと扱いやすくなります
+	//フェードの描画
 	auto rate = static_cast<float>(frame_) / static_cast<float>(fade_interval);
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255 * rate);// αブレンド
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255 * rate);
 	DrawBox(0, 0, Game::kScreenWidth, Game::kScreenHeight, 0x000000, true);
-	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);// ブレンドしない
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);//ブレンドしない
 }
 
 void GameScene::NormalDraw() 
@@ -134,8 +141,8 @@ void GameScene::Init()
 
 		break;
 	case StageType::BossDebugStage:
-		player_ = std::make_shared<Player>(Vector2{ 100,300 }, Vector2{});
-		enemyFactory_.AddBoss(Vector2{ 1000,1600 },player_,bg_);
+		player_ = std::make_shared<Player>(Vector2{ spawnPosX,spawnPosY }, Vector2{});
+		enemyFactory_.AddBoss(Vector2{ 1000,1600 }, Vector2{0,0},player_, &bulletManager_);
 		break;
 	default:
 		break;

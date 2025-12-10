@@ -88,14 +88,12 @@ void EnemyFactory::Draw(const Vector2& cameraOffset)
     }
 }
 
-void EnemyFactory::AddBoss(Vector2 pos, 
-    std::shared_ptr<Player>player,
-    std::shared_ptr<Bg>bg)
+void EnemyFactory::AddBoss(Vector2 pos, Vector2 vel,
+    std::shared_ptr<Player>player,BulletManager*bm)
 {
-    auto boss = std::make_shared<Boss>(pos, Vector2{});
+    auto boss = std::make_shared<Boss>(pos, vel,player,bm);
     boss->Init();
     boss->SetPlayer(player);
-    boss->SetBg(bg);
     enemies_.push_back(boss);
 }
 

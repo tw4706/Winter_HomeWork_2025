@@ -61,7 +61,7 @@ void SelectScene::NormalUpdate(Input& input)
 	}
 
 	//Œˆ’è
-	if (input.IsTriggered("ok"))
+	if (input.IsTriggered("next"))
 	{
 		update_ = &SelectScene::FadeOutUpdate;
 		draw_ = &SelectScene::FadeDraw;

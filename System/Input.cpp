@@ -4,7 +4,7 @@
 Input::Input() :inputData_{}, lastInputData_{}, inputTable_{}
 {
 
-	inputTable_["ok"] = {{ PeripheralType::keyboard, KEY_INPUT_RETURN },
+	inputTable_["next"] = {{ PeripheralType::keyboard, KEY_INPUT_RETURN },
 							{ PeripheralType::pad1, PAD_INPUT_L } };
 	inputTable_["shot"] = {{ PeripheralType::keyboard, KEY_INPUT_Z },
 							{ PeripheralType::pad1, PAD_INPUT_B } };

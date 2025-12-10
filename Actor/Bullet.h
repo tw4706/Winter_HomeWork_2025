@@ -82,8 +82,8 @@ private:
 	std::shared_ptr<Bg> pBg_;
 	
 	//”g“®ŠÖ˜A
+	int hadouDir_;
 	bool isHadouSpawned_;			//”g“®‚ğ¶¬‚µ‚½‚©‚Ç‚¤‚©
 	std::vector<Hadou> hadouRects_;	//”g“®‚Ì“–‚½‚è”»’è—p‚Ì‹éŒ`
-	int hadouDir_;
 };
 
