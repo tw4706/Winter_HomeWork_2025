@@ -34,10 +34,13 @@ namespace
 	constexpr int kGraphHalfW = 32/2;
 	constexpr int kGraphHalfH = 32/2;
 	constexpr float kScale = 4.0f;
+	constexpr float kColSize = 64.0f;
 
 	constexpr float kKnockBackPos = 2.0f;
 	constexpr float kComeBackPos = 0.05f;
 	constexpr float kSpeed = 3.0f;
+	constexpr float kShotInterval = 5.0f;
+	constexpr int KMaxHp = 10;
 
 	constexpr float kGravity = 0.5f;
 	constexpr float kDistance = 400.0f;
@@ -52,11 +55,11 @@ Boss::Boss(Vector2 pos, Vector2 vel, std::shared_ptr<Player>player, BulletManage
 	stateTimer_(0),
 	handle_(-1),
 	shotTimer_(0.0f),
-	shotInterval_(5.0f),
-	hp_(10),
+	shotInterval_(kShotInterval),
+	hp_(KMaxHp),
 	backPos_(pos)
 {
-	colSize_ = 64.0f;
+	colSize_ = kColSize;
 	SetUseGravity(false);
 }
 
@@ -132,7 +135,6 @@ void Boss::Draw()
 
 	float drawX = pos_.x + cameraOffset_.x;
 	float drawY = pos_.y + cameraOffset_.y;
-
 
 	DrawRectRotaGraph3(
 		drawX, drawY,

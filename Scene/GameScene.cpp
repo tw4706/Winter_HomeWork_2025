@@ -20,6 +20,7 @@ namespace
 {
 	//フェードまでの間隔
 	constexpr int fade_interval = 60;
+	constexpr float kColSize = 32;
 
 	//落下判定となる座標
 	constexpr float kFallLimit = 1900.0f;
@@ -49,6 +50,8 @@ void GameScene::FadeInUpdate(Input&)
 
 void GameScene::NormalUpdate(Input&input)
 {
+	if (update_ != &GameScene::NormalUpdate) return;
+
 	if (input.IsTriggered("next"))
 	{
 		controller_.ChangeScene(std::make_shared<SelectScene>(controller_));
@@ -58,6 +61,48 @@ void GameScene::NormalUpdate(Input&input)
 	if (player_->GetPos().y > kFallLimit)
 	{
 		update_ = &GameScene::FadeOutUpdate;
+		draw_ = &GameScene::FadeDraw;
+		frame_ = 0;
+		return;
+	}
+
+	//各クラスの更新処理
+	camera_->Update(player_);
+
+	player_->Update(input, bulletManager_);
+
+	enemyFactory_.Update();
+
+	//弾の更新処理
+	bulletManager_.Update(input, enemyFactory_.GetEnemies(), *player_);
+
+	if (player_->IsDead() && player_->IsDeadAnimFinished())
+	{
+		update_ = &GameScene::FadeOutUpdate;
+		draw_ = &GameScene::FadeDraw;
+		frame_ = 0;
+
+		return;
+	}
+
+	//プレイヤーと敵の当たり判定
+	for (auto& enemy : enemyFactory_.GetEnemies())
+	{
+		if (!enemy->IsDead() && player_->GetColRect().IsCollision(enemy->GetColRect()))
+		{
+			if (!player_->IsDead())
+			{
+				player_->Dead();
+			}
+			break;
+		}
+	}
+
+	//ゴールとの当たり判定
+	if (player_->GetColRect().IsCollision(goalRect_))
+	{
+		printfDx("GoalHit!\n");
+		update_ = &GameScene::GoalFadeOutUpdate;
 		draw_ = &GameScene::FadeDraw;
 		frame_ = 0;
 		return;
@@ -104,20 +149,25 @@ void GameScene::NormalDraw()
 	bulletManager_.SetCameraOffset(cameraOffset);
 	bulletManager_.Draw();
 
+	int keyScreenX = goalRect_.left_ + cameraOffset.x;
+	int keyScreenY = goalRect_.top_ + cameraOffset.y;
+
 	//鍵画像を描画 magicNumber
-	DrawGraph(
-		static_cast<int>(8500 - cameraOffset.x),
-		static_cast<int>(1724 - cameraOffset.y),
-		keyH_, TRUE
-	);
+	DrawRectRotaGraph3(keyScreenX, keyScreenY,
+		0,0,
+		32,32,
+		16,16,
+		1.0f,1.0f,
+		0.0,
+		keyH_, TRUE);
 
 #ifdef _DEBUG
-	Rect goalRectScreen = goalRect_;
-	goalRectScreen.left_ -= cameraOffset.x;
-	goalRectScreen.top_ -= cameraOffset.y;
-	goalRectScreen.right_ -= cameraOffset.x;
-	goalRectScreen.bottom_ -= cameraOffset.y;
-	goalRectScreen.Draw(0xff0000, false);
+	Rect screenGoal = goalRect_;
+	screenGoal.left_ -= cameraOffset.x;
+	screenGoal.top_ -= cameraOffset.y;
+	screenGoal.right_ -= cameraOffset.x;
+	screenGoal.bottom_ -= cameraOffset.y;
+	screenGoal.Draw(0xff0000, false);
 #endif
 }
 
@@ -137,7 +187,7 @@ void GameScene::Init()
 		player_ = std::make_shared<Player>(Vector2{ spawnPosX,spawnPosY }, Vector2{});
 
 		enemyFactory_.LoadFromCSV("data/Enemy/enemyData.csv", &bulletManager_);
-		goalRect_.SetLT(8500, 1724, 32, 32);
+		goalRect_.SetLT(8500, 1724, kColSize, kColSize);
 
 		break;
 	case StageType::BossDebugStage:
@@ -162,50 +212,6 @@ void GameScene::Init()
 void GameScene::Update(Input& input)
 {
 	(this->*update_)(input);
-
-	if (update_ != &GameScene::NormalUpdate) return;
-
-	//各クラスの更新処理
-	camera_->Update(player_);
-
-	player_->Update(input,bulletManager_);
-
-	enemyFactory_.Update();
-
-	//弾の更新処理
-	bulletManager_.Update(input,enemyFactory_.GetEnemies(), *player_);
-
-	if (player_->IsDead()&&player_->IsDeadAnimFinished())
-	{
-		update_ = &GameScene::FadeOutUpdate;
-		draw_ = &GameScene::FadeDraw;
-		frame_ = 0;
-
-		return;
-	}
-
-	//プレイヤーと敵の当たり判定
-	for (auto& enemy : enemyFactory_.GetEnemies())
-	{
-		if (!enemy->IsDead() && player_->GetColRect().IsCollision(enemy->GetColRect()))
-		{
-			if (!player_->IsDead())
-			{
-				player_->Dead();
-			}
-			break;
-		}
-	}
-
-	//ゴールとの当たり判定
-	if (player_->GetColRect().IsCollision(goalRect_))
-	{
-		printfDx("GoalHit!\n");
-		update_ = &GameScene::GoalFadeOutUpdate;
-		draw_ = &GameScene::FadeDraw;
-		frame_ = 0;
-		return;
-	}
 }
 
 void GameScene::Draw()

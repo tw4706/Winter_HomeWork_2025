@@ -65,16 +65,16 @@ void Dog::Update()
 
 void Dog::Draw()
 {
-	float drawX = pos_.x + cameraOffset_.x;
-	float drawY = pos_.y + cameraOffset_.y;
+	float drawX = (isTurn_) ? (pos_.x + cameraOffset_.x)+30 : pos_.x + cameraOffset_.x;
+	float drawY = (pos_.y + cameraOffset_.y)-15;
 
-	DrawRectRotaGraph3(drawX, drawY-15,
+	DrawRectRotaGraph3(drawX, drawY,
 		0, 0,
 		kGraphSize, kGraphSize,
 		kGraphColSize, kGraphColSize,
 		2.0, 2.0,
 		0.0,
-		dogH_, true);
+		dogH_, true,isTurn_);
 #ifdef _DEBUG
 	//“–‚½‚è”»’è‚Ì•`‰æ
 	colRect_.DrawAndCamera(cameraOffset_, 0xff0000, false);
@@ -95,6 +95,7 @@ void Dog::Move()
 		{
 			vel_.y = -kJumpPower;
 			vel_.x = (dx > 0) ? kSpeed : -kSpeed;
+			isTurn_ = (dx > 0) ? true : false;
 			isGround_ = false;
 			timer_ = 0.0f;
 		}

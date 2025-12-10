@@ -48,7 +48,7 @@ void Zombie::Init()
 	assert(zombieH_ >= 0);
 
 	//“–‚½‚è”»’è‚ÌXV
-	colRect_.SetCenter(pos_.x, pos_.y, kDrawW, kDrawH);
+	colRect_.SetCenter(pos_.x, pos_.y, kGraphWidth, kGraphHeight);
 }
 
 void Zombie::Update()
@@ -97,7 +97,7 @@ void Zombie::Move()
 	if (distance < kDistance)
 	{
 		vel_.x = (dx > 0) ? kSpeed : (dx < 0 ? -kSpeed : 0);
-		isTurn_ = dx < 0;
+		isTurn_ = (dx > 0) ? false : true;
 	}
 	else
 	{

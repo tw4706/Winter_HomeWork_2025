@@ -36,12 +36,12 @@ namespace
 	};
 	static_assert(static_cast<int>(kGraphNum) == _countof(kGraphName));
 
-	
+
 	//プレイヤーの画像サイズ
 	constexpr int kGraphWidth = 128;
 	constexpr int kGraphHeight = 128;
-	constexpr int kGraphHalfWidth = 128/2;
-	constexpr int kGraphHalfHeight = 128/2;
+	constexpr int kGraphHalfWidth = 128 / 2;
+	constexpr int kGraphHalfHeight = 128 / 2;
 	constexpr float kGraphColSize = 64.0f;
 
 	//拡大率
@@ -54,10 +54,10 @@ namespace
 	constexpr float kHalfSpeed = 1.5f;
 
 	//ジャンプの高さ
-	constexpr float kJumpPower = 12.0f;
+	constexpr float kJumpPower = 18.0f;
 
 	//ダブルジャンプの高さ
-	constexpr float kDoubleJumpPower = 8.0f;
+	constexpr float kDoubleJumpPower = 12.0f;
 
 	//落下判定となる座標
 	constexpr float kFallLimit = 2100.0f;
@@ -111,7 +111,7 @@ namespace
 
 	//状態ごとのフレーム数とフレーム間隔
 	const int frameCounts[kGraphNum] = { kIdleFrameCount,kAttackFrameCount,kWalkFrameCount, kJumpFrameCount, kHurtFrameCount, kDeathFrameCount };
-	const int frameIntervals[kGraphNum] = { kIdleFrameInterval, 
+	const int frameIntervals[kGraphNum] = { kIdleFrameInterval,
 		kAttackFrameInterval, kWalkFrameInterval, kJumpFrameInterval, kHurtFrameInterval, kDeathFrameInterval }; // 更新速度
 }
 
@@ -169,13 +169,13 @@ void Player::Update(Input& input, BulletManager& bm)
 
 	if (state_ == PlayerState::Walk)
 	{
-		colOffsetX = isTurn_?-kWalkColXOffset:kWalkColXOffset;
+		colOffsetX = isTurn_ ? -kWalkColXOffset : kWalkColXOffset;
 	}
 
 	float colX = pos_.x + colOffsetX;
 
-	colRect_.SetCenter(colX, pos_.y- kPosXOffset, kGraphHalfWidth, kGraphHeight- kColYOffset);
-	
+	colRect_.SetCenter(colX, pos_.y - kPosXOffset, kGraphHalfWidth, kGraphHeight - kColYOffset);
+
 
 	//状態遷移の更新
 	UpdateState(input);
@@ -197,7 +197,7 @@ void Player::Update(Input& input, BulletManager& bm)
 	Jump(input);
 
 	//発射処理
-	Shot(input,bm);
+	Shot(input, bm);
 
 	//アニメーションの更新
 	animations_[static_cast<int>(state_)]->Update();
@@ -234,7 +234,8 @@ void Player::Update(Input& input, BulletManager& bm)
 #ifdef _DEBUG
 	//デバッグ用
 	DrawFormatString(0, 0, GetColor(255, 255, 255), "PlayerX:%f", pos_.x);
-	DrawFormatString(0, 20, GetColor(255, 255, 255), "VelX:%f", vel_.x);
+	DrawFormatString(0, 20, GetColor(255, 255, 255), "PlayerY:%f", pos_.y);
+	//DrawFormatString(0, 20, GetColor(255, 255, 255), "VelX:%f", vel_.x);
 #endif
 
 }
@@ -317,7 +318,7 @@ void Player::Move(Input& input)
 //ジャンプ処理
 void Player::Jump(Input& input)
 {
-	if (input.IsTriggered("jump")) 
+	if (input.IsTriggered("jump"))
 	{
 		// 通常ジャンプ
 		if (isGround_)
@@ -337,7 +338,7 @@ void Player::Jump(Input& input)
 	}
 }
 
-void Player::Shot(Input&input,BulletManager&bm)
+void Player::Shot(Input& input, BulletManager& bm)
 {
 	if (shotTimer_ > 0)
 	{
@@ -350,7 +351,7 @@ void Player::Shot(Input&input,BulletManager&bm)
 
 		//弾の発射される位置
 		float spawnX = pos_.x + (isTurn_ ? kGunOffsetX : -kGunOffsetX);
-		float spawnY = pos_.y-kGunOffsetY;
+		float spawnY = pos_.y - kGunOffsetY;
 
 		if (currentBulletType_ == BulletType::Torch)
 		{
@@ -364,7 +365,7 @@ void Player::Shot(Input&input,BulletManager&bm)
 			Vector2{ config.speed, 0.0f } : Vector2{ -config.speed, 0.0f };
 
 		//弾の生成
-		auto bullet = std::make_shared<Bullet>(spawnPos, bulletVel, currentBulletType_,pBg_);
+		auto bullet = std::make_shared<Bullet>(spawnPos, bulletVel, currentBulletType_, pBg_);
 		bullet->Init();
 		bullet->SetBg(pBg_);
 		bm.Init(bullet);
