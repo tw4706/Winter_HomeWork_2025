@@ -40,6 +40,7 @@ namespace
 	constexpr float kKnockBackPos = 2.0f;
 	constexpr float kComeBackPos = 0.05f;
 	constexpr float kSpeed = 0.5f;
+	constexpr float kBulletSpeed = 3.0f;
 	constexpr float kShotInterval = 5.0f;
 	constexpr int KMaxHp = 10;
 
@@ -82,7 +83,8 @@ Boss::Boss(Vector2 pos, Vector2 vel, std::shared_ptr<Player>player, BulletManage
 	shotInterval_(kShotInterval),
 	hp_(KMaxHp),
 	backPos_(pos),
-	hasShot_(false)
+	hasShot_(false),
+	knockbackDir_(0)
 {
 	colSize_ = kColSize;
 	SetUseGravity(false);
@@ -123,6 +125,10 @@ void Boss::Update()
 {
 	if (isDead_)return;
 	Enemy::Update();
+
+	//常にプレイヤーの方向を向く
+	isTurn_ = (pPlayer_->GetPos().x < pos_.x);
+
 	colRect_.SetCenter(pos_.x,pos_.y,colSize_,colSize_);
 
 	//アニメーションの更新
@@ -234,7 +240,7 @@ void Boss::UpdateAttack()
 {
 	stateTimer_++;
 
-	int currentFrame = animations_[static_cast<int>(BossState::Attack)]->GetFrameCount();
+	int currentFrame = animations_[static_cast<int>(BossState::Attack)]->GetCurrentFrame();
 
 	shotTimer_ += 1.0f / 60.0f;
 	float distance = std::abs(pos_.x - pPlayer_->GetPos().x);
@@ -249,7 +255,17 @@ void Boss::UpdateAttack()
 
 				//弾を発射
 				Vector2 bulletPos = pos_;
-				Vector2 bulletVel = { -kSpeed, 0.0f };
+
+				//弾がプレイヤーを狙う
+				Vector2 toPlayer = pPlayer_->GetPos() - pos_;
+
+				float len = sqrtf(toPlayer.x * toPlayer.x + toPlayer.y * toPlayer.y);
+				if (len > 0.0f)
+				{
+					toPlayer.x /= len;
+					toPlayer.y /= len;
+				}
+				Vector2 bulletVel = { toPlayer.x * kBulletSpeed, toPlayer.y * kBulletSpeed };
 
 				pBm_->AddEnemyBullet(bulletPos, bulletVel);
 			}
@@ -267,7 +283,7 @@ void Boss::UpdateFly()
 
 	// プレイヤーが右なら右へ、左なら左へ
 	float playerX = pPlayer_->GetPos().x;
-	isTurn_ = (playerX < pos_.x); // プレイヤーが左にいるなら反転
+	isTurn_ = (playerX < pos_.x); //プレイヤーが左にいるなら反転
 
 	// 水平方向の移動
 	vel_.x = (isTurn_ ? -kSpeed : kSpeed);
@@ -275,7 +291,7 @@ void Boss::UpdateFly()
 
 	// 大きく上下へ蛇行 (振幅40〜60)
 	float amplitude = 40.0f;
-	float frequency = 0.08f; // 波の細かさ
+	float frequency = 0.08f;
 	pos_.y += sin(stateTimer_ * frequency) * amplitude * 0.1f;
 
 	// 一定時間で戻る
@@ -319,6 +335,15 @@ void Boss::OnHit(int damage)
 	hp_ -= damage;
 
 	pCamera_->Shake(kCameraDuration, kCameraMagnitude);
+
+	if(pPlayer_->GetPos().x < pos_.x)
+	{
+		knockbackDir_ = 1; //右方向にノックバック
+	}
+	else
+	{
+		knockbackDir_ = -1; //左方向にノックバック
+	}
 
 	if (hp_ <= 0)
 	{

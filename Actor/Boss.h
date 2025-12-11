@@ -41,6 +41,7 @@ private:
 	float shotInterval_;//弾を撃つ間隔
 	Vector2 backPos_;//戻る位置を保存する変数
 	bool hasShot_;//弾を撃ったかどうかのフラグ
+	int knockbackDir_;//ノックバックの方向
 
 	//グラフィックハンドルの配列
 	std::vector<int>graphHandles_;
