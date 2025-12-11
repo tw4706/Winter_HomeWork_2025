@@ -130,15 +130,22 @@ void Bg::DrawMapChip(std::shared_ptr<Camera>pCamera)
 	{
 		for (int x = 0; x < kChipNumX; x++)
 		{
+			int tileW = (int)(kChipSize * kScale);
+			int tileH = (int)(kChipSize * kScale);
 
-			int posX = static_cast<int>(x * kChipSize * kScale + pCamera->GetOffset().x);
-			int posY = static_cast<int>(y * kChipSize*kScale + pCamera->GetOffset().y);
+			int posX = (int)(x * kChipSize * kScale + pCamera->GetOffset().x);
+			int posY = (int)(y * kChipSize * kScale + pCamera->GetOffset().y);
 
+			// 画面外判定（正常版）
+			if (posX + tileW < 0) continue;
+			if (posX > Game::kScreenWidth) continue;
+			if (posY + tileH < 0) continue;
+			if (posY > Game::kScreenHeight) continue;
 			//画面外のものは描画しない
-			if (posX < 0 - kChipSize*3)continue;
-			if (posX > Game::kScreenWidth)continue;
-			if (posY < 0 - kChipSize)continue;
-			if (posY > Game::kScreenHeight)continue;
+			//if (posX < 0 - kChipSize*3)continue;
+			//if (posX > Game::kScreenWidth)continue;
+			//if (posY < 0 - kChipSize)continue;
+			//if (posY > Game::kScreenHeight)continue;
 
 			//マップチップ番号を取得
 			int chipNum = mapChipData_[y][x];

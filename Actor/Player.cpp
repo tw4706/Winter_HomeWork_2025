@@ -57,7 +57,7 @@ namespace
 	constexpr float kJumpPower = 12.0f;
 
 	//ダブルジャンプの高さ
-	constexpr float kDoubleJumpPower = 18.0f;
+	constexpr float kDoubleJumpPower = 10.0f;
 
 	//落下判定となる座標
 	constexpr float kFallLimit = 2100.0f;

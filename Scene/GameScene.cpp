@@ -176,7 +176,7 @@ void GameScene::Init()
 	//ŠeƒNƒ‰ƒX‚Ì‰Šú‰»
 	bg_->Init();
 
-	float spawnPosX = 50.0f;
+	float spawnPosX = 200.0f;
 	float spawnPosY = 1744.0f;
 
 	switch (stageType_)

@@ -1,4 +1,4 @@
-#include "Boss.h"
+ï»¿#include "Boss.h"
 #include "Player.h"
 #include"Camera.h"
 #include "BulletManager.h"
@@ -39,7 +39,7 @@ namespace
 
 	constexpr float kKnockBackPos = 2.0f;
 	constexpr float kComeBackPos = 0.05f;
-	constexpr float kSpeed = 3.0f;
+	constexpr float kSpeed = 0.5f;
 	constexpr float kShotInterval = 5.0f;
 	constexpr int KMaxHp = 10;
 
@@ -50,7 +50,7 @@ namespace
 	constexpr int kCameraDuration = 10;
 	constexpr int kCameraMagnitude = 8;
 
-	//ó‘Ô‚²‚Æ‚Ì‘ƒtƒŒ[ƒ€”
+	//çŠ¶æ…‹ã”ã¨ã®ç·ãƒ•ãƒ¬ãƒ¼ãƒ æ•°
 	constexpr int kIdleFrameCount = 4;
 	constexpr int kAttackFrameCount = 8;
 	constexpr int kFlyFrameCount = 4;
@@ -63,7 +63,7 @@ namespace
 	constexpr int kHurtFrameInterval = 6;
 	constexpr int kDeathFrameInterval = 12;
 
-	//ó‘Ô‚²‚Æ‚ÌƒtƒŒ[ƒ€”‚ÆƒtƒŒ[ƒ€ŠÔŠu
+	//çŠ¶æ…‹ã”ã¨ã®ãƒ•ãƒ¬ãƒ¼ãƒ æ•°ã¨ãƒ•ãƒ¬ãƒ¼ãƒ é–“éš”
 	const int frameCounts[kGraphNum] = { kIdleFrameCount,kAttackFrameCount,
 		kFlyFrameCount, kHurtFrameCount, kDeathFrameCount };
 	const int frameIntervals[kGraphNum] = { kIdleFrameInterval,
@@ -125,7 +125,7 @@ void Boss::Update()
 	Enemy::Update();
 	colRect_.SetCenter(pos_.x,pos_.y,colSize_,colSize_);
 
-	//ƒAƒjƒ[ƒVƒ‡ƒ“‚ÌXV
+	//ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®æ›´æ–°
 	animations_[static_cast<int>(currentState_)]->Update();
 
 	switch (currentState_)
@@ -173,20 +173,12 @@ void Boss::Draw()
 
 	float drawX = pos_.x + cameraOffset_.x;
 	float drawY = pos_.y + cameraOffset_.y;
-	//•`‰æ
+	//æç”»
 	int animIndex = static_cast<int>(currentState_);
 	int frame = animations_[animIndex]->GetFrameCount();
 
-	animations_[animIndex]->Draw(drawX, drawY, isTurn_);
-
-	//DrawRectRotaGraph3(
-	//	drawX, drawY,
-	//	0, 0,
-	//	kGraphWidth, kGraphHeight,
-	//	kGraphHalfW, kGraphHalfH,
-	//	kScale, kScale,
-	//	0.0,
-	//	handle_, true);
+	//ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®æç”»
+	animations_[animIndex]->Draw(drawX, drawY, !isTurn_);
 #ifdef _DEBUG
 	colRect_.DrawAndCamera(cameraOffset_, 0xff0000, false);
 #endif
@@ -194,8 +186,15 @@ void Boss::Draw()
 
 void Boss::ChangeState(BossState nextState)
 {
+	if (currentState_ == BossState::Hurt && nextState == BossState::Idle)
+	{
+		backPos_ = pos_;
+	}
+
 	currentState_ = nextState;
 	stateTimer_ = 0;
+
+	animations_[static_cast<int>(nextState)]->Reset();
 	
 	if (nextState == BossState::Attack)
 	{
@@ -207,27 +206,27 @@ void Boss::UpdateIdle()
 {
 	stateTimer_++;
 
-	//ƒmƒbƒNƒoƒbƒN‚µ‚Ä‚àŒ³‚ÌˆÊ’u‚É–ß‚é
+	//ãƒãƒƒã‚¯ãƒãƒƒã‚¯ã—ã¦ã‚‚å…ƒã®ä½ç½®ã«æˆ»ã‚‹
 	pos_.x += (backPos_.x - pos_.x) * kComeBackPos;
 	pos_.y += (backPos_.y - pos_.y) * kComeBackPos;
 
 	float distance = std::abs(pos_.x - pPlayer_->GetPos().x);
 
-	//ƒvƒŒƒCƒ„[‚ª‹ß‚¢‚ÆUŒ‚ƒAƒjƒ[ƒVƒ‡ƒ“
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒè¿‘ã„ã¨æ”»æ’ƒã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³
 	if (distance < kDistance)
 	{
 		ChangeState(BossState::Attack);
 		return;
 	}
 
-	//ˆê’èŠÔŒo‰ß‚Å”òsƒAƒjƒ[ƒVƒ‡ƒ“
+	//ä¸€å®šæ™‚é–“çµŒéã§é£›è¡Œã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³
 	if (stateTimer_ > 60 && rand() % 100 < 2)
 	{
 		ChangeState(BossState::Fly);
 		return;
 	}
 
-	//‚ä‚Á‚­‚èã‰ºˆÚ“®
+	//ã‚†ã£ãã‚Šä¸Šä¸‹ç§»å‹•
 	pos_.y += sin(stateTimer_ * 0.1f) * 0.5f;
 }
 
@@ -248,7 +247,7 @@ void Boss::UpdateAttack()
 				shotTimer_ = 0.0f;
 				hasShot_ = true;
 
-				//’e‚ğ”­Ë
+				//å¼¾ã‚’ç™ºå°„
 				Vector2 bulletPos = pos_;
 				Vector2 bulletVel = { -kSpeed, 0.0f };
 
@@ -266,21 +265,21 @@ void Boss::UpdateFly()
 {
 	stateTimer_++;
 
-	//¶‰EˆÚ“®
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒå³ãªã‚‰å³ã¸ã€å·¦ãªã‚‰å·¦ã¸
+	float playerX = pPlayer_->GetPos().x;
+	isTurn_ = (playerX < pos_.x); // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒå·¦ã«ã„ã‚‹ãªã‚‰åè»¢
+
+	// æ°´å¹³æ–¹å‘ã®ç§»å‹•
 	vel_.x = (isTurn_ ? -kSpeed : kSpeed);
 	pos_.x += vel_.x;
 
-	//•Ç‚Å”½“]
-	if (pos_.x < 200)
-	{
-		isTurn_ = false;
-	}
-	else if (pos_.x > 1000)
-	{
-		isTurn_ = true;
-	}
+	// å¤§ããä¸Šä¸‹ã¸è›‡è¡Œ (æŒ¯å¹…40ã€œ60)
+	float amplitude = 40.0f;
+	float frequency = 0.08f; // æ³¢ã®ç´°ã‹ã•
+	pos_.y += sin(stateTimer_ * frequency) * amplitude * 0.1f;
 
-	if (stateTimer_ > 150)
+	// ä¸€å®šæ™‚é–“ã§æˆ»ã‚‹
+	if (animations_[static_cast<int>(BossState::Fly)]->IsAnimFinished())
 	{
 		ChangeState(BossState::Idle);
 	}
@@ -290,12 +289,12 @@ void Boss::UpdateHurt()
 {
 	stateTimer_++;
 
-	pos_.x += (isTurn_ ? -kKnockBackPos : kKnockBackPos);
+	pos_.x += (isTurn_ ? kKnockBackPos : -kKnockBackPos);
 
 	pos_.y += sin(stateTimer_ * 0.3f) * 0.3f;
 
-	//ƒ^ƒCƒ}[‚ği‚ß‚ÄIdleó‘Ô‚É–ß‚é
-	if (stateTimer_ > 30)
+	//ã‚¿ã‚¤ãƒãƒ¼ã‚’é€²ã‚ã¦IdleçŠ¶æ…‹ã«æˆ»ã‚‹
+	if (animations_[static_cast<int>(BossState::Hurt)]->IsAnimFinished())
 	{
 		ChangeState(BossState::Idle);
 	}
@@ -303,7 +302,7 @@ void Boss::UpdateHurt()
 
 void Boss::UpdateDead()
 {
-	vel_.y += kGravity; //d—Í
+	vel_.y += kGravity; //é‡åŠ›
 	pos_.y += vel_.y;
 
 	if (pos_.y > kGround)
@@ -327,5 +326,10 @@ void Boss::OnHit(int damage)
 		return;
 	}
 
-	ChangeState(BossState::Hurt);
+	//ã™ã§ã«ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚’å—ã‘ã¦ã„ã‚‹ãªã‚‰ä¸Šæ›¸ã‚’ã—ãªã„ã‚ˆã†ã«ã™ã‚‹
+	if (currentState_ != BossState::Hurt)
+	{
+		ChangeState(BossState::Hurt);
+	}
+
 }
