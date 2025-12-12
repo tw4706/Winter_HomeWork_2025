@@ -49,6 +49,8 @@ private:
 
 	//実験用のゴールオブジェクト
 	int keyH_;//鍵のハンドル
-	Rect goalRect_;
+	Rect keyRect_;//鍵の当たり判定
+	Vector2 keyPos_;//鍵の座標
 	StageType stageType_;
+	bool isKeyActive_;//鍵が出現しているかどうか
 };

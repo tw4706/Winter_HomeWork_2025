@@ -34,7 +34,7 @@ namespace
 	constexpr int kGraphHeight = 32;
 	constexpr int kGraphHalfW = 32/2;
 	constexpr int kGraphHalfH = 32/2;
-	constexpr float kScale = 4.0f;
+	constexpr float kScale = 8.0f;
 	constexpr float kColSize = 64.0f;
 
 	constexpr float kKnockBackPos = 2.0f;

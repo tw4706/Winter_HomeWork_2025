@@ -24,6 +24,9 @@ namespace
 
 	//落下判定となる座標
 	constexpr float kFallLimit = 1900.0f;
+
+	//鍵が落ちる速度
+	constexpr int kDropSpeed = 5.0f;
 }
 
 GameScene::GameScene(SceneController& controller, StageType stage) :
@@ -32,7 +35,9 @@ GameScene::GameScene(SceneController& controller, StageType stage) :
 	update_(&GameScene::FadeInUpdate),
 	draw_(&GameScene::FadeDraw),
 	keyH_(-1),
-	frame_(0)
+	frame_(0),
+	isKeyActive_(false),
+	keyPos_{0,0}
 {
 	bg_ = std::make_shared<Bg>();
 	pCamera_ = std::make_shared<Camera>();
@@ -98,14 +103,35 @@ void GameScene::NormalUpdate(Input&input)
 		}
 	}
 
-	//ゴールとの当たり判定
-	if (pPlayer_->GetColRect().IsCollision(goalRect_))
+	//ボスを倒すとクリアシーンに遷移
+	for (auto& enemy : enemyFactory_.GetEnemies())
 	{
-		printfDx("GoalHit!\n");
-		update_ = &GameScene::GoalFadeOutUpdate;
-		draw_ = &GameScene::FadeDraw;
-		frame_ = 0;
-		return;
+		//敵がボス+死亡している場合
+		if (enemy->IsBoss() && enemy->IsDead())
+		{
+			if (!isKeyActive_)
+			{
+				isKeyActive_ = true;
+				keyPos_ = Vector2{ enemy->GetPos().x, enemy->GetPos().y - 200 }; //上から落とす位置
+			}
+		}
+	}
+
+	//鍵を出現させ、しゅとくするとクリアシーンに遷移する
+	if (isKeyActive_)
+	{
+		keyPos_.y += kDropSpeed;
+
+		// プレイヤーとの当たり判定
+		keyRect_.SetCenter(keyPos_.x, keyPos_.y, 32, 32);
+
+		if (pPlayer_->GetColRect().IsCollision(keyRect_))
+		{
+			isKeyActive_ = false; // 鍵を消す
+			update_ = &GameScene::GoalFadeOutUpdate;
+			draw_ = &GameScene::FadeDraw;
+			frame_ = 0;
+		}
 	}
 }
 
@@ -149,20 +175,23 @@ void GameScene::NormalDraw()
 	bulletManager_.SetCameraOffset(cameraOffset);
 	bulletManager_.Draw();
 
-	int keyScreenX = goalRect_.left_ + cameraOffset.x;
-	int keyScreenY = goalRect_.top_ + cameraOffset.y;
+	int keyScreenX = keyRect_.left_ + cameraOffset.x;
+	int keyScreenY = keyRect_.top_ + cameraOffset.y;
 
-	//鍵画像を描画 magicNumber
-	DrawRectRotaGraph3(keyScreenX, keyScreenY,
-		0,0,
-		32,32,
-		16,16,
-		1.0f,1.0f,
-		0.0,
-		keyH_, TRUE);
+	if (isKeyActive_)
+	{
+		//鍵画像を描画
+		DrawRectRotaGraph3(keyScreenX, keyScreenY,
+			0, 0,
+			32, 32,
+			16, 16,
+			1.0f, 1.0f,
+			0.0,
+			keyH_, TRUE);
+	}
 
 #ifdef _DEBUG
-	Rect screenGoal = goalRect_;
+	Rect screenGoal = keyRect_;
 	screenGoal.left_ -= cameraOffset.x;
 	screenGoal.top_ -= cameraOffset.y;
 	screenGoal.right_ -= cameraOffset.x;
@@ -187,7 +216,7 @@ void GameScene::Init()
 		pPlayer_ = std::make_shared<Player>(Vector2{ spawnPosX,spawnPosY }, Vector2{});
 
 		enemyFactory_.LoadFromCSV("data/Enemy/enemyData.csv", &bulletManager_);
-		goalRect_.SetLT(8500, 1724, kColSize, kColSize);
+		enemyFactory_.AddBoss(Vector2{ 8500,1600 }, Vector2{ 0,0 }, pPlayer_, &bulletManager_, pCamera_);
 
 		break;
 	case StageType::BossDebugStage:

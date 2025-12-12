@@ -29,6 +29,8 @@ private:
 	/// </summary>
 	void LoadMapData();
 
+	void UpdateBg();
+
 	void DrawBg();
 
 	/// <summary>
@@ -54,5 +56,10 @@ private:
 
 	Vector2 pos_;//座標
 	std::shared_ptr<Player>pPlayer_;
+	int bgBackHandle_;//一番奥の画像ハンドル
+	int bgMiddleHandle_;//真ん中の背景の画像ハンドル
+	float bgMiddlePosX1_;//一番奥の背景のX座標
+	float bgMiddlePosX2_;//真ん中の背景のX座標
+	float scrollSpeed_;//スクロールする速度
 };
 

@@ -22,6 +22,8 @@ public:
 
 	void Move()override {};
 
+	bool IsBoss() const override { return true; }
+
 	void ChangeState(BossState nextState);
 
 	void UpdateIdle();

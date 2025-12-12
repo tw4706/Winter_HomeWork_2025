@@ -54,7 +54,7 @@ void Camera::Update(std::shared_ptr<Player> player)
 	drawOffset_.x = pos_.x * -1;
 	drawOffset_.y = pos_.y * -1;
 
-	////画面の中央にプレイヤーが来るようにする
+	//画面の中央にプレイヤーが来るようにする
 	drawOffset_.x =drawOffset_.x + (Game::kScreenWidth * 0.5f);
 	drawOffset_.y = drawOffset_.y + (Game::kScreenHeight * 0.5f);
 

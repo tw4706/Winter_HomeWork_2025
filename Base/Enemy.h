@@ -44,6 +44,8 @@ public:
 	//€–Sƒtƒ‰ƒO‚ğæ“¾‚·‚éŠÖ”
 	bool IsDead() const { return isDead_; }
 
+	virtual bool IsBoss() const { return false; }
+
 	//’e‚ª“–‚½‚Á‚½‚Ìˆ—
 	//“–‚½‚è”»’è‚ğÁ‚·
 	virtual void OnHit(int damage);

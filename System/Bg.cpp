@@ -19,13 +19,22 @@ namespace
 }
 
 Bg::Bg():
-	pos_{}
+	pos_{},
+	bgMiddlePosX1_(0.0f),
+	scrollSpeed_(2.0f)
 {
 	mapHandle_ = LoadGraph("data/Map/mapChip.png");
+	bgBackHandle_ = LoadGraph("data/map/bg.png");
+	bgMiddleHandle_ = LoadGraph("data/map/middle.png");
+
+	int midWidth = 0;
+	int midHeight = 0;
+	GetGraphSize(bgMiddleHandle_, &midWidth, &midHeight);
+	bgMiddlePosX2_ = static_cast<float>(midWidth);
+
 	int graphWidth = 0;
 	int graphHeight = 0;
 	GetGraphSize(mapHandle_, &graphWidth, &graphHeight);
-
 
 	graphChipNumX_ = (graphWidth > 0) ? graphWidth / kChipSize : 1;
 	graphChipNumY_ = (graphHeight > 0) ? graphHeight / kChipSize : 1;
@@ -46,6 +55,7 @@ void Bg::Init()
 
 void Bg::Draw(std::shared_ptr<Camera> pCamera)
 {
+	UpdateBg();
 	DrawBg();
 	DrawMapChip(pCamera);
 }
@@ -118,10 +128,43 @@ void Bg::LoadMapData()
 	}
 }
 
+void Bg::UpdateBg()
+{
+	bgMiddlePosX1_ -= scrollSpeed_;
+	bgMiddlePosX2_ -= scrollSpeed_;
+
+
+	int midWidth = 0;
+	int midHeight = 0;
+	GetGraphSize(bgMiddleHandle_, &midWidth, &midHeight);
+
+	if (bgMiddlePosX1_ <= -midWidth) 
+	{
+		bgMiddlePosX1_ = bgMiddlePosX2_ + midWidth;
+	}
+	if (bgMiddlePosX2_ <= -midWidth)
+	{
+		bgMiddlePosX2_ = bgMiddlePosX1_ + midWidth;
+	}
+}
+
 void Bg::DrawBg()
 {
 	Size bgSize = { 0,0 };
 	GetGraphSize(mapHandle_, &bgSize.width, &bgSize.height);
+
+	int screenW = Game::kScreenWidth;
+	int screenH = Game::kScreenHeight;
+
+	DrawExtendGraph(0, 0, screenW, screenH, bgBackHandle_, true);
+
+	int midWidth = 0, midHeight = 0;
+	GetGraphSize(bgMiddleHandle_, &midWidth, &midHeight);
+
+	int midPosY = (screenH - midHeight) / 2;
+
+	DrawGraph(static_cast<int>(bgMiddlePosX1_), midPosY, bgMiddleHandle_, true);
+	DrawGraph(static_cast<int>(bgMiddlePosX2_), midPosY, bgMiddleHandle_, true);
 }
 
 void Bg::DrawMapChip(std::shared_ptr<Camera>pCamera)
