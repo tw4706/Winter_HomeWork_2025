@@ -27,9 +27,9 @@ void EnemyFactory::LoadFromCSV(const std::string& path, BulletManager* bulletMan
     //敵生成用ファクトリ
     std::map<int, std::function<std::shared_ptr<Enemy>(Vector2)>> enemyFactory = 
     {
-        {1, [](Vector2 pos) { return std::make_shared<Zombie>(pos, Vector2{}); }},
-        {2, [bulletManager](Vector2 pos) { return std::make_shared<SkullFlower>(pos, Vector2{}, bulletManager); }},
-        {3, [](Vector2 pos) { return std::make_shared<Dog>(pos, Vector2{}); }}
+        {1, [](Vector2 pos) { return std::make_shared<Zombie>(pos, Vector2{0,0}); }},
+        {2, [bulletManager](Vector2 pos) { return std::make_shared<SkullFlower>(pos, Vector2{0,0}, bulletManager); }},
+        {3, [](Vector2 pos) { return std::make_shared<Dog>(pos, Vector2{0,0}); }}
     };
 
 	//CSVファイルの各行を読み込み

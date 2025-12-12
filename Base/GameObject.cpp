@@ -7,8 +7,9 @@ namespace
 }
 
 GameObject::GameObject() :
-	pos_{}, vel_{}, isTurn_(false), 
+	pos_{0,0}, vel_{0,0}, isTurn_(false), 
 	isGround_(false),
+	useGravity_(true),
 	graphW_(kCharaSize),
 	graphH_(kCharaSize),
 	colSize_(kCharaSize), cameraOffset_{}
@@ -20,6 +21,7 @@ GameObject::GameObject(Vector2 pos, Vector2 vel):
 	vel_(vel),
 	isTurn_(false),
 	isGround_(false),
+	useGravity_(true),
 	graphW_(kCharaSize),
 	graphH_(kCharaSize),
 	colSize_(kCharaSize),
@@ -34,6 +36,7 @@ GameObject::GameObject(Vector2 pos, Vector2 vel,
 	isTurn_(false),
 	isGround_(false),
 	chipRect_(),
+	useGravity_(true),
 	graphW_(graphW),
 	graphH_(graphH),
 	colSize_(colSize),
@@ -48,9 +51,10 @@ GameObject::~GameObject()
 
 void GameObject::Update()
 {
+	CheckMapCollision(chipRect_);
+
 	Gravity();
 
-	CheckMapCollision(chipRect_);
 	if (!isGround_)
 	{
 		isGround_ = IsOnGround();

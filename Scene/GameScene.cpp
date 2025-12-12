@@ -166,7 +166,7 @@ void GameScene::NormalDraw()
 	Vector2 cameraOffset = pCamera_->GetOffset();
 
 	//ŠeƒNƒ‰ƒX‚Ì•`‰æˆ—
-	bg_->Draw(pCamera_);
+	bg_->Draw(pCamera_,pPlayer_->GetPos().x);
 	pPlayer_->SetCameraOffset(cameraOffset);
 	pPlayer_->Draw();
 
@@ -213,7 +213,7 @@ void GameScene::Init()
 	case StageType::Stage1:
 
 
-		pPlayer_ = std::make_shared<Player>(Vector2{ spawnPosX,spawnPosY }, Vector2{});
+		pPlayer_ = std::make_shared<Player>(Vector2{ spawnPosX,spawnPosY }, Vector2{0,0});
 
 		enemyFactory_.LoadFromCSV("data/Enemy/enemyData.csv", &bulletManager_);
 		enemyFactory_.AddBoss(Vector2{ 8500,1600 }, Vector2{ 0,0 }, pPlayer_, &bulletManager_, pCamera_);

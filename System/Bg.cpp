@@ -19,18 +19,12 @@ namespace
 }
 
 Bg::Bg():
-	pos_{},
-	bgMiddlePosX1_(0.0f),
-	scrollSpeed_(2.0f)
+	pos_{0,0},
+	prevCameraX_(0.0f),
+	scrollX_(0.0f)
 {
 	mapHandle_ = LoadGraph("data/Map/mapChip.png");
-	bgBackHandle_ = LoadGraph("data/map/bg.png");
-	bgMiddleHandle_ = LoadGraph("data/map/middle.png");
-
-	int midWidth = 0;
-	int midHeight = 0;
-	GetGraphSize(bgMiddleHandle_, &midWidth, &midHeight);
-	bgMiddlePosX2_ = static_cast<float>(midWidth);
+	bgHandle_ = LoadGraph("data/map/bg.png");
 
 	int graphWidth = 0;
 	int graphHeight = 0;
@@ -39,6 +33,7 @@ Bg::Bg():
 	graphChipNumX_ = (graphWidth > 0) ? graphWidth / kChipSize : 1;
 	graphChipNumY_ = (graphHeight > 0) ? graphHeight / kChipSize : 1;
 
+
 	//マップデータの読み込み
 	LoadMapData();
 }
@@ -46,6 +41,7 @@ Bg::Bg():
 Bg::~Bg()
 {
 	DeleteGraph(mapHandle_);
+	DeleteGraph(bgHandle_);
 }
 
 void Bg::Init()
@@ -53,10 +49,12 @@ void Bg::Init()
 
 }
 
-void Bg::Draw(std::shared_ptr<Camera> pCamera)
+void Bg::Draw(std::shared_ptr<Camera> pCamera,float playerPosX)
 {
-	UpdateBg();
-	DrawBg();
+
+	UpdateBg(playerPosX);
+
+	DrawBg(pCamera);
 	DrawMapChip(pCamera);
 }
 
@@ -128,44 +126,16 @@ void Bg::LoadMapData()
 	}
 }
 
-void Bg::UpdateBg()
+void Bg::UpdateBg(float playerPosX)
 {
-	bgMiddlePosX1_ -= scrollSpeed_;
-	bgMiddlePosX2_ -= scrollSpeed_;
-
-
-	int midWidth = 0;
-	int midHeight = 0;
-	GetGraphSize(bgMiddleHandle_, &midWidth, &midHeight);
-
-	if (bgMiddlePosX1_ <= -midWidth) 
-	{
-		bgMiddlePosX1_ = bgMiddlePosX2_ + midWidth;
-	}
-	if (bgMiddlePosX2_ <= -midWidth)
-	{
-		bgMiddlePosX2_ = bgMiddlePosX1_ + midWidth;
-	}
+	scrollX_ = 0;
 }
 
-void Bg::DrawBg()
+void Bg::DrawBg(std::shared_ptr<Camera> pCamera)
 {
-	Size bgSize = { 0,0 };
-	GetGraphSize(mapHandle_, &bgSize.width, &bgSize.height);
-
-	int screenW = Game::kScreenWidth;
-	int screenH = Game::kScreenHeight;
-
-	DrawExtendGraph(0, 0, screenW, screenH, bgBackHandle_, true);
-
-	int midWidth = 0, midHeight = 0;
-	GetGraphSize(bgMiddleHandle_, &midWidth, &midHeight);
-
-	int midPosY = (screenH - midHeight) / 2;
-
-	DrawGraph(static_cast<int>(bgMiddlePosX1_), midPosY, bgMiddleHandle_, true);
-	DrawGraph(static_cast<int>(bgMiddlePosX2_), midPosY, bgMiddleHandle_, true);
+	DrawGraph(0, 0, bgHandle_, false);
 }
+
 
 void Bg::DrawMapChip(std::shared_ptr<Camera>pCamera)
 {
@@ -179,16 +149,11 @@ void Bg::DrawMapChip(std::shared_ptr<Camera>pCamera)
 			int posX = (int)(x * kChipSize * kScale + pCamera->GetOffset().x);
 			int posY = (int)(y * kChipSize * kScale + pCamera->GetOffset().y);
 
-			// 画面外判定（正常版）
+			//画面外のものは描画しない
 			if (posX + tileW < 0) continue;
 			if (posX > Game::kScreenWidth) continue;
 			if (posY + tileH < 0) continue;
 			if (posY > Game::kScreenHeight) continue;
-			//画面外のものは描画しない
-			//if (posX < 0 - kChipSize*3)continue;
-			//if (posX > Game::kScreenWidth)continue;
-			//if (posY < 0 - kChipSize)continue;
-			//if (posY > Game::kScreenHeight)continue;
 
 			//マップチップ番号を取得
 			int chipNum = mapChipData_[y][x];
