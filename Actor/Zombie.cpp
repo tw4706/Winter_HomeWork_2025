@@ -1,5 +1,6 @@
 #include "Zombie.h"
 #include "Player.h"
+#include "Animation.h"
 #include"GlobalConstants.h"
 #include <Dxlib.h>
 #include <cassert>
@@ -8,15 +9,43 @@
 // エネミーに関する定数
 namespace
 {
+
+	enum Graph
+	{
+		kIdleGraph,
+		kWalkGraph,
+
+		kGraphNum
+	};
+
+	const std::string kGraphName[kGraphNum] =
+	{
+		"data/Enemy/Zombie.png",
+		"data/Enemy/zombie_walk.png"
+	};
+	static_assert(static_cast<int>(kGraphNum) == _countof(kGraphName));
+
 	//グラフィックのサイズ
 	constexpr int kGraphWidth = 32;
 	constexpr int kGraphHeight = 48;
-	constexpr int kGraphHalfWidth = 32/2;
-	constexpr int kGraphHalfHeight = 48/2;
+	constexpr int kGraphHalfWidth = 32 / 2;
+	constexpr int kGraphHalfHeight = 48 / 2;
+
+	//各状態遷移の総フレーム数
+	constexpr int kIdleFrameCount = 11;
+	constexpr int kWalkFrameCount = 6;
+
+	//各状態遷移のフレーム間隔
+	constexpr int kIdleFrameInterval = 6;
+	constexpr int kWalkFrameInterval = 8;
+
+	//状態ごとのフレーム数とフレーム間隔
+	const int frameCounts[kGraphNum] = { kIdleFrameCount,kWalkFrameCount };
+	const int frameIntervals[kGraphNum] = { kIdleFrameInterval, kWalkFrameInterval };
 
 	//敵の見た目のサイズ
 	constexpr float kDrawW = kGraphWidth * 1.5f;
-	constexpr float kDrawH = kGraphHeight*1.5f;
+	constexpr float kDrawH = kGraphHeight * 1.5f;
 
 	//エネミーの移動速度
 	constexpr float kSpeed = 0.5f;
@@ -31,36 +60,61 @@ namespace
 	constexpr int kPosYDrawOffset = 30;
 }
 
-Zombie::Zombie(Vector2 pos,Vector2 vel) :
-	Enemy(pos,vel),
-	zombieH_(-1)
+Zombie::Zombie(Vector2 pos, Vector2 vel) :
+	Enemy(pos, vel),
+	zombieState_(ZombieState::Idle),
+	isIdlePlayed_(false)
 {
+
 }
 
 Zombie::~Zombie()
 {
+	for (auto& handle : graphHandles_)
+	{
+		DeleteGraph(handle);
+	}
 }
 
 void Zombie::Init()
 {
 	isTurn_ = true;
-	zombieH_ = LoadGraph("data/Enemy/zombie_walk.png");
-	assert(zombieH_ >= 0);
+
+	graphHandles_.resize(kGraphNum);
+	animations_.resize(static_cast<int>(ZombieState::Walk) + 1);
+
+	for (int i = 0; i < kGraphNum; i++)
+	{
+		graphHandles_[i] = LoadGraph(kGraphName[i].c_str());
+		animations_[i] = std::make_shared<Animation>(
+			graphHandles_[i],
+			kGraphWidth,
+			kGraphHeight,
+			frameCounts[i],
+			frameIntervals[i],
+			kScale,
+			false
+		);
+	}
 
 	//当たり判定の更新
 	colRect_.SetCenter(pos_.x, pos_.y, kGraphWidth, kGraphHeight);
+	zombieState_ = ZombieState::Idle;
 }
 
 void Zombie::Update()
 {
-	if (isDead_)return;
-	
+	if (isDead_ || !pPlayer_) return;
+
+	UpdateAnim();
+
 	//移動処理
 	Move();
-	GameObject::Update();
 
 	//当たり判定の更新
-	colRect_.SetCenter(pos_.x, pos_.y- kPosYOffset, kDrawW, kDrawH);
+	colRect_.SetCenter(pos_.x, pos_.y - kPosYOffset, kDrawW, kDrawH);
+
+	Enemy::Update();
 }
 
 void Zombie::Draw()
@@ -68,21 +122,65 @@ void Zombie::Draw()
 	float drawX = pos_.x + cameraOffset_.x;
 	float drawY = pos_.y + cameraOffset_.y;
 
-	DrawRectRotaGraph3(
-		drawX, drawY- kPosYDrawOffset,
-		0, 0,
-		kGraphWidth, kGraphHeight,
-		kGraphHalfWidth, kGraphHalfHeight,
-		kScale, kScale,
-		0.0,
-		zombieH_,
-		true,
-		isTurn_
-	);
+	animations_[static_cast<int>(zombieState_)]->Draw(
+		drawX, drawY - kPosYDrawOffset, isTurn_);
 
 #ifdef _DEBUG
-	colRect_.DrawAndCamera(cameraOffset_,0xff0000, false);
+	colRect_.DrawAndCamera(cameraOffset_, 0xff0000, false);
 #endif
+}
+
+void Zombie::UpdateAnim()
+{
+	if (!pPlayer_) return;
+
+	float dx = pPlayer_->GetPos().x - pos_.x;
+	float distance = std::abs(dx);
+
+	switch (zombieState_)
+	{
+	case ZombieState::Idle:
+		// プレイヤーがMove距離以内ならWalkに移行
+		if (distance < kDistance)
+		{
+			zombieState_ = ZombieState::Walk;
+			animations_[static_cast<int>(ZombieState::Walk)]->Reset();
+		}
+		break;
+
+	case ZombieState::Walk:
+		// プレイヤーが距離外になったらIdleに戻る
+		if (distance >= kDistance)
+		{
+			zombieState_ = ZombieState::Idle;
+			isIdlePlayed_ = false; // 次回近づいたらIdle再生
+		}
+		break;
+	}
+
+	// Idleアニメーション制御
+	if (zombieState_ == ZombieState::Idle)
+	{
+		constexpr float kIdleTriggerDistance = 300.0f; // Idleアニメーション再生トリガー
+
+		if (distance < kIdleTriggerDistance && !isIdlePlayed_)
+		{
+			// 近づいたら一度だけIdleアニメーションを再生
+			animations_[static_cast<int>(ZombieState::Idle)]->Reset();
+			isIdlePlayed_ = true;
+			animations_[static_cast<int>(ZombieState::Idle)]->Update();
+		}
+		else if (distance >= kIdleTriggerDistance)
+		{
+			// 遠いときはIdleアニメーションを更新せず静止
+			animations_[static_cast<int>(ZombieState::Idle)]->SetFrame(0); // 最初のフレームで止める
+		}
+	}
+	else if (zombieState_ == ZombieState::Walk)
+	{
+		// Walkは常に更新
+		animations_[static_cast<int>(ZombieState::Walk)]->Update();
+	}
 }
 
 void Zombie::Move()

@@ -2,6 +2,13 @@
 #include "Enemy.h"
 #include "BulletManager.h"
 
+enum class SkullFlowerState
+{
+    Idle,
+    Hurt,
+    Death
+};
+
 class SkullFlower :public Enemy
 {
 public:
@@ -14,10 +21,13 @@ public:
 
     void Move()override {};
 
+    void OnHit(int damage)override;
+
 private:
     BulletManager* pBm_; // 弾を発射するために必要
     float shotInterval_;           // 発射間隔
     float shotTimer_;              // 経過時間カウント
-    int flowerH_;
+    std::vector<int>graphHandles_;
+    SkullFlowerState flowerState_;
 };
 

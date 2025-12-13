@@ -52,3 +52,12 @@ void Animation::Reset()
 	frameTimer_ = 0;
 }
 
+void Animation::SetFrame(int frame)
+{
+    if (frame < 0) frame = 0;
+    if (frame >= frameCount_) frame = frameCount_ - 1;
+
+    currentFrame_ = frame;
+    frameTimer_ = 0; // 更新タイマーもリセットしておくと安全
+}
+

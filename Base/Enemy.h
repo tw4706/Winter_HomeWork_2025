@@ -2,17 +2,8 @@
 #include"GameObject.h"
 #include"Animation.h"
 #include<memory>
+#include<vector>
 #include<string>
-
-enum class EnemyState
-{
-	Idle,
-	Walk,
-	Jump,
-	Attack,
-	Damage,
-	Death
-};
 
 class Player;
 class Enemy:public GameObject
@@ -26,6 +17,8 @@ protected:
 	Rect colRect_;					//当たり判定の矩形
 	bool isDead_;					//死亡フラグ
 	int hp_;						//体力
+	int currentState_;
+	std::vector<std::shared_ptr<Animation>> animations_;//アニメーション配列
 
 public:
 	Enemy(Vector2 pos,Vector2 vel);

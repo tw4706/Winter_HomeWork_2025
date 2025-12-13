@@ -1,8 +1,17 @@
 #pragma once
 #include "Enemy.h"
 #include<memory>
+
+enum class ZombieState
+{
+	Idle,
+	Walk
+};
+
 class Player;
 class Zombie :public Enemy
+
+
 {
 public:
 	Zombie(Vector2 pos,Vector2 vel);
@@ -12,10 +21,13 @@ public:
 	void Update()override;
 	void Draw()override;
 
+	void UpdateAnim();
+
 	void Move();			//ˆÚ“®ˆ—
 
 private:
-	int zombieH_;			//ƒ]ƒ“ƒr‚Ì‰æ‘œƒnƒ“ƒhƒ‹
-	std::shared_ptr<Animation>animations_;
+	std::vector<int>graphHandles_;
+	ZombieState zombieState_;
+	bool isIdlePlayed_;
 };
 

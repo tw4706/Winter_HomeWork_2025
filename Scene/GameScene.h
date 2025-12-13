@@ -10,7 +10,6 @@ enum class StageType
 {
 	Stage1,
 	Stage2,
-	BossStage,
 	BossDebugStage
 };
 
@@ -40,6 +39,8 @@ public:
 	void Update(Input&)override;
 	void Draw()override;
 
+	StageType GetNextStageType(StageType nextStage);
+
 private:
 	std::shared_ptr<Player>pPlayer_;
 	BulletManager bulletManager_;
@@ -47,10 +48,12 @@ private:
 	std::shared_ptr<Bg>bg_;
 	std::shared_ptr<Camera>pCamera_;
 
-	//実験用のゴールオブジェクト
+
+	//ボスを倒した後に落ちる鍵関連
 	int keyH_;//鍵のハンドル
 	Rect keyRect_;//鍵の当たり判定
 	Vector2 keyPos_;//鍵の座標
 	StageType stageType_;
 	bool isKeyActive_;//鍵が出現しているかどうか
+
 };

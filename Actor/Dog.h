@@ -1,5 +1,12 @@
 #pragma once
 #include "Enemy.h"
+
+enum class DogState
+{
+	Idle,
+	Jump
+};
+
 class Dog :public Enemy
 {
 public:
@@ -13,7 +20,8 @@ public:
 	void Move()override;//移動処理
 
 private:
-	int dogH_;				//ドッグの画像ハンドル
+	std::vector<int>graphHandles_;
+	DogState dogState_;
 	float timer_;			//タイマー
 };
 

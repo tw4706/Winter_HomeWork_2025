@@ -7,9 +7,28 @@
 
 namespace
 {
+
+	enum Graph
+	{
+		kIdleGraph,
+		kJumpGraph,
+
+		kGraphNum
+	};
+
+	const std::string kGraphName[kGraphNum] =
+	{
+		"data/Enemy/dog.png",
+		"data/Enemy/dog_jump.png"
+	};
+
+	const int frameCounts[kGraphNum] = { 4, 4 };
+	const int frameIntervals[kGraphNum] = { 8, 8 };
+
 	//画像の切り取りサイズ
 	constexpr int kGraphSize = 48;
 	constexpr int kGraphColSize = kGraphSize -16;
+	constexpr float kScale = 2.0f;
 
 	//当たり判定のサイズ
 	constexpr  int kRectWidth = 32;
@@ -30,20 +49,39 @@ namespace
 
 Dog::Dog(Vector2 pos, Vector2 vel) :
 	Enemy(pos, vel),
-	dogH_(-1),
+	dogState_(DogState::Idle),
 	timer_(0.0f)
 {
 }
 
 Dog::~Dog()
 {
+	for (auto& handle : graphHandles_)
+	{
+		DeleteGraph(handle);
+	}
 }
 
 void Dog::Init()
 {
-	//画像のロード
-	dogH_ = LoadGraph("data/Enemy/dog.png");
-	assert(dogH_ >= 0);
+	graphHandles_.resize(kGraphNum);
+	animations_.resize(static_cast<int>(DogState::Jump) + 1);
+
+	for (int i = 0; i < kGraphNum; i++)
+	{
+		graphHandles_[i] = LoadGraph(kGraphName[i].c_str());
+		animations_[i] = std::make_shared<Animation>(
+			graphHandles_[i],
+			kGraphSize,
+			kGraphSize,
+			frameCounts[i],
+			frameIntervals[i],
+			kScale,
+			false
+		);
+	}
+
+	dogState_ = DogState::Idle;
 }
 
 void Dog::Update()
@@ -52,10 +90,12 @@ void Dog::Update()
 
 	//移動処理
 	Move();
-	GameObject::Update();
+	//GameObject::Update();
 
 	//当たり判定の更新
 	colRect_.SetCenter(pos_.x, pos_.y-5, kGraphSize, kGraphSize);
+
+	Enemy::Update();
 
 	//デバッグ表示
 	DrawFormatString(0, 150, 0xffffff, "Dog PosX:%f", pos_.x);
@@ -66,15 +106,10 @@ void Dog::Update()
 void Dog::Draw()
 {
 	float drawX = (isTurn_) ? (pos_.x + cameraOffset_.x)+30 : pos_.x + cameraOffset_.x;
-	float drawY = (pos_.y + cameraOffset_.y)-15;
+	float drawY = (pos_.y + cameraOffset_.y)-30;
 
-	DrawRectRotaGraph3(drawX, drawY,
-		0, 0,
-		kGraphSize, kGraphSize,
-		kGraphColSize, kGraphColSize,
-		2.0, 2.0,
-		0.0,
-		dogH_, true,isTurn_);
+	animations_[static_cast<int>(dogState_)]->Draw(drawX, drawY, !isTurn_);
+
 #ifdef _DEBUG
 	//当たり判定の描画
 	colRect_.DrawAndCamera(cameraOffset_, 0xff0000, false);
@@ -98,14 +133,17 @@ void Dog::Move()
 			isTurn_ = (dx > 0) ? true : false;
 			isGround_ = false;
 			timer_ = 0.0f;
+			dogState_ = DogState::Jump;
 		}
 		else if (isGround_)
 		{
 			vel_.x = 0.0f;
+			dogState_ = DogState::Idle;
 		}
 	}
 	else
 	{
 		vel_.x = 0.0f;
+		dogState_ = DogState::Idle;
 	}
 }

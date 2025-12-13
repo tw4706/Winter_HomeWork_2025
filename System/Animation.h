@@ -13,6 +13,8 @@ public:
 
     void Reset();
 
+    void SetFrame(int frame);
+
 	int GetFrameCount() const { return frameCount_; }
 	int GetCurrentFrame() const { return currentFrame_; }
 

@@ -35,7 +35,7 @@ GameScene::GameScene(SceneController& controller, StageType stage) :
 	update_(&GameScene::FadeInUpdate),
 	draw_(&GameScene::FadeDraw),
 	keyH_(-1),
-	frame_(0),
+	frame_(fade_interval),
 	isKeyActive_(false),
 	keyPos_{0,0}
 {
@@ -148,7 +148,9 @@ void GameScene::GoalFadeOutUpdate(Input&)
 {
 	if (frame_++ >= fade_interval)
 	{
-		controller_.ChangeScene(std::make_shared<ClearScene>(controller_));
+		//次のステージを取得
+		StageType next = GetNextStageType(stageType_);
+		controller_.ChangeScene(std::make_shared<GameScene>(controller_,next));
 	}
 }
 
@@ -163,6 +165,12 @@ void GameScene::FadeDraw()
 
 void GameScene::NormalDraw() 
 {
+	if (stageType_ == StageType::Stage2)
+	{
+		DrawBox(0, 0, Game::kScreenWidth, Game::kScreenHeight,
+			0x00ff00, true);
+	}
+
 	Vector2 cameraOffset = pCamera_->GetOffset();
 
 	//各クラスの描画処理
@@ -189,6 +197,14 @@ void GameScene::NormalDraw()
 			0.0,
 			keyH_, TRUE);
 	}
+
+	//ステージ2表示
+	DrawFormatString(
+		Game::kScreenWidth, Game::kScreenHeight,
+		GetColor(255, 255, 0),
+		"STAGE %d",
+		static_cast<int>(stageType_) + 1
+	);
 
 #ifdef _DEBUG
 	Rect screenGoal = keyRect_;
@@ -217,7 +233,11 @@ void GameScene::Init()
 
 		enemyFactory_.LoadFromCSV("data/Enemy/enemyData.csv", &bulletManager_);
 		enemyFactory_.AddBoss(Vector2{ 8500,1600 }, Vector2{ 0,0 }, pPlayer_, &bulletManager_, pCamera_);
+		break;
 
+	case StageType::Stage2:
+		pPlayer_ = std::make_shared<Player>(Vector2{ spawnPosX, spawnPosY },Vector2{ 0,0 });
+		enemyFactory_.LoadFromCSV("data/Enemy/enemyData.csv", &bulletManager_);
 		break;
 	case StageType::BossDebugStage:
 		pPlayer_ = std::make_shared<Player>(Vector2{ spawnPosX,spawnPosY }, Vector2{});
@@ -246,4 +266,13 @@ void GameScene::Update(Input& input)
 void GameScene::Draw()
 {
 	(this->*draw_)();
+}
+
+StageType GameScene::GetNextStageType(StageType nextStage)
+{
+	switch (nextStage)
+	{
+	case StageType::Stage1: return StageType::Stage2;
+	default: return nextStage;
+	}
 }
