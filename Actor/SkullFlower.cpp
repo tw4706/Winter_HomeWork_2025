@@ -103,10 +103,11 @@ void SkullFlower::Update()
 
 	shotTimer_ -= 1.0f / 60.0f;
 
+	Enemy::Update();// 移動＋衝突更新
+
 	// 当たり判定の更新
 	colRect_.SetCenter(pos_.x, pos_.y - kPosYOffset, kGraphSize, kGraphSize);
 
-	Enemy::Update();// 移動＋衝突更新
 }
 
 void SkullFlower::Draw()

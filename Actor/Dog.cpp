@@ -22,20 +22,17 @@ namespace
 		"data/Enemy/dog_jump.png"
 	};
 
-	const int frameCounts[kGraphNum] = { 4, 4 };
-	const int frameIntervals[kGraphNum] = { 8, 8 };
+	const int frameCounts[kGraphNum] = { 11, 6 };
+	const int frameIntervals[kGraphNum] = { 8, 6 };
 
 	//画像の切り取りサイズ
-	constexpr int kGraphSize = 48;
-	constexpr int kGraphColSize = kGraphSize -16;
+	constexpr int kGraphW = 64;
+	constexpr int kGraphH = 48;
+	constexpr int kGraphColSize = 48;
 	constexpr float kScale = 2.0f;
 
-	//当たり判定のサイズ
-	constexpr  int kRectWidth = 32;
-	constexpr  int kRectHeight = 32;
-
-	constexpr float kDrawW = kGraphSize * 2.0f;
-	constexpr float kDrawH = kGraphSize * 2.0f;
+	constexpr float kDrawW = kGraphW * 2.0f;
+	constexpr float kDrawH = kGraphH * 2.0f;
 
 	//ジャンプの高さ
 	constexpr float kJumpPower = 15.0f;
@@ -72,12 +69,12 @@ void Dog::Init()
 		graphHandles_[i] = LoadGraph(kGraphName[i].c_str());
 		animations_[i] = std::make_shared<Animation>(
 			graphHandles_[i],
-			kGraphSize,
-			kGraphSize,
+			kGraphW,
+			kGraphH,
 			frameCounts[i],
 			frameIntervals[i],
 			kScale,
-			false
+			i==kIdleGraph
 		);
 	}
 
@@ -90,12 +87,13 @@ void Dog::Update()
 
 	//移動処理
 	Move();
-	//GameObject::Update();
-
-	//当たり判定の更新
-	colRect_.SetCenter(pos_.x, pos_.y-5, kGraphSize, kGraphSize);
 
 	Enemy::Update();
+
+	//当たり判定の更新
+	colRect_.SetCenter(pos_.x, pos_.y-5, kGraphColSize, kGraphColSize);
+
+	UpdateAnim();
 
 	//デバッグ表示
 	DrawFormatString(0, 150, 0xffffff, "Dog PosX:%f", pos_.x);
@@ -105,10 +103,10 @@ void Dog::Update()
 
 void Dog::Draw()
 {
-	float drawX = (isTurn_) ? (pos_.x + cameraOffset_.x)+30 : pos_.x + cameraOffset_.x;
+	float drawX = pos_.x + cameraOffset_.x;
 	float drawY = (pos_.y + cameraOffset_.y)-30;
 
-	animations_[static_cast<int>(dogState_)]->Draw(drawX, drawY, !isTurn_);
+	animations_[static_cast<int>(dogState_)]->Draw(drawX, drawY, isTurn_);
 
 #ifdef _DEBUG
 	//当たり判定の描画
@@ -118,7 +116,6 @@ void Dog::Draw()
 
 void Dog::Move()
 {
-	timer_++;
 	if (!pPlayer_) return;
 
 	float dx = pPlayer_->GetPos().x - pos_.x;
@@ -126,24 +123,67 @@ void Dog::Move()
 
 	if (distance < kDistance)
 	{
-		if (isGround_ && timer_ > kJumpInterval)
+		if (isGround_)
 		{
-			vel_.y = -kJumpPower;
-			vel_.x = (dx > 0) ? kSpeed : -kSpeed;
-			isTurn_ = (dx > 0) ? true : false;
-			isGround_ = false;
-			timer_ = 0.0f;
-			dogState_ = DogState::Jump;
+			timer_++;
+			if (timer_ > kJumpInterval)
+			{
+				vel_.y = -kJumpPower;
+				vel_.x = (dx > 0) ? kSpeed : -kSpeed;
+				isTurn_ = (dx > 0) ? true : false;
+				isGround_ = false;
+				timer_ = 0;
+				dogState_ = DogState::Jump;
+				animations_[static_cast<int>(DogState::Jump)]->Reset();
+			}
+			else
+			{
+				//ジャンプまでの待機時間は横移動しない
+				vel_.x = 0.0f;
+			}
 		}
-		else if (isGround_)
-		{
-			vel_.x = 0.0f;
-			dogState_ = DogState::Idle;
-		}
+
 	}
 	else
 	{
 		vel_.x = 0.0f;
+
+		//着地したらIdleに戻る
+		if (isGround_)
+		{
+			dogState_ = DogState::Idle;
+		}
+	}
+}
+
+void Dog::UpdateAnim()
+{
+
+	if (isGround_)
+	{
 		dogState_ = DogState::Idle;
+		vel_.x = 0.0f; //Idle 時は横速度も止める
+	}
+
+	auto idleAnim = animations_[static_cast<int>(DogState::Idle)];
+	auto jumpAnim = animations_[static_cast<int>(DogState::Jump)];
+
+	// アニメーション更新
+	switch (dogState_)
+	{
+	case DogState::Idle:
+		idleAnim->Update();
+		break;
+
+	case DogState::Jump:
+		if (!jumpAnim->IsAnimFinished())
+		{
+			jumpAnim->Update();
+		}
+		else
+		{
+			dogState_ = DogState::Idle;
+		}
+		break;
 	}
 }

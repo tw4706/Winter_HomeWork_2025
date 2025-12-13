@@ -30,20 +30,11 @@ void Enemy::Update()
 	GameObject::Update();
 
 	colRect_.SetCenter(pos_.x, pos_.y, colSize_, colSize_);
-
-	// アニメーション更新
-	if (!animations_.empty() && currentState_ >= 0 && currentState_ < (int)animations_.size())
-		animations_[currentState_]->Update();
 }
 
 void Enemy::Draw()
 {
 	if (isDead_)return;
-
-	if (!animations_.empty() && currentState_ >= 0 && currentState_ < (int)animations_.size())
-	{
-		animations_[currentState_]->Draw(pos_.x, pos_.y, !isTurn_);
-	}
 }
 
 void Enemy::OnHit(int damage)

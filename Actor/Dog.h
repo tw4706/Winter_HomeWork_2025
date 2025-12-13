@@ -19,6 +19,8 @@ public:
 
 	void Move()override;//ˆÚ“®ˆ—
 
+	void UpdateAnim();
+
 private:
 	std::vector<int>graphHandles_;
 	DogState dogState_;

@@ -58,6 +58,9 @@ namespace
 
 	constexpr int kPosYOffset = 20;
 	constexpr int kPosYDrawOffset = 30;
+
+	//Idleアニメーション再生トリガー
+	constexpr float kIdleTriggerDistance = 250.0f;
 }
 
 Zombie::Zombie(Vector2 pos, Vector2 vel) :
@@ -111,10 +114,10 @@ void Zombie::Update()
 	//移動処理
 	Move();
 
+	Enemy::Update();
+
 	//当たり判定の更新
 	colRect_.SetCenter(pos_.x, pos_.y - kPosYOffset, kDrawW, kDrawH);
-
-	Enemy::Update();
 }
 
 void Zombie::Draw()
@@ -137,49 +140,70 @@ void Zombie::UpdateAnim()
 	float dx = pPlayer_->GetPos().x - pos_.x;
 	float distance = std::abs(dx);
 
+	auto idleAnim = animations_[static_cast<int>(ZombieState::Idle)];
+	auto walkAnim = animations_[static_cast<int>(ZombieState::Walk)];
+
 	switch (zombieState_)
 	{
 	case ZombieState::Idle:
-		// プレイヤーがMove距離以内ならWalkに移行
-		if (distance < kDistance)
+		//Idleアニメーション終了かつプレイヤーが近づいたらWalkへ
+		if (isIdlePlayed_ && idleAnim->IsAnimFinished() && distance < kDistance)
 		{
 			zombieState_ = ZombieState::Walk;
-			animations_[static_cast<int>(ZombieState::Walk)]->Reset();
+			walkAnim->Reset();
 		}
 		break;
 
 	case ZombieState::Walk:
-		// プレイヤーが距離外になったらIdleに戻る
+		//プレイヤーが離れたらIdleに戻す
 		if (distance >= kDistance)
 		{
 			zombieState_ = ZombieState::Idle;
-			isIdlePlayed_ = false; // 次回近づいたらIdle再生
+			isIdlePlayed_ = false;
 		}
 		break;
 	}
 
-	// Idleアニメーション制御
+	//Idleアニメーション制御
 	if (zombieState_ == ZombieState::Idle)
 	{
-		constexpr float kIdleTriggerDistance = 300.0f; // Idleアニメーション再生トリガー
+		auto idleAnim = animations_[static_cast<int>(ZombieState::Idle)];
 
-		if (distance < kIdleTriggerDistance && !isIdlePlayed_)
+		if (!isIdlePlayed_ && distance < kIdleTriggerDistance)
 		{
-			// 近づいたら一度だけIdleアニメーションを再生
-			animations_[static_cast<int>(ZombieState::Idle)]->Reset();
+			// まだ再生していない場合だけ Reset
+			idleAnim->Reset();
 			isIdlePlayed_ = true;
-			animations_[static_cast<int>(ZombieState::Idle)]->Update();
 		}
-		else if (distance >= kIdleTriggerDistance)
+
+		if (isIdlePlayed_)
 		{
-			// 遠いときはIdleアニメーションを更新せず静止
-			animations_[static_cast<int>(ZombieState::Idle)]->SetFrame(0); // 最初のフレームで止める
+			// 再生中は Update
+			if (!idleAnim->IsAnimFinished())
+			{
+				idleAnim->Update();
+			}
+			else
+			{
+				// 最後まで再生されたら停止
+				idleAnim->SetFrame(idleAnim->GetFrameCount() - 1);
+			}
+		}
+		else
+		{
+			// 遠い場合は最初のフレームで停止
+			idleAnim->SetFrame(0);
+		}
+
+		// プレイヤーが遠くなったらフラグをリセット
+		if (distance >= kIdleTriggerDistance)
+		{
+			isIdlePlayed_ = false;
 		}
 	}
 	else if (zombieState_ == ZombieState::Walk)
 	{
-		// Walkは常に更新
-		animations_[static_cast<int>(ZombieState::Walk)]->Update();
+		walkAnim->Update();
 	}
 }
 
