@@ -68,7 +68,7 @@ void SkullFlower::Init()
 			frameCount[i],
 			frameIntervals[i],
 			kScale,
-			i == kIdleGraph
+			i == kIdleGraph,192
 		);
 	}
 
@@ -80,6 +80,8 @@ void SkullFlower::Init()
 void SkullFlower::Update()
 {
 	if (isDead_) return;
+
+	UpdateAnim();
 
 	//弾発射タイマー更新
 	shotTimer_ += 1.0f / 60.0f;
@@ -96,12 +98,6 @@ void SkullFlower::Update()
 			pBm_->AddEnemyBullet(bulletPos, bulletVel);
 		}
 	}
-
-
-	flowerState_ = (flowerState_ != SkullFlowerState::Death && 
-		flowerState_ != SkullFlowerState::Hurt)? SkullFlowerState::Idle : flowerState_;
-
-	shotTimer_ -= 1.0f / 60.0f;
 
 	Enemy::Update();// 移動＋衝突更新
 
@@ -136,11 +132,49 @@ void SkullFlower::OnHit(int damage)
 	{
 		flowerState_ = SkullFlowerState::Death;
 		animations_[static_cast<int>(flowerState_)]->Reset();
-		isDead_ = true;
 	}
 	else
 	{
 		flowerState_ = SkullFlowerState::Hurt;
 		animations_[static_cast<int>(flowerState_)]->Reset();
+	}
+}
+
+void SkullFlower::UpdateAnim()
+{
+	auto idleAnim = animations_[static_cast<int>(SkullFlowerState::Idle)];
+	auto hurtAnim = animations_[static_cast<int>(SkullFlowerState::Hurt)];
+	auto deathAnim = animations_[static_cast<int>(SkullFlowerState::Death)];
+
+	switch (flowerState_)
+	{
+	case SkullFlowerState::Idle:
+		idleAnim->Update();
+		break;
+
+	case SkullFlowerState::Hurt:
+		if (!hurtAnim->IsAnimFinished())
+		{
+			hurtAnim->Update();
+		}
+		else
+		{
+			//Hurt状態が終わったらIdleへ戻す
+			flowerState_ = SkullFlowerState::Idle;
+			idleAnim->Reset();
+		}
+		break;
+
+	case SkullFlowerState::Death:
+		if (!deathAnim->IsAnimFinished())
+		{
+			deathAnim->Update();
+		}
+		else
+		{
+			//死亡アニメーション終了あとに敵を削除
+			isDead_ = true;
+		}
+		break;
 	}
 }

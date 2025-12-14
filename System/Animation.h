@@ -5,7 +5,7 @@ class Animation
 {
 public:
     Animation(int handle, int frameW, int frameH,
-        int frameCount, int frameInterval, float scale, bool loop);
+        int frameCount, int frameInterval, float scale, bool loop,int startY);
 	~Animation();
 
     void Update();
@@ -30,5 +30,6 @@ private:
 	int frameInterval_;     //フレームの間隔
 	float scale_;           //描画スケール
 	bool isLoop_;           //ループするかどうか
+	int startY_;           //アニメーション開始Y座標
 };
 

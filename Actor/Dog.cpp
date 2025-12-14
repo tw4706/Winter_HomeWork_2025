@@ -74,7 +74,7 @@ void Dog::Init()
 			frameCounts[i],
 			frameIntervals[i],
 			kScale,
-			i==kIdleGraph
+			i==kIdleGraph,0
 		);
 	}
 

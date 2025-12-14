@@ -113,7 +113,7 @@ void Boss::Init()
 			frameCounts[i],
 			frameIntervals[i],
 			kScale,
-			false
+			false,0
 		);
 	}
 	currentState_ = BossState::Idle;

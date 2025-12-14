@@ -3,10 +3,10 @@
 
 
 Animation::Animation(int handle, int frameW, int frameH, 
-    int frameCount, int frameInterval,float scale,bool loop) :
+    int frameCount, int frameInterval,float scale,bool loop,int startY) :
     handle_(handle), frameW_(frameW), frameH_(frameH),
     frameCount_(frameCount), frameInterval_(frameInterval),
-	currentFrame_(0), frameTimer_(0), scale_(scale), isLoop_(loop)
+	currentFrame_(0), frameTimer_(0), scale_(scale), isLoop_(loop), startY_(startY)
 {
 }
 
@@ -33,7 +33,7 @@ void Animation::Update()
 void Animation::Draw(float x, float y, bool flip)
 {
     int sx = currentFrame_ * frameW_;
-    int sy = 0;
+    int sy = startY_;
 
     DrawRectRotaGraph3(
         (int)x, (int)y,             //•`‰æˆÊ’u

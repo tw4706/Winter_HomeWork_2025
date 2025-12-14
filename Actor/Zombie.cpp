@@ -96,7 +96,7 @@ void Zombie::Init()
 			frameCounts[i],
 			frameIntervals[i],
 			kScale,
-			false
+			false,0
 		);
 	}
 
