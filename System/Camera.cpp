@@ -16,7 +16,7 @@ Vector2 VLerp(Vector2 start, Vector2 end, float t)
 	return ret;
 }
 
-Camera::Camera():
+Camera::Camera() :
 	pos_{},
 	drawOffset_{},
 	shakeDuration_(0),
@@ -39,8 +39,8 @@ void Camera::Init(std::shared_ptr<Player> player)
 
 void Camera::Update(std::shared_ptr<Player> player)
 {
-	//プレイヤーの位置とカメラの位置を同じにする
-	pos_ = VLerp(pos_, player->GetPos(), 0.05);
+	// X軸のみプレイヤーを追従
+	pos_ = VLerp(pos_, player->GetPos(), 0.05f);
 
 	// --- X軸のカメラ制限（左端で止める） ---
 	float halfW = Game::kScreenWidth * 0.5f;
@@ -55,7 +55,7 @@ void Camera::Update(std::shared_ptr<Player> player)
 	drawOffset_.y = pos_.y * -1;
 
 	//画面の中央にプレイヤーが来るようにする
-	drawOffset_.x =drawOffset_.x + (Game::kScreenWidth * 0.5f);
+	drawOffset_.x = drawOffset_.x + (Game::kScreenWidth * 0.5f);
 	drawOffset_.y = drawOffset_.y + (Game::kScreenHeight * 0.5f);
 
 	if (shakeTimer_ < shakeDuration_)

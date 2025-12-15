@@ -14,7 +14,7 @@ public:
 
 	void Init();
 
-	void Draw(std::shared_ptr<Camera> pCamera,  float playerPosX);
+	void Draw(std::shared_ptr<Camera> pCamera);
 
 	/// <summary>
 	/// 指定した矩形と当たっているかを判定する
@@ -31,9 +31,11 @@ private:
 	/// </summary>
 	void LoadMapData();
 
-	void UpdateBg(float camMoveX);
+	void UpdateMidBg(std::shared_ptr<Camera> pCamera);
 
 	void DrawBg(std::shared_ptr<Camera> pCamera);
+
+	void DrawMidBg();
 
 	/// <summary>
 	/// マップチップ表示
@@ -58,7 +60,10 @@ private:
 
 	Vector2 pos_;//座標
 	std::shared_ptr<Player>pPlayer_;
-	float scrollX_;//X座標のスクロール量
-	float prevCameraX_;//前フレームのカメラのX座標
+	float prevCameraX_;		//前フレームのカメラのX座標
+	int midbgHandle_;		//中景画像ハンドル
+	float midPosY_;			//画面上での縦位置
+	float midScrollRate_;	//パララックス倍率
+	float midBgScrollX_;	//中景のスクロールX座標
 };
 

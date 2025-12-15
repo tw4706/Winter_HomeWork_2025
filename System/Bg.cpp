@@ -21,10 +21,14 @@ namespace
 Bg::Bg():
 	pos_{0,0},
 	prevCameraX_(0.0f),
-	scrollX_(0.0f)
+	midbgHandle_(-1),
+	midPosY_(0.0f),
+	midScrollRate_(0.5f),
+	midBgScrollX_(0.0f)
 {
 	mapHandle_ = LoadGraph("data/Map/mapChip.png");
 	bgHandle_ = LoadGraph("data/map/bg.png");
+	midbgHandle_ = LoadGraph("data/map/middle1.png");
 
 	int graphWidth = 0;
 	int graphHeight = 0;
@@ -49,12 +53,14 @@ void Bg::Init()
 
 }
 
-void Bg::Draw(std::shared_ptr<Camera> pCamera,float playerPosX)
+void Bg::Draw(std::shared_ptr<Camera> pCamera)
 {
 
-	UpdateBg(playerPosX);
-
 	DrawBg(pCamera);
+
+	UpdateMidBg(pCamera);
+	DrawMidBg(pCamera);
+
 	DrawMapChip(pCamera);
 }
 
@@ -126,14 +132,33 @@ void Bg::LoadMapData()
 	}
 }
 
-void Bg::UpdateBg(float playerPosX)
+void Bg::UpdateMidBg(std::shared_ptr<Camera> pCamera)
 {
-	scrollX_ = 0;
+	// カメラのX移動量
+	float cameraX = pCamera->GetOffset().x;
+
+	// 中景のスクロール量を更新
+	midBgScrollX_ += (cameraX - prevCameraX_) * midScrollRate_;
+
+	// 中景画像の幅を取得
+	int midBgWidth, midBgHeight;
+	GetGraphSize(midbgHandle_, &midBgWidth, &midBgHeight);
+
+	// ループ処理
+	if (midBgScrollX_ > midBgWidth) midBgScrollX_ -= midBgWidth;
+	if (midBgScrollX_ < 0) midBgScrollX_ += midBgWidth;
+
+	// 前回カメラ位置を保存
+	prevCameraX_ = cameraX;
 }
 
 void Bg::DrawBg(std::shared_ptr<Camera> pCamera)
 {
 	DrawGraph(0, 0, bgHandle_, false);
+}
+
+void Bg::DrawMidBg(std::shared_ptr<Camera> pCamera)
+{
 }
 
 
