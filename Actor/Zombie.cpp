@@ -60,7 +60,7 @@ namespace
 	constexpr int kPosYDrawOffset = 30;
 
 	//Idleアニメーション再生トリガー
-	constexpr float kIdleTriggerDistance = 250.0f;
+	constexpr float kIdleTriggerDistance = 270.0f;
 }
 
 Zombie::Zombie(Vector2 pos, Vector2 vel) :

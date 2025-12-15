@@ -35,7 +35,7 @@ private:
 
 	void DrawBg(std::shared_ptr<Camera> pCamera);
 
-	void DrawMidBg();
+	void DrawMidBg(std::shared_ptr<Camera> pCamera);
 
 	/// <summary>
 	/// マップチップ表示

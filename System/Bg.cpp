@@ -134,22 +134,10 @@ void Bg::LoadMapData()
 
 void Bg::UpdateMidBg(std::shared_ptr<Camera> pCamera)
 {
-	// カメラのX移動量
-	float cameraX = pCamera->GetOffset().x;
-
-	// 中景のスクロール量を更新
-	midBgScrollX_ += (cameraX - prevCameraX_) * midScrollRate_;
-
-	// 中景画像の幅を取得
-	int midBgWidth, midBgHeight;
-	GetGraphSize(midbgHandle_, &midBgWidth, &midBgHeight);
-
-	// ループ処理
-	if (midBgScrollX_ > midBgWidth) midBgScrollX_ -= midBgWidth;
-	if (midBgScrollX_ < 0) midBgScrollX_ += midBgWidth;
-
-	// 前回カメラ位置を保存
-	prevCameraX_ = cameraX;
+	// 中景のX座標をカメラに合わせてスクロール
+	float cameraMoveX = pCamera->GetOffset().x - prevCameraX_;
+	midBgScrollX_ += cameraMoveX * midScrollRate_;
+	prevCameraX_ = pCamera->GetOffset().x;
 }
 
 void Bg::DrawBg(std::shared_ptr<Camera> pCamera)
@@ -159,6 +147,20 @@ void Bg::DrawBg(std::shared_ptr<Camera> pCamera)
 
 void Bg::DrawMidBg(std::shared_ptr<Camera> pCamera)
 {
+	if (midbgHandle_ < 0) return;
+
+	// 横にループさせる場合
+	int graphWidth = 0, graphHeight = 0;
+	GetGraphSize(midbgHandle_, &graphWidth, &graphHeight);
+
+	// 縦位置を固定
+	int drawX = static_cast<int>(midBgScrollX_);
+	midPosY_ = Game::kScreenHeight / 2 - graphHeight / 2; // 好みのY位置に固定
+
+	for (int x = drawX % graphWidth - graphWidth; x < Game::kScreenWidth; x += graphWidth)
+	{
+		DrawGraph(x, midPosY_, midbgHandle_, true);
+	}
 }
 
 
