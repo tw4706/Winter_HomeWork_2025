@@ -39,7 +39,7 @@ namespace
 	//移動速度
 	constexpr float kSpeed = 4.0f;
 	//ジャンプ間隔
-	constexpr int kJumpInterval = 120;
+	constexpr int kJumpInterval = 60;
 	//プレイヤーとの距離
 	const float kDistance = 300.0f;
 }

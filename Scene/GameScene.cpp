@@ -232,7 +232,7 @@ void GameScene::Init()
 		pPlayer_ = std::make_shared<Player>(Vector2{ spawnPosX,spawnPosY }, Vector2{0,0});
 
 		enemyFactory_.LoadFromCSV("data/Enemy/enemyData.csv", &bulletManager_);
-		enemyFactory_.AddBoss(Vector2{ 8500,1600 }, Vector2{ 0,0 }, pPlayer_, &bulletManager_, pCamera_);
+		enemyFactory_.AddBoss(Vector2{ 8800,1600 }, Vector2{ 0,0 }, pPlayer_, &bulletManager_, pCamera_);
 		break;
 
 	case StageType::Stage2:

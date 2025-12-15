@@ -137,6 +137,7 @@ void SkullFlower::OnHit(int damage)
 
 	if (hp_ <= 0)
 	{
+		colRect_.SetCenter(-9999, -9999, 0, 0);
 		//当たり判定を先に消すことで
 		//死亡アニメーション中の当たり判定を無効にする
 		isColActive_ = false;

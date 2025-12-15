@@ -212,6 +212,13 @@ void Zombie::Move()
 	// プレイヤーがセットされていない場合は何もしない
 	if (!pPlayer_) return;
 
+	//Idle状態なら移動しない
+	if (zombieState_ == ZombieState::Idle)
+	{
+		vel_.x = 0.0f;
+		return;
+	}
+
 	//プレイヤーとの距離を見て移動する処理を追加
 	float dx = pPlayer_->GetPos().x - pos_.x;
 	float distance = std::abs(dx);

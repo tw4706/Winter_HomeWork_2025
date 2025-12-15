@@ -35,6 +35,7 @@ namespace
 	constexpr int kGraphHalfW = 32/2;
 	constexpr int kGraphHalfH = 32/2;
 	constexpr float kScale = 8.0f;
+	constexpr float kColScale = 2.0f;
 	constexpr float kColSize = 64.0f;
 
 	constexpr float kKnockBackPos = 2.0f;
@@ -129,7 +130,7 @@ void Boss::Update()
 	//常にプレイヤーの方向を向く
 	isTurn_ = (pPlayer_->GetPos().x < pos_.x);
 
-	colRect_.SetCenter(pos_.x,pos_.y,colSize_,colSize_);
+	colRect_.SetCenter(pos_.x-20, pos_.y, colSize_ * kColScale, colSize_ * kColScale);
 
 	//アニメーションの更新
 	animations_[static_cast<int>(currentState_)]->Update();
