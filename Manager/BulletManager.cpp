@@ -50,23 +50,12 @@ void BulletManager::Init()
 void BulletManager::Update(Input& input, std::vector<std::shared_ptr<Enemy>>&enemies, Player&player)
 {
 	//弾の更新
-	//弾とキャラクターの当たり判定
 	for (auto& bullet : bullets_)
 	{
 		if (!bullet->IsAlive()) continue;
 
 		// Bullet 側に全ての処理を任せる
 		bullet->Update(input, enemies);
-
-		//敵の弾の場合だけプレイヤーとの判定を行う
-		if (!IsPlayerBullet(bullet->GetType()))
-		{
-			if (bullet->GetColRect().IsCollision(player.GetColRect()))
-			{
-				bullet->OnHit();
-				player.OnDamage();
-			}
-		}
 	}
 
 	//弾の削除
@@ -112,4 +101,9 @@ void BulletManager::AddEnemyBullet(Vector2& pos, Vector2& vel)
 	auto bullet = std::make_shared<Bullet>(pos, vel,BulletType::EnemyBullet,pBg_);
 	bullet->Init();
 	bullets_.push_back(bullet);
+}
+
+std::vector<std::shared_ptr<Bullet>>& BulletManager::GetBullets()
+{
+	return bullets_;
 }

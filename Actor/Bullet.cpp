@@ -109,10 +109,12 @@ void Bullet::Update(Input& input, std::vector<std::shared_ptr<Enemy>>& enemies)
 	//è’ìÀîªíË
 	CheckBulletAndMapCollision();
 
+	// ìGíeÇÕà⁄ìÆÇæÇØ
 	if (bulletType_ == BulletType::EnemyBullet)
 	{
 		pos_ += vel_;
-		colRect_.SetCenter(pos_.x+ kColOffsetX, pos_.y+ kColOffsetY, colSize_*kScale, colSize_* kScale);
+		colRect_.SetCenter(pos_.x + kColOffsetX,pos_.y + kColOffsetY,
+			colSize_ * kScale,colSize_ * kScale);
 		UpdateShot();
 		return;
 	}
@@ -120,27 +122,6 @@ void Bullet::Update(Input& input, std::vector<std::shared_ptr<Enemy>>& enemies)
 	UpdateShot();
 
 	UpdateHadou(enemies);
-
-	for (auto& enemy : enemies)
-	{
-		if (enemy->IsDead()) continue;
-
-		if (colRect_.IsCollision(enemy->GetColRect()))
-		{
-			bool otherBullet_ = (bulletType_ == BulletType::Lance) || (bulletType_ == BulletType::Torch);
-			if (otherBullet_)
-			{
-				damage_ = kMaxDamage;
-			}
-
-			enemy->OnHit(damage_);
-
-			//íeë§ÇÃèàóù
-			OnHit();
-
-			break;
-		}
-	}
 }
 
 void Bullet::Draw()
@@ -329,5 +310,28 @@ void Bullet::CheckBulletAndMapCollision()
 		pos_.y = chipRect_.GetTop() - colSize_ / 2.0f;
 		vel_.y = 0;
 		isGround_ = true;
+	}
+}
+
+bool Bullet::IsPlayerBullet() const
+{
+	return bulletType_ == BulletType::Knife ||
+		bulletType_ == BulletType::Lance ||
+		bulletType_ == BulletType::Torch;
+}
+
+int Bullet::GetDamage() const
+{
+	switch (bulletType_)
+	{
+	case BulletType::Knife:
+		return 1;
+
+	case BulletType::Lance:
+	case BulletType::Torch:
+		return kMaxDamage;
+
+	default:
+		return 0;
 	}
 }

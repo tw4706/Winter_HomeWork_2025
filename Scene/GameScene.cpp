@@ -12,6 +12,7 @@
 #include "SelectScene.h"
 #include"SceneController.h"
 #include"GlobalConstants.h"
+#include "CollisionManager.h"
 #include<cmath>
 #include<cassert>
 #include<Dxlib.h>
@@ -26,7 +27,9 @@ namespace
 	constexpr float kFallLimit = 1900.0f;
 
 	//鍵が落ちる速度
-	constexpr int kDropSpeed = 5.0f;
+	constexpr int kKeyDropSpeed = 5.0f;
+	constexpr float kKeyAttractRange = 300.0f; // 吸い付く距離
+	constexpr float kKeyAttractSpeed = 12.0f; // 吸引速度
 }
 
 GameScene::GameScene(SceneController& controller, StageType stage) :
@@ -81,6 +84,15 @@ void GameScene::NormalUpdate(Input&input)
 	//弾の更新処理
 	bulletManager_.Update(input, enemyFactory_.GetEnemies(), *pPlayer_);
 
+	//プレイヤーの弾 × 敵の当たり判定
+	CollisionManager::PlayerBulletsVsEnemies(
+		bulletManager_.GetBullets(),enemyFactory_.GetEnemies());
+
+	//敵の弾 × プレイヤーの当たり判定
+	CollisionManager::EnemyBulletsVsPlayer(
+		bulletManager_.GetBullets(),*pPlayer_);
+
+
 	if (pPlayer_->IsDead() && pPlayer_->IsDeadAnimFinished())
 	{
 		update_ = &GameScene::FadeOutUpdate;
@@ -91,15 +103,12 @@ void GameScene::NormalUpdate(Input&input)
 	}
 
 	//プレイヤーと敵の当たり判定
-	for (auto& enemy : enemyFactory_.GetEnemies())
+	if (CollisionManager::PlayerVsEnemies(pPlayer_->GetColRect(),
+		enemyFactory_.GetEnemies()))
 	{
-		if (!enemy->IsDead() && pPlayer_->GetColRect().IsCollision(enemy->GetColRect()))
+		if (!pPlayer_->IsDead())
 		{
-			if (!pPlayer_->IsDead())
-			{
-				pPlayer_->Dead();
-			}
-			break;
+			pPlayer_->Dead();
 		}
 	}
 
@@ -117,17 +126,38 @@ void GameScene::NormalUpdate(Input&input)
 		}
 	}
 
-	//鍵を出現させ、しゅとくするとクリアシーンに遷移する
+	//鍵を出現させ、取得するとクリアシーンに遷移する
 	if (isKeyActive_)
 	{
-		keyPos_.y += kDropSpeed;
+		Vector2 playerPos = pPlayer_->GetPos();
 
-		// プレイヤーとの当たり判定
+		float dx = playerPos.x - keyPos_.x;
+		float dy = playerPos.y - keyPos_.y;
+		float dist = std::sqrt(dx * dx + dy * dy);
+
+		if (dist < kKeyAttractRange)
+		{
+			// プレイヤーに吸い付く
+			if (dist > 0.01f)
+			{
+				dx /= dist;
+				dy /= dist;
+			}
+			keyPos_.x += dx * kKeyAttractSpeed;
+			keyPos_.y += dy * kKeyAttractSpeed;
+		}
+		else
+		{
+			// 通常落下
+			keyPos_.y += kKeyDropSpeed;
+		}
+
 		keyRect_.SetCenter(keyPos_.x, keyPos_.y, 32, 32);
 
-		if (pPlayer_->GetColRect().IsCollision(keyRect_))
+		if (CollisionManager::PlayerVsKey(
+			pPlayer_->GetColRect(),keyRect_))
 		{
-			isKeyActive_ = false; // 鍵を消す
+			isKeyActive_ = false;
 			update_ = &GameScene::GoalFadeOutUpdate;
 			draw_ = &GameScene::FadeDraw;
 			frame_ = 0;

@@ -72,6 +72,12 @@ public:
 	//たいまつの波動とマップの当たり判定を行う関数
 	void CheckBulletAndMapCollision();
 
+	//プレイヤーの弾かどうかを返す関数
+	bool IsPlayerBullet() const;
+
+	//ダメージ量を返す関数
+	int GetDamage() const;
+
 private:
 	bool isAlive_;		//弾が存在しているかどうか
 	int bulletH_;		//弾の画像ハンドル
