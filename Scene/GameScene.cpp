@@ -148,9 +148,9 @@ void GameScene::GoalFadeOutUpdate(Input&)
 {
 	if (frame_++ >= fade_interval)
 	{
-		//次のステージを取得
-		StageType next = GetNextStageType(stageType_);
-		controller_.ChangeScene(std::make_shared<GameScene>(controller_,next));
+		////次のステージを取得
+		//StageType next = GetNextStageType(stageType_);
+		controller_.ChangeScene(std::make_shared<ClearScene>(controller_));
 	}
 }
 

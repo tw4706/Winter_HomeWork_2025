@@ -8,7 +8,7 @@
 #include "SceneController.h"
 #include"GlobalConstants.h"
 
-constexpr int fade_interval = 60;
+constexpr int kFadeInterval = 60;
 
 void TitleScene::FadeInUpdate(Input&input)
 {
@@ -32,7 +32,7 @@ void TitleScene::NormalUpdate(Input&input)
 
 void TitleScene::FadeOutUpdate(Input&input)
 {
-	if (frame_++ >= fade_interval) {
+	if (frame_++ >= kFadeInterval) {
 		controller_.ChangeScene(std::make_shared<SelectScene>(controller_));
 		return;
 	}
@@ -40,25 +40,24 @@ void TitleScene::FadeOutUpdate(Input&input)
 
 void TitleScene::NormalDraw()
 {
-	DrawRotaGraph(Game::kScreenWidth / 2, Game::kScreenHeight / 2, 1.0f, 0.0f, titleH_, true);
+	DrawRotaGraph(Game::kScreenWidth / 2, Game::kScreenHeight/2-100 , 1.0f, 0.0f, titleH_, true);
 }
 
 void TitleScene::FadeDraw()
 {
-	DrawRotaGraph(Game::kScreenWidth/2, Game::kScreenHeight/2, 1.0f, 0.0f, titleH_, true);
 	// 値の範囲を一旦0.0~1.0にしておくといろいろと扱いやすくなります
-	auto rate = static_cast<float>(frame_) / static_cast<float>(fade_interval);
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255 * rate);// αブレンド
-	DrawBox(0, 0, Game::kScreenWidth, Game::kScreenHeight, 0x000000, true);
+	auto rate = 1.0f-static_cast<float>(frame_) / static_cast<float>(kFadeInterval);
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255 * rate);//αブレンド
+	DrawBox(0, 0, Game::kScreenWidth, Game::kScreenHeight, 0xffffff, true);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);// ブレンドしない
 }
 
 TitleScene::TitleScene(SceneController&controller):Scene(controller)
 {
-	titleH_ = LoadGraph("data/title.png");
+	titleH_ = LoadGraph("data/map/title.png");
 	update_ = &TitleScene::FadeInUpdate;
 	draw_ = &TitleScene::FadeDraw;
-	frame_ = 0;
+	frame_ = kFadeInterval;
 }
 
 TitleScene::~TitleScene()
