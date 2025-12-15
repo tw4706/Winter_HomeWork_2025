@@ -40,6 +40,7 @@ SkullFlower::SkullFlower(Vector2 pos, Vector2 vel, BulletManager* bm)
 	pBm_(bm),
 	shotInterval_(2.0f),
 	shotTimer_(0.0f),
+	isColActive_(true),
 	flowerState_(SkullFlowerState::Idle)
 {
 }
@@ -99,10 +100,13 @@ void SkullFlower::Update()
 		}
 	}
 
-	Enemy::Update();// 移動＋衝突更新
+	GameObject::Update();
 
 	// 当たり判定の更新
-	colRect_.SetCenter(pos_.x, pos_.y - kPosYOffset, kGraphSize, kGraphSize);
+	if (isColActive_)
+	{
+		colRect_.SetCenter(pos_.x, pos_.y - kPosYOffset, kGraphSize, kGraphSize);
+	}
 
 }
 
@@ -110,7 +114,7 @@ void SkullFlower::Draw()
 {
 	if (isDead_) return;
 	float drawX = pos_.x + cameraOffset_.x;
-	float drawY = pos_.y + cameraOffset_.y;
+	float drawY = pos_.y + cameraOffset_.y-15;
 
 	animations_[static_cast<int>(flowerState_)]->Draw(drawX, drawY, !isTurn_);
 
@@ -126,10 +130,16 @@ void SkullFlower::Draw()
 
 void SkullFlower::OnHit(int damage)
 {
+	//すでに死亡している場合は処理しない
+	if (flowerState_ == SkullFlowerState::Death)return;
+
 	hp_ -= damage;
 
 	if (hp_ <= 0)
 	{
+		//当たり判定を先に消すことで
+		//死亡アニメーション中の当たり判定を無効にする
+		isColActive_ = false;
 		flowerState_ = SkullFlowerState::Death;
 		animations_[static_cast<int>(flowerState_)]->Reset();
 	}

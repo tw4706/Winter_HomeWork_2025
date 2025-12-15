@@ -29,6 +29,7 @@ private:
     BulletManager* pBm_; // 弾を発射するために必要
     float shotInterval_;           // 発射間隔
     float shotTimer_;              // 経過時間カウント
+	bool isColActive_;       //当たり判定が有効かどうか
     std::vector<int>graphHandles_;
     SkullFlowerState flowerState_;
 };

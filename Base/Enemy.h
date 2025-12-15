@@ -29,6 +29,13 @@ public:
 	virtual void Draw() = 0;
 
 	virtual void Move() = 0;//移動
+	//弾が当たった時の処理
+	//当たり判定を消す
+	virtual void OnHit(int damage);
+
+	//死亡時の処理
+	virtual void Dead();
+
 	//プレイヤーのポインタをセットする関数(セッター関数)
 	void SetPlayer(std::shared_ptr<Player> player) { pPlayer_ = player; }
 
@@ -39,8 +46,5 @@ public:
 
 	virtual bool IsBoss() const { return false; }
 
-	//弾が当たった時の処理
-	//当たり判定を消す
-	virtual void OnHit(int damage);
 };
 

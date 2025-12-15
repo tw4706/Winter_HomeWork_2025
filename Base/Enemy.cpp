@@ -40,10 +40,15 @@ void Enemy::Draw()
 void Enemy::OnHit(int damage)
 {
 	hp_ -= damage;
-	if (hp_ <= 0)
-	{
-		isDead_ = true;
-		colRect_.SetCenter(-9999, -9999, 0, 0);
-	}
 
+	if(hp_ <= 0)
+	{
+		Dead();
+	}
+}
+
+void Enemy::Dead()
+{
+	isDead_ = true;
+	colRect_.SetCenter(-9999,-9999,0,0);
 }
