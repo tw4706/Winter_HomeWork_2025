@@ -82,7 +82,7 @@ namespace
 	constexpr int kColYOffset = 32;
 
 	//•`‰æ‚Ì’²®—p
-	constexpr int kPosXOffset = 10;
+	constexpr int kColPosYOffset = 15;
 	constexpr int kPosYOffset = 60;
 	constexpr float kWalkColXOffset = 15.0f;
 
@@ -174,8 +174,7 @@ void Player::Update(Input& input, BulletManager& bm)
 
 	float colX = pos_.x + colOffsetX;
 
-	colRect_.SetCenter(colX, pos_.y - kPosXOffset, kGraphHalfWidth, kGraphHeight - kColYOffset);
-
+	colRect_.SetCenter(colX, pos_.y - kColPosYOffset, kGraphHalfWidth, kGraphHeight - kColYOffset);
 
 	//ó‘Ô‘JˆÚ‚ÌXV
 	UpdateState(input);

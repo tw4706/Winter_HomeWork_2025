@@ -74,6 +74,7 @@ void SkullFlower::Init()
 	}
 
 	flowerState_ = SkullFlowerState::Idle;
+
 	//当たり判定の更新
 	colRect_.SetCenter(pos_.x, pos_.y, kGraphSize, kGraphSize);
 }
@@ -82,25 +83,15 @@ void SkullFlower::Update()
 {
 	if (isDead_) return;
 
-	UpdateAnim();
-
-	//弾発射タイマー更新
-	shotTimer_ += 1.0f / 60.0f;
-	float distance = std::abs(pos_.x - pPlayer_->GetPos().x);
-	if (distance < kDistance)
+	if (isColActive_)
 	{
-		if (shotTimer_ >= shotInterval_) {
-			shotTimer_ = 0.0f;
-
-			//弾を発射
-			Vector2 bulletPos = pos_;
-			Vector2 bulletVel = { -kSpeed, 0.0f };
-
-			pBm_->AddEnemyBullet(bulletPos, bulletVel);
-		}
+		Shot();
 	}
 
+
 	GameObject::Update();
+	
+	UpdateAnim();
 
 	// 当たり判定の更新
 	if (isColActive_)
@@ -183,9 +174,29 @@ void SkullFlower::UpdateAnim()
 		}
 		else
 		{
-			//死亡アニメーション終了あとに敵を削除
+			//死亡アニメーション終了あとに敵を消す
 			isDead_ = true;
 		}
 		break;
+	}
+}
+
+void SkullFlower::Shot()
+{
+	//弾発射タイマー更新
+	shotTimer_ += 1.0f / 60.0f;
+	float distance = std::abs(pos_.x - pPlayer_->GetPos().x);
+	if (distance < kDistance)
+	{
+		if (shotTimer_ >= shotInterval_) 
+		{
+			shotTimer_ = 0.0f;
+
+			//弾を発射
+			Vector2 bulletPos = pos_;
+			Vector2 bulletVel = { -kSpeed, 0.0f };
+
+			pBm_->AddEnemyBullet(bulletPos, bulletVel);
+		}
 	}
 }

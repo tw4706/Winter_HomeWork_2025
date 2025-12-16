@@ -51,9 +51,11 @@ GameObject::~GameObject()
 
 void GameObject::Update()
 {
-	CheckMapCollision(chipRect_);
-
+	//重力
 	Gravity();
+
+	//チップとの当たり判定
+	CheckMapCollision(chipRect_);
 
 	if (!isGround_)
 	{
@@ -107,12 +109,12 @@ void GameObject::CheckMapCollision(Rect& chipRect)
 	{
 		if (vel_.y >= 0.0f) 
 		{
-			pos_.y = chipRect.GetTop() - (colSize_ / 2.0f); //地面に乗る
+			pos_.y = chipRect.GetTop() - (colSize_/2.0f);//地面に乗る
 			isGround_ = true;
 		}
 		else if (vel_.y <= 0.0f) 
 		{
-			pos_.y = chipRect.GetBottom() + (colSize_ / 2.0f); //天井に当たる
+			pos_.y = chipRect.GetBottom() + (colSize_ / 2.0f)-20.0f; //天井に当たる
 		}
 		vel_.y = 0.0f; //縦方向の速度を止める
 	}

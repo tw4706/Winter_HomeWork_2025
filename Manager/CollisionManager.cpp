@@ -49,7 +49,7 @@ void CollisionManager::PlayerBulletsVsEnemies(
     }
 }
 
-// 敵弾とプレイヤー
+//敵弾とプレイヤー
 bool CollisionManager::EnemyBulletsVsPlayer(
     std::vector<std::shared_ptr<Bullet>>& bullets,
     Player& player)

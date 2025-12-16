@@ -30,16 +30,16 @@ namespace
 
 	static_assert(static_cast<int>(kGraphNum)== _countof(kGraphName));
 
-	constexpr int kGraphWidth = 32;
-	constexpr int kGraphHeight = 32;
-	constexpr int kGraphHalfW = 32/2;
-	constexpr int kGraphHalfH = 32/2;
-	constexpr float kScale = 8.0f;
+	constexpr int kGraphWidth = 81;
+	constexpr int kGraphHeight = 71;
+	constexpr int kGraphHalfW = kGraphWidth /2;
+	constexpr int kGraphHalfH = kGraphHeight /2;
+	constexpr float kScale = 4.0f;
 	constexpr float kColScale = 2.0f;
 	constexpr float kColSize = 64.0f;
 
 	constexpr float kKnockBackPos = 2.0f;
-	constexpr float kComeBackPos = 0.05f;
+	constexpr float kComeBackPos = 0.5f;
 	constexpr float kSpeed = 0.5f;
 	constexpr float kBulletSpeed = 3.0f;
 	constexpr float kShotInterval = 5.0f;
@@ -292,7 +292,7 @@ void Boss::UpdateFly()
 
 	// 大きく上下へ蛇行 (振幅40〜60)
 	float amplitude = 40.0f;
-	float frequency = 0.08f;
+	float frequency = 0.8f;
 	pos_.y += sin(stateTimer_ * frequency) * amplitude * 0.1f;
 
 	// 一定時間で戻る

@@ -25,6 +25,8 @@ public:
 
     void UpdateAnim();
 
+    void Shot();
+
 private:
     BulletManager* pBm_; // ’e‚ð”­ŽË‚·‚é‚½‚ß‚É•K—v
     float shotInterval_;           // ”­ŽËŠÔŠu

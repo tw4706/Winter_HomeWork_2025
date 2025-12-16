@@ -154,8 +154,7 @@ void GameScene::NormalUpdate(Input&input)
 
 		keyRect_.SetCenter(keyPos_.x, keyPos_.y, 32, 32);
 
-		if (CollisionManager::PlayerVsKey(
-			pPlayer_->GetColRect(),keyRect_))
+		if (CollisionManager::PlayerVsKey(pPlayer_->GetColRect(),keyRect_))
 		{
 			isKeyActive_ = false;
 			update_ = &GameScene::GoalFadeOutUpdate;
