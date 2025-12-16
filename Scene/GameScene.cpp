@@ -89,8 +89,8 @@ void GameScene::NormalUpdate(Input&input)
 		bulletManager_.GetBullets(),enemyFactory_.GetEnemies());
 
 	//敵の弾 × プレイヤーの当たり判定
-	CollisionManager::EnemyBulletsVsPlayer(
-		bulletManager_.GetBullets(),*pPlayer_);
+	CollisionManager::EnemyBulletsVsPlayer(bulletManager_.GetBullets(),
+		*pPlayer_);
 
 
 	if (pPlayer_->IsDead() && pPlayer_->IsDeadAnimFinished())
@@ -196,8 +196,7 @@ void GameScene::NormalDraw()
 {
 	if (stageType_ == StageType::Stage2)
 	{
-		DrawBox(0, 0, Game::kScreenWidth, Game::kScreenHeight,
-			0x00ff00, true);
+		DrawBox(0, 0, Game::kScreenWidth, Game::kScreenHeight,0x00ff00, true);
 	}
 
 	Vector2 cameraOffset = pCamera_->GetOffset();
@@ -228,12 +227,8 @@ void GameScene::NormalDraw()
 	}
 
 	//ステージ2表示
-	DrawFormatString(
-		Game::kScreenWidth, Game::kScreenHeight,
-		GetColor(255, 255, 0),
-		"STAGE %d",
-		static_cast<int>(stageType_) + 1
-	);
+	DrawFormatString(Game::kScreenWidth, Game::kScreenHeight,
+		GetColor(255, 255, 0),"STAGE %d",static_cast<int>(stageType_) + 1);
 
 #ifdef _DEBUG
 	Rect screenGoal = keyRect_;

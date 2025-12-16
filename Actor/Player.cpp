@@ -75,6 +75,10 @@ namespace
 	//ダメージを受けたときの無敵時間
 	constexpr int kDamageDuration = 60;
 
+	//被弾した時のノックバックの強さ
+	constexpr float kKnockBackX = 8.0f;
+	constexpr float kKnockBackY = 6.0f;
+
 	//重力
 	constexpr float kGravity = 1.0f;
 
@@ -179,9 +183,12 @@ void Player::Update(Input& input, BulletManager& bm)
 	//状態遷移の更新
 	UpdateState(input);
 
+	//死亡処理
 	if (!isAlive_)
 	{
 		animations_[static_cast<int>(PlayerState::Death)]->Update();
+
+		//死亡アニメーションが終了したらゲームオーバー処理を呼び出す
 		if (animations_[static_cast<int>(PlayerState::Death)]->IsAnimFinished() && onGameOver_)
 		{
 			onGameOver_();
@@ -211,6 +218,29 @@ void Player::Update(Input& input, BulletManager& bm)
 		return;
 	}
 
+	//摩擦
+	if (isDamaged_)
+	{
+		vel_.x *= 0.9f;
+	}
+
+	//無敵時間
+	if (damageTimer_ > 0)
+	{
+		damageTimer_--;
+		if (damageTimer_ == 0)
+		{
+			isDamaged_ = false;
+			vel_.x = 0.0f;
+		}
+	}
+
+	//ダメージ中は移動や攻撃を受け付けない
+	if (isDamaged_)
+	{
+		animations_[static_cast<int>(state_)]->Update();
+		return;
+	}
 #ifdef _DEBUG
 	//武器の切り替え
 	if (input.IsTriggered("changeWeapon"))
@@ -220,23 +250,11 @@ void Player::Update(Input& input, BulletManager& bm)
 		currentBulletType_ = static_cast<BulletType>(weaponType);
 	}
 
-#endif
-	//無敵時間
-	if (damageTimer_ > 0)
-	{
-		damageTimer_--;
-		if (damageTimer_ == 0)
-		{
-			isDamaged_ = false;
-		}
-	}
-#ifdef _DEBUG
 	//デバッグ用
 	DrawFormatString(0, 0, GetColor(255, 255, 255), "PlayerX:%f", pos_.x);
 	DrawFormatString(0, 20, GetColor(255, 255, 255), "PlayerY:%f", pos_.y);
-	//DrawFormatString(0, 20, GetColor(255, 255, 255), "VelX:%f", vel_.x);
-#endif
 
+#endif
 }
 
 void Player::Draw()
@@ -276,6 +294,12 @@ void Player::Draw()
 //移動処理
 void Player::Move(Input& input)
 {
+	//ダメージ中は移動できない
+	if (isDamaged_)
+	{
+		return; // 横速度を上書きしない
+	}
+
 	bool CanJumpMove = isGround_ || isDoubleJumping_;
 	//地面にいるときかつダブルジャンプが可能な時
 	if (CanJumpMove)
@@ -384,6 +408,26 @@ void Player::OnDamage()
 {
 	isDamaged_ = true;
 	damageTimer_ = kDamageDuration;
+
+	//向きに応じて横方向のノックバック
+	if (isTurn_)
+	{
+		vel_.x = -kKnockBackX;
+	}
+	else
+	{
+		vel_.x = kKnockBackX;
+	}
+
+	//上方向にノックバック
+	vel_.y = -kKnockBackY;
+
+	//空中にいる判定にする
+	isGround_ = false;
+
+	//ダメージアニメーションへ
+	animations_[static_cast<int>(PlayerState::Hurt)]->Reset();
+
 }
 
 void Player::Dead()

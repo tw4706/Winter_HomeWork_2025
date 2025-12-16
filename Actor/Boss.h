@@ -44,6 +44,9 @@ private:
 	Vector2 backPos_;//戻る位置を保存する変数
 	bool hasShot_;//弾を撃ったかどうかのフラグ
 	int knockbackDir_;//ノックバックの方向
+	bool isCharging_;     //突進中か
+	Vector2 chargeVel_;   //突進速度
+	bool isActive_;
 
 	//グラフィックハンドルの配列
 	std::vector<int>graphHandles_;

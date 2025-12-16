@@ -46,6 +46,9 @@ namespace
 	constexpr float kBulletSpeed = 3.0f;
 	constexpr float kShotInterval = 5.0f;
 	constexpr int KMaxHp = 30;
+	constexpr float kRushSpeed = 6.0f;   //突進する速度
+	constexpr int   kRushTime = 30;     //突進するフレーム数
+	constexpr float kActiveDistance = 500.0f;
 
 	//地形・距離関連
 	constexpr float kGravity = 0.5f;
@@ -90,7 +93,10 @@ Boss::Boss(Vector2 pos, Vector2 vel, std::shared_ptr<Player>player, BulletManage
 	hp_(KMaxHp),
 	backPos_(pos),
 	hasShot_(false),
-	knockbackDir_(0)
+	knockbackDir_(0),
+	isCharging_(false),
+	chargeVel_(0.0f),
+	isActive_(false)
 {
 	colSize_ = kColSize;
 	SetUseGravity(false);
@@ -130,6 +136,27 @@ void Boss::Update()
 {
 	if (isDead_)return;
 	Enemy::Update();
+
+	float distance = std::abs(pPlayer_->GetPos().x - pos_.x);
+
+	// プレイヤーが一定距離まで近づいたら起動
+	if (!isActive_)
+	{
+		if (distance < kActiveDistance)
+		{
+			isActive_ = true;
+			stateTimer_ = 0;
+		}
+		else
+		{
+			//起動前は当たり判定はなしにする
+			colRect_.SetCenter(pos_.x, pos_.y, 0, 0);
+
+			//Idleアニメーションだけ再生
+			animations_[static_cast<int>(BossState::Idle)]->Update();
+			return;
+		}
+	}
 
 	//常にプレイヤーの方向を向く
 	isTurn_ = (pPlayer_->GetPos().x < pos_.x);
@@ -197,6 +224,12 @@ void Boss::Draw()
 
 void Boss::ChangeState(BossState nextState)
 {
+	//アクティブでない時はIdle以外に状態遷移しない
+	if (!isActive_ && nextState != BossState::Idle)
+	{
+		return;
+	}
+
 	if (currentState_ == BossState::Hurt && nextState == BossState::Idle)
 	{
 		backPos_ = pos_;
@@ -210,6 +243,24 @@ void Boss::ChangeState(BossState nextState)
 	if (nextState == BossState::Attack)
 	{
 		hasShot_ = false;
+		// ★40%で突進
+		if (rand() % 100 < 40)
+		{
+			isCharging_ = true;
+
+			Vector2 dir = pPlayer_->GetPos() - pos_;
+			float len = sqrtf(dir.x * dir.x + dir.y * dir.y);
+			if (len > 0.0f)
+			{
+				dir.x /= len;
+				dir.y /= len;
+			}
+			chargeVel_ = { dir.x * kRushSpeed, dir.y * kRushSpeed };
+		}
+		else
+		{
+			isCharging_ = false;
+		}
 	}
 }
 
@@ -245,40 +296,46 @@ void Boss::UpdateAttack()
 {
 	stateTimer_++;
 
-	int currentFrame = animations_[static_cast<int>(BossState::Attack)]->GetCurrentFrame();
-
-	shotTimer_ += 1.0f / 60.0f;
-	float distance = std::abs(pos_.x - pPlayer_->GetPos().x);
-	if (distance < kDistance)
+	if (isCharging_)
 	{
-		if (!hasShot_ && currentFrame == 4)
+		pos_.x += chargeVel_.x;
+		pos_.y += chargeVel_.y;
+
+		// 突進時間終了でFlyへ
+		if (stateTimer_ > kRushTime)
 		{
-			if (shotTimer_ >= shotInterval_)
-			{
-				shotTimer_ = 0.0f;
-				hasShot_ = true;
-
-				//弾を発射
-				Vector2 bulletPos = pos_;
-
-				//弾がプレイヤーを狙う
-				Vector2 toPlayer = pPlayer_->GetPos() - pos_;
-
-				float len = sqrtf(toPlayer.x * toPlayer.x + toPlayer.y * toPlayer.y);
-				if (len > 0.0f)
-				{
-					toPlayer.x /= len;
-					toPlayer.y /= len;
-				}
-				Vector2 bulletVel = { toPlayer.x * kBulletSpeed, toPlayer.y * kBulletSpeed };
-
-				pBm_->AddEnemyBullet(bulletPos, bulletVel);
-			}
+			isCharging_ = false;
+			ChangeState(BossState::Fly);
 		}
+		return;
 	}
-	if (animations_[static_cast<int>(BossState::Attack)]->IsAnimFinished())
+
+	// Flyと同じ移動を維持
+	vel_.x = (isTurn_ ? -kSpeed : kSpeed);
+	pos_.x += vel_.x;
+
+	float targetY = pPlayer_->GetPos().y - 120.0f;
+	pos_.y += (targetY - pos_.y) * 0.05f;
+
+	// 一定間隔で弾
+	shotTimer_ += 1.0f / 60.0f;
+	if (shotTimer_ >= 1.5f)
 	{
-		ChangeState(BossState::Idle);
+		shotTimer_ = 0.0f;
+
+		Vector2 bulletVel =
+		{
+			isTurn_ ? -kBulletSpeed : kBulletSpeed,
+			0.0f
+		};
+
+		pBm_->AddEnemyBullet(pos_, bulletVel);
+	}
+
+	// 短時間でFlyに戻る
+	if (stateTimer_ > 120)
+	{
+		ChangeState(BossState::Fly);
 	}
 }
 
@@ -286,23 +343,24 @@ void Boss::UpdateFly()
 {
 	stateTimer_++;
 
-	// プレイヤーが右なら右へ、左なら左へ
-	float playerX = pPlayer_->GetPos().x;
-	isTurn_ = (playerX < pos_.x); //プレイヤーが左にいるなら反転
+	// 向き
+	isTurn_ = (pPlayer_->GetPos().x < pos_.x);
 
-	// 水平方向の移動
+	// 横移動（プレイヤーを追い越すように）
 	vel_.x = (isTurn_ ? -kSpeed : kSpeed);
 	pos_.x += vel_.x;
 
-	// 大きく上下へ蛇行 (振幅40〜60)
-	float amplitude = 40.0f;
-	float frequency = 0.8f;
-	pos_.y += sin(stateTimer_ * frequency) * amplitude * 0.1f;
+	// プレイヤーより少し上を飛ぶ（重要）
+	float targetY = pPlayer_->GetPos().y - 120.0f;
+	pos_.y += (targetY - pos_.y) * 0.05f;
 
-	// 一定時間で戻る
-	if (animations_[static_cast<int>(BossState::Fly)]->IsAnimFinished())
+	// ゆるい羽ばたき上下
+	pos_.y += sin(stateTimer_ * 0.08f) * 1.2f;
+
+	// 一定確率で攻撃へ
+	if (stateTimer_ > 60 && rand() % 100 < 2)
 	{
-		ChangeState(BossState::Idle);
+		ChangeState(BossState::Attack);
 	}
 }
 
