@@ -15,7 +15,7 @@ namespace
 	//弾のダメージ設定
 	constexpr int kMaxDamage = 3;
 
-	//重力加速度
+	//重力
 	constexpr float kGravity = 0.2f;
 
 	//波動関連の定数

@@ -30,6 +30,7 @@ namespace
 
 	static_assert(static_cast<int>(kGraphNum)== _countof(kGraphName));
 
+	//ボスの描画・当たり判定関連
 	constexpr int kGraphWidth = 81;
 	constexpr int kGraphHeight = 71;
 	constexpr int kGraphHalfW = kGraphWidth /2;
@@ -38,17 +39,20 @@ namespace
 	constexpr float kColScale = 2.0f;
 	constexpr float kColSize = 64.0f;
 
+	//ボスの挙動関連
 	constexpr float kKnockBackPos = 2.0f;
 	constexpr float kComeBackPos = 0.5f;
 	constexpr float kSpeed = 0.5f;
 	constexpr float kBulletSpeed = 3.0f;
 	constexpr float kShotInterval = 5.0f;
-	constexpr int KMaxHp = 10;
+	constexpr int KMaxHp = 30;
 
+	//地形・距離関連
 	constexpr float kGravity = 0.5f;
 	constexpr float kDistance = 400.0f;
 	constexpr float kGround = 1764.0f;
 
+	//カメラの揺れ関連
 	constexpr int kCameraDuration = 10;
 	constexpr int kCameraMagnitude = 8;
 
@@ -59,13 +63,14 @@ namespace
 	constexpr int kHurtFrameCount = 4;
 	constexpr int kDeathFrameCount = 7;
 
+	//状態ごとの更新フレームの間隔
 	constexpr int kIdleFrameInterval = 6;
 	constexpr int kAttackFrameInterval = 6;
 	constexpr int kFlyFrameInterval = 6;
 	constexpr int kHurtFrameInterval = 6;
 	constexpr int kDeathFrameInterval = 12;
 
-	//状態ごとのフレーム数とフレーム間隔
+	//状態ごとのフレーム数とフレームの間隔
 	const int frameCounts[kGraphNum] = { kIdleFrameCount,kAttackFrameCount,
 		kFlyFrameCount, kHurtFrameCount, kDeathFrameCount };
 	const int frameIntervals[kGraphNum] = { kIdleFrameInterval,
@@ -114,8 +119,7 @@ void Boss::Init()
 			frameCounts[i],
 			frameIntervals[i],
 			kScale,
-			false,0
-		);
+			false,0);
 	}
 	currentState_ = BossState::Idle;
 	stateTimer_ = 0;
