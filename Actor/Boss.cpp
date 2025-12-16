@@ -75,7 +75,7 @@ namespace
 	constexpr int kAttackFrameInterval = 6;
 	constexpr int kFlyFrameInterval = 6;
 	constexpr int kHurtFrameInterval = 6;
-	constexpr int kDeathFrameInterval = 12;
+	constexpr int kDeathFrameInterval = 6;
 
 	//状態ごとのフレーム数とフレームの間隔
 	const int frameCounts[kGraphNum] = { kIdleFrameCount,kAttackFrameCount,
@@ -139,7 +139,6 @@ void Boss::Init()
 
 void Boss::Update()
 {
-	if (isDead_)return;
 	Enemy::Update();
 
 	float distance = std::abs(pPlayer_->GetPos().x - pos_.x);
@@ -205,8 +204,6 @@ void Boss::Update()
 
 void Boss::Draw()
 {
-	if (isDead_)return;
-
 	switch (currentState_)
 	{
 	case BossState::Idle:
@@ -241,54 +238,36 @@ void Boss::Draw()
 
 void Boss::ChangeState(BossState nextState)
 {
+	bool islanding = false;
+
 	if (!isActive_ && nextState != BossState::Idle)
-	{
 		return;
-	}
 
-	BossState prevState = currentState_; // ★保存
-
-	if (currentState_ == BossState::Hurt && nextState == BossState::Idle)
-	{
-		backPos_ = pos_;
-	}
-
+	BossState prevState = currentState_;
 	currentState_ = nextState;
 	stateTimer_ = 0;
 
+	// ★ 共通：アニメーション初期化
 	animations_[static_cast<int>(nextState)]->Reset();
 
-	// Attack開始処理
+	if (nextState == BossState::Dead)
+	{
+		islanding = false;
+
+		//落下開始
+		vel_.x = 0.0f;
+		vel_.y = 0.0f;
+
+		//行動停止
+		isCharging_ = false;
+		shotTimer_ = 0.0f;
+		return;
+	}
+
+	
 	if (nextState == BossState::Attack)
 	{
 		hasShot_ = false;
-
-		if (rand() % 100 < 40)
-		{
-			isCharging_ = true;
-
-			Vector2 dir = pPlayer_->GetPos() - pos_;
-			dir.y *= 0.4f; //縦方向の追尾
-
-			float len = sqrtf(dir.x * dir.x + dir.y * dir.y);
-			if (len > 0.0f)
-			{
-				dir.x /= len;
-				dir.y /= len;
-			}
-			chargeVel_ = { dir.x * kRushSpeed, dir.y * kRushSpeed };
-		}
-		else
-		{
-			isCharging_ = false;
-		}
-	}
-
-	// ★Attack → Fly は必ず離脱
-	if (prevState == BossState::Attack && nextState == BossState::Fly)
-	{
-		isTurn_ = !isTurn_;
-		escapeTimer_ = 40;
 	}
 }
 
@@ -437,12 +416,19 @@ void Boss::UpdateHurt()
 
 void Boss::UpdateDead()
 {
+	stateTimer_++;
 	vel_.y += kGravity; //重力
 	pos_.y += vel_.y;
 
 	if (pos_.y > kGround)
 	{
 		pos_.y = kGround;
+		vel_.y = 0.0f;
+	}
+
+	//死亡アニメーションが終わったらガチの死亡
+	if (stateTimer_ > 0 && animations_[static_cast<int>(BossState::Dead)]->IsAnimFinished())
+	{
 		isDead_ = true;
 	}
 }
