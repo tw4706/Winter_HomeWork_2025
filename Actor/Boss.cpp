@@ -43,11 +43,15 @@ namespace
 	constexpr float kKnockBackPos = 2.0f;
 	constexpr float kComeBackPos = 0.5f;
 	constexpr float kSpeed = 0.5f;
+
+	//近づかれすぎた時の逃げる速度
+	constexpr float kFlySpeed = 0.4f;
+	constexpr float kEscapeSpeed = 1.8f;
 	constexpr float kBulletSpeed = 3.0f;
 	constexpr float kShotInterval = 5.0f;
 	constexpr int KMaxHp = 30;
-	constexpr float kRushSpeed = 6.0f;   //突進する速度
-	constexpr int   kRushTime = 30;     //突進するフレーム数
+	constexpr float kRushSpeed = 4.5f;   //突進する速度
+	constexpr int   kRushTime = 18;     //突進するフレーム数
 	constexpr float kActiveDistance = 500.0f;
 
 	//地形・距離関連
@@ -96,7 +100,8 @@ Boss::Boss(Vector2 pos, Vector2 vel, std::shared_ptr<Player>player, BulletManage
 	knockbackDir_(0),
 	isCharging_(false),
 	chargeVel_(0.0f),
-	isActive_(false)
+	isActive_(false),
+	escapeTimer_(0.0f)
 {
 	colSize_ = kColSize;
 	SetUseGravity(false);
@@ -184,6 +189,18 @@ void Boss::Update()
 		UpdateDead();
 		break;
 	}
+
+#ifdef _DEBUG
+	//Kキーで即死
+	if (CheckHitKey(KEY_INPUT_K))
+	{
+		hp_ = 0;
+		pCamera_->Shake(60, 15.0f);
+		ChangeState(BossState::Dead);
+		return;
+	}
+#endif
+
 }
 
 void Boss::Draw()
@@ -224,11 +241,12 @@ void Boss::Draw()
 
 void Boss::ChangeState(BossState nextState)
 {
-	//アクティブでない時はIdle以外に状態遷移しない
 	if (!isActive_ && nextState != BossState::Idle)
 	{
 		return;
 	}
+
+	BossState prevState = currentState_; // ★保存
 
 	if (currentState_ == BossState::Hurt && nextState == BossState::Idle)
 	{
@@ -239,16 +257,19 @@ void Boss::ChangeState(BossState nextState)
 	stateTimer_ = 0;
 
 	animations_[static_cast<int>(nextState)]->Reset();
-	
+
+	// Attack開始処理
 	if (nextState == BossState::Attack)
 	{
 		hasShot_ = false;
-		// ★40%で突進
+
 		if (rand() % 100 < 40)
 		{
 			isCharging_ = true;
 
 			Vector2 dir = pPlayer_->GetPos() - pos_;
+			dir.y *= 0.4f; //縦方向の追尾
+
 			float len = sqrtf(dir.x * dir.x + dir.y * dir.y);
 			if (len > 0.0f)
 			{
@@ -261,6 +282,13 @@ void Boss::ChangeState(BossState nextState)
 		{
 			isCharging_ = false;
 		}
+	}
+
+	// ★Attack → Fly は必ず離脱
+	if (prevState == BossState::Attack && nextState == BossState::Fly)
+	{
+		isTurn_ = !isTurn_;
+		escapeTimer_ = 40;
 	}
 }
 
@@ -310,12 +338,10 @@ void Boss::UpdateAttack()
 		return;
 	}
 
-	// Flyと同じ移動を維持
-	vel_.x = (isTurn_ ? -kSpeed : kSpeed);
-	pos_.x += vel_.x;
+	vel_.x = 0.0f;
 
 	float targetY = pPlayer_->GetPos().y - 120.0f;
-	pos_.y += (targetY - pos_.y) * 0.05f;
+	pos_.y += (targetY - pos_.y) * 0.02f;
 
 	// 一定間隔で弾
 	shotTimer_ += 1.0f / 60.0f;
@@ -343,21 +369,51 @@ void Boss::UpdateFly()
 {
 	stateTimer_++;
 
-	// 向き
-	isTurn_ = (pPlayer_->GetPos().x < pos_.x);
+	float dx = pPlayer_->GetPos().x - pos_.x;
+	float distance = fabsf(dx);
+	float speed = kFlySpeed;
 
-	// 横移動（プレイヤーを追い越すように）
-	vel_.x = (isTurn_ ? -kSpeed : kSpeed);
+	// ===== 逃げ維持 =====
+	if (escapeTimer_ > 0)
+	{
+		escapeTimer_--;
+		speed = kEscapeSpeed;
+	}
+	else
+	{
+		// 近すぎたら逃げ開始
+		if (distance < 300.0f)
+		{
+			isTurn_ = (dx > 0); // プレイヤーと逆
+			escapeTimer_ = 40;
+			speed = kEscapeSpeed;
+		}
+		// 遠すぎたら接近
+		else if (distance > 500.0f)
+		{
+			isTurn_ = (dx < 0);
+			speed = kFlySpeed;
+		}
+	}
+
+	vel_.x = (isTurn_ ? -speed : speed);
 	pos_.x += vel_.x;
 
-	// プレイヤーより少し上を飛ぶ（重要）
-	float targetY = pPlayer_->GetPos().y - 120.0f;
-	pos_.y += (targetY - pos_.y) * 0.05f;
+	//上下の追従は弱め
+	float targetY = pPlayer_->GetPos().y - 150.0f;
+	pos_.y += (targetY - pos_.y) * 0.02f;
 
-	// ゆるい羽ばたき上下
+	//羽ばたき
 	pos_.y += sin(stateTimer_ * 0.08f) * 1.2f;
 
-	// 一定確率で攻撃へ
+	//重なり防止
+	if (fabsf(dx) < 30.0f)
+	{
+		isTurn_ = !isTurn_;
+		escapeTimer_ = 40;
+	}
+
+	//攻撃へ
 	if (stateTimer_ > 60 && rand() % 100 < 2)
 	{
 		ChangeState(BossState::Attack);
@@ -410,6 +466,7 @@ void Boss::OnHit(int damage)
 
 	if (hp_ <= 0)
 	{
+		pCamera_->Shake(90, 35.0f);
 		ChangeState(BossState::Dead);
 		return;
 	}

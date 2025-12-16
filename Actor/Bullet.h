@@ -1,6 +1,7 @@
 #pragma once
 #include"GameObject.h"
 #include"Geometry.h"
+#include"Animation.h"
 #include<memory>
 #include<vector>
 
@@ -27,9 +28,19 @@ struct BulletConfig
 //波動の情報
 struct Hadou
 {
-	Rect rect;
-	int appearTimer; // 出現までの待機フレーム
-	int lifetime;    // 出現後の寿命
+	Rect rect_;
+	int appearTimer_; //出現までの待機フレーム
+	int lifetime;    //出現後の寿命
+
+	std::unique_ptr<Animation> animations_;//波動のアニメーション
+
+	Hadou(const Rect& rect, int appearTimer, int lifetime)
+		: rect_(rect),
+		appearTimer_(appearTimer),
+		lifetime(lifetime),
+		animations_(nullptr)
+	{}
+
 };
 
 //弾の詳細情報の配列

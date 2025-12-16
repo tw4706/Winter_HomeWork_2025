@@ -41,12 +41,14 @@ private:
 	int handle_;//画像ハンドル
 	float shotTimer_;//弾を撃つまでの時間
 	float shotInterval_;//弾を撃つ間隔
-	Vector2 backPos_;//戻る位置を保存する変数
 	bool hasShot_;//弾を撃ったかどうかのフラグ
 	int knockbackDir_;//ノックバックの方向
 	bool isCharging_;     //突進中か
-	Vector2 chargeVel_;   //突進速度
 	bool isActive_;
+	int escapeTimer_;//逃走用タイマー
+	Vector2 backPos_;//戻る位置を保存する変数
+	Vector2 chargeVel_;   //突進速度
+
 
 	//グラフィックハンドルの配列
 	std::vector<int>graphHandles_;
