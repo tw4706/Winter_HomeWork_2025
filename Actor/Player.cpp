@@ -76,8 +76,9 @@ namespace
 	constexpr int kDamageDuration = 60;
 
 	//被弾した時のノックバックの強さ
-	constexpr float kKnockBackX = 8.0f;
-	constexpr float kKnockBackY = 6.0f;
+	constexpr float kKnockBackX = 10.0f;
+	constexpr float kKnockBackY = 5.0f;
+	constexpr float kKnockBackSpeed = 0.94f;
 
 	//重力
 	constexpr float kGravity = 1.0f;
@@ -221,7 +222,7 @@ void Player::Update(Input& input, BulletManager& bm)
 	//摩擦
 	if (isDamaged_)
 	{
-		vel_.x *= 0.9f;
+		vel_.x *= kKnockBackSpeed;
 	}
 
 	//無敵時間
@@ -404,13 +405,13 @@ void Player::Shot(Input& input, BulletManager& bm)
 }
 
 //ダメージを受けたときの処理
-void Player::OnDamage()
+void Player::OnDamage(float enemyX)
 {
 	isDamaged_ = true;
 	damageTimer_ = kDamageDuration;
 
 	//向きに応じて横方向のノックバック
-	if (isTurn_)
+	if (pos_.x<enemyX)
 	{
 		vel_.x = -kKnockBackX;
 	}

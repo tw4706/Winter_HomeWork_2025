@@ -89,8 +89,7 @@ void GameScene::NormalUpdate(Input&input)
 		bulletManager_.GetBullets(),enemyFactory_.GetEnemies());
 
 	//敵の弾 × プレイヤーの当たり判定
-	CollisionManager::EnemyBulletsVsPlayer(bulletManager_.GetBullets(),
-		*pPlayer_);
+	CollisionManager::EnemyBulletsVsPlayer(bulletManager_.GetBullets(),*pPlayer_);
 
 
 	if (pPlayer_->IsDead() && pPlayer_->IsDeadAnimFinished())
@@ -103,14 +102,16 @@ void GameScene::NormalUpdate(Input&input)
 	}
 
 	//プレイヤーと敵の当たり判定
-	if (CollisionManager::PlayerVsEnemies(pPlayer_->GetColRect(),
-		enemyFactory_.GetEnemies()))
+	Enemy* hitEnemy = CollisionManager::PlayerVsEnemies(
+		pPlayer_->GetColRect(),
+		enemyFactory_.GetEnemies());
+
+	//敵に当たっていて、プレイヤーが死んでいない場合ダメージ処理を行う
+	if (hitEnemy && !pPlayer_->IsDead())
 	{
-		if (!pPlayer_->IsDead())
-		{
-			pPlayer_->Dead();
-		}
+		pPlayer_->OnDamage(hitEnemy->GetPos().x);
 	}
+
 
 	//ボスを倒すとクリアシーンに遷移
 	for (auto& enemy : enemyFactory_.GetEnemies())

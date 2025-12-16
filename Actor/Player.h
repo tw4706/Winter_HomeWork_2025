@@ -39,7 +39,7 @@ public:
 	void Shot(Input& input, BulletManager& bm);
 
 	//ƒ_ƒ[ƒW‚ğó‚¯‚½‚Ìˆ—
-	void OnDamage();
+	void OnDamage(float enemyX);
 
 	void Dead();
 	bool IsDead()const { return !isAlive_; }

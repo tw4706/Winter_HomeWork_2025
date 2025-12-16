@@ -5,18 +5,19 @@
 #include "BulletManager.h"
 
 //プレイヤーと敵の当たり判定
-bool CollisionManager::PlayerVsEnemies(const Rect& playerRect,
+Enemy* CollisionManager::PlayerVsEnemies(const Rect& playerRect,
     const std::vector<std::shared_ptr<Enemy>>& enemies)
 {
     for (const auto& enemy : enemies)
     {
-        if (!enemy->IsDead() &&
-            playerRect.IsCollision(enemy->GetColRect()))
+        if (enemy->IsDead()) continue;
+
+        if (playerRect.IsCollision(enemy->GetColRect()))
         {
-            return true;
+            return enemy.get(); //当たった敵を返す
         }
     }
-    return false;
+    return nullptr;
 }
 
 //プレイヤーと鍵の当たり判定
@@ -62,7 +63,7 @@ bool CollisionManager::EnemyBulletsVsPlayer(
         if (bullet->GetColRect().IsCollision(player.GetColRect()))
         {
             bullet->OnHit();
-            player.OnDamage();
+            player.OnDamage(bullet->GetPos().x);
             return true;
         }
     }

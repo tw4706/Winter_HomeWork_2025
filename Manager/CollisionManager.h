@@ -11,12 +11,11 @@ class CollisionManager
 public:
 
     // ƒvƒŒƒCƒ„[ ~ “G
-    static bool PlayerVsEnemies(const Rect& playerRect,
+    static Enemy*PlayerVsEnemies(const Rect& playerRect,
         const std::vector<std::shared_ptr<Enemy>>& enemies);
 
     // ƒvƒŒƒCƒ„[ ~ Œ®
     static bool PlayerVsKey(const Rect& playerRect,const Rect& keyRect);
-
 
     // ƒvƒŒƒCƒ„[’e ~ “G
     static void PlayerBulletsVsEnemies(std::vector<std::shared_ptr<Bullet>>& bullets,
