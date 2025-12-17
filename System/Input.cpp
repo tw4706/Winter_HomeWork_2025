@@ -3,7 +3,6 @@
 
 Input::Input() :inputData_{}, lastInputData_{}, inputTable_{}
 {
-
 	inputTable_["next"] = {{ PeripheralType::keyboard, KEY_INPUT_RETURN },
 							{ PeripheralType::pad1, PAD_INPUT_L } };
 	inputTable_["shot"] = {{ PeripheralType::keyboard, KEY_INPUT_Z },
@@ -24,7 +23,8 @@ Input::Input() :inputData_{}, lastInputData_{}, inputTable_{}
 							{ PeripheralType::pad1, PAD_INPUT_K } };
 
 	//変な値が入らないように枠を開けておく
-	for (const auto& input : inputTable_) {
+	for (const auto& input : inputTable_) 
+	{
 		inputData_[input.first] = false;
 		lastInputData_[input.first] = false;
 	}
@@ -39,9 +39,11 @@ void Input::Update()
 	lastInputData_ = inputData_;
 
 	//すべての入力イベントをチェック
-	for (const auto& inputInfo : inputTable_) {
+	for (const auto& inputInfo : inputTable_) 
+	{
 		auto& input = inputData_[inputInfo.first];
-		for (const auto& state : inputInfo.second) {
+		for (const auto& state : inputInfo.second) 
+		{
 			switch (state.type)
 			{
 			case PeripheralType::keyboard:
@@ -51,7 +53,9 @@ void Input::Update()
 				input = (padState & state.id);
 				break;
 			}
-			if (input) {//必須!
+			if (input) 
+			{
+				//必須!
 				break;
 			}
 		}
