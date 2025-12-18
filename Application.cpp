@@ -7,7 +7,8 @@
 #include"SceneController.h"
 #include"TitleScene.h"
 
-Application::Application()
+Application::Application():
+	windowSize_(Game::kScreenWidth, Game::kScreenHeight)
 {
 
 }
@@ -50,7 +51,7 @@ void Application::Run()
 	controller.ChangeScene(std::make_shared<TitleScene>(controller));
 
 
-	while (ProcessMessage() != -1)
+	while (ProcessMessage() != -1 && !requestedExit_)
 	{
 		// このフレームの開始時間を取得
 		LONGLONG start = GetNowHiPerformanceCount();
@@ -83,5 +84,15 @@ void Application::Run()
 
 void Application::Terminate()
 {
-	DxLib_End();				// ＤＸライブラリ使用の終了処理
+	DxLib_End();				//ＤＸライブラリ使用の終了処理
+}
+
+const Size& Application::GetWindowSize() const
+{
+	return windowSize_;
+}
+
+void Application::RequestExit()
+{
+	requestedExit_ = true;
 }

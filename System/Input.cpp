@@ -4,7 +4,7 @@
 Input::Input() :inputData_{}, lastInputData_{}, inputTable_{}
 {
 	inputTable_["next"] = {{ PeripheralType::keyboard, KEY_INPUT_RETURN },
-							{ PeripheralType::pad1, PAD_INPUT_L } };
+							{ PeripheralType::pad1, PAD_INPUT_R } };
 	inputTable_["shot"] = {{ PeripheralType::keyboard, KEY_INPUT_Z },
 							{ PeripheralType::pad1, PAD_INPUT_B } };
 	inputTable_["up"] = {{ PeripheralType::keyboard, KEY_INPUT_UP },
@@ -19,8 +19,8 @@ Input::Input() :inputData_{}, lastInputData_{}, inputTable_{}
 							{PeripheralType::pad1,PAD_INPUT_A} };
 	inputTable_["changeWeapon"] = { { PeripheralType::keyboard, KEY_INPUT_C },
 							{ PeripheralType::pad1, PAD_INPUT_M } };
-	inputTable_["respawn"]= { { PeripheralType::keyboard, KEY_INPUT_R },
-							{ PeripheralType::pad1, PAD_INPUT_K } };
+	inputTable_["pause"] = { { PeripheralType::keyboard, KEY_INPUT_P },
+						{ PeripheralType::pad1, PAD_INPUT_L } };
 
 	//•Ï‚È’l‚ª“ü‚ç‚È‚¢‚æ‚¤‚É˜g‚ðŠJ‚¯‚Ä‚¨‚­
 	for (const auto& input : inputTable_) 

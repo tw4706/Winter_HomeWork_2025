@@ -5,9 +5,11 @@
 class Application
 {
 private:
+	Size windowSize_{};
 	Application();
 	Application(const Application& app) = delete;
 	void operator=(const Application& app) = delete;
+	bool requestedExit_ = false;
 public:
 	~Application();
 	/// <summary>
@@ -22,5 +24,10 @@ public:
 	//更新処理
 	void Run();
 	void Terminate();
+
+	//ウィンドウサイズを返す関数
+	const Size& GetWindowSize()const;
+
+	void RequestExit();
 };
 

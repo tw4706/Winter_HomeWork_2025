@@ -48,7 +48,6 @@ private:
 	std::shared_ptr<Bg>bg_;
 	std::shared_ptr<Camera>pCamera_;
 
-
 	//ボスを倒した後に落ちる鍵関連
 	int keyH_;//鍵のハンドル
 	Rect keyRect_;//鍵の当たり判定

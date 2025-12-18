@@ -10,6 +10,7 @@
 #include "GameOverScene.h"
 #include "ClearScene.h"
 #include "SelectScene.h"
+#include "PauseScene.h"
 #include"SceneController.h"
 #include"GlobalConstants.h"
 #include "CollisionManager.h"
@@ -58,13 +59,19 @@ void GameScene::FadeInUpdate(Input&)
 
 void GameScene::NormalUpdate(Input&input)
 {
-	if (update_ != &GameScene::NormalUpdate) return;
 
 	if (input.IsTriggered("next"))
 	{
 		controller_.ChangeScene(std::make_shared<SelectScene>(controller_));
 		return;
 	}
+
+	//ポーズボタンを押したらポーズシーンに遷移
+	//if (input.IsTriggered("pause"))
+	//{
+	//	controller_.PushScene(std::make_shared<PauseScene>(controller_));
+	//	return;
+	//}
 
 	if (pPlayer_->GetPos().y > kFallLimit)
 	{
