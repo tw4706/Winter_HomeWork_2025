@@ -66,7 +66,8 @@ namespace
 Zombie::Zombie(Vector2 pos, Vector2 vel) :
 	Enemy(pos, vel),
 	zombieState_(ZombieState::Idle),
-	isIdlePlayed_(false)
+	isIdlePlayed_(false),
+	isInvincibled_(false)
 {
 
 }
@@ -117,7 +118,19 @@ void Zombie::Update()
 	Enemy::Update();
 
 	//当たり判定の更新
-	colRect_.SetCenter(pos_.x, pos_.y - kPosYOffset, kDrawW, kDrawH);
+	auto idleAnim = animations_[static_cast<int>(ZombieState::Idle)];
+
+	if (zombieState_ == ZombieState::Idle && !idleAnim->IsAnimFinished())
+	{
+		//潜っているときは当たり判定をなしにする
+		colRect_.SetCenter(pos_.x, pos_.y, 0, 0);
+		isInvincibled_ = true;
+	}
+	else
+	{
+		colRect_.SetCenter(pos_.x, pos_.y - kPosYOffset, kDrawW, kDrawH);
+		isInvincibled_ = false;
+	}
 }
 
 void Zombie::Draw()
@@ -171,7 +184,7 @@ void Zombie::UpdateAnim()
 
 		if (!isIdlePlayed_ && distance < kIdleTriggerDistance)
 		{
-			// まだ再生していない場合だけ Reset
+			//まだ再生していない場合だけ Reset
 			idleAnim->Reset();
 			isIdlePlayed_ = true;
 		}
@@ -232,6 +245,14 @@ void Zombie::Move()
 	{
 		vel_.x = 0.0f;
 	}
-	DrawFormatString(0, 80, GetColor(255, 255, 255), "ZombieDx:%f", dx);
-	DrawFormatString(0, 100, GetColor(255, 255, 255), "ZombieDistance:%f", distance);
+	//DrawFormatString(0, 80, GetColor(255, 255, 255), "ZombieDx:%f", dx);
+	//DrawFormatString(0, 100, GetColor(255, 255, 255), "ZombieDistance:%f", distance);
+}
+
+void Zombie::OnHit(int damage)
+{
+	//無敵ならダメージを受けない
+	if (isInvincibled_) return;
+
+	Enemy::OnHit(damage);
 }

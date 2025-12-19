@@ -24,10 +24,12 @@ public:
 	void UpdateAnim();
 
 	void Move();			//移動処理
+	void OnHit(int damage)override;	//ダメージ処理
 
 private:
 	std::vector<int>graphHandles_;
 	ZombieState zombieState_;
-	bool isIdlePlayed_;
+	bool isIdlePlayed_;//Idアニメーション再生済みかどうか
+	bool isInvincibled_; //無敵状態かどうか
 };
 
