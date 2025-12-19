@@ -3,6 +3,7 @@
 #include "SkullFlower.h"
 #include "Dog.h"
 #include "Boss.h"
+#include "GameScene.h"
 #include<Dxlib.h>
 #include <fstream>
 #include <sstream>
@@ -18,8 +19,23 @@ namespace
     constexpr float kEnemyOffsetY = 32.0f;
 }
 
-void EnemyFactory::LoadFromCSV(const std::string& path, BulletManager* bulletManager)
+void EnemyFactory::LoadFromCSV(StageType stageType, BulletManager* bulletManager)
 {
+
+    std::string path;
+    switch (stageType)
+    {
+    case StageType::Stage1:
+        path = "data/Enemy/enemyData.csv";
+        break;
+    case StageType::Stage2:
+        path = "data/Enemy/enemyData2.csv";
+        break;
+    default:
+        path = "data/Enemy/enemyData.csv";
+        break;
+    }
+
     std::ifstream file(path);
     std::string line;
     int row = 0;
@@ -32,8 +48,12 @@ void EnemyFactory::LoadFromCSV(const std::string& path, BulletManager* bulletMan
         {3, [](Vector2 pos) { return std::make_shared<Dog>(pos, Vector2{0,0}); }}
     };
 
+	//既存の敵データを削除
+    enemies_.clear();
+
 	//CSVファイルの各行を読み込み
-    while (std::getline(file, line)) {
+    while (std::getline(file, line)) 
+    {
         std::stringstream ss(line);
         std::string cell;
         int col = 0;
@@ -41,7 +61,8 @@ void EnemyFactory::LoadFromCSV(const std::string& path, BulletManager* bulletMan
         while (std::getline(ss, cell, ','))
         {
             int id = std::stoi(cell);
-            if (id != 0 && enemyFactory.count(id)) {
+            if (id != 0 && enemyFactory.count(id)) 
+            {
                 Vector2 pos{ col * cellSize, row * cellSize+kEnemyOffsetY };
                 enemies_.push_back(enemyFactory[id](pos));
             }

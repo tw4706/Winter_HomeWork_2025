@@ -9,7 +9,7 @@ class Camera;
 class Bg
 {
 public:
-	Bg();
+	Bg(int stage);
 	~Bg();
 
 	void Init();
@@ -29,7 +29,7 @@ private:
 	/// <summary>
 	/// ƒ}ƒbƒv‚ğ“Ç‚İ‚Ş
 	/// </summary>
-	void LoadMapData();
+	void LoadMapData(int stage);
 
 	void UpdateMidBg(std::shared_ptr<Camera> pCamera);
 

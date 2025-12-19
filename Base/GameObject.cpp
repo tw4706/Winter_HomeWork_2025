@@ -114,7 +114,7 @@ void GameObject::CheckMapCollision(Rect& chipRect)
 		}
 		else if (vel_.y <= 0.0f) 
 		{
-			pos_.y = chipRect.GetBottom() + (colSize_ / 2.0f)-20.0f; //“Vˆä‚É“–‚½‚é
+			pos_.y = chipRect.GetBottom() + (colSize_ / 2.0f); //“Vˆä‚É“–‚½‚é
 		}
 		vel_.y = 0.0f; //c•ûŒü‚Ì‘¬“x‚ðŽ~‚ß‚é
 	}

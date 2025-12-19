@@ -86,3 +86,4 @@ void Rect::DrawAndCamera(const Vector2& cameraOffset, unsigned int color, bool i
 
 	DrawBox(drawL, drawT, drawR, drawB, color, isFill);
 }
+

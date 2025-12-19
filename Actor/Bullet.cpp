@@ -230,26 +230,23 @@ void Bullet::SpawnHadou()
 	for (int i = 0; i < kHadouNum; ++i)
 	{
 		Rect rect;
-		rect.SetLT(
-			pos_.x + hadouDir_ * (i + 1) * kHadouSpacing,
+		rect.SetLT(pos_.x + hadouDir_ * (i + 1) * kHadouSpacing,
 			pos_.y - kHadouH / 2,
-			kHadouW,
-			kHadouH
-		);
+			kHadouW*kScale,
+			kHadouH*kScale);
 
-		// ★ ここでコンストラクタを使う
+		//コンストラクタを使う
 		Hadou h(rect, i * kHadouSpawnInterval, kHadouLifetime);
 
 		h.animations_ = std::make_unique<Animation>(
 			hadouH_,
 			kHadouW,        //32
 			kHadouH,        //32
-			4,              //192→288 の4フレーム
+			4,              //アニメーションの総フレーム
 			5,              //フレーム間隔
 			1.0f,
 			true,
-			kHadouSrcY      //=192
-		);
+			kHadouSrcY);
 
 		hadouRects_.push_back(std::move(h));
 	}
@@ -267,7 +264,7 @@ void Bullet::UpdateHadou(std::vector<std::shared_ptr<Enemy>>& enemies)
 			continue;
 		}
 
-		// ★ アニメーション更新
+		//アニメーション更新
 		if (h.animations_)
 		{
 			h.animations_->Update();
@@ -330,10 +327,10 @@ void Bullet::CheckBulletAndMapCollision()
 			case BulletType::Knife:
 			case BulletType::Torch:
 			case BulletType::EnemyBullet:
-				isAlive_ = false;  // 横衝突で消滅
+				isAlive_ = false;  //横衝突で消滅
 				break;
 			case BulletType::Lance:
-				// 横衝突は無視
+				//横衝突は無視
 				break;
 			}
 			return;

@@ -5,11 +5,13 @@
 #include "Player.h"
 #include "Bg.h"
 
+enum class StageType;
+class GameScene;
 class EnemyFactory
 {
 
 public:
-    void LoadFromCSV(const std::string& path, BulletManager* bulletManager);
+    void LoadFromCSV(StageType stageType, BulletManager* bulletManager);
     void Init(std::shared_ptr<Player> player, std::shared_ptr<Bg> bg);
     void Update();
     void Draw(const Vector2& cameraOffset);
@@ -20,5 +22,6 @@ public:
 
 private:
     std::vector<std::shared_ptr<Enemy>> enemies_;
+    StageType stageType_;
 };
 

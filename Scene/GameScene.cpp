@@ -20,6 +20,14 @@
 
 namespace 
 {
+
+	//プレイヤーのスポーン位置
+	constexpr float kPlayerSpawnPosX = 200.0f;
+	constexpr float kPlayerSpawnPosY = 1744.0f;
+
+	constexpr float kBoss1SpawnPosX = 8800.0f;
+	constexpr float kBoss1SpawnPosY = 1600.0f;
+
 	//フェードまでの間隔
 	constexpr int fade_interval = 60;
 	constexpr float kColSize = 32;
@@ -43,7 +51,8 @@ GameScene::GameScene(SceneController& controller, StageType stage) :
 	isKeyActive_(false),
 	keyPos_{0,0}
 {
-	bg_ = std::make_shared<Bg>();
+	//bgにステージに対応するマップデータをセット
+	bg_ = std::make_shared<Bg>(static_cast<int>(stage) + 1);
 	pCamera_ = std::make_shared<Camera>();
 }
 
@@ -185,9 +194,9 @@ void GameScene::GoalFadeOutUpdate(Input&)
 {
 	if (frame_++ >= fade_interval)
 	{
-		////次のステージを取得
-		//StageType next = GetNextStageType(stageType_);
-		controller_.ChangeScene(std::make_shared<ClearScene>(controller_));
+		//次のステージを取得
+		StageType next = GetNextStageType(stageType_);
+		controller_.ChangeScene(std::make_shared<GameScene>(controller_,next));
 	}
 }
 
@@ -251,39 +260,26 @@ void GameScene::NormalDraw()
 void GameScene::Init()
 {
 	//各クラスの初期化
+	bg_ = std::make_shared<Bg>(static_cast<int>(stageType_) + 1);
 	bg_->Init();
 
-	float spawnPosX = 200.0f;
-	float spawnPosY = 1744.0f;
+	//プレイヤーのスポーン位置位置
 
-	switch (stageType_)
-	{
-	case StageType::Stage1:
-
-
-		pPlayer_ = std::make_shared<Player>(Vector2{ spawnPosX,spawnPosY }, Vector2{0,0});
-
-		enemyFactory_.LoadFromCSV("data/Enemy/enemyData.csv", &bulletManager_);
-		enemyFactory_.AddBoss(Vector2{ 8800,1600 }, Vector2{ 0,0 }, pPlayer_, &bulletManager_, pCamera_);
-		break;
-
-	case StageType::Stage2:
-		pPlayer_ = std::make_shared<Player>(Vector2{ spawnPosX, spawnPosY },Vector2{ 0,0 });
-		enemyFactory_.LoadFromCSV("data/Enemy/enemyData.csv", &bulletManager_);
-		break;
-	case StageType::BossDebugStage:
-		pPlayer_ = std::make_shared<Player>(Vector2{ spawnPosX,spawnPosY }, Vector2{});
-		enemyFactory_.AddBoss(Vector2{ 1000,1600 }, Vector2{0,0},pPlayer_, &bulletManager_, pCamera_);
-		break;
-	default:
-		break;
-	}
-
+	//プレイヤーの初期化
+	pPlayer_ = std::make_shared<Player>(Vector2{ kPlayerSpawnPosX, kPlayerSpawnPosY }, Vector2{ 0,0 });
+	pPlayer_->Init();
 	pPlayer_->Init();
 	pPlayer_->SetBg(bg_);
 
+	//カメラの初期化
 	pCamera_->Init(pPlayer_);
 
+	//敵の初期化
+	enemyFactory_.LoadFromCSV(stageType_, &bulletManager_);
+	if (stageType_ == StageType::Stage1)
+	{
+		enemyFactory_.AddBoss(Vector2{ kBoss1SpawnPosX,kBoss1SpawnPosY }, Vector2{ 0,0 }, pPlayer_, &bulletManager_, pCamera_);
+	}
 	enemyFactory_.Init(pPlayer_, bg_);
 
 	keyH_ = LoadGraph("data/map/Key.png");

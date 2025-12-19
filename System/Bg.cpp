@@ -18,7 +18,7 @@ namespace
 	constexpr int kChipNumY = 40;
 }
 
-Bg::Bg():
+Bg::Bg(int stage):
 	pos_{0,0},
 	prevCameraX_(0.0f),
 	midbgHandle_(-1),
@@ -39,7 +39,7 @@ Bg::Bg():
 
 
 	//マップデータの読み込み
-	LoadMapData();
+	LoadMapData(stage);
 }
 
 Bg::~Bg()
@@ -97,7 +97,7 @@ bool Bg::IsCollision(Rect& rect, Rect& chipRect)
 	return false;
 }
 
-void Bg::LoadMapData()
+void Bg::LoadMapData(int stage)
 {
 	//配列を初期化
 	for (int x = 0; x < kChipNumX; ++x)
@@ -107,8 +107,20 @@ void Bg::LoadMapData()
 			mapChipData_[y][x] = 0;
 		}
 	}
+	std::string fileName;
 
-	std::ifstream file("data/Map/Stage1.csv");
+	//ステージに応じたマップデータを設定
+	switch (stage)
+	{
+	case 1: 
+		fileName = "data/Map/Stage1.csv"; break;
+	case 2: 
+		fileName = "data/Map/Stage2.csv"; break;
+	default: 
+		fileName = "data/Map/Stage1.csv"; break;
+	}
+
+	std::ifstream file(fileName);
 	std::string line;
 
 	//1行ずつ読み込み
