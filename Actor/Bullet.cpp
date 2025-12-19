@@ -11,7 +11,7 @@ namespace
 {
 	constexpr float kGround = 1764.0f;
 	constexpr float kScale = 1.5f;
-	constexpr float KEnemyBulletScale = 3.0f;
+	constexpr float KEnemyBulletScale = 2.0f;
 
 	//弾のダメージ設定
 	constexpr int kMaxDamage = 3;
@@ -61,6 +61,19 @@ void Bullet::Init()
 	const auto& config = kBulletConfigs[static_cast<int>(bulletType_)];
 	bulletH_ = LoadGraph(config.imagePath);
 	assert(bulletH_ >= 0);
+
+	if (bulletType_ == BulletType::EnemyBullet)
+	{
+		animations_ = std::make_unique<Animation>(
+			bulletH_,
+			config.width* KEnemyBulletScale,
+			config.height* KEnemyBulletScale,
+			5,
+			5,
+			1.0f,
+			true,0);
+	}
+
 	hadouH_ = LoadGraph("data/Bullet/hadou.png");
 	assert(hadouH_ >= 0);
 
@@ -76,6 +89,11 @@ void Bullet::UpdateShot()
 	const auto& config = kBulletConfigs[static_cast<int>(bulletType_)];
 
 	if (!isAlive_) return;
+
+	if (bulletType_ == BulletType::EnemyBullet)
+	{
+		animations_->Update();
+	}
 
 	//弾の状態に応じて処理を分岐させる
 	switch (bulletType_)
@@ -119,8 +137,7 @@ void Bullet::Update(Input& input, std::vector<std::shared_ptr<Enemy>>& enemies)
 	if (bulletType_ == BulletType::EnemyBullet)
 	{
 		pos_ += vel_;
-		colRect_.SetCenter(pos_.x + kColOffsetX, pos_.y + kColOffsetY,
-			colSize_ * kScale, colSize_ * kScale);
+		colRect_.SetCenter(pos_.x-kColOffsetX, pos_.y,colSize_, colSize_);
 		UpdateShot();
 		return;
 	}
@@ -185,13 +202,7 @@ void Bullet::Draw()
 		}
 		if (bulletType_ == BulletType::EnemyBullet)
 		{
-			DrawRectRotaGraph(
-				drawX, drawY,
-				srcX, srcY,        // 切り取り開始位置
-				frameW, frameH,    // 切り取りサイズ
-				KEnemyBulletScale, angle,
-				bulletH_,
-				TRUE);
+			animations_->Draw(drawX, drawY, vel_.x < 0);
 		}
 		else
 		{

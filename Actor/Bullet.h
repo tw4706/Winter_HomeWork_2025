@@ -97,6 +97,7 @@ private:
 	std::vector<int>hadouTimers_;
 	BulletType bulletType_;
 	std::shared_ptr<Bg> pBg_;
+	std::shared_ptr<Animation> animations_;//弾のアニメーション
 	
 	//波動関連
 	int hadouH_;
