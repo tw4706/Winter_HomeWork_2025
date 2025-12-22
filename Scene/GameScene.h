@@ -2,16 +2,10 @@
 #include "Scene.h"
 #include "Camera.h"
 #include"Geometry.h"
+#include"StageType.h"
 #include"BulletManager.h"
 #include"EnemyFactory.h"
 #include<memory>
-
-enum class StageType
-{
-	Stage1,
-	Stage2,
-	BossDebugStage
-};
 
 class Player;
 class Bg;

@@ -3,6 +3,7 @@
 #include"Enemy.h"
 #include"Animation.h"
 #include"Bullet.h"
+#include"StageType.h"
 #include<vector>
 #include<memory>
 #include<functional>
@@ -30,7 +31,7 @@ public:
 
 	void Init()override;
 	void Update()override {};
-	void Update(Input& input, BulletManager& bm);
+	void Update(Input& input, BulletManager& bm, StageType stage);
 	void Draw()override;
 
 	void Move(Input& input);
@@ -47,9 +48,13 @@ public:
 
 	void UpdateState(Input& input);
 
+	//たいまつが使えるかどうか
+	bool CanUseTorch(StageType stage) const {return stage == StageType::Stage2;}
+
 private:
 	std::vector<int>graphHandles_;//画像ハンドルの配列
 	Vector2 initializePos_;//リスポーンしたときの初期位置保存用
+	int hp_;//体力
 	bool isJumping_;//ジャンプしているかどうか
 	bool isDoubleJumping_;//ダブルジャンプ可能かどうか
 	bool isDamaged_;//ダメージを受けているかどうか
@@ -59,6 +64,7 @@ private:
 	int shotTimer_;//弾の発射間隔タイマー
 	bool isAlive_;//生存しているかどうか
 	bool isDeathAnimFinished_;//死亡アニメーションが終了したかどうか
+	StageType currentStage_;//現在のステージの種類
 	//プレイヤーの状態
 	PlayerState state_;
 	BulletType currentBulletType_;//現在の弾の種類

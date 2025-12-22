@@ -2,6 +2,7 @@
 #include "Input.h"
 #include"Bullet.h"
 #include"Bg.h"
+#include"StageType.h"
 #include "BulletManager.h"
 #include "CollisionManager.h"
 #include"GlobalConstants.h"
@@ -43,11 +44,11 @@ namespace
 	constexpr int kGraphHalfWidth = 128 / 2;
 	constexpr int kGraphHalfHeight = 128 / 2;
 	constexpr float kGraphColSize = 64.0f;
+	constexpr int kMaxHp = 2;
 
 	//拡大率
 	constexpr float kScale = 1.5f;
-
-	//移動速度 //通常:3
+	//移動速度
 	constexpr float kSpeed = 5.0f;
 
 	//ジャンプ時の横移動速度
@@ -123,6 +124,7 @@ namespace
 Player::Player(Vector2 pos, Vector2 vel) :
 	GameObject(pos, vel, kGraphWidth, kGraphHeight, kGraphColSize),
 	initializePos_{ pos },
+	hp_(kMaxHp),
 	isJumping_(false),
 	isDoubleJumping_(false),
 	isDamaged_(false),
@@ -161,12 +163,12 @@ void Player::Init()
 			frameCounts[i],
 			frameIntervals[i],
 			kScale,
-			false,0
+			false, 0
 		);
 	}
 }
 
-void Player::Update(Input& input, BulletManager& bm)
+void Player::Update(Input& input, BulletManager& bm,StageType stage)
 {
 	GameObject::Update();
 
@@ -246,9 +248,15 @@ void Player::Update(Input& input, BulletManager& bm)
 	//武器の切り替え
 	if (input.IsTriggered("changeWeapon"))
 	{
-		//printfDx("武器変えた!\n");
-		int weaponType = (static_cast<int>(currentBulletType_) + 1) % kBulletNum;
-		currentBulletType_ = static_cast<BulletType>(weaponType);
+		int next = (static_cast<int>(currentBulletType_) + 1) % kBulletNum;
+
+		//たいまつ解放ならスキップ
+		if (next == static_cast<int>(BulletType::Torch) && !CanUseTorch(currentStage_))
+		{
+			next = (next + 1) % kBulletNum;
+		}
+
+		currentBulletType_ = static_cast<BulletType>(next);
 	}
 
 	//デバッグ用
@@ -371,6 +379,12 @@ void Player::Shot(Input& input, BulletManager& bm)
 
 	if (input.IsTriggered("shot") && shotTimer_ <= 0)
 	{
+		//たいまつが使えないステージなら発射出来ないようにする
+		if (currentBulletType_ == BulletType::Torch && !CanUseTorch(currentStage_))
+		{
+			return;
+		}
+
 		const auto& config = kBulletConfigs[static_cast<int>(currentBulletType_)];
 
 		//弾の発射される位置
@@ -407,11 +421,20 @@ void Player::Shot(Input& input, BulletManager& bm)
 //ダメージを受けたときの処理
 void Player::OnDamage(float enemyX)
 {
+	if (!isAlive_)return;
+
+	hp_--;
+	if(hp_ <= 0)
+	{
+		Dead();
+		return;
+	}
+
 	isDamaged_ = true;
 	damageTimer_ = kDamageDuration;
 
 	//向きに応じて横方向のノックバック
-	if (pos_.x<enemyX)
+	if (pos_.x < enemyX)
 	{
 		vel_.x = -kKnockBackX;
 	}

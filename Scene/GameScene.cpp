@@ -93,7 +93,7 @@ void GameScene::NormalUpdate(Input&input)
 	//各クラスの更新処理
 	pCamera_->Update(pPlayer_);
 
-	pPlayer_->Update(input, bulletManager_);
+	pPlayer_->Update(input, bulletManager_,stageType_);
 
 	enemyFactory_.Update();
 
@@ -279,6 +279,10 @@ void GameScene::Init()
 	if (stageType_ == StageType::Stage1)
 	{
 		enemyFactory_.AddBoss(Vector2{ kBoss1SpawnPosX,kBoss1SpawnPosY }, Vector2{ 0,0 }, pPlayer_, &bulletManager_, pCamera_);
+	}
+	if (stageType_ == StageType::BossDebugStage)
+	{
+		enemyFactory_.AddBoss(Vector2{ 1000,1600 }, Vector2{ 0,0 }, pPlayer_, &bulletManager_, pCamera_);
 	}
 	enemyFactory_.Init(pPlayer_, bg_);
 
