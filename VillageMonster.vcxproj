@@ -138,6 +138,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Actor\Boss.cpp" />
+    <ClCompile Include="GameProgress.cpp" />
     <ClCompile Include="Scene\PauseScene.cpp" />
     <ClCompile Include="Scene\ClearScene.cpp" />
     <ClCompile Include="Manager\EnemyFactory.cpp" />
@@ -167,6 +168,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actor\Boss.h" />
+    <ClInclude Include="GameProgress.h" />
     <ClInclude Include="Scene\PauseScene.h" />
     <ClInclude Include="Scene\ClearScene.h" />
     <ClInclude Include="Manager\EnemyFactory.h" />

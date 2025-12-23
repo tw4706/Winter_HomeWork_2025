@@ -1,7 +1,9 @@
 #pragma once
+#include "GameProgress.h"
 #include<memory>
 #include<list>
 #include <type_traits>
+
 class Input;
 class Scene;
 class SceneController
@@ -10,7 +12,13 @@ private:
 	//現在スタックに積まれているシーン
 	//最後に積んだものだけがUpdateされる
 	std::list<std::shared_ptr<Scene>>scenes_;
+
+	GameProgress progress_;
+
 public:
+
+	//ゲームの進行状況を取得する関数
+	GameProgress& GetProgress() { return progress_; }
 
 	void ResetScene(std::shared_ptr<Scene>scene);
 

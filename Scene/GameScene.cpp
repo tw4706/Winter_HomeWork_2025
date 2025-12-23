@@ -135,6 +135,8 @@ void GameScene::NormalUpdate(Input&input)
 		//敵がボス+死亡している場合
 		if (enemy->IsBoss() && enemy->IsDead())
 		{
+			//ボスを倒したことをプレイヤーに伝える
+			controller_.GetProgress().isDefeatedBoss1_ = true;
 			if (!isKeyActive_)
 			{
 				isKeyActive_ = true;
@@ -288,6 +290,14 @@ void GameScene::Init()
 
 	keyH_ = LoadGraph("data/map/Key.png");
 	assert(keyH_ >= 0);
+
+	//たいまつのアンロックするための処理
+	auto& progress = controller_.GetProgress();
+
+	if (stageType_ == StageType::Stage2 && progress.isDefeatedBoss1_)
+	{
+		pPlayer_->UnlockTorch();
+	}
 }
 
 void GameScene::Update(Input& input)

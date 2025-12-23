@@ -134,6 +134,9 @@ Player::Player(Vector2 pos, Vector2 vel) :
 	shotTimer_(0),
 	isAlive_(true),
 	isDeathAnimFinished_(false),
+	isDefeatedBoss1_(false),
+	currentStage_(StageType::Stage1),
+	isUnlockedTorch_(false),
 	state_(PlayerState::Idle),
 	currentBulletType_(BulletType::Knife)
 {
@@ -170,6 +173,8 @@ void Player::Init()
 
 void Player::Update(Input& input, BulletManager& bm,StageType stage)
 {
+	currentStage_ = stage;
+
 	GameObject::Update();
 
 	float colOffsetX = 0.0f;
@@ -251,7 +256,7 @@ void Player::Update(Input& input, BulletManager& bm,StageType stage)
 		int next = (static_cast<int>(currentBulletType_) + 1) % kBulletNum;
 
 		//たいまつ解放ならスキップ
-		if (next == static_cast<int>(BulletType::Torch) && !CanUseTorch(currentStage_))
+		if (next == static_cast<int>(BulletType::Torch) && !IsUnlockedTorch())
 		{
 			next = (next + 1) % kBulletNum;
 		}
@@ -380,7 +385,7 @@ void Player::Shot(Input& input, BulletManager& bm)
 	if (input.IsTriggered("shot") && shotTimer_ <= 0)
 	{
 		//たいまつが使えないステージなら発射出来ないようにする
-		if (currentBulletType_ == BulletType::Torch && !CanUseTorch(currentStage_))
+		if (currentBulletType_ == BulletType::Torch && !IsUnlockedTorch())
 		{
 			return;
 		}
@@ -412,8 +417,6 @@ void Player::Shot(Input& input, BulletManager& bm)
 		// 攻撃開始
 		isAttacking_ = true;
 		animations_[static_cast<int>(PlayerState::Attack)]->Reset();
-
-		shotTimer_ = kBulletConfigs[static_cast<int>(currentBulletType_)].shotInterval;
 		shotTimer_ = config.shotInterval;
 	}
 }

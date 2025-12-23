@@ -49,7 +49,12 @@ public:
 	void UpdateState(Input& input);
 
 	//たいまつが使えるかどうか
-	bool CanUseTorch(StageType stage) const {return stage == StageType::Stage2;}
+	void UnlockTorch() { isUnlockedTorch_ = true; }
+	bool IsUnlockedTorch() const { return isUnlockedTorch_; }
+
+	//ステージ1のボスを倒したかどうか
+	void SetBoss1Defeated() { isDefeatedBoss1_ = true; }
+	bool IsBoss1Defeated() const { return isDefeatedBoss1_; }
 
 private:
 	std::vector<int>graphHandles_;//画像ハンドルの配列
@@ -64,6 +69,9 @@ private:
 	int shotTimer_;//弾の発射間隔タイマー
 	bool isAlive_;//生存しているかどうか
 	bool isDeathAnimFinished_;//死亡アニメーションが終了したかどうか
+	bool isUnlockedTorch_;//たいまつが使えるかどうか
+	bool isDefeatedBoss1_;//ステージ1のボスを倒したかどうか
+
 	StageType currentStage_;//現在のステージの種類
 	//プレイヤーの状態
 	PlayerState state_;
