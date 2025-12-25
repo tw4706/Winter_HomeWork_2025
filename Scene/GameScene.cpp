@@ -35,7 +35,8 @@ namespace
 	//落下判定となる座標
 	constexpr float kFallLimit = 1900.0f;
 
-	constexpr int kPlayerDir = 1;
+	//プレイヤーが自動で歩行する向きと距離
+	constexpr int kPlayerDir = 1;//右向き
 	constexpr float kPlayerAutoWalkX = 600.0f;
 }
 

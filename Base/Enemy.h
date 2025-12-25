@@ -27,12 +27,9 @@ public:
 	virtual void Init() = 0;
 	virtual void Update()=0;
 	virtual void Draw() = 0;
-
-	virtual void Move() = 0;//ˆÚ“®
+	virtual void Move() = 0;
 	//’e‚ª“–‚½‚Á‚½‚Ìˆ—
-	//“–‚½‚è”»’è‚ğÁ‚·
 	virtual void OnHit(int damage);
-
 	//€–S‚Ìˆ—
 	virtual void Dead();
 

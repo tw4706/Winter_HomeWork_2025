@@ -14,7 +14,7 @@ public:
 	};
 	Boss(Vector2 pos, Vector2 vel,std::shared_ptr<Player>player,
 		BulletManager*bm,std::shared_ptr<Camera>camera);
-	~Boss();
+	virtual~Boss() = 0;
 
 	void Init()override;
 	void Update()override;
@@ -25,16 +25,15 @@ public:
 	bool IsBoss() const override { return true; }
 
 	void ChangeState(BossState nextState);
-
-	void UpdateIdle();
-	void UpdateAttack();
-	void UpdateFly();
-	void UpdateHurt();
-	void UpdateDead();
-
 	void OnHit(int damage);
+protected:
+	virtual void UpdateIdle() = 0;
+	virtual void UpdateAttack() = 0;
+	virtual void UpdateMove() = 0;
+	virtual void UpdateHurt();
+	virtual void UpdateDead();
 
-private:
+protected:
 	int hp_;//体力
 	BossState currentState_;//現在の状態
 	int stateTimer_;//状態遷移用タイマー
