@@ -135,7 +135,10 @@ Player::Player(Vector2 pos, Vector2 vel) :
 	isAlive_(true),
 	isDeathAnimFinished_(false),
 	isDefeatedBoss1_(false),
+	autoWalkDir_(1),
+	autoWalkSpeed_(kSpeed),
 	currentStage_(StageType::Stage1),
+	controlMode_(PlayerControl::Normal),
 	isUnlockedTorch_(false),
 	state_(PlayerState::Idle),
 	currentBulletType_(BulletType::Knife)
@@ -185,6 +188,23 @@ void Player::Update(Input& input, BulletManager& bm,StageType stage)
 	}
 
 	float colX = pos_.x + colOffsetX;
+
+	//©“®‚ÅˆÚ“®‚·‚é‚Ìˆ—
+	if (controlMode_ == PlayerControl::AutoWalking)
+	{
+		vel_.x = autoWalkSpeed_ * autoWalkDir_;
+		vel_.y += kGravity;
+
+		colRect_.SetCenter(
+			colX,
+			pos_.y - kColPosYOffset,
+			kGraphHalfWidth,
+			kGraphHeight - kColYOffset);
+
+		state_ = PlayerState::Walk;
+		animations_[static_cast<int>(state_)]->Update();
+		return;
+	}
 
 	colRect_.SetCenter(colX, pos_.y - kColPosYOffset, kGraphHalfWidth, kGraphHeight - kColYOffset);
 
@@ -424,7 +444,9 @@ void Player::Shot(Input& input, BulletManager& bm)
 //ƒ_ƒ[ƒW‚ğó‚¯‚½‚Æ‚«‚Ìˆ—
 void Player::OnDamage(float enemyX)
 {
-	if (!isAlive_)return;
+	if (controlMode_ == PlayerControl::AutoWalking) return;
+	if (!isAlive_) return;
+	if (isDamaged_) return;
 
 	hp_--;
 	if(hp_ <= 0)
@@ -526,4 +548,18 @@ void Player::UpdateState(Input& input)
 	{
 		state_ = PlayerState::Idle;
 	}
+}
+
+void Player::StartAutoWalk(int dir)
+{
+	controlMode_ = PlayerControl::AutoWalking;
+	autoWalkDir_ = dir;
+	vel_.x = kSpeed * dir;
+	isTurn_ = (dir > 0);
+
+	isAttacking_ = false;
+	isDamaged_ = false;
+
+	state_ = PlayerState::Walk;
+	animations_[static_cast<int>(state_)]->Reset();
 }

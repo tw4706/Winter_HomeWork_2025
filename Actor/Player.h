@@ -8,6 +8,7 @@
 #include<memory>
 #include<functional>
 
+//プレイヤーの状態
 enum class PlayerState
 {
 	Idle,
@@ -16,6 +17,13 @@ enum class PlayerState
 	Jump,
 	Hurt,
 	Death
+};
+
+//プレイヤーの操作状態
+enum class PlayerControl
+{
+	Normal,
+	AutoWalking
 };
 
 class Input;
@@ -39,6 +47,9 @@ public:
 	//弾の発射処理
 	void Shot(Input& input, BulletManager& bm);
 
+	//座標の設定(デバッグで使う用)
+	void SetPos(const Vector2& pos) { pos_ = pos; }
+
 	//ダメージを受けた時の処理
 	void OnDamage(float enemyX);
 
@@ -56,6 +67,9 @@ public:
 	void SetBoss1Defeated() { isDefeatedBoss1_ = true; }
 	bool IsBoss1Defeated() const { return isDefeatedBoss1_; }
 
+	//ボスを倒した後の自動移動
+	void StartAutoWalk(int dir);
+
 private:
 	std::vector<int>graphHandles_;//画像ハンドルの配列
 	Vector2 initializePos_;//リスポーンしたときの初期位置保存用
@@ -71,10 +85,12 @@ private:
 	bool isDeathAnimFinished_;//死亡アニメーションが終了したかどうか
 	bool isUnlockedTorch_;//たいまつが使えるかどうか
 	bool isDefeatedBoss1_;//ステージ1のボスを倒したかどうか
+	int autoWalkDir_;//自動移動の方向
+	float autoWalkSpeed_;//自動移動の速度
 
 	StageType currentStage_;//現在のステージの種類
-	//プレイヤーの状態
-	PlayerState state_;
+	PlayerControl controlMode_;//プレイヤーの操作している状態
+	PlayerState state_;	//プレイヤーの状態
 	BulletType currentBulletType_;//現在の弾の種類
 	std::vector<std::shared_ptr<Animation>>animations_;//アニメーションの配列
 };

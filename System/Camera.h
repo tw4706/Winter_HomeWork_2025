@@ -15,6 +15,8 @@ public:
 	//ƒJƒƒ‰‚ğ—h‚ç‚·
 	void Shake(int duration, float magnitude);
 
+	bool IsShaking() const { return shakeTimer_ < shakeDuration_; }
+
 private:
 	Vector2 pos_;
 	Vector2 drawOffset_;

@@ -35,10 +35,8 @@ namespace
 	//落下判定となる座標
 	constexpr float kFallLimit = 1900.0f;
 
-	//鍵が落ちる速度
-	constexpr int kKeyDropSpeed = 5.0f;
-	constexpr float kKeyAttractRange = 300.0f; // 吸い付く距離
-	constexpr float kKeyAttractSpeed = 12.0f; // 吸引速度
+	constexpr int kPlayerDir = 1;
+	constexpr float kPlayerAutoWalkX = 600.0f;
 }
 
 GameScene::GameScene(SceneController& controller, StageType stage) :
@@ -46,10 +44,10 @@ GameScene::GameScene(SceneController& controller, StageType stage) :
 	stageType_(stage),
 	update_(&GameScene::FadeInUpdate),
 	draw_(&GameScene::FadeDraw),
-	keyH_(-1),
+	clearState_(ClearState::None),
 	frame_(fade_interval),
-	isKeyActive_(false),
-	keyPos_{0,0}
+	isBossDefeated_(false),
+	autoWalkStartX_(0)
 {
 	//bgにステージに対応するマップデータをセット
 	bg_ = std::make_shared<Bg>(static_cast<int>(stage) + 1);
@@ -68,7 +66,6 @@ void GameScene::FadeInUpdate(Input&)
 
 void GameScene::NormalUpdate(Input&input)
 {
-
 	if (input.IsTriggered("next"))
 	{
 		controller_.ChangeScene(std::make_shared<SelectScene>(controller_));
@@ -133,54 +130,48 @@ void GameScene::NormalUpdate(Input&input)
 	for (auto& enemy : enemyFactory_.GetEnemies())
 	{
 		//敵がボス+死亡している場合
-		if (enemy->IsBoss() && enemy->IsDead())
+		if (enemy->IsBoss() && enemy->IsDead()
+			&& clearState_ == ClearState::None)
 		{
+			clearState_ = ClearState::BossCameraShake;
+
 			//ボスを倒したことをプレイヤーに伝える
 			controller_.GetProgress().isDefeatedBoss1_ = true;
-			if (!isKeyActive_)
-			{
-				isKeyActive_ = true;
-				keyPos_ = Vector2{ enemy->GetPos().x, enemy->GetPos().y - 200 }; //上から落とす位置
-			}
 		}
 	}
 
-	//鍵を出現させ、取得するとクリアシーンに遷移する
-	if (isKeyActive_)
+	if (clearState_ == ClearState::BossCameraShake)
 	{
-		Vector2 playerPos = pPlayer_->GetPos();
-
-		float dx = playerPos.x - keyPos_.x;
-		float dy = playerPos.y - keyPos_.y;
-		float dist = std::sqrt(dx * dx + dy * dy);
-
-		if (dist < kKeyAttractRange)
+		if (!pCamera_->IsShaking())
 		{
-			// プレイヤーに吸い付く
-			if (dist > 0.01f)
-			{
-				dx /= dist;
-				dy /= dist;
-			}
-			keyPos_.x += dx * kKeyAttractSpeed;
-			keyPos_.y += dy * kKeyAttractSpeed;
+			clearState_ = ClearState::AutoWalk;
+
+			autoWalkStartX_ = pPlayer_->GetPos().x;
+			pPlayer_->StartAutoWalk(kPlayerDir);
 		}
-		else
-		{
-			// 通常落下
-			keyPos_.y += kKeyDropSpeed;
-		}
+	}
 
-		keyRect_.SetCenter(keyPos_.x, keyPos_.y, 32, 32);
+	if (clearState_ == ClearState::AutoWalk)
+	{
+		float nowX = pPlayer_->GetPos().x;
 
-		if (CollisionManager::PlayerVsKey(pPlayer_->GetColRect(),keyRect_))
+		if (nowX >= autoWalkStartX_ + kPlayerAutoWalkX)
 		{
-			isKeyActive_ = false;
 			update_ = &GameScene::GoalFadeOutUpdate;
 			draw_ = &GameScene::FadeDraw;
 			frame_ = 0;
+			return;
 		}
 	}
+
+#ifdef _DEBUG
+	//デバッグ用：ステージクリア
+	if (input.IsTriggered("debug_warp"))
+	{
+		pPlayer_->SetPos(Vector2{ 8300,1740 });
+	}
+#endif
+
 }
 
 void GameScene::FadeOutUpdate(Input&) 
@@ -230,33 +221,9 @@ void GameScene::NormalDraw()
 	bulletManager_.SetCameraOffset(cameraOffset);
 	bulletManager_.Draw();
 
-	int keyScreenX = keyRect_.left_ + cameraOffset.x;
-	int keyScreenY = keyRect_.top_ + cameraOffset.y;
-
-	if (isKeyActive_)
-	{
-		//鍵画像を描画
-		DrawRectRotaGraph3(keyScreenX, keyScreenY,
-			0, 0,
-			32, 32,
-			16, 16,
-			1.0f, 1.0f,
-			0.0,
-			keyH_, TRUE);
-	}
-
 	//ステージ2表示
 	DrawFormatString(Game::kScreenWidth, Game::kScreenHeight,
 		GetColor(255, 255, 0),"STAGE %d",static_cast<int>(stageType_) + 1);
-
-#ifdef _DEBUG
-	Rect screenGoal = keyRect_;
-	screenGoal.left_ -= cameraOffset.x;
-	screenGoal.top_ -= cameraOffset.y;
-	screenGoal.right_ -= cameraOffset.x;
-	screenGoal.bottom_ -= cameraOffset.y;
-	screenGoal.Draw(0xff0000, false);
-#endif
 }
 
 void GameScene::Init()
@@ -288,8 +255,6 @@ void GameScene::Init()
 	}
 	enemyFactory_.Init(pPlayer_, bg_);
 
-	keyH_ = LoadGraph("data/map/Key.png");
-	assert(keyH_ >= 0);
 
 	//たいまつのアンロックするための処理
 	auto& progress = controller_.GetProgress();
