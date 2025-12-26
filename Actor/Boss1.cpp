@@ -111,7 +111,7 @@ void Boss1::UpdateMove()
 	float distance = fabsf(dx);
 	float speed = kFlySpeed;
 
-	// ===== 逃げ維持 =====
+	//逃げ維持
 	if (escapeTimer_ > 0)
 	{
 		escapeTimer_--;
@@ -119,14 +119,14 @@ void Boss1::UpdateMove()
 	}
 	else
 	{
-		// 近すぎたら逃げ開始
+		//近すぎたら逃げ開始
 		if (distance < 300.0f)
 		{
-			isTurn_ = (dx > 0); // プレイヤーと逆
+			isTurn_ = (dx > 0); //プレイヤーと逆方向
 			escapeTimer_ = 40;
 			speed = kEscapeSpeed;
 		}
-		// 遠すぎたら接近
+		//遠すぎたら接近する
 		else if (distance > 500.0f)
 		{
 			isTurn_ = (dx < 0);

@@ -126,13 +126,13 @@
     <ClCompile Include="Scene\PauseScene.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="GameProgress.cpp">
+    <ClCompile Include="System\GameProgress.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Boss1.cpp">
+    <ClCompile Include="Actor\Boss1.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Boss2.cpp">
+    <ClCompile Include="Actor\Boss2.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -221,13 +221,13 @@
     <ClInclude Include="StageType.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="GameProgress.h">
+    <ClInclude Include="System\GameProgress.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Boss1.h">
+    <ClInclude Include="Actor\Boss1.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Boss2.h">
+    <ClInclude Include="Actor\Boss2.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

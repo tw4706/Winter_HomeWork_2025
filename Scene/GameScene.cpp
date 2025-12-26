@@ -25,8 +25,13 @@ namespace
 	constexpr float kPlayerSpawnPosX = 200.0f;
 	constexpr float kPlayerSpawnPosY = 1744.0f;
 
+	//ボス1のスポーン位置
 	constexpr float kBoss1SpawnPosX = 8800.0f;
 	constexpr float kBoss1SpawnPosY = 1600.0f;
+
+	//ボス2のスポーン位置
+	constexpr float kBoss2SpawnPosX = 9200.0f;
+	constexpr float kBoss2SpawnPosY = 1600.0f;
 
 	//フェードまでの間隔
 	constexpr int fade_interval = 60;
@@ -248,11 +253,17 @@ void GameScene::Init()
 	enemyFactory_.LoadFromCSV(stageType_, &bulletManager_);
 	if (stageType_ == StageType::Stage1)
 	{
-		enemyFactory_.AddBoss(Vector2{ kBoss1SpawnPosX,kBoss1SpawnPosY }, Vector2{ 0,0 }, pPlayer_, &bulletManager_, pCamera_);
+		enemyFactory_.AddBoss1(Vector2{ kBoss1SpawnPosX,kBoss1SpawnPosY }, Vector2{ 0,0 },
+			pPlayer_, &bulletManager_, pCamera_);
 	}
-	if (stageType_ == StageType::BossDebugStage)
+	else if (stageType_ == StageType::Stage2)
 	{
-		enemyFactory_.AddBoss(Vector2{ 1000,1600 }, Vector2{ 0,0 }, pPlayer_, &bulletManager_, pCamera_);
+		enemyFactory_.AddBoss2(Vector2{ kBoss2SpawnPosX, kBoss2SpawnPosY },Vector2{ 0,0 },
+			pPlayer_,&bulletManager_,pCamera_);
+	}
+	else if (stageType_ == StageType::BossDebugStage)
+	{
+		enemyFactory_.AddBoss1(Vector2{ 1000,1600 }, Vector2{ 0,0 }, pPlayer_, &bulletManager_, pCamera_);
 	}
 	enemyFactory_.Init(pPlayer_, bg_);
 

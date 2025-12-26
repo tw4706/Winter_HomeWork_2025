@@ -17,9 +17,11 @@ public:
     void Draw(const Vector2& cameraOffset);
     std::vector<std::shared_ptr<Enemy>>& GetEnemies() { return enemies_; }
 
-    void AddBoss(Vector2 pos, Vector2 vel,
+    void AddBoss1(Vector2 pos, Vector2 vel,
         std::shared_ptr<Player>player, BulletManager* bm, std::shared_ptr<Camera>camera);
 
+    void AddBoss2(Vector2 pos, Vector2 vel,
+		std::shared_ptr<Player>player, BulletManager* bm, std::shared_ptr<Camera>camera);
 private:
     std::vector<std::shared_ptr<Enemy>> enemies_;
     StageType stageType_;

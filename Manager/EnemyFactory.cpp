@@ -3,6 +3,7 @@
 #include "SkullFlower.h"
 #include "Dog.h"
 #include "Boss1.h"
+#include "Boss2.h"
 #include "GameScene.h"
 #include<Dxlib.h>
 #include <fstream>
@@ -21,7 +22,6 @@ namespace
 
 void EnemyFactory::LoadFromCSV(StageType stageType, BulletManager* bulletManager)
 {
-
     std::string path;
     switch (stageType)
     {
@@ -109,12 +109,20 @@ void EnemyFactory::Draw(const Vector2& cameraOffset)
     }
 }
 
-void EnemyFactory::AddBoss(Vector2 pos, Vector2 vel,
+void EnemyFactory::AddBoss1(Vector2 pos, Vector2 vel,
     std::shared_ptr<Player>player,BulletManager*bm, std::shared_ptr<Camera>camera)
 {
     auto boss = std::make_shared<Boss1>(pos, vel,player,bm,camera);
     boss->Init();
     boss->SetPlayer(player);
     enemies_.push_back(boss);
+}
+
+void EnemyFactory::AddBoss2(Vector2 pos, Vector2 vel, std::shared_ptr<Player> player, BulletManager* bm, std::shared_ptr<Camera> camera)
+{
+    auto boss = std::make_shared<Boss2>(pos, vel, player, bm, camera);
+    boss->Init();
+    boss->SetPlayer(player);
+	enemies_.push_back(boss);
 }
 
