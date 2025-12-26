@@ -30,11 +30,11 @@ namespace
 
 	constexpr int kFrameCount[kAnimNum] =
 	{
-		4, // Idle
-		8, // Attack
-		4, // Fly
-		4, // Hurt
-		7  // Dead
+		6, // Idle
+		10, // Attack
+		14, // Fly
+		7, // Hurt
+		16  // Dead
 	};
 }
 
@@ -64,6 +64,15 @@ void Boss2::Init()
 
 	currentState_ = BossState::Idle;
 	stateTimer_ = 0;
+}
+
+void Boss2::LoadResources()
+{
+}
+
+int Boss2::GetGraphIndex(BossState state) const
+{
+	return 0;
 }
 
 void Boss2::UpdateIdle()

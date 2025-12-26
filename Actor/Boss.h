@@ -8,7 +8,7 @@ public:
 	{
 		Idle,
 		Attack,
-		Fly,
+		Move,
 		Hurt,
 		Dead
 	};
@@ -25,8 +25,11 @@ public:
 	bool IsBoss() const override { return true; }
 
 	void ChangeState(BossState nextState);
-	void OnHit(int damage);
+	virtual void OnHit(int damage);
 protected:
+	//画像の読み込み
+	virtual void LoadResources() = 0;
+	virtual int GetGraphIndex(BossState state) const = 0;
 	virtual void UpdateIdle() = 0;
 	virtual void UpdateAttack() = 0;
 	virtual void UpdateMove() = 0;
@@ -37,17 +40,12 @@ protected:
 	int hp_;//体力
 	BossState currentState_;//現在の状態
 	int stateTimer_;//状態遷移用タイマー
-	int handle_;//画像ハンドル
 	float shotTimer_;//弾を撃つまでの時間
 	float shotInterval_;//弾を撃つ間隔
 	bool hasShot_;//弾を撃ったかどうかのフラグ
-	int knockbackDir_;//ノックバックの方向
-	bool isCharging_;     //突進中か
 	bool isActive_;
-	int escapeTimer_;//逃走用タイマー
+	bool isCharging_;     //突進中か
 	Vector2 backPos_;//戻る位置を保存する変数
-	Vector2 chargeVel_;   //突進速度
-
 
 	//グラフィックハンドルの配列
 	std::vector<int>graphHandles_;

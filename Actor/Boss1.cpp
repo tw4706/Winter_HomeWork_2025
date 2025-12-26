@@ -1,12 +1,66 @@
 #include "Boss1.h"
 #include "Player.h"
 #include "BulletManager.h"
+#include<Dxlib.h>
 
 namespace 
 {
+	enum Graph
+	{
+		kIdleGraph,
+		kAttackGraph,
+		kFlyGraph,
+		kHurtGraph,
+		kDeadGraph,
+
+		kGraphNum
+	};
+
+	const std::string kGraphName[kGraphNum] =
+	{
+		"data/Enemy/IDLE.png",
+		"data/Enemy/ATTACK.png",
+		"data/Enemy/FLYING.png",
+		"data/Enemy/HURT.png",
+		"data/Enemy/DEATH.png"
+	};
+	static_assert(static_cast<int>(kGraphNum) == _countof(kGraphName));
+
+
+	//状態ごとの総フレーム数
+	constexpr int kIdleFrameCount = 4;
+	constexpr int kAttackFrameCount = 8;
+	constexpr int kFlyFrameCount = 4;
+	constexpr int kHurtFrameCount = 4;
+	constexpr int kDeathFrameCount = 7;
+
+	//状態ごとの更新フレームの間隔
+	constexpr int kIdleFrameInterval = 6;
+	constexpr int kAttackFrameInterval = 6;
+	constexpr int kFlyFrameInterval = 6;
+	constexpr int kHurtFrameInterval = 6;
+	constexpr int kDeathFrameInterval = 6;
+
+	//状態ごとのフレーム数とフレームの間隔
+	const int frameCounts[kGraphNum] = { kIdleFrameCount,kAttackFrameCount,
+		kFlyFrameCount, kHurtFrameCount, kDeathFrameCount };
+	const int frameIntervals[kGraphNum] = { kIdleFrameInterval,
+		kAttackFrameInterval, kFlyFrameInterval, kHurtFrameInterval, kDeathFrameInterval };
+	
+	//ボスの描画・当たり判定関連
+	constexpr int kGraphWidth = 81;
+	constexpr int kGraphHeight = 71;
+	constexpr int kGraphHalfW = kGraphWidth / 2;
+	constexpr int kGraphHalfH = kGraphHeight / 2;
+	constexpr float kScale = 4.0f;
+
 	//近づかれすぎた時の逃げる速度
 	constexpr float kComeBackPos = 0.5f;
 	constexpr float kDistance = 400.0f;
+
+	//ボスのノックバック距離
+	constexpr float kKnockBackPos = 2.0f;
+	constexpr float kSpeed = 0.5f;
 
 	constexpr float kFlySpeed = 0.4f;
 	constexpr float kEscapeSpeed = 1.8f;
@@ -21,13 +75,44 @@ Boss1::Boss1(Vector2 pos, Vector2 vel,
 	std::shared_ptr<Player> player,
 	BulletManager* bm,
 	std::shared_ptr<Camera> camera)
-	:Boss(pos, vel, player, bm, camera)
+	:Boss(pos, vel, player, bm, camera),
+	escapeTimer_(0.0f),
+	knockbackDir_(0),
+	chargeVel_(0.0f)
 {
 }
 
 void Boss1::Init()
 {
 	Boss::Init();
+}
+
+void Boss1::LoadResources()
+{
+	graphHandles_.resize(kGraphNum);
+	animations_.resize(kGraphNum);
+
+	for (int i = 0; i < kGraphNum; i++)
+	{
+		graphHandles_[i] = LoadGraph(kGraphName[i].c_str());
+		animations_[i] = std::make_shared<Animation>(
+			graphHandles_[i],
+			kGraphWidth,
+			kGraphHeight,
+			frameCounts[i],
+			frameIntervals[i],
+			kScale,
+			false, 0);
+	}
+}
+
+void Boss1::OnHit(int damage)
+{
+	Boss::OnHit(damage);
+
+	if (currentState_ == BossState::Dead) return;
+
+	knockbackDir_ = (pPlayer_->GetPos().x < pos_.x) ? 1 : -1;
 }
 
 void Boss1::UpdateIdle()
@@ -50,7 +135,7 @@ void Boss1::UpdateIdle()
 	//一定時間経過で飛行アニメーション
 	if (stateTimer_ > 60 && rand() % 100 < 2)
 	{
-		ChangeState(BossState::Fly);
+		ChangeState(BossState::Move);
 		return;
 	}
 
@@ -71,7 +156,7 @@ void Boss1::UpdateAttack()
 		if (stateTimer_ > kRushTime)
 		{
 			isCharging_ = false;
-			ChangeState(BossState::Fly);
+			ChangeState(BossState::Move);
 		}
 		return;
 	}
@@ -99,7 +184,7 @@ void Boss1::UpdateAttack()
 	// 短時間でFlyに戻る
 	if (stateTimer_ > 120)
 	{
-		ChangeState(BossState::Fly);
+		ChangeState(BossState::Move);
 	}
 }
 
@@ -156,4 +241,39 @@ void Boss1::UpdateMove()
 	{
 		ChangeState(BossState::Attack);
 	}
+}
+
+void Boss1::UpdateHurt()
+{
+	stateTimer_++;
+
+	pos_.x += (isTurn_ ? kKnockBackPos : -kKnockBackPos);
+
+	pos_.y += sin(stateTimer_ * 0.3f) * 0.3f;
+
+	//タイマーを進めてIdle状態に戻る
+	if (animations_[static_cast<int>(BossState::Hurt)]->IsAnimFinished())
+	{
+		ChangeState(BossState::Idle);
+	}
+}
+
+int Boss1::GetGraphIndex(BossState state) const
+{
+	switch (state)
+	{
+	case BossState::Idle:
+		return kIdleGraph;
+	case BossState::Attack:
+		return kAttackGraph;
+	case BossState::Move:
+		return kFlyGraph;
+	case BossState::Hurt:
+		return kHurtGraph;
+	case BossState::Dead:
+		return kDeadGraph;
+	default:
+		return kIdleGraph;
+	}
+	return kIdleGraph;
 }

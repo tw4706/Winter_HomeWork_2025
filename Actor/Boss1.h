@@ -12,9 +12,20 @@ public:
 
     void Init() override;
 
+    void LoadResources() override;
+
+	void OnHit(int damage) override;
+
 protected:
     void UpdateIdle() override;
     void UpdateAttack() override;
     void UpdateMove() override;
+	void UpdateHurt() override;
+    int GetGraphIndex(BossState state) const override;
+
+private:
+    int escapeTimer_;//逃走用タイマー
+    int knockbackDir_;//ノックバックの方向
+    Vector2 chargeVel_;   //突進速度
 };
 

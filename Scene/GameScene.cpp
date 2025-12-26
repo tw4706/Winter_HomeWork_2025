@@ -30,7 +30,7 @@ namespace
 	constexpr float kBoss1SpawnPosY = 1600.0f;
 
 	//ボス2のスポーン位置
-	constexpr float kBoss2SpawnPosX = 9200.0f;
+	constexpr float kBoss2SpawnPosX = 1000.0f;
 	constexpr float kBoss2SpawnPosY = 1600.0f;
 
 	//フェードまでの間隔
@@ -263,8 +263,8 @@ void GameScene::Init()
 	}
 	else if (stageType_ == StageType::BossDebugStage)
 	{
-		enemyFactory_.AddBoss1(Vector2{ 1000,1600 }, Vector2{ 0,0 }, pPlayer_, &bulletManager_, pCamera_);
-	}
+		enemyFactory_.AddBoss1(Vector2{ kBoss2SpawnPosX, kBoss2SpawnPosY },Vector2{ 0,0 },
+			pPlayer_,&bulletManager_,pCamera_);	}
 	enemyFactory_.Init(pPlayer_, bg_);
 
 

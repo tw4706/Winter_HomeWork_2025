@@ -8,41 +8,8 @@
 
 namespace
 {
-	enum Graph
-	{
-		kIdleGraph,
-		kAttackGraph,
-		kFlyGraph,
-		kHurtGraph,
-		kDeadGraph,
-
-		kGraphNum
-	};
-
-	const std::string kGraphName[kGraphNum] =
-	{
-		"data/Enemy/IDLE.png",
-		"data/Enemy/ATTACK.png",
-		"data/Enemy/FLYING.png",
-		"data/Enemy/HURT.png",
-		"data/Enemy/DEATH.png"
-	};
-
-	static_assert(static_cast<int>(kGraphNum)== _countof(kGraphName));
-
-	//ボスの描画・当たり判定関連
-	constexpr int kGraphWidth = 81;
-	constexpr int kGraphHeight = 71;
-	constexpr int kGraphHalfW = kGraphWidth /2;
-	constexpr int kGraphHalfH = kGraphHeight /2;
-	constexpr float kScale = 4.0f;
 	constexpr float kColScale = 2.0f;
 	constexpr float kColSize = 64.0f;
-
-	//ボスの挙動関連
-	constexpr float kKnockBackPos = 2.0f;
-	constexpr float kComeBackPos = 0.5f;
-	constexpr float kSpeed = 0.5f;
 
 	constexpr float kActiveDistance = 500.0f;
 	constexpr float kShotInterval = 5.0f;
@@ -56,26 +23,6 @@ namespace
 	//カメラの揺れ関連
 	constexpr int kCameraDuration = 10;
 	constexpr int kCameraMagnitude = 8;
-
-	//状態ごとの総フレーム数
-	constexpr int kIdleFrameCount = 4;
-	constexpr int kAttackFrameCount = 8;
-	constexpr int kFlyFrameCount = 4;
-	constexpr int kHurtFrameCount = 4;
-	constexpr int kDeathFrameCount = 7;
-
-	//状態ごとの更新フレームの間隔
-	constexpr int kIdleFrameInterval = 6;
-	constexpr int kAttackFrameInterval = 6;
-	constexpr int kFlyFrameInterval = 6;
-	constexpr int kHurtFrameInterval = 6;
-	constexpr int kDeathFrameInterval = 6;
-
-	//状態ごとのフレーム数とフレームの間隔
-	const int frameCounts[kGraphNum] = { kIdleFrameCount,kAttackFrameCount,
-		kFlyFrameCount, kHurtFrameCount, kDeathFrameCount };
-	const int frameIntervals[kGraphNum] = { kIdleFrameInterval,
-		kAttackFrameInterval, kFlyFrameInterval, kHurtFrameInterval, kDeathFrameInterval };
 }
 
 Boss::Boss(Vector2 pos, Vector2 vel, std::shared_ptr<Player>player, BulletManager*bm,std::shared_ptr<Camera>camera):
@@ -85,17 +32,13 @@ Boss::Boss(Vector2 pos, Vector2 vel, std::shared_ptr<Player>player, BulletManage
 	pCamera_(camera),
 	currentState_(BossState::Idle),
 	stateTimer_(0),
-	handle_(-1),
 	shotTimer_(0.0f),
 	shotInterval_(kShotInterval),
 	hp_(KMaxHp),
 	backPos_(pos),
 	hasShot_(false),
-	knockbackDir_(0),
-	isCharging_(false),
-	chargeVel_(0.0f),
 	isActive_(false),
-	escapeTimer_(0.0f)
+	isCharging_(false)
 {
 	colSize_ = kColSize;
 	SetUseGravity(false);
@@ -111,24 +54,9 @@ Boss::~Boss()
 
 void Boss::Init()
 {
-	graphHandles_.resize(kGraphNum);
-	animations_.resize(kGraphNum);
-
-	for (int i = 0; i < kGraphNum; i++)
-	{
-		graphHandles_[i] = LoadGraph(kGraphName[i].c_str());
-		animations_[i] = std::make_shared<Animation>(
-			graphHandles_[i],
-			kGraphWidth,
-			kGraphHeight,
-			frameCounts[i],
-			frameIntervals[i],
-			kScale,
-			false,0);
-	}
+	LoadResources();
 	currentState_ = BossState::Idle;
 	stateTimer_ = 0;
-	handle_ = graphHandles_[kIdleGraph];
 }
 
 void Boss::Update()
@@ -172,7 +100,7 @@ void Boss::Update()
 	case BossState::Attack:
 		UpdateAttack();
 		break;
-	case BossState::Fly:
+	case BossState::Move:
 		UpdateMove();
 		break;
 	case BossState::Hurt:
@@ -198,33 +126,13 @@ void Boss::Update()
 
 void Boss::Draw()
 {
-	switch (currentState_)
-	{
-	case BossState::Idle:
-		handle_ = graphHandles_[kIdleGraph];
-		break;
-	case BossState::Attack:
-		handle_ = graphHandles_[kAttackGraph];
-		break;
-	case BossState::Fly:
-		handle_ = graphHandles_[kFlyGraph];
-		break;
-	case BossState::Hurt:
-		handle_ = graphHandles_[kHurtGraph];
-		break;
-	case BossState::Dead:
-		handle_ = graphHandles_[kDeadGraph];
-		break;
-	}
+	int graphIndex = GetGraphIndex(currentState_);
 
 	float drawX = pos_.x + cameraOffset_.x;
 	float drawY = pos_.y + cameraOffset_.y;
-	//描画
-	int animIndex = static_cast<int>(currentState_);
-	int frame = animations_[animIndex]->GetFrameCount();
 
-	//アニメーションの描画
-	animations_[animIndex]->Draw(drawX, drawY, !isTurn_);
+	animations_[graphIndex]->Draw(drawX, drawY, !isTurn_);
+
 #ifdef _DEBUG
 	colRect_.DrawAndCamera(cameraOffset_, 0xff0000, false);
 #endif
@@ -267,17 +175,15 @@ void Boss::ChangeState(BossState nextState)
 
 void Boss::UpdateHurt()
 {
-	stateTimer_++;
+    stateTimer_++;
 
-	pos_.x += (isTurn_ ? kKnockBackPos : -kKnockBackPos);
+    // 演出だけ
+    pos_.y += sin(stateTimer_ * 0.3f) * 0.3f;
 
-	pos_.y += sin(stateTimer_ * 0.3f) * 0.3f;
-
-	//タイマーを進めてIdle状態に戻る
-	if (animations_[static_cast<int>(BossState::Hurt)]->IsAnimFinished())
-	{
-		ChangeState(BossState::Idle);
-	}
+    if (animations_[static_cast<int>(BossState::Hurt)]->IsAnimFinished())
+    {
+        ChangeState(BossState::Idle);
+    }
 }
 
 void Boss::UpdateDead()
@@ -305,28 +211,15 @@ void Boss::OnHit(int damage)
 
 	hp_ -= damage;
 
-	pCamera_->Shake(kCameraDuration, kCameraMagnitude);
-
-	if(pPlayer_->GetPos().x < pos_.x)
-	{
-		knockbackDir_ = 1; //右方向にノックバック
-	}
-	else
-	{
-		knockbackDir_ = -1; //左方向にノックバック
-	}
-
+	//体力が0以下ならカメラを大きく揺らして死亡状態へ
 	if (hp_ <= 0)
 	{
-		pCamera_->Shake(90, 35.0f);
+		pCamera_->Shake(60, 15.0f);
 		ChangeState(BossState::Dead);
 		return;
 	}
 
-	//すでにダメージを受けているなら上書きをしないようにする
-	if (currentState_ != BossState::Hurt)
-	{
-		ChangeState(BossState::Hurt);
-	}
-
+	//カメラを揺らす
+	pCamera_->Shake(kCameraDuration, kCameraMagnitude);
+	ChangeState(BossState::Hurt);
 }
