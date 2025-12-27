@@ -55,6 +55,7 @@ Boss::~Boss()
 void Boss::Init()
 {
 	LoadResources();
+	SetUseGravity(false);
 	currentState_ = BossState::Idle;
 	stateTimer_ = 0;
 }

@@ -263,7 +263,7 @@ void GameScene::Init()
 	}
 	else if (stageType_ == StageType::BossDebugStage)
 	{
-		enemyFactory_.AddBoss1(Vector2{ kBoss2SpawnPosX, kBoss2SpawnPosY },Vector2{ 0,0 },
+		enemyFactory_.AddBoss2(Vector2{ kBoss2SpawnPosX, kBoss2SpawnPosY },Vector2{ 0,0 },
 			pPlayer_,&bulletManager_,pCamera_);	}
 	enemyFactory_.Init(pPlayer_, bg_);
 

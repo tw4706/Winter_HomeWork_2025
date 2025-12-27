@@ -5,7 +5,9 @@ namespace
 {
 	constexpr int kGraphW = 192;
 	constexpr int kGraphH = 108;
-	constexpr float kScale = 1.0f;
+	constexpr float kScale = 4.0f;
+	constexpr float kColSizeX = 128.0f;
+	constexpr float kColSizeY = 256.0f;
 
 	constexpr int kFrameInterval = 6;
 
@@ -62,8 +64,33 @@ void Boss2::Init()
 			kStartY[i]);
 	}
 
+	SetUseGravity(true);
+
 	currentState_ = BossState::Idle;
 	stateTimer_ = 0;
+}
+
+void Boss2::Update()
+{
+	Boss::Update();
+
+	colRect_.SetCenter(pos_.x, pos_.y-100, kColSizeX, kColSizeY);
+}
+
+void Boss2::Draw()
+{
+	int graphIndex = GetGraphIndex(currentState_);
+
+	const float imageHeight = kGraphH * kScale;
+
+	float drawX = pos_.x + cameraOffset_.x;
+	float drawY = pos_.y + cameraOffset_.y-180;
+
+	animations_[graphIndex]->Draw(drawX, drawY, !isTurn_);
+
+#ifdef _DEBUG
+	colRect_.DrawAndCamera(cameraOffset_, 0xff0000, false);
+#endif
 }
 
 void Boss2::LoadResources()
@@ -109,14 +136,20 @@ void Boss2::UpdateMove()
 
 }
 
+void Boss2::SetAttackMode(BossAttackMode mode)
+{
+	bossMode_ = mode;
+}
+
 void Boss2::AttackKnife()
 {
+	//ナイフ攻撃：左右に揺れ動く
+	vel_.x = sinf(stateTimer_ * 0.15f) * 1.5f;
 	stateTimer_++;
-
-	pos_.x += sinf(stateTimer_ * 0.15f) * 1.5f;
 
 	if (stateTimer_ > 90)
 	{
+		vel_.x = 0.0f;
 		ChangeState(BossState::Idle);
 	}
 }
@@ -127,8 +160,6 @@ void Boss2::AttackLance()
 	{
 		vel_.x = isTurn_ ? -5.0f : 5.0f;
 	}
-
-	pos_.x += vel_.x;
 	stateTimer_++;
 
 	if (stateTimer_ > 60)
@@ -140,7 +171,11 @@ void Boss2::AttackLance()
 
 void Boss2::AttackTorch()
 {
-	pos_.y = backPos_.y - 100.0f + sinf(stateTimer_ * 0.05f) * 20.0f;
+	if (stateTimer_ == 0 && isGround_)
+	{
+		vel_.y = -12.0f; //小ジャンプ
+	}
+
 	stateTimer_++;
 
 	if (stateTimer_ > 150)
