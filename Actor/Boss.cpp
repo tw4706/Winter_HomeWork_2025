@@ -38,7 +38,8 @@ Boss::Boss(Vector2 pos, Vector2 vel, std::shared_ptr<Player>player, BulletManage
 	backPos_(pos),
 	hasShot_(false),
 	isActive_(false),
-	isCharging_(false)
+	isCharging_(false),
+	isInvincible_(false)
 {
 	colSize_ = kColSize;
 	SetUseGravity(false);
@@ -46,10 +47,6 @@ Boss::Boss(Vector2 pos, Vector2 vel, std::shared_ptr<Player>player, BulletManage
 
 Boss::~Boss()
 {
-	for (auto& handle : graphHandles_)
-	{
-		DeleteGraph(handle);
-	}
 }
 
 void Boss::Init()
@@ -91,7 +88,8 @@ void Boss::Update()
 	colRect_.SetCenter(pos_.x-20, pos_.y, colSize_ * kColScale, colSize_ * kColScale);
 
 	//アニメーションの更新
-	animations_[static_cast<int>(currentState_)]->Update();
+	int graphIdx = GetGraphIndex(currentState_);
+	animations_[graphIdx]->Update();
 
 	switch (currentState_)
 	{
@@ -103,6 +101,9 @@ void Boss::Update()
 		break;
 	case BossState::Move:
 		UpdateMove();
+		break;
+	case BossState::Exposed:
+		UpdateExposed();
 		break;
 	case BossState::Hurt:
 		UpdateHurt();
@@ -141,7 +142,8 @@ void Boss::Draw()
 
 void Boss::ChangeState(BossState nextState)
 {
-	bool islanding = false;
+	//無敵状態解除
+	isInvincible_ = false;
 
 	if (!isActive_ && nextState != BossState::Idle)
 		return;
@@ -150,13 +152,12 @@ void Boss::ChangeState(BossState nextState)
 	currentState_ = nextState;
 	stateTimer_ = 0;
 
-	//共通：アニメーション初期化
-	animations_[static_cast<int>(nextState)]->Reset();
+	//アニメーション初期化
+	int animIdx = GetGraphIndex(nextState);
+	animations_[animIdx]->Reset();
 
 	if (nextState == BossState::Dead)
 	{
-		islanding = false;
-
 		//落下開始
 		vel_.x = 0.0f;
 		vel_.y = 0.0f;
@@ -181,10 +182,11 @@ void Boss::UpdateHurt()
     // 演出だけ
     pos_.y += sin(stateTimer_ * 0.3f) * 0.3f;
 
-    if (animations_[static_cast<int>(BossState::Hurt)]->IsAnimFinished())
-    {
-        ChangeState(BossState::Idle);
-    }
+	int animIndex = GetGraphIndex(BossState::Hurt);
+	if (animations_[animIndex]->IsAnimFinished())
+	{
+		ChangeState(BossState::Idle);
+	}
 }
 
 void Boss::UpdateDead()
@@ -200,7 +202,8 @@ void Boss::UpdateDead()
 	}
 
 	//死亡アニメーションが終わったらガチの死亡
-	if (stateTimer_ > 0 && animations_[static_cast<int>(BossState::Dead)]->IsAnimFinished())
+	int animIdx = GetGraphIndex(BossState::Dead);
+	if (stateTimer_ > 0 && animations_[animIdx]->IsAnimFinished())
 	{
 		isDead_ = true;
 	}
@@ -208,6 +211,7 @@ void Boss::UpdateDead()
 
 void Boss::OnHit(int damage)
 {
+	if (isInvincible_) return;
 	if (currentState_ == BossState::Dead) return;
 
 	hp_ -= damage;

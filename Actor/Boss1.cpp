@@ -82,6 +82,14 @@ Boss1::Boss1(Vector2 pos, Vector2 vel,
 {
 }
 
+Boss1::~Boss1()
+{
+	for (auto& handle : graphHandles_)
+	{
+		DeleteGraph(handle);
+	}
+}
+
 void Boss1::Init()
 {
 	Boss::Init();

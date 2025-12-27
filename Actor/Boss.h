@@ -9,6 +9,7 @@ public:
 		Idle,
 		Attack,
 		Move,
+		Exposed,
 		Hurt,
 		Dead
 	};
@@ -33,6 +34,7 @@ protected:
 	virtual void UpdateIdle() = 0;
 	virtual void UpdateAttack() = 0;
 	virtual void UpdateMove() = 0;
+	virtual void UpdateExposed() = 0;
 	virtual void UpdateHurt();
 	virtual void UpdateDead();
 
@@ -45,6 +47,7 @@ protected:
 	bool hasShot_;//弾を撃ったかどうかのフラグ
 	bool isActive_;
 	bool isCharging_;     //突進中か
+	bool isInvincible_;//無敵状態かどうか
 	Vector2 backPos_;//戻る位置を保存する変数
 
 	//グラフィックハンドルの配列

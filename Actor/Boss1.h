@@ -10,6 +10,8 @@ public:
         BulletManager* bm,
         std::shared_ptr<Camera> camera);
 
+	~Boss1() override;
+
     void Init() override;
 
     void LoadResources() override;
@@ -20,6 +22,7 @@ protected:
     void UpdateIdle() override;
     void UpdateAttack() override;
     void UpdateMove() override;
+    void UpdateExposed() override {};
 	void UpdateHurt() override;
     int GetGraphIndex(BossState state) const override;
 
