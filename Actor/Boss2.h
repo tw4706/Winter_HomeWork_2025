@@ -17,6 +17,7 @@ public:
     void Init() override;
 	void Update() override;
     void Draw()override;
+    void OnHit(int damage) override;
         
 	//ボスがダメージを受けられる状態かどうかを返す関数
     bool IsDamageable() const;
@@ -36,7 +37,7 @@ protected:
     void UpdateMove() override;
     void UpdateExposed() override;
 	void UpdateHurt() override;
-	void OnHit(int damage) override;
+
 
 private:
     void AttackKnife();

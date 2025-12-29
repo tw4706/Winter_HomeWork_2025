@@ -5,6 +5,7 @@
 #include"Input.h"
 #include"Player.h"
 #include"Zombie.h"
+#include"Boss2.h"
 #include"Application.h"
 #include "SkullFlower.h"
 #include "GameOverScene.h"
@@ -135,6 +136,8 @@ void GameScene::NormalUpdate(Input&input)
 	//ƒ{ƒX‚ð“|‚·‚ÆƒNƒŠƒAƒV[ƒ“‚É‘JˆÚ
 	for (auto& enemy : enemyFactory_.GetEnemies())
 	{
+		auto boss2 = enemyFactory_.GetBoss2();
+
 		//“G‚ªƒ{ƒX+Ž€–S‚µ‚Ä‚¢‚éê‡
 		if (enemy->IsBoss() && enemy->IsDead()
 			&& clearState_ == ClearState::None)
@@ -143,6 +146,12 @@ void GameScene::NormalUpdate(Input&input)
 
 			//ƒ{ƒX‚ð“|‚µ‚½‚±‚Æ‚ðƒvƒŒƒCƒ„[‚É“`‚¦‚é
 			controller_.GetProgress().isDefeatedBoss1_ = true;
+		}
+		if (boss2 && boss2->IsDead())
+		{
+			controller_.ChangeScene(std::make_shared<ClearScene>(controller_));
+
+			return;
 		}
 	}
 

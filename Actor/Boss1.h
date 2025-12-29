@@ -13,6 +13,7 @@ public:
 	~Boss1() override;
 
     void Init() override;
+    void Update()override;
 
     void LoadResources() override;
 

@@ -53,6 +53,8 @@ namespace
 	constexpr int kGraphHalfW = kGraphWidth / 2;
 	constexpr int kGraphHalfH = kGraphHeight / 2;
 	constexpr float kScale = 4.0f;
+	constexpr float kColWidth = 120.0f;
+	constexpr float kColHeight = 120.0f;
 
 	//近づかれすぎた時の逃げる速度
 	constexpr float kComeBackPos = 0.5f;
@@ -96,6 +98,13 @@ void Boss1::Init()
 {
 	SetUseGravity(false);
 	Boss::Init();
+}
+
+void Boss1::Update()
+{
+	Boss::Update();
+
+	colRect_.SetCenter(pos_.x, pos_.y, kColWidth, kColHeight);
 }
 
 void Boss1::LoadResources()
@@ -258,12 +267,10 @@ void Boss1::UpdateHurt()
 {
 	stateTimer_++;
 
-	pos_.x += (isTurn_ ? kKnockBackPos : -kKnockBackPos);
+	int animIndex = GetGraphIndex(BossState::Hurt);
+	animations_[animIndex]->Update();
 
-	pos_.y += sin(stateTimer_ * 0.3f) * 0.3f;
-
-	//タイマーを進めてIdle状態に戻る
-	if (animations_[static_cast<int>(BossState::Hurt)]->IsAnimFinished())
+	if (animations_[animIndex]->IsAnimFinished())
 	{
 		ChangeState(BossState::Idle);
 	}

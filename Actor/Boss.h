@@ -1,5 +1,6 @@
 #pragma once
 #include "Enemy.h"
+
 class BulletManager;
 class Boss :public Enemy
 {
