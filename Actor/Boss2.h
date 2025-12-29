@@ -17,11 +17,18 @@ public:
     void Init() override;
 	void Update() override;
     void Draw()override;
-
+        
+	//ボスがダメージを受けられる状態かどうかを返す関数
     bool IsDamageable() const;
 
+	//プレイヤーが選んだ武器をボスに伝える関数
+    void SetPlayerWeapon(BulletType weapon);
+
+    //ボスの攻撃行動を確定させる関数
+    void DecideAttackMode(BulletType playerWeapon);
+
 protected:
-    void LoadResources() override;
+    void LoadResources() override {};
     int GetGraphIndex(BossState state) const override;
 
     void UpdateIdle() override;
@@ -31,12 +38,12 @@ protected:
 	void UpdateHurt() override;
 	void OnHit(int damage) override;
 
-    void SetAttackMode(BulletType type);
-
 private:
     void AttackKnife();
     void AttackLance();
     void AttackTorch();
 
     BossAttackMode bossMode_;//ボスの攻撃モード
+    bool isModeDecided_ = false;
+    BulletType playerWeapon_= BulletType::Knife;
 };

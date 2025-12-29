@@ -80,6 +80,8 @@ Boss1::Boss1(Vector2 pos, Vector2 vel,
 	knockbackDir_(0),
 	chargeVel_(0.0f)
 {
+	SetUseGravity(false);
+	hp_ = KMaxHp;
 }
 
 Boss1::~Boss1()
@@ -92,6 +94,7 @@ Boss1::~Boss1()
 
 void Boss1::Init()
 {
+	SetUseGravity(false);
 	Boss::Init();
 }
 

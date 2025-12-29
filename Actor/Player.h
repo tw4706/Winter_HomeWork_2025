@@ -70,6 +70,9 @@ public:
 	//ボスを倒した後の自動移動
 	void StartAutoWalk(int dir);
 
+	//現在の弾の種類を取得
+	BulletType GetCurrentWeapon() const { return currentBulletType_; }
+
 private:
 	std::vector<int>graphHandles_;//画像ハンドルの配列
 	Vector2 initializePos_;//リスポーンしたときの初期位置保存用

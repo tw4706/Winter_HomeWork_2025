@@ -42,7 +42,6 @@ Boss::Boss(Vector2 pos, Vector2 vel, std::shared_ptr<Player>player, BulletManage
 	isInvincible_(false)
 {
 	colSize_ = kColSize;
-	SetUseGravity(false);
 }
 
 Boss::~Boss()
@@ -52,18 +51,15 @@ Boss::~Boss()
 void Boss::Init()
 {
 	LoadResources();
-	SetUseGravity(false);
 	currentState_ = BossState::Idle;
 	stateTimer_ = 0;
 }
 
 void Boss::Update()
 {
-	Enemy::Update();
-
 	float distance = std::abs(pPlayer_->GetPos().x - pos_.x);
 
-	// プレイヤーが一定距離まで近づいたら起動
+	//プレイヤーが一定距離まで近づいたら起動
 	if (!isActive_)
 	{
 		if (distance < kActiveDistance)
@@ -73,11 +69,12 @@ void Boss::Update()
 		}
 		else
 		{
-			//ボスの検知する前は当たり判定はなしにする
 			colRect_.SetCenter(pos_.x, pos_.y, 0, 0);
 
-			//Idleアニメーションだけ再生
-			animations_[static_cast<int>(BossState::Idle)]->Update();
+			//Idleアニメだけ更新
+			animations_[GetGraphIndex(BossState::Idle)]->Update();
+
+			Enemy::Update();
 			return;
 		}
 	}
@@ -113,6 +110,8 @@ void Boss::Update()
 		break;
 	}
 
+	Enemy::Update();
+
 #ifdef _DEBUG
 	//Kキーで即死
 	if (CheckHitKey(KEY_INPUT_K))
@@ -142,37 +141,21 @@ void Boss::Draw()
 
 void Boss::ChangeState(BossState nextState)
 {
-	//無敵状態解除
 	isInvincible_ = false;
 
-	if (!isActive_ && nextState != BossState::Idle)
-		return;
+	if (!isActive_ && nextState != BossState::Idle)return;
 
-	BossState prevState = currentState_;
 	currentState_ = nextState;
 	stateTimer_ = 0;
 
-	//アニメーション初期化
-	int animIdx = GetGraphIndex(nextState);
-	animations_[animIdx]->Reset();
-
-	if (nextState == BossState::Dead)
+	//状態変更時に速度0にする
+	vel_.x = 0.0f;
+	if (nextState != BossState::Attack)
 	{
-		//落下開始
-		vel_.x = 0.0f;
 		vel_.y = 0.0f;
-
-		//行動停止
-		isCharging_ = false;
-		shotTimer_ = 0.0f;
-		return;
 	}
 
-	
-	if (nextState == BossState::Attack)
-	{
-		hasShot_ = false;
-	}
+	animations_[GetGraphIndex(nextState)]->Reset();
 }
 
 void Boss::UpdateHurt()

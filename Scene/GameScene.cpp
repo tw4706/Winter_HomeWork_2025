@@ -258,13 +258,18 @@ void GameScene::Init()
 	}
 	else if (stageType_ == StageType::Stage2)
 	{
+		BulletType weapon = pPlayer_->GetCurrentWeapon();
+
 		enemyFactory_.AddBoss2(Vector2{ kBoss2SpawnPosX, kBoss2SpawnPosY },Vector2{ 0,0 },
-			pPlayer_,&bulletManager_,pCamera_);
+			pPlayer_,&bulletManager_,pCamera_,weapon);
 	}
 	else if (stageType_ == StageType::BossDebugStage)
 	{
-		enemyFactory_.AddBoss2(Vector2{ kBoss2SpawnPosX, kBoss2SpawnPosY },Vector2{ 0,0 },
-			pPlayer_,&bulletManager_,pCamera_);	}
+		BulletType weapon = pPlayer_->GetCurrentWeapon();
+
+		enemyFactory_.AddBoss2(Vector2{ kBoss2SpawnPosX, kBoss2SpawnPosY }, Vector2{ 0,0 },
+			pPlayer_, &bulletManager_, pCamera_, weapon);
+	}
 	enemyFactory_.Init(pPlayer_, bg_);
 
 

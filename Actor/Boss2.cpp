@@ -1,10 +1,11 @@
 #include "Boss2.h"
+#include"BulletManager.h"
 #include<Dxlib.h>
 
 namespace
 {
 	constexpr int kGraphW = 192;
-	constexpr int kGraphH = 108;
+	constexpr int kGraphH = 128;
 	constexpr float kScale = 4.0f;
 	constexpr float kColSizeX = 128.0f;
 	constexpr float kColSizeY = 256.0f;
@@ -43,7 +44,8 @@ namespace
 
 void Boss2::Init()
 {
-	//スプライトシートを1枚だけ読み込む
+	Boss::Init();
+
 	int graph = LoadGraph("data/Enemy/Boss2.png");
 
 	graphHandles_.resize(kAnimNum);
@@ -64,15 +66,20 @@ void Boss2::Init()
 			kStartY[i]);
 	}
 
+	//起動前も地面にいさせる
 	SetUseGravity(true);
 
 	currentState_ = BossState::Idle;
 	stateTimer_ = 0;
-	bossMode_ = BossAttackMode::Knife;
 }
 
 void Boss2::Update()
 {
+	if (isActive_ && !isModeDecided_)
+	{
+		DecideAttackMode(pPlayer_->GetCurrentWeapon());
+		isModeDecided_ = true;
+	}
 	Boss::Update();
 
 	colRect_.SetCenter(pos_.x, pos_.y-100, kColSizeX, kColSizeY);
@@ -83,7 +90,7 @@ void Boss2::Draw()
 	int graphIndex = GetGraphIndex(currentState_);
 
 	float drawX = pos_.x + cameraOffset_.x;
-	float drawY = pos_.y + cameraOffset_.y;
+	float drawY = pos_.y + cameraOffset_.y-150;
 
 	animations_[graphIndex]->Draw(drawX, drawY, !isTurn_);
 
@@ -108,8 +115,28 @@ bool Boss2::IsDamageable() const
 	}
 }
 
-void Boss2::LoadResources()
+void Boss2::SetPlayerWeapon(BulletType weapon)
 {
+	playerWeapon_ = weapon;
+}
+
+void Boss2::DecideAttackMode(BulletType playerWeapon)
+{
+	switch (playerWeapon)
+	{
+	case BulletType::Knife:
+		bossMode_ = BossAttackMode::Knife;
+		break;
+	case BulletType::Lance:
+		bossMode_ = BossAttackMode::Lance;
+		break;
+	case BulletType::Torch:
+		bossMode_ = BossAttackMode::Torch;
+		break;
+	default:
+		bossMode_ = BossAttackMode::Knife;
+		break;
+	}
 }
 
 int Boss2::GetGraphIndex(BossState state) const
@@ -162,7 +189,17 @@ void Boss2::UpdateAttack()
 
 void Boss2::UpdateMove()
 {
+	stateTimer_++;
 
+	//歩行
+	vel_.x = isTurn_ ? -1.5f : 1.5f;
+
+	//一定時間でIdleへ
+	if (stateTimer_ > 60)
+	{
+		vel_.x = 0.0f;
+		ChangeState(BossState::Idle);
+	}
 }
 
 void Boss2::UpdateExposed()
@@ -183,22 +220,18 @@ void Boss2::UpdateHurt()
 {
 	stateTimer_++;
 
-	// 無敵点滅用
-	isInvincible_ = true;
+	//ノックバック
+	pos_.x += isTurn_ ? 2.0f : -2.0f;
+	pos_.y += sinf(stateTimer_ * 0.3f) * 0.3f;
 
 	if (stateTimer_ > 30)
 	{
-		isInvincible_ = false;
-
 		switch (bossMode_)
 		{
-		case BossAttackMode::Knife:
-			ChangeState(BossState::Idle);
-			break;
 		case BossAttackMode::Lance:
 			ChangeState(BossState::Exposed);
 			break;
-		case BossAttackMode::Torch:
+		default:
 			ChangeState(BossState::Idle);
 			break;
 		}
@@ -220,23 +253,6 @@ void Boss2::OnHit(int damage)
 	Boss::OnHit(damage);
 }
 
-void Boss2::SetAttackMode(BulletType type)
-{
-	switch (type)
-	{
-	case BulletType::Knife:
-		bossMode_ = BossAttackMode::Knife;
-		break;
-	case BulletType::Lance:
-		bossMode_ = BossAttackMode::Lance;
-		break;
-	case BulletType::Torch:
-		bossMode_ = BossAttackMode::Torch;
-		break;
-	default:
-		break;
-	}
-}
 
 void Boss2::AttackKnife()
 {
@@ -256,11 +272,13 @@ void Boss2::AttackLance()
 	if (stateTimer_ == 0)
 	{
 		isInvincible_ = true;
-		vel_.x = isTurn_ ? -5.0f : 5.0f;
 	}
 
 	stateTimer_++;
 
+	vel_.x = isTurn_ ? -5.0f : 5.0f;
+
+	//一定時間で停止
 	if (stateTimer_ > 60)
 	{
 		vel_.x = 0.0f;
@@ -271,19 +289,21 @@ void Boss2::AttackLance()
 
 void Boss2::AttackTorch()
 {
-	isInvincible_ = false;
-
-	if (stateTimer_ == 0 && isGround_)
-	{
-		vel_.y = -14.0f;
-		vel_.x = isTurn_ ? -3.0f : 3.0f;
-	}
-
 	stateTimer_++;
 
-	//着地後だけ隙
-	if (isGround_ && stateTimer_ > 50)
+	//ジャンプ開始
+	if (stateTimer_ == 1 && isGround_)
 	{
+		vel_.y = -12.0f; //ジャンプ初速
+	}
+
+	//空中横移動
+	vel_.x = isTurn_ ? -2.5f : 2.5f;
+
+	//着地後の隙
+	if (isGround_ && stateTimer_ > 30)
+	{
+		vel_.x = 0.0f;
 		ChangeState(BossState::Idle);
 	}
 }
