@@ -19,6 +19,9 @@ private:
 	//はい・いいえダイアログの選択中インデックス
 	int yesNoDialogSelectIdx_ = 1;
 
+	//ダイアログに表示するタイトル
+	std::string yesNoDialogTitle_;
+
 	//はい・いいえあとに実行する内容
 	std::function<void()>requestFunction_ = []() {};
 
