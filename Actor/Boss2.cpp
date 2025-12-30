@@ -106,10 +106,13 @@ bool Boss2::IsDamageable() const
 	{
 	case BossAttackMode::Knife:
 		return true;
+
 	case BossAttackMode::Lance:
 		return currentState_ == BossState::Exposed;
+
 	case BossAttackMode::Torch:
 		return currentState_ == BossState::Idle;
+
 	default:
 		return true;
 	}
@@ -126,12 +129,15 @@ void Boss2::DecideAttackMode(BulletType playerWeapon)
 	{
 	case BulletType::Knife:
 		bossMode_ = BossAttackMode::Knife;
+		hp_ = 50;
 		break;
 	case BulletType::Lance:
 		bossMode_ = BossAttackMode::Lance;
+		hp_ = 30;
 		break;
 	case BulletType::Torch:
 		bossMode_ = BossAttackMode::Torch;
+		hp_ = 40;
 		break;
 	default:
 		bossMode_ = BossAttackMode::Knife;
@@ -272,18 +278,19 @@ void Boss2::AttackLance()
 	if (stateTimer_ == 0)
 	{
 		isInvincible_ = true;
+		vel_.y = -15.0f;// 大ジャンプ
 	}
 
 	stateTimer_++;
 
-	vel_.x = isTurn_ ? -5.0f : 5.0f;
+	vel_.x = isTurn_ ? -4.0f : 4.0f;
 
 	//一定時間で停止
-	if (stateTimer_ > 60)
+	if (isGround_ && stateTimer_ > 30)
 	{
-		vel_.x = 0.0f;
+		vel_ = { 0.0f, 0.0f };
 		isInvincible_ = false;
-		ChangeState(BossState::Exposed);
+		ChangeState(BossState::Exposed); // ダメージチャンス
 	}
 }
 
@@ -291,18 +298,20 @@ void Boss2::AttackTorch()
 {
 	stateTimer_++;
 
-	//ジャンプ開始
+	//空中は無敵
+	isInvincible_ = !isGround_;
+
 	if (stateTimer_ == 1 && isGround_)
 	{
-		vel_.y = -12.0f; //ジャンプ初速
+		vel_.y = -12.0f;
 	}
 
-	//空中横移動
 	vel_.x = isTurn_ ? -2.5f : 2.5f;
 
 	//着地後の隙
-	if (isGround_ && stateTimer_ > 30)
+	if (isGround_ && stateTimer_ > 40)
 	{
+		isInvincible_ = false;
 		vel_.x = 0.0f;
 		ChangeState(BossState::Idle);
 	}

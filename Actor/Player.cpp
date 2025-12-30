@@ -269,7 +269,6 @@ void Player::Update(Input& input, BulletManager& bm,StageType stage)
 		animations_[static_cast<int>(state_)]->Update();
 		return;
 	}
-#ifdef _DEBUG
 	//武器の切り替え
 	if (input.IsTriggered("changeWeapon"))
 	{
@@ -284,6 +283,7 @@ void Player::Update(Input& input, BulletManager& bm,StageType stage)
 		currentBulletType_ = static_cast<BulletType>(next);
 	}
 
+#ifdef _DEBUG
 	//デバッグ用
 	DrawFormatString(0, 0, GetColor(255, 255, 255), "PlayerX:%f", pos_.x);
 	DrawFormatString(0, 20, GetColor(255, 255, 255), "PlayerY:%f", pos_.y);
