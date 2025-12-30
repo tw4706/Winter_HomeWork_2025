@@ -2,7 +2,6 @@
 #include "Input.h"
 #include "SceneController.h"
 #include "Application.h"
-#include "TitleScene.h"
 #include"Dxlib.h"
 
 constexpr int frame_margin = 10;//枠が画面端からどれくらい離れているか
@@ -10,8 +9,6 @@ constexpr int appear_interval = 10;//枠が出現するまでのフレーム数
 constexpr int menu_row_height = 50;//メニューの行の高さ
 constexpr int menu_left_margin = 200;//メニュー枠からの左余白
 constexpr int menu_top_margin = 120;//メニュー枠からの上余白
-constexpr int yes_no_dialog_yes = 0;
-constexpr int yes_no_dialog_no = 1;
 
 void PauseScene::AppearUpdate(Input& input)
 {
@@ -44,13 +41,6 @@ void PauseScene::NormalUpdate(Input& input)
 	if (input.IsTriggered("down")) {
 		selectIndex_ = (selectIndex_ + 1) % menuList_.size();
 	}
-	if (input.IsTriggered("ok")) {
-		//現在選択中のメニューアイテム名取得する
-		auto& menuName = menuList_[selectIndex_];
-		//その目ny－アイテムの名前に対応付けられたラムダ式を実行する
-		execTable_[menuName](input);
-		return;
-	}
 }
 
 void PauseScene::DisappearUpdate(Input& input)
@@ -61,30 +51,6 @@ void PauseScene::DisappearUpdate(Input& input)
 		return;
 	}
 	--frame_;
-}
-
-void PauseScene::YesNoDialogUpdate(Input& input)
-{
-	if (input.IsTriggered("left") || input.IsTriggered("right"))
-	{
-		yesNoIndex = (yesNoIndex + 1) % 2;
-		return;
-	}
-	if (input.IsTriggered("ok"))
-	{
-		//YESが選ばれた
-		if (yesNoIndex == yes_no_dialog_yes)
-		{
-			yesRequestFunction_();
-		}
-		else//NOが選ばれた
-		{
-			yesRequestFunction_ = []() {};//念のためクリア
-			update_ = &PauseScene::NormalUpdate;
-			draw_ = &PauseScene::NormalDraw;
-		}
-		return;
-	}
 }
 
 void PauseScene::IntervalDraw()
@@ -160,56 +126,6 @@ void PauseScene::DrawMenu()
 	}
 }
 
-void PauseScene::YesNoDialogDraw()
-{
-	if (menuList_.empty() || selectIndex_ >= menuList_.size())
-	{
-		return;
-	}
-
-	//NormalDrawを書いているのは通常のメニューの上に
-	//YesNoDialogを置きたいので、メニューの表示をするため
-	NormalDraw();
-
-	constexpr int yes_no_dialog_height = 100;
-	constexpr int yes_no_dialog_width = 300;
-	const int centerY = Application::GetInstance().GetWindowSize().h / 2;
-	const int centerX = Application::GetInstance().GetWindowSize().w / 2;
-
-	//YES/NOの枠表示
-	const int dialog_left = centerX - yes_no_dialog_width / 2;
-	DrawBox(dialog_left,
-		centerY - yes_no_dialog_height / 2,
-		centerX + yes_no_dialog_width / 2,
-		centerY + yes_no_dialog_height / 2,
-		0xaa88bb, true);
-	DrawBox(dialog_left,
-		centerY - yes_no_dialog_height / 2,
-		centerX + yes_no_dialog_width / 2,
-		centerY + yes_no_dialog_height / 2,
-		0xffffff, false, 3);
-
-	int y = centerY - 10;//画面中心から文字サイズの半分引く
-	int x = dialog_left + 90;//はい、いいえが真ん中に来るように
-	std::array<std::wstring, 2>answers = { L"はい",L"いいえ" };
-
-	//ダイアログタイトルを表示
-	DrawFormatString(centerX - 80, centerX - yes_no_dialog_width / 2 + 30,
-		0xffffff, "%s", menuList_[selectIndex_].c_str());
-
-	//はい、いいえを表示
-	for (int idx = 0; idx < 2; ++idx)
-	{
-		uint32_t col = 0xffffff;
-		if (yesNoIndex == idx) {
-			DrawString(x - 20, y, "⇒", 0xaaffaa);
-			col = GetColor(255, 64, 64);
-		}
-		DrawFormatString(x, y, col, "%s", answers[idx].c_str());
-		x += 100;
-	}
-}
-
 PauseScene::PauseScene(SceneController& controller) :
 	Scene(controller),
 	update_(&PauseScene::AppearUpdate),
@@ -217,54 +133,21 @@ PauseScene::PauseScene(SceneController& controller) :
 {
 	menuList_ = {
 		"ゲームに戻る",
-		"キーコンフィグ",
 		"タイトルに戻る",
 		"ゲームを終了する"
 	};
-	//メニューで選ばれる文字列と実行される内容のペアを定義S
-	execTable_["ゲームに戻る"] = [this](Input&)
-		{
-			update_ = &PauseScene::DisappearUpdate;
-			draw_ = &PauseScene::IntervalDraw;
-			frame_ = appear_interval;
-			return;
-		};
-	execTable_["キーコンフィグ"] = [this](Input& input)
-		{
-			controller_.PushScene(std::make_shared<TitleScene>(controller_));
-		};
-	execTable_["タイトルに戻る"] = [this](Input&)
-		{
-			update_ = &PauseScene::YesNoDialogUpdate;
-			draw_ = &PauseScene::YesNoDialogDraw;
-			yesRequestFunction_ = [this]()
-				{
-					controller_.ResetScene(std::make_shared<TitleScene>(controller_));
-				};
-		};
-	execTable_["ゲームを終了する"] = [this](Input&)
-		{
-			update_ = &PauseScene::YesNoDialogUpdate;
-			draw_ = &PauseScene::YesNoDialogDraw;
-			yesRequestFunction_ = []()
-				{
-					Application::GetInstance().RequestExit();
-				};
-		};
 }
 
 void PauseScene::Init()
 {
 	frame_ = 0;
 	selectIndex_ = 0;
-	yesNoIndex = 1;
 
 	if (menuList_.empty())
 	{
 		menuList_ =
 		{
 			"ゲームに戻る",
-			"キーコンフィグ",
 			"タイトルに戻る",
 			"ゲームを終了する"
 		};

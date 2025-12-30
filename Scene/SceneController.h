@@ -44,19 +44,5 @@ public:
 	/// “à•”‚É‚Á‚Ä‚¢‚éDraw‚ğŒÄ‚Ño‚·
 	/// </summary>
 	void Draw();
-
-	//’Ç‰Á: Œ^T‚ÌƒV[ƒ“‚ğæ“¾‚·‚é
-	template<typename T>
-	std::shared_ptr<T> GetScene()
-	{
-		for (auto it = scenes_.rbegin(); it != scenes_.rend(); ++it)
-		{
-			auto casted = std::dynamic_pointer_cast<T>(*it);
-			if (casted)
-				return casted;
-		}
-		return nullptr;
-	}
-
 };
 
