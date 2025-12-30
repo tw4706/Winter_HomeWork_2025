@@ -5,8 +5,8 @@
 void SceneController::ResetScene(std::shared_ptr<Scene> scene)
 {
 	if (!scene) return;
-	scenes_.clear(); //全てのシーンを削除
-	scenes_.push_back(scene); //新しいシーンを追加
+	scenes_.clear();
+	scenes_.push_back(scene);
 	scene->Init();
 }
 
@@ -17,7 +17,7 @@ void SceneController::ChangeScene(std::shared_ptr<Scene> scene)
 
     if (!scenes_.empty()) 
 	{
-        scenes_.pop_back(); //古いシーンを削除
+		scenes_.pop_back(); //古いシーンを削除
     }
     scenes_.push_back(scene); //新しいシーンを追加
 
@@ -27,17 +27,17 @@ void SceneController::ChangeScene(std::shared_ptr<Scene> scene)
 
 void SceneController::PushScene(std::shared_ptr<Scene> scene)
 {
+	//新しいシーンを末尾に積みます
 	if (!scene) return;
-	scenes_.push_back(scene); //新しいシーンを追加
+	scenes_.push_back(scene);
 	scene->Init();
 }
 
 void SceneController::PopScene()
 {
-	if (!scenes_.empty()) 
-	{
-		scenes_.pop_back(); //古いシーンを削除
-	}
+	//末尾のシーンを削除します
+	if (scenes_.empty()) return;
+	scenes_.pop_back();
 }
 
 void SceneController::Update(Input& input)

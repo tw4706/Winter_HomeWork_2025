@@ -73,11 +73,6 @@ void GameScene::FadeInUpdate(Input&)
 
 void GameScene::NormalUpdate(Input&input)
 {
-	if (input.IsTriggered("next"))
-	{
-		controller_.ChangeScene(std::make_shared<SelectScene>(controller_));
-		return;
-	}
 
 	//ポーズボタンを押したらポーズシーンに遷移
 	if (input.IsTriggered("pause"))
@@ -85,6 +80,13 @@ void GameScene::NormalUpdate(Input&input)
 		controller_.PushScene(std::make_shared<PauseScene>(controller_));
 		return;
 	}
+
+	if (input.IsTriggered("next"))
+	{
+		controller_.ChangeScene(std::make_shared<SelectScene>(controller_));
+		return;
+	}
+
 
 	if (pPlayer_->GetPos().y > kFallLimit)
 	{
@@ -251,7 +253,6 @@ void GameScene::Init()
 
 	//プレイヤーの初期化
 	pPlayer_ = std::make_shared<Player>(Vector2{ kPlayerSpawnPosX, kPlayerSpawnPosY }, Vector2{ 0,0 });
-	pPlayer_->Init();
 	pPlayer_->Init();
 	pPlayer_->SetBg(bg_);
 

@@ -14,7 +14,6 @@ private:
 	std::list<std::shared_ptr<Scene>>scenes_;
 
 	GameProgress progress_;
-
 public:
 
 	//ゲームの進行状況を取得する関数
@@ -46,7 +45,7 @@ public:
 	/// </summary>
 	void Draw();
 
-	// 追加: 型Tのシーンを取得する
+	//追加: 型Tのシーンを取得する
 	template<typename T>
 	std::shared_ptr<T> GetScene()
 	{

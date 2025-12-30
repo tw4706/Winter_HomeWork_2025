@@ -1,61 +1,47 @@
 #pragma once
-#include "Scene.h"
-#include <vector>
-#include <string>
+#include"Scene.h"
+#include<vector>
 #include<map>
-#include<functional>
+#include<functional>//ラムダ式を書くために必要
+#include<string>
 
-
+/// <summary>
+/// ポーズシーン
+/// </summary>
 class PauseScene :public Scene
 {
 private:
-
 	//メニュー名と実行内容の対応テーブル
-	std::map<std::string, std::function<void(Input&)>>menuActions_;
+	std::map<std::string, std::function<void(Input&)>>execTable_;
 
 	int frame_ = 0;
-	int selectIdx_ = 0;
+	int selectIndex_ = 0;//現在選択中のインデックス
 
-	//はい・いいえダイアログの選択中インデックス
-	int yesNoDialogSelectIdx_ = 1;
-
-	//ダイアログに表示するタイトル
-	std::string yesNoDialogTitle_;
-
-	//はい・いいえあとに実行する内容
-	std::function<void()>requestFunction_ = []() {};
+	int yesNoIndex = 1;//Noがデフォルトですが、YES=0,NO=1とします。
+	//YES?NOの後で実行してほしい内容
+	std::function<void()>yesRequestFunction_ = []() {};
 
 	using UpdateFunc_t = void(PauseScene::*)(Input& input);
 	UpdateFunc_t update_;
-	//ポーズ画面の表示中の更新
 	void AppearUpdate(Input& input);
-	//ポーズ画面の通常更新
 	void NormalUpdate(Input& input);
-	//ポーズ画面の消失中の更新
 	void DisappearUpdate(Input& input);
-	//はい・いいえダイアログ表示中の更新
-	void YesNoDialogUpdate(Input& input);
 
+	void YesNoDialogUpdate(Input& input);
 
 	using DrawFunc_t = void(PauseScene::*)();
 	DrawFunc_t draw_;
-	//ポーズ画面の表示開始時の描画
 	void IntervalDraw();
-	//ポーズ画面の通常描画
 	void NormalDraw();
-
-	//ポーズ画面中に表示するメニューリスト
-	std::vector<std::string>menuList_;
-	//メニューの選択中インデックスの描画
+	std::vector<std::string>menuList_;//ポーズ画面中に表示するメニューリスト
 	void DrawMenu();
-	void YesNoDialogDraw();
 
+	void YesNoDialogDraw();
 
 public:
 	PauseScene(SceneController& controller);
-
-	void Init() override {};
-	void Update(Input& input) override;
-	void Draw() override;
+	void Init()override;
+	void Update(Input& input)override;
+	void Draw()override;
 };
 
