@@ -41,6 +41,10 @@ void PauseScene::NormalUpdate(Input& input)
 	if (input.IsTriggered("down")) {
 		selectIndex_ = (selectIndex_ + 1) % menuList_.size();
 	}
+	if (input.IsTriggered("next")) 
+	{
+		ExcecuteMenu();
+	}
 }
 
 void PauseScene::DisappearUpdate(Input& input)
@@ -51,6 +55,25 @@ void PauseScene::DisappearUpdate(Input& input)
 		return;
 	}
 	--frame_;
+}
+void PauseScene::ExcecuteMenu() 
+{
+	if (menuList_.empty()) return;
+	if (selectIndex_ < 0 || selectIndex_ >= static_cast<int>(menuList_.size())) return;
+	const std::string& menu = menuList_[selectIndex_]; 
+	if (menu == "ゲームに戻る") {
+		update_ = &PauseScene::DisappearUpdate;
+		draw_ = &PauseScene::IntervalDraw; 
+		frame_ = appear_interval; 
+	} 
+	else if (menu == "タイトルに戻る") 
+	{ 
+		OutputDebugStringA("タイトルに戻る が選ばれました\n");
+	} 
+	else if (menu == "ゲームを終了する") 
+	{
+		Application::GetInstance().RequestExit();
+	} 
 }
 
 void PauseScene::IntervalDraw()
@@ -162,6 +185,7 @@ void PauseScene::Update(Input& input)
 	(this->*update_)(input);
 }
 
-void PauseScene::Draw() {
+void PauseScene::Draw() 
+{
 	(this->*draw_)();
 }

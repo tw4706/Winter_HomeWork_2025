@@ -21,6 +21,8 @@ private:
 	void NormalUpdate(Input& input);
 	void DisappearUpdate(Input& input);
 
+	void ExcecuteMenu();
+
 	using DrawFunc_t = void(PauseScene::*)();
 	DrawFunc_t draw_;
 	void IntervalDraw();
