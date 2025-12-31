@@ -1,19 +1,32 @@
 #pragma once
 #include "Scene.h"
+
+//タイトルシーンの状態
+enum class TitleState
+{
+	Normal,//通常
+	Confirm//初回プレイか確認中
+};
+
 class TitleScene :public Scene
 {
 private:
 	int titleH_;//タイトル画像ハンドル
 	int frame_;//経過フレーム
 
+	TitleState titleState_;//シーンの状態
+	int confirmSelect_;//確認選択肢 0 = はい 1 = いいえ
+
 	void FadeInUpdate(Input&);
 	void NormalUpdate(Input&);
 	void FadeOutUpdate(Input&);
+	void ConfirmUpdate(Input& input);
 	using UpdateFunc_t = void (TitleScene::*)(Input&);
 	UpdateFunc_t update_;
 
 	void NormalDraw();
 	void FadeDraw();
+	void ConfirmDraw();
 	using DrawFunc_t = void(TitleScene::*)();
 	DrawFunc_t draw_;
 
