@@ -133,6 +133,7 @@ TitleScene::TitleScene(SceneController& controller) :
 
 TitleScene::~TitleScene()
 {
+	DeleteGraph(titleH_);
 }
 
 void TitleScene::Init()

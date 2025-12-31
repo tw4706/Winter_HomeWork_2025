@@ -18,7 +18,10 @@ public:
 	int GetFrameCount() const { return frameCount_; }
 	int GetCurrentFrame() const { return currentFrame_; }
 
+	//アニメーションが終了したかどうか
 	bool IsAnimFinished() const { return (!isLoop_ && currentFrame_ >= frameCount_ - 1); }
+
+
 
 private:
     int handle_;            //画像ハンドル

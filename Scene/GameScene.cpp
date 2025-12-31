@@ -105,6 +105,10 @@ void GameScene::NormalUpdate(Input&input)
 
 	//弾の更新処理
 	bulletManager_.Update(input, enemyFactory_.GetEnemies(), *pPlayer_);
+	bulletManager_.SetEffectManager(&effectManager_);
+
+	effectManager_.SetCameraOffset(pCamera_->GetOffset());
+	effectManager_.Update();
 
 	//プレイヤーの弾 × 敵の当たり判定
 	CollisionManager::PlayerBulletsVsEnemies(
@@ -237,6 +241,9 @@ void GameScene::NormalDraw()
 
 	bulletManager_.SetCameraOffset(cameraOffset);
 	bulletManager_.Draw();
+
+	effectManager_.SetCameraOffset(cameraOffset);
+	effectManager_.Draw();
 
 	//ステージ2表示
 	DrawFormatString(Game::kScreenWidth, Game::kScreenHeight,

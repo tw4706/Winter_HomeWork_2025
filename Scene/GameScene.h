@@ -4,6 +4,7 @@
 #include"Geometry.h"
 #include"StageType.h"
 #include"BulletManager.h"
+#include"EffectManager.h"
 #include"EnemyFactory.h"
 #include<memory>
 
@@ -45,6 +46,7 @@ public:
 private:
 	std::shared_ptr<Player>pPlayer_;
 	BulletManager bulletManager_;
+	EffectManager effectManager_;
 	EnemyFactory enemyFactory_;
 	std::shared_ptr<Bg>bg_;
 	std::shared_ptr<Camera>pCamera_;

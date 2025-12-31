@@ -4,6 +4,8 @@
 #include "Animation.h"
 #include "GlobalConstants.h"
 #include "BulletManager.h"
+#include "EffectManager.h"
+#include"SpriteEffect.h"
 #include<Dxlib.h>
 #include<cassert>
 
@@ -318,6 +320,27 @@ void Bullet::CheckBulletAndMapCollision()
 
 	if (pBg_->IsCollision(colRect_, chipRect_))
 	{
+		//マップ衝突エフェクトの追加
+		if (pEffectManager_)
+		{
+			DrawFormatString(0, 16, 0xffffff, "EFFECT OK");
+			pEffectManager_->AddEffect(
+				std::make_shared<SpriteEffect>(
+					pos_,
+					"data/Effect/bullet_effect.png", // ← マップ衝突用エフェクト
+					160,      // startY
+					16, 16, // frameW, frameH
+					4,      // frameCount
+					5,      // frameInterval
+					1.5f    // scale
+				)
+			);
+		}
+		else
+		{
+			DrawFormatString(0, 16, 0xff0000, "EFFECT NULL");
+		}
+
 		float bulletLeft = pos_.x - colSize_ / 2.0f;
 		float bulletRight = pos_.x + colSize_ / 2.0f;
 		float tileLeft = chipRect_.GetLeft();
@@ -327,12 +350,13 @@ void Bullet::CheckBulletAndMapCollision()
 		float tileTop = chipRect_.GetTop();
 		float tileBottom = chipRect_.GetBottom();
 
-		// 横方向の衝突
+		//横方向の衝突
 		bool hitSide = (bulletRight > tileLeft && bulletLeft < tileRight &&
 			bulletBottom > tileTop && bulletTop < tileBottom);
 
 		if (hitSide)
 		{
+
 			switch (bulletType_)
 			{
 			case BulletType::Knife:

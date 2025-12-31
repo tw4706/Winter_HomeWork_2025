@@ -54,6 +54,7 @@ constexpr BulletConfig kBulletConfigs[] =
 
 class Input;
 class Enemy;
+class EffectManager;
 class Bullet:public GameObject
 {
 public:
@@ -89,6 +90,9 @@ public:
 	//ダメージ量を返す関数
 	int GetDamage() const;
 
+	//エフェクトマネージャーのセッター
+	void SetEffectManager(std::shared_ptr<EffectManager> effectManager) { pEffectManager_ = effectManager; }
+
 private:
 	bool isAlive_;		//弾が存在しているかどうか
 	int bulletH_;		//弾の画像ハンドル
@@ -98,6 +102,7 @@ private:
 	BulletType bulletType_;
 	std::shared_ptr<Bg> pBg_;
 	std::shared_ptr<Animation> animations_;//弾のアニメーション
+	std::shared_ptr<EffectManager> pEffectManager_ = nullptr;//エフェクトマネージャーのポインタ
 	
 	//波動関連
 	int hadouH_;
