@@ -90,8 +90,11 @@ public:
 	//ダメージ量を返す関数
 	int GetDamage() const;
 
-	//エフェクトマネージャーのセッター
-	void SetEffectManager(std::shared_ptr<EffectManager> effectManager) { pEffectManager_ = effectManager; }
+	//エフェクトマネージャーのセット
+	void SetEffectManager(EffectManager* effect)
+	{
+		pEffectManager_ = effect;
+	}
 
 private:
 	bool isAlive_;		//弾が存在しているかどうか
@@ -102,7 +105,7 @@ private:
 	BulletType bulletType_;
 	std::shared_ptr<Bg> pBg_;
 	std::shared_ptr<Animation> animations_;//弾のアニメーション
-	std::shared_ptr<EffectManager> pEffectManager_ = nullptr;//エフェクトマネージャーのポインタ
+	EffectManager* pEffectManager_ = nullptr;//エフェクトマネージャーのポインタ
 	
 	//波動関連
 	int hadouH_;

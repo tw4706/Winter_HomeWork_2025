@@ -311,84 +311,32 @@ void Bullet::UpdateHadou(std::vector<std::shared_ptr<Enemy>>& enemies)
 
 void Bullet::CheckBulletAndMapCollision()
 {
-	if (!pBg_)return;
+	if (!pBg_) return;
 
-	isGround_ = false;
-
-	pos_.x += vel_.x;
+	pos_ += vel_;
 	colRect_.SetCenter(pos_.x, pos_.y, colSize_, colSize_);
 
+	//マップに当たったら即消す
 	if (pBg_->IsCollision(colRect_, chipRect_))
 	{
-		//マップ衝突エフェクトの追加
+		DrawFormatString(0, 48, 0x00ff00, "HIT MAP");
+
+		//エフェクト
 		if (pEffectManager_)
 		{
-			DrawFormatString(0, 16, 0xffffff, "EFFECT OK");
 			pEffectManager_->AddEffect(
 				std::make_shared<SpriteEffect>(
 					pos_,
-					"data/Effect/bullet_effect.png", // ← マップ衝突用エフェクト
-					160,      // startY
-					16, 16, // frameW, frameH
-					4,      // frameCount
-					5,      // frameInterval
-					1.5f    // scale
-				)
-			);
-		}
-		else
-		{
-			DrawFormatString(0, 16, 0xff0000, "EFFECT NULL");
+					"data/Effect/bullet_effect.png",
+					160,
+					16, 16,
+					4,
+					5,
+					1.5f));
 		}
 
-		float bulletLeft = pos_.x - colSize_ / 2.0f;
-		float bulletRight = pos_.x + colSize_ / 2.0f;
-		float tileLeft = chipRect_.GetLeft();
-		float tileRight = chipRect_.GetRight();
-		float bulletTop = pos_.y - colSize_ / 2.0f;
-		float bulletBottom = pos_.y + colSize_ / 2.0f;
-		float tileTop = chipRect_.GetTop();
-		float tileBottom = chipRect_.GetBottom();
-
-		//横方向の衝突
-		bool hitSide = (bulletRight > tileLeft && bulletLeft < tileRight &&
-			bulletBottom > tileTop && bulletTop < tileBottom);
-
-		if (hitSide)
-		{
-
-			switch (bulletType_)
-			{
-			case BulletType::Knife:
-			case BulletType::Torch:
-			case BulletType::EnemyBullet:
-				isAlive_ = false;  //横衝突で消滅
-				break;
-			case BulletType::Lance:
-				//横衝突は無視
-				break;
-			}
-			return;
-		}
-	}
-
-	//まず垂直方向に移動
-	pos_.y += vel_.y;
-	colRect_.SetCenter(pos_.x, pos_.y, colSize_, colSize_);
-
-	//足元だけ判定する
-	Rect foot = colRect_;
-	foot.top_ += 2;
-	foot.bottom_ += 2;
-
-	Rect nextRect;
-
-	if (pBg_ && pBg_->IsCollision(foot, chipRect_))
-	{
-		//地面の上に乗る
-		pos_.y = chipRect_.GetTop() - colSize_ / 2.0f;
-		vel_.y = 0;
-		isGround_ = true;
+		isAlive_ = false;
+		return;
 	}
 }
 

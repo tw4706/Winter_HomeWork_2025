@@ -29,7 +29,7 @@ public:
 	//プレイヤーの弾を追加
 	std::vector<std::shared_ptr<Bullet>>& GetBullets();
 
-	void SetEffectManager(std::shared_ptr<EffectManager> effectManager)
+	void SetEffectManager(EffectManager*effectManager)
 	{
 		pEffectManager_ = effectManager;
 	}
@@ -38,6 +38,6 @@ private:
 	std::vector<std::shared_ptr<Bullet>>bullets_;
 	std::map<BulletType, int>bulletLimits_;
 	Rect screenRect_;
-	std::shared_ptr<EffectManager> pEffectManager_;
+	EffectManager* pEffectManager_;//エフェクトマネージャーのポインタ
 };
 

@@ -104,8 +104,8 @@ void GameScene::NormalUpdate(Input&input)
 	enemyFactory_.Update();
 
 	//’e‚ÌXVˆ—
-	bulletManager_.Update(input, enemyFactory_.GetEnemies(), *pPlayer_);
 	bulletManager_.SetEffectManager(&effectManager_);
+	bulletManager_.Update(input, enemyFactory_.GetEnemies(), *pPlayer_);
 
 	effectManager_.SetCameraOffset(pCamera_->GetOffset());
 	effectManager_.Update();

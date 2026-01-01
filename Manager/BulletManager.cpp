@@ -54,7 +54,8 @@ void BulletManager::Update(Input& input, std::vector<std::shared_ptr<Enemy>>&ene
 	{
 		if (!bullet->IsAlive()) continue;
 
-		// Bullet 側に全ての処理を任せる
+		//Bullet 側に全ての処理を任せる
+		bullet->SetEffectManager(pEffectManager_);
 		bullet->Update(input, enemies);
 	}
 
@@ -75,7 +76,7 @@ void BulletManager::Draw()
 		bullet->Draw();
 	}
 #ifdef _DEBUG
-	// デバッグ用：画面矩形を赤枠で描画
+	//デバッグ用
 	screenRect_.DrawAndCamera(Vector2{ 0,0 }, 0xff0000, false);
 #endif
 }
