@@ -246,7 +246,10 @@ void Boss2::UpdateHurt()
 
 void Boss2::OnHit(int damage)
 {
-	//Hurt中・死亡中は無視
+	//被弾中・無敵状態なら無視する
+	if (isHitInvincible_) return;
+
+	//Hurt中・死亡中は無視する
 	if (currentState_ == BossState::Hurt ||currentState_ == BossState::Dead)return;
 
 	//ダメージが通らない状態でもHurt状態へ移行
@@ -257,6 +260,13 @@ void Boss2::OnHit(int damage)
 	}
 
 	Boss::OnHit(damage);
+
+	//槍の場合はすぐに戻る
+	if (bossMode_ == BossAttackMode::Lance &&
+		currentState_ != BossState::Dead)
+	{
+		ChangeState(BossState::Idle);
+	}
 }
 
 

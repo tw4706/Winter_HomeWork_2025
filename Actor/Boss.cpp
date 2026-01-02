@@ -23,6 +23,9 @@ namespace
 	//カメラの揺れ関連
 	constexpr int kCameraDuration = 10;
 	constexpr int kCameraMagnitude = 8;
+
+	//被弾無敵時間
+	constexpr int kHitInvincibleTime = 20;
 }
 
 Boss::Boss(Vector2 pos, Vector2 vel, std::shared_ptr<Player>player, BulletManager*bm,std::shared_ptr<Camera>camera):
@@ -39,7 +42,9 @@ Boss::Boss(Vector2 pos, Vector2 vel, std::shared_ptr<Player>player, BulletManage
 	hasShot_(false),
 	isActive_(false),
 	isCharging_(false),
-	isInvincible_(false)
+	isInvincible_(false),
+	hitInvincibleTimer_(0),
+	isHitInvincible_(false)
 {
 	colSize_ = kColSize;
 }
@@ -108,6 +113,16 @@ void Boss::Update()
 	case BossState::Dead:
 		UpdateDead();
 		break;
+	}
+
+	//無敵時間の更新
+	if (isHitInvincible_)
+	{
+		hitInvincibleTimer_--;
+		if (hitInvincibleTimer_ <= 0)
+		{
+			isHitInvincible_ = false;
+		}
 	}
 
 	Enemy::Update();
@@ -194,6 +209,8 @@ void Boss::UpdateDead()
 
 void Boss::OnHit(int damage)
 {
+	//被弾中・無敵状態・死亡状態なら無視
+	if (isHitInvincible_) return;
 	if (isInvincible_) return;
 	if (currentState_ == BossState::Dead) return;
 
@@ -210,4 +227,10 @@ void Boss::OnHit(int damage)
 	//カメラを揺らす
 	pCamera_->Shake(kCameraDuration, kCameraMagnitude);
 	ChangeState(BossState::Hurt);
+}
+
+void Boss::StartHitInvincible()
+{
+	isHitInvincible_ = true;
+	hitInvincibleTimer_ = kHitInvincibleTime;
 }

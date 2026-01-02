@@ -1,37 +1,66 @@
 #include "SpriteEffect.h"
 #include<Dxlib.h>
 
-SpriteEffect::SpriteEffect(const Vector2& pos, const char* filePath, 
-	int startY, int frameW, int frameH, int frameCount, int frameInterval, float scale)
+
+SpriteEffect::SpriteEffect(
+    const Vector2& pos,
+    const char* filePath,
+    int srcX,
+    int srcY,
+    int frameW,
+    int frameH,
+    int frameCount,
+    int frameInterval,
+    float scale
+)
+    : srcX_(srcX),
+    srcY_(srcY),
+    frameW_(frameW),
+    frameH_(frameH),
+    frameCount_(frameCount),
+    frameInterval_(frameInterval),
+    scale_(scale)
 {
-	pos_ = pos;
-	isDead_ = false;
-	graphH_ = LoadGraph(filePath);
-    animation_ = std::make_unique<Animation>(
-        graphH_,
-        frameW,
-        frameH,
-        frameCount,
-        frameInterval,
-        scale,
-        false,      //ループしない
-        startY);
+    pos_ = pos;
+    isDead_ = false;
+    graphH_ = LoadGraph(filePath);
 }
 
 void SpriteEffect::Update()
 {
-    animation_->Update();
-    //アニメーションが終了したらエフェクトを消す
-    if (animation_->IsAnimFinished())
+    timer_++;
+
+    if (timer_ >= frameInterval_)
     {
-        isDead_ = true;
-	}
+        timer_ = 0;
+        frame_++;
+
+        if (frame_ >= frameCount_)
+        {
+            isDead_ = true;
+        }
+    }
 }
 
 void SpriteEffect::Draw()
 {
-	float drawX = pos_.x + cameraOffset_.x;
-	float drawY = pos_.y + cameraOffset_.y;
+    if (isDead_) return;
 
-	animation_->Draw(drawX, drawY, false);
+    float drawX = pos_.x + cameraOffset_.x;
+    float drawY = pos_.y + cameraOffset_.y;
+
+    int srcX = srcX_ + frame_ * frameW_;
+    int srcY = srcY_;
+
+    DrawRectRotaGraph(
+        drawX,
+        drawY,
+        srcX,
+        srcY,
+        frameW_,
+        frameH_,
+        scale_,
+        0.0f,
+        graphH_,
+        TRUE);
 }

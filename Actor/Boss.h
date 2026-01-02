@@ -28,6 +28,10 @@ public:
 
 	void ChangeState(BossState nextState);
 	virtual void OnHit(int damage);
+
+	//被弾状態開始
+	void StartHitInvincible();
+
 protected:
 	//画像の読み込み
 	virtual void LoadResources() = 0;
@@ -50,6 +54,8 @@ protected:
 	bool isCharging_;     //突進中か
 	bool isInvincible_;//無敵状態かどうか
 	Vector2 backPos_;//戻る位置を保存する変数
+	int hitInvincibleTimer_;//被弾無敵時間用タイマー
+	bool isHitInvincible_;//被弾無敵状態かどうか
 
 	//グラフィックハンドルの配列
 	std::vector<int>graphHandles_;

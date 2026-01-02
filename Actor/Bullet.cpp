@@ -328,7 +328,8 @@ void Bullet::CheckBulletAndMapCollision()
 				std::make_shared<SpriteEffect>(
 					pos_,
 					"data/Effect/bullet_effect.png",
-					160,
+					240,
+					48,
 					16, 16,
 					4,
 					5,

@@ -9,19 +9,30 @@ public:
     SpriteEffect(
         const Vector2& pos,
         const char* filePath,
-        int startY,
+        int srcX,
+        int srcY,
         int frameW,
         int frameH,
         int frameCount,
         int frameInterval,
-        float scale = 1.0f
-    );
+        float scale = 1.0f);
 
     void Update() override;
     void Draw() override;
 
 private:
+	//アニメーションに必要な変数
     int graphH_;
-    std::unique_ptr<Animation> animation_;
+
+    int srcX_;
+    int srcY_;
+    int frameW_;
+    int frameH_;
+    int frameCount_;
+    int frameInterval_;
+    float scale_;
+
+    int frame_ = 0;
+    int timer_ = 0;
 };
 
