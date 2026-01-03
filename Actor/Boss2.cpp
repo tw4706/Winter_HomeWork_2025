@@ -77,7 +77,7 @@ void Boss2::Update()
 {
 	if (isActive_ && !isModeDecided_)
 	{
-		DecideAttackMode(pPlayer_->GetCurrentWeapon());
+		DecideAttackMode(pPlayer_->GetCurrentBulletType());
 		isModeDecided_ = true;
 	}
 	Boss::Update();

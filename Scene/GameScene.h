@@ -3,6 +3,7 @@
 #include "Camera.h"
 #include"Geometry.h"
 #include"StageType.h"
+#include "PlayerWeaponUI.h"
 #include"BulletManager.h"
 #include"EffectManager.h"
 #include"EnemyFactory.h"
@@ -52,6 +53,7 @@ private:
 	std::shared_ptr<Camera>pCamera_;
 	StageType stageType_;
 	ClearState clearState_;
+	PlayerWeaponUI weaponUI_;
 
 	bool isBossDefeated_;
 	int autoWalkStartX_;

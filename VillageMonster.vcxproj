@@ -142,6 +142,7 @@
     <ClCompile Include="Actor\Boss2.cpp" />
     <ClCompile Include="Effect.cpp" />
     <ClCompile Include="EffectManager.cpp" />
+    <ClCompile Include="PlayerWeaponUI.cpp" />
     <ClCompile Include="SpriteEffect.cpp" />
     <ClCompile Include="System\GameProgress.cpp" />
     <ClCompile Include="Scene\PauseScene.cpp" />
@@ -177,6 +178,8 @@
     <ClInclude Include="Actor\Boss2.h" />
     <ClInclude Include="Effect.h" />
     <ClInclude Include="EffectManager.h" />
+    <ClInclude Include="PlayerWeaponUI.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="SpriteEffect.h" />
     <ClInclude Include="System\GameProgress.h" />
     <ClInclude Include="Scene\PauseScene.h" />
@@ -206,6 +209,9 @@
     <ClInclude Include="Scene\SceneController.h" />
     <ClInclude Include="Scene\TitleScene.h" />
     <ClInclude Include="Actor\Zombie.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="VillageMonster.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

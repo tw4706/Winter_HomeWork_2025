@@ -71,7 +71,7 @@ public:
 	void StartAutoWalk(int dir);
 
 	//Œ»İ‚Ì’e‚Ìí—Ş‚ğæ“¾
-	BulletType GetCurrentWeapon() const { return currentBulletType_; }
+	BulletType GetCurrentBulletType() const { return currentBulletType_; }
 
 private:
 	std::vector<int>graphHandles_;//‰æ‘œƒnƒ“ƒhƒ‹‚Ì”z—ñ

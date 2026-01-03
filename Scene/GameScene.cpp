@@ -101,6 +101,9 @@ void GameScene::NormalUpdate(Input&input)
 
 	pPlayer_->Update(input, bulletManager_,stageType_);
 
+	//UIの更新
+	weaponUI_.Update(*pPlayer_);
+
 	enemyFactory_.Update();
 
 	//弾の更新処理
@@ -245,6 +248,9 @@ void GameScene::NormalDraw()
 	effectManager_.SetCameraOffset(cameraOffset);
 	effectManager_.Draw();
 
+	//UIの描画
+	weaponUI_.Draw();
+
 	//ステージ2表示
 	DrawFormatString(Game::kScreenWidth, Game::kScreenHeight,
 		GetColor(255, 255, 0),"STAGE %d",static_cast<int>(stageType_) + 1);
@@ -275,20 +281,22 @@ void GameScene::Init()
 	}
 	else if (stageType_ == StageType::Stage2)
 	{
-		BulletType weapon = pPlayer_->GetCurrentWeapon();
+		BulletType weapon = pPlayer_->GetCurrentBulletType();
 
 		enemyFactory_.AddBoss2(Vector2{ kBoss2SpawnPosX, kBoss2SpawnPosY },Vector2{ 0,0 },
 			pPlayer_,&bulletManager_,pCamera_,weapon);
 	}
 	else if (stageType_ == StageType::BossDebugStage)
 	{
-		BulletType weapon = pPlayer_->GetCurrentWeapon();
+		BulletType weapon = pPlayer_->GetCurrentBulletType();
 
 		enemyFactory_.AddBoss2(Vector2{ kBoss2SpawnPosX, kBoss2SpawnPosY }, Vector2{ 0,0 },
 			pPlayer_, &bulletManager_, pCamera_, weapon);
 	}
 	enemyFactory_.Init(pPlayer_, bg_);
 
+	//UIの初期化
+	weaponUI_.Init();
 
 	//たいまつのアンロックするための処理
 	auto& progress = controller_.GetProgress();
