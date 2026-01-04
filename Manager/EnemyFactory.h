@@ -3,9 +3,9 @@
 #include <memory>
 #include "Enemy.h"
 #include "Player.h"
+#include"StageType.h"
 #include "Bg.h"
 
-enum class StageType;
 class GameScene;
 class Boss1;
 class Boss2;

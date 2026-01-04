@@ -25,6 +25,9 @@ void EnemyFactory::LoadFromCSV(StageType stageType, BulletManager* bulletManager
     std::string path;
     switch (stageType)
     {
+	case StageType::Tutorial:
+        path = "data/Enemy/enemyData_Tutorial.csv";
+		break;
     case StageType::Stage1:
         path = "data/Enemy/enemyData.csv";
         break;

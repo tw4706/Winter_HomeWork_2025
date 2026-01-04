@@ -57,7 +57,7 @@ GameScene::GameScene(SceneController& controller, StageType stage) :
 	autoWalkStartX_(0)
 {
 	//bgにステージに対応するマップデータをセット
-	bg_ = std::make_shared<Bg>(static_cast<int>(stage) + 1);
+	bg_ = std::make_shared<Bg>(stageType_);
 	pCamera_ = std::make_shared<Camera>();
 }
 
@@ -112,6 +112,21 @@ void GameScene::NormalUpdate(Input&input)
 
 	effectManager_.SetCameraOffset(pCamera_->GetOffset());
 	effectManager_.Update();
+
+	//チュートリアルステージの更新処理
+	if (tutorialManager_)
+	{
+		tutorialManager_->Update(*pPlayer_, enemyFactory_);
+
+		if (tutorialManager_->IsTutorialFinished())
+		{
+			// フェードして Stage1 へ
+			update_ = &GameScene::GoalFadeOutUpdate;
+			draw_ = &GameScene::FadeDraw;
+			frame_ = 0;
+			return;
+		}
+	}
 
 	//プレイヤーの弾 × 敵の当たり判定
 	CollisionManager::PlayerBulletsVsEnemies(
@@ -253,13 +268,13 @@ void GameScene::NormalDraw()
 
 	//ステージ2表示
 	DrawFormatString(Game::kScreenWidth, Game::kScreenHeight,
-		GetColor(255, 255, 0),"STAGE %d",static_cast<int>(stageType_) + 1);
+		GetColor(255, 255, 0),"STAGE %d", stageType_);
 }
 
 void GameScene::Init()
 {
 	//各クラスの初期化
-	bg_ = std::make_shared<Bg>(static_cast<int>(stageType_) + 1);
+	bg_ = std::make_shared<Bg>(stageType_);
 	bg_->Init();
 
 	//プレイヤーのスポーン位置位置
@@ -305,6 +320,17 @@ void GameScene::Init()
 	{
 		pPlayer_->UnlockTorch();
 	}
+
+	//チュートリアルステージ用の初期化
+	if (stageType_ == StageType::Tutorial)
+	{
+		tutorialManager_ = std::make_unique<TutorialManager>();
+		tutorialManager_->Init();
+	}
+	else
+	{
+		tutorialManager_.reset();
+	}
 }
 
 void GameScene::Update(Input& input)
@@ -317,11 +343,16 @@ void GameScene::Draw()
 	(this->*draw_)();
 }
 
+//次のステージタイプを取得
 StageType GameScene::GetNextStageType(StageType nextStage)
 {
 	switch (nextStage)
 	{
-	case StageType::Stage1: return StageType::Stage2;
-	default: return nextStage;
+	case StageType::Tutorial: 
+		return StageType::Stage1;
+	case StageType::Stage1:   
+		return StageType::Stage2;
+	default:                 
+		return nextStage;
 	}
 }

@@ -75,7 +75,7 @@ void TitleScene::ConfirmUpdate(Input&input)
 	{
 		if (confirmSelect_ == 0)
 		{
-			auto stageType = StageType::Stage2;
+			auto stageType = StageType::Tutorial;
 			// はい → チュートリアル
 			controller_.ChangeScene(std::make_shared<GameScene>(controller_,stageType));
 		}

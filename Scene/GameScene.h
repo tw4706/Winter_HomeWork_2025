@@ -6,6 +6,7 @@
 #include "PlayerWeaponUI.h"
 #include"BulletManager.h"
 #include"EffectManager.h"
+#include "TutorialManager.h"
 #include"EnemyFactory.h"
 #include<memory>
 
@@ -54,6 +55,7 @@ private:
 	StageType stageType_;
 	ClearState clearState_;
 	PlayerWeaponUI weaponUI_;
+	std::unique_ptr<TutorialManager> tutorialManager_;
 
 	bool isBossDefeated_;
 	int autoWalkStartX_;

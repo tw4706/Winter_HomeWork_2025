@@ -1,5 +1,6 @@
 #pragma once
 #include"Geometry.h"
+#include"StageType.h"
 #include<memory>
 #include<vector>
 
@@ -9,7 +10,7 @@ class Camera;
 class Bg
 {
 public:
-	Bg(int stage);
+	Bg(StageType stageType);
 	~Bg();
 
 	void Init();
@@ -29,7 +30,7 @@ private:
 	/// <summary>
 	/// マップを読み込む
 	/// </summary>
-	void LoadMapData(int stage);
+	void LoadMapData(StageType stageType);
 
 	void UpdateMidBg(std::shared_ptr<Camera> pCamera);
 
@@ -65,5 +66,6 @@ private:
 	float midPosY_;			//画面上での縦位置
 	float midScrollRate_;	//パララックス倍率
 	float midBgScrollX_;	//中景のスクロールX座標
+	StageType stageType_;	//ステージの種類
 };
 

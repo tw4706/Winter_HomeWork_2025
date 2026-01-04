@@ -18,13 +18,14 @@ namespace
 	constexpr int kChipNumY = 40;
 }
 
-Bg::Bg(int stage):
+Bg::Bg(StageType stageType):
 	pos_{0,0},
 	prevCameraX_(0.0f),
 	midbgHandle_(-1),
 	midPosY_(0.0f),
 	midScrollRate_(0.5f),
-	midBgScrollX_(0.0f)
+	midBgScrollX_(0.0f),
+	stageType_(stageType)
 {
 	mapHandle_ = LoadGraph("data/Map/mapChip.png");
 	bgHandle_ = LoadGraph("data/map/bg.png");
@@ -39,13 +40,14 @@ Bg::Bg(int stage):
 
 
 	//マップデータの読み込み
-	LoadMapData(stage);
+	LoadMapData(stageType_);
 }
 
 Bg::~Bg()
 {
 	DeleteGraph(mapHandle_);
 	DeleteGraph(bgHandle_);
+	DeleteGraph(midbgHandle_);
 }
 
 void Bg::Init()
@@ -97,7 +99,7 @@ bool Bg::IsCollision(Rect& rect, Rect& chipRect)
 	return false;
 }
 
-void Bg::LoadMapData(int stage)
+void Bg::LoadMapData(StageType stageType)
 {
 	//配列を初期化
 	for (int x = 0; x < kChipNumX; ++x)
@@ -110,11 +112,13 @@ void Bg::LoadMapData(int stage)
 	std::string fileName;
 
 	//ステージに応じたマップデータを設定
-	switch (stage)
+	switch (stageType)
 	{
-	case 1: 
+	case StageType::Tutorial:
+		fileName = "data/Map/Tutorial.csv"; break;
+	case StageType::Stage1:
 		fileName = "data/Map/Stage1.csv"; break;
-	case 2: 
+	case StageType::Stage2: 
 		fileName = "data/Map/Stage2.csv"; break;
 	default: 
 		fileName = "data/Map/Stage1.csv"; break;
