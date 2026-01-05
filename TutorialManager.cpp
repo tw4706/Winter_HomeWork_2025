@@ -31,7 +31,7 @@ void TutorialManager::Draw() const
 		"Jump",
 		"Double Jump",
 		"Attack",
-		"Get Hit"
+		"Damaged"
 	};
 
 	for (int i = 0; i < (int)TutorialStep::Finish; ++i)

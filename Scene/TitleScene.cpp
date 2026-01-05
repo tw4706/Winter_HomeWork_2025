@@ -13,6 +13,9 @@ namespace
 {
 	constexpr int kFadeInterval = 60;
 
+	constexpr float kPressStartScale = 0.5f;
+	constexpr int kDecideBlinkFrame = 20;
+
 	//確認バナー幅・高さ
 	constexpr int kBannerW = 400;
 	constexpr int kBannerH = 150;
@@ -40,19 +43,50 @@ void TitleScene::FadeInUpdate(Input&input)
 
 void TitleScene::NormalUpdate(Input&input)
 {
-	if (input.IsTriggered("next")) 
+//	if (input.IsTriggered("next")) 
+//	{
+//#ifdef _DEBUG
+//		update_ = &TitleScene::FadeOutUpdate;
+//		draw_ = &TitleScene::FadeDraw;
+//		frame_ = 0;// フェードアウトの最初
+//#else
+//		titleState_ = TitleState::Confirm;
+//		confirmSelect_ = 0;
+//		update_ = &TitleScene::ConfirmUpdate;
+//		draw_ = &TitleScene::ConfirmDraw;
+//#endif
+//		return;
+//	}
+
+	//決定中の高速点滅更新
+	if (isDeciding_)
 	{
-#ifdef _DEBUG
-		update_ = &TitleScene::FadeOutUpdate;
-		draw_ = &TitleScene::FadeDraw;
-		frame_ = 0;// フェードアウトの最初
-#else
-		titleState_ = TitleState::Confirm;
-		confirmSelect_ = 0;
-		update_ = &TitleScene::ConfirmUpdate;
-		draw_ = &TitleScene::ConfirmDraw;
-#endif
+		pressBlinkFrame_++;
+		decideBlinkCount_++;
+
+		if (decideBlinkCount_ >= kDecideBlinkFrame)
+		{
+			// 点滅終了 → 確認画面へ
+			titleState_ = TitleState::Confirm;
+			confirmSelect_ = 0;
+
+			isDeciding_ = false;
+			decideBlinkCount_ = 0;
+
+			update_ = &TitleScene::ConfirmUpdate;
+			draw_ = &TitleScene::ConfirmDraw;
+		}
 		return;
+	}
+
+	//通常時の点滅更新
+	pressBlinkFrame_++;
+
+	if (input.IsTriggered("next"))
+	{
+		isDeciding_ = true;
+		pressBlinkFrame_ = 0;
+		decideBlinkCount_ = 0;
 	}
 }
 
@@ -91,6 +125,41 @@ void TitleScene::ConfirmUpdate(Input&input)
 void TitleScene::NormalDraw()
 {
 	DrawRotaGraph(Game::kScreenWidth / 2, Game::kScreenHeight/2-100 , 1.0f, 0.0f, titleH_, true);
+
+	//PressStartUIの点滅表示
+	if (isDeciding_)
+	{
+		//決定時の小刻み点滅
+		bool visible = ((pressBlinkFrame_ / 3) % 2) == 0;
+
+		if (visible)
+		{
+			DrawRotaGraph(
+				Game::kScreenWidth / 2,
+				Game::kScreenHeight / 2 + 100,
+				kPressStartScale,
+				0.0f,
+				pressStartH_,
+				true);
+		}
+	}
+	else
+	{
+		//通常時の点滅
+		int alpha = static_cast<int>(128 + 127 * sinf(pressBlinkFrame_ * 0.05f));
+
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
+
+		DrawRotaGraph(
+			Game::kScreenWidth / 2,
+			Game::kScreenHeight / 2 + 100,
+			kPressStartScale,
+			0.0f,
+			pressStartH_,
+			true);
+
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+	}
 }
 
 void TitleScene::FadeDraw()
@@ -123,7 +192,11 @@ void TitleScene::ConfirmDraw()
 TitleScene::TitleScene(SceneController& controller) :
 	Scene(controller),
 	titleH_(-1),
+	pressStartH_(-1),
 	frame_(0),
+	pressBlinkFrame_(0),
+	isDeciding_(false),
+	decideBlinkCount_(0),
 	titleState_(TitleState::Normal),
 	confirmSelect_(0)
 {
@@ -134,11 +207,13 @@ TitleScene::TitleScene(SceneController& controller) :
 TitleScene::~TitleScene()
 {
 	DeleteGraph(titleH_);
+	DeleteGraph(pressStartH_);
 }
 
 void TitleScene::Init()
 {
-	titleH_ = LoadGraph("data/map/title.png");
+	titleH_ = LoadGraph("data/UI/title.png");
+	pressStartH_ = LoadGraph("data/UI/PressButton.png");
 	frame_ = kFadeInterval;
 }
 

@@ -40,7 +40,7 @@ void GameOverScene::FadeOutUpdate(Input& input)
 	frame_++;
 	if (frame_ >= kFadeDuration)
 	{
-		controller_.ChangeScene(std::make_shared<SelectScene>(controller_));
+		controller_.ChangeScene(std::make_shared<TitleScene>(controller_));
 	}
 }
 

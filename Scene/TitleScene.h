@@ -12,7 +12,11 @@ class TitleScene :public Scene
 {
 private:
 	int titleH_;//タイトル画像ハンドル
+	int pressStartH_;//PressStart画像ハンドル
 	int frame_;//経過フレーム
+	int pressBlinkFrame_;//PressStart点滅用フレーム
+	bool isDeciding_;//決定中かどうか
+	int decideBlinkCount_;//決定時の点滅カウント
 
 	TitleState titleState_;//シーンの状態
 	int confirmSelect_;//確認選択肢 0 = はい 1 = いいえ
