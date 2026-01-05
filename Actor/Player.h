@@ -26,7 +26,17 @@ enum class PlayerControl
 	AutoWalking
 };
 
+enum class TutorialAction
+{
+	Move,
+	Jump,
+	DoubleJump,
+	Attack,
+	Damaged
+};
+
 class Input;
+class GameProgress;
 class BulletManager;
 class Player :public GameObject
 {
@@ -73,6 +83,11 @@ public:
 	//現在の弾の種類を取得
 	BulletType GetCurrentBulletType() const { return currentBulletType_; }
 
+	//ゲームの進行状況を設定する関数
+	void SetGameProgress(GameProgress* progress) { gameProgress_ = progress; }
+
+	//チュートリアルアクションの通知を行う関数	
+	void OnTutorialAction(TutorialAction action);
 private:
 	std::vector<int>graphHandles_;//画像ハンドルの配列
 	Vector2 initializePos_;//リスポーンしたときの初期位置保存用
@@ -96,5 +111,6 @@ private:
 	PlayerState state_;	//プレイヤーの状態
 	BulletType currentBulletType_;//現在の弾の種類
 	std::vector<std::shared_ptr<Animation>>animations_;//アニメーションの配列
+	GameProgress* gameProgress_;//ゲームの進行状況を管理するクラスへのポインタ
 };
 

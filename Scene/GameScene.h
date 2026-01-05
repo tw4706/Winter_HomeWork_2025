@@ -19,6 +19,7 @@ enum class ClearState
 
 class Player;
 class Bg;
+class GameProgress;
 class GameScene :public Scene
 {
 private:
@@ -56,6 +57,7 @@ private:
 	ClearState clearState_;
 	PlayerWeaponUI weaponUI_;
 	std::unique_ptr<TutorialManager> tutorialManager_;
+	GameProgress*gameProgress_;
 
 	bool isBossDefeated_;
 	int autoWalkStartX_;

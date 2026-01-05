@@ -6,12 +6,14 @@
 #include"Player.h"
 #include"Zombie.h"
 #include"Boss2.h"
+#include"GameProgress.h"
 #include"Application.h"
 #include "SkullFlower.h"
 #include "GameOverScene.h"
 #include "ClearScene.h"
 #include "SelectScene.h"
 #include "PauseScene.h"
+#include "TutorialManager.h"
 #include"SceneController.h"
 #include"GlobalConstants.h"
 #include "CollisionManager.h"
@@ -266,6 +268,12 @@ void GameScene::NormalDraw()
 	//UIの描画
 	weaponUI_.Draw();
 
+	//チュートリアルステージの描画
+	if (tutorialManager_ && !tutorialManager_->IsTutorialFinished())
+	{
+		tutorialManager_->Draw();
+	}
+
 	//ステージ2表示
 	DrawFormatString(Game::kScreenWidth, Game::kScreenHeight,
 		GetColor(255, 255, 0),"STAGE %d", stageType_);
@@ -273,16 +281,18 @@ void GameScene::NormalDraw()
 
 void GameScene::Init()
 {
+	//ゲーム進行状況の取得
+	gameProgress_ = &controller_.GetProgress();
+
 	//各クラスの初期化
 	bg_ = std::make_shared<Bg>(stageType_);
 	bg_->Init();
-
-	//プレイヤーのスポーン位置位置
 
 	//プレイヤーの初期化
 	pPlayer_ = std::make_shared<Player>(Vector2{ kPlayerSpawnPosX, kPlayerSpawnPosY }, Vector2{ 0,0 });
 	pPlayer_->Init();
 	pPlayer_->SetBg(bg_);
+	pPlayer_->SetGameProgress(gameProgress_);
 
 	//カメラの初期化
 	pCamera_->Init(pPlayer_);
@@ -325,7 +335,7 @@ void GameScene::Init()
 	if (stageType_ == StageType::Tutorial)
 	{
 		tutorialManager_ = std::make_unique<TutorialManager>();
-		tutorialManager_->Init();
+		tutorialManager_->Init(gameProgress_);
 	}
 	else
 	{

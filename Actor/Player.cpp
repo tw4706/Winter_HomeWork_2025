@@ -3,6 +3,7 @@
 #include"Bullet.h"
 #include"Bg.h"
 #include"StageType.h"
+#include"GameProgress.h"
 #include "BulletManager.h"
 #include "CollisionManager.h"
 #include"GlobalConstants.h"
@@ -338,6 +339,10 @@ void Player::Move(Input& input)
 	//地面にいるときかつダブルジャンプが可能な時
 	if (CanJumpMove)
 	{
+		if (input.IsTriggered("left") || input.IsTriggered("right"))
+		{
+			OnTutorialAction(TutorialAction::Move);
+		}
 		if (input.IsPressed("left"))
 		{
 			vel_.x = -kSpeed;
@@ -383,6 +388,7 @@ void Player::Jump(Input& input)
 			vel_.y = -kJumpPower;
 			isGround_ = false;
 			isDoubleJumping_ = true;
+			OnTutorialAction(TutorialAction::Jump);
 			return;
 		}
 
@@ -391,6 +397,7 @@ void Player::Jump(Input& input)
 		{
 			vel_.y = -kDoubleJumpPower;
 			isDoubleJumping_ = false;
+			OnTutorialAction(TutorialAction::DoubleJump);
 		}
 	}
 }
@@ -433,6 +440,7 @@ void Player::Shot(Input& input, BulletManager& bm)
 		bullet->SetBg(pBg_);
 		bm.Init(bullet);
 
+		OnTutorialAction(TutorialAction::Attack);
 
 		// 攻撃開始
 		isAttacking_ = true;
@@ -449,6 +457,8 @@ void Player::OnDamage(float enemyX)
 	if (isDamaged_) return;
 
 	hp_--;
+	OnTutorialAction(TutorialAction::Damaged);
+
 	if(hp_ <= 0)
 	{
 		Dead();
@@ -562,4 +572,28 @@ void Player::StartAutoWalk(int dir)
 
 	state_ = PlayerState::Walk;
 	animations_[static_cast<int>(state_)]->Reset();
+}
+
+void Player::OnTutorialAction(TutorialAction action)
+{
+	if (!gameProgress_) return;
+
+	switch (action)
+	{
+	case TutorialAction::Move:
+		gameProgress_->tutorialMoved_ = true;
+		break;
+	case TutorialAction::Jump:
+		gameProgress_->tutorialJumped_ = true;
+		break;
+	case TutorialAction::DoubleJump:
+		gameProgress_->tutorialDoubleJumped_ = true;
+		break;
+	case TutorialAction::Attack:
+		gameProgress_->tutorialAttacked_ = true;
+		break;
+	case TutorialAction::Damaged:
+		gameProgress_->tutorialDamaged_ = true;
+		break;
+	}
 }
