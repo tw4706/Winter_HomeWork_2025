@@ -13,10 +13,12 @@ namespace
 {
 	constexpr int kFadeInterval = 60;
 
-	constexpr float kPressStartScale = 0.5f;
+	constexpr int kTitleScale = 2.0f;
+
+	constexpr float kPressStartScale = 0.25f;
 	constexpr int kDecideBlinkFrame = 20;
 
-	//確認バナー幅・高さ
+	//確認バナー幅と高さ
 	constexpr int kBannerW = 400;
 	constexpr int kBannerH = 150;
 	//確認バナー表示位置
@@ -27,9 +29,7 @@ namespace
 	constexpr int kOptionOffsetY = kBannerY + 70;
 	constexpr int kOptionYesOffsetX = kBannerX + 50;
 	constexpr int kOptionNoOffsetX = kBannerX + 250;
-
 }
-
 
 void TitleScene::FadeInUpdate(Input&input)
 {
@@ -43,21 +43,6 @@ void TitleScene::FadeInUpdate(Input&input)
 
 void TitleScene::NormalUpdate(Input&input)
 {
-//	if (input.IsTriggered("next")) 
-//	{
-//#ifdef _DEBUG
-//		update_ = &TitleScene::FadeOutUpdate;
-//		draw_ = &TitleScene::FadeDraw;
-//		frame_ = 0;// フェードアウトの最初
-//#else
-//		titleState_ = TitleState::Confirm;
-//		confirmSelect_ = 0;
-//		update_ = &TitleScene::ConfirmUpdate;
-//		draw_ = &TitleScene::ConfirmDraw;
-//#endif
-//		return;
-//	}
-
 	//決定中の高速点滅更新
 	if (isDeciding_)
 	{
@@ -84,6 +69,11 @@ void TitleScene::NormalUpdate(Input&input)
 
 	if (input.IsTriggered("next"))
 	{
+#ifdef _DEBUG
+		update_ = &TitleScene::FadeOutUpdate;
+		draw_ = &TitleScene::FadeDraw;
+		return;
+#endif
 		isDeciding_ = true;
 		pressBlinkFrame_ = 0;
 		decideBlinkCount_ = 0;
@@ -124,7 +114,7 @@ void TitleScene::ConfirmUpdate(Input&input)
 
 void TitleScene::NormalDraw()
 {
-	DrawRotaGraph(Game::kScreenWidth / 2, Game::kScreenHeight/2-100 , 1.0f, 0.0f, titleH_, true);
+	DrawRotaGraph(Game::kScreenWidth / 2, Game::kScreenHeight/2-100 , kTitleScale, 0.0f, titleH_, true);
 
 	//PressStartUIの点滅表示
 	if (isDeciding_)

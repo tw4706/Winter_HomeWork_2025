@@ -33,11 +33,11 @@ namespace
 
 	constexpr int kFrameCount[kAnimNum] =
 	{
-		6, // Idle
-		10, // Attack
-		14, // Fly
-		7, // Hurt
-		16  // Dead
+		6,	//Idle
+		10, //Attack
+		14, //Fly
+		7,	//Hurt
+		16  //Dead
 	};
 }
 
@@ -101,7 +101,7 @@ void Boss2::Draw()
 
 bool Boss2::IsDamageable() const
 {
-	//ダメージを与えられる状態だけtrueを返す
+	//ダメージを与えられる状態だけTrueを返す
 	switch (bossMode_)
 	{
 	case BossAttackMode::Knife:
@@ -272,7 +272,7 @@ void Boss2::OnHit(int damage)
 
 void Boss2::AttackKnife()
 {
-	//ナイフ攻撃：左右に揺れ動く
+	//ナイフの場合は左右に揺れ動く
 	vel_.x = sinf(stateTimer_ * 0.15f) * 1.5f;
 	stateTimer_++;
 
@@ -288,7 +288,8 @@ void Boss2::AttackLance()
 	if (stateTimer_ == 0)
 	{
 		isInvincible_ = true;
-		vel_.y = -15.0f;// 大ジャンプ
+		//大ジャンプ
+		vel_.y = -15.0f;
 	}
 
 	stateTimer_++;
@@ -300,7 +301,8 @@ void Boss2::AttackLance()
 	{
 		vel_ = { 0.0f, 0.0f };
 		isInvincible_ = false;
-		ChangeState(BossState::Exposed); // ダメージチャンス
+		//ダメージチャンス
+		ChangeState(BossState::Exposed);
 	}
 }
 

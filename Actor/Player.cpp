@@ -541,7 +541,6 @@ void Player::UpdateState(Input& input)
 		return;
 	}
 
-
 	//ジャンプ中ならジャンプ状態
 	if (!isGround_)
 	{
