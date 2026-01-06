@@ -532,15 +532,6 @@ void Player::UpdateState(Input& input)
 		return;
 	}
 
-	//攻撃入力があったら攻撃状態へ
-	if (input.IsTriggered("shot"))
-	{
-		isAttacking_ = true;
-		animations_[static_cast<int>(PlayerState::Attack)]->Reset();
-		state_ = PlayerState::Attack;
-		return;
-	}
-
 	//ジャンプ中ならジャンプ状態
 	if (!isGround_)
 	{

@@ -108,7 +108,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>c:\DxLib_VC\プロジェクトに追加すべきファイル_VC用;$(ProjectDir)Actor;$(ProjectDir)Manager;$(ProjectDir)Physics;$(ProjectDir)Scene;$(ProjectDir)System;$(ProjectDir)Base;$(ProjectDir)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>c:\DxLib_VC\プロジェクトに追加すべきファイル_VC用;$(ProjectDir)Actor;$(ProjectDir)Manager;$(ProjectDir)Physics;$(ProjectDir)Scene;$(ProjectDir)System;$(ProjectDir)Base;$(ProjectDir)UI・Effect;$(ProjectDir)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
@@ -126,7 +126,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>c:\DxLib_VC\プロジェクトに追加すべきファイル_VC用;$(ProjectDir)Actor;$(ProjectDir)Manager;$(ProjectDir)Physics;$(ProjectDir)Scene;$(ProjectDir)System;$(ProjectDir)Base;$(ProjectDir)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>c:\DxLib_VC\プロジェクトに追加すべきファイル_VC用;$(ProjectDir)Actor;$(ProjectDir)Manager;$(ProjectDir)Physics;$(ProjectDir)Scene;$(ProjectDir)System;$(ProjectDir)Base;$(ProjectDir)UI・Effect;$(ProjectDir)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
@@ -140,10 +140,10 @@
     <ClCompile Include="Actor\Boss.cpp" />
     <ClCompile Include="Actor\Boss1.cpp" />
     <ClCompile Include="Actor\Boss2.cpp" />
-    <ClCompile Include="Effect.cpp" />
-    <ClCompile Include="EffectManager.cpp" />
-    <ClCompile Include="PlayerWeaponUI.cpp" />
-    <ClCompile Include="SpriteEffect.cpp" />
+    <ClCompile Include="UI・Effect\Effect.cpp" />
+    <ClCompile Include="Manager\EffectManager.cpp" />
+    <ClCompile Include="UI・Effect\PlayerWeaponUI.cpp" />
+    <ClCompile Include="UI・Effect\SpriteEffect.cpp" />
     <ClCompile Include="System\GameProgress.cpp" />
     <ClCompile Include="Scene\PauseScene.cpp" />
     <ClCompile Include="Scene\ClearScene.cpp" />
@@ -171,17 +171,17 @@
     <ClCompile Include="Scene\SceneController.cpp" />
     <ClCompile Include="Scene\TitleScene.cpp" />
     <ClCompile Include="Actor\Zombie.cpp" />
-    <ClCompile Include="TutorialManager.cpp" />
+    <ClCompile Include="Manager\TutorialManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actor\Boss.h" />
     <ClInclude Include="Actor\Boss1.h" />
     <ClInclude Include="Actor\Boss2.h" />
-    <ClInclude Include="Effect.h" />
-    <ClInclude Include="EffectManager.h" />
-    <ClInclude Include="PlayerWeaponUI.h" />
+    <ClInclude Include="UI・Effect\Effect.h" />
+    <ClInclude Include="Manager\EffectManager.h" />
+    <ClInclude Include="UI・Effect\PlayerWeaponUI.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="SpriteEffect.h" />
+    <ClInclude Include="UI・Effect\SpriteEffect.h" />
     <ClInclude Include="System\GameProgress.h" />
     <ClInclude Include="Scene\PauseScene.h" />
     <ClInclude Include="Scene\ClearScene.h" />
@@ -210,7 +210,7 @@
     <ClInclude Include="Scene\SceneController.h" />
     <ClInclude Include="Scene\TitleScene.h" />
     <ClInclude Include="Actor\Zombie.h" />
-    <ClInclude Include="TutorialManager.h" />
+    <ClInclude Include="Manager\TutorialManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="VillageMonster.rc" />

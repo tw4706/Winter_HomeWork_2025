@@ -33,7 +33,7 @@ namespace
 	constexpr float kBoss1SpawnPosY = 1600.0f;
 
 	//ボス2のスポーン位置
-	constexpr float kBoss2SpawnPosX = 1000.0f;
+	constexpr float kBoss2SpawnPosX = 8600.0f;
 	constexpr float kBoss2SpawnPosY = 1600.0f;
 
 	//フェードまでの間隔

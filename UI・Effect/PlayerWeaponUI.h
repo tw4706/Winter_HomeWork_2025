@@ -17,5 +17,6 @@ private:
 	BulletType currentWeapon_;//現在の武器
 	bool isTorchUnlocked_ = false;//たいまつ解放フラグ
 
+	int iconFrameGraph_;//武器のフレームの画像ハンドル
 };
 

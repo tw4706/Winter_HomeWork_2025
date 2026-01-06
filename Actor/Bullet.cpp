@@ -151,6 +151,7 @@ void Bullet::Update(Input& input, std::vector<std::shared_ptr<Enemy>>& enemies)
 
 void Bullet::Draw()
 {
+	//弾の種類が松明で波動が発生している場合
 	if (bulletType_ == BulletType::Torch && isHadouSpawned_)
 	{
 		for (auto& h : hadouRects_)
@@ -183,6 +184,7 @@ void Bullet::Draw()
 		}
 		return;
 	}
+	//弾が生存している場合のみ描画
 	else if (isAlive_)
 	{
 		const auto& config = kBulletConfigs[static_cast<int>(bulletType_)];
@@ -244,7 +246,7 @@ void Bullet::SpawnHadou()
 	{
 		Rect rect;
 		rect.SetLT(pos_.x + hadouDir_ * (i + 1) * kHadouSpacing,
-			pos_.y - kHadouH / 2,
+			pos_.y - kHadouH / 2-20,
 			kHadouW*kScale,
 			kHadouH*kScale);
 
@@ -319,17 +321,37 @@ void Bullet::CheckBulletAndMapCollision()
 	//マップに当たったら即消す
 	if (pBg_->IsCollision(colRect_, chipRect_))
 	{
-		DrawFormatString(0, 48, 0x00ff00, "HIT MAP");
+		//松明
+		if (bulletType_ == BulletType::Torch)
+		{
+			isGround_ = true;
+			vel_ = Vector2(0.0f, 0.0f);
 
-		//エフェクト
+			//松明のエフェクト
+			if (pEffectManager_)
+			{
+				pEffectManager_->AddEffect(
+					std::make_shared<SpriteEffect>(
+						Vector2{ pos_.x, chipRect_.GetTop() },
+						"data/Effect/torch_land.png",
+						128, 32,
+						16, 16,
+						4,
+						4,
+						1.0f));
+			}
+
+			return;
+		}
+
+		//短剣や槍の着弾エフェクト
 		if (pEffectManager_)
 		{
 			pEffectManager_->AddEffect(
 				std::make_shared<SpriteEffect>(
 					pos_,
 					"data/Effect/bullet_effect.png",
-					240,
-					48,
+					240, 48,
 					16, 16,
 					4,
 					5,

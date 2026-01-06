@@ -24,11 +24,16 @@ namespace
 	//確認バナー表示位置
 	constexpr int kBannerX = Game::kScreenWidth / 2 - kBannerW / 2;
 	constexpr int kBannerY = Game::kScreenHeight / 2 - kBannerH / 2;
-	constexpr int kConfirmMessageX = kBannerX + 20;
+	constexpr int kConfirmMessageX = kBannerX + 75;
 	constexpr int kConfirmMessageY = kBannerY + 20;
 	constexpr int kOptionOffsetY = kBannerY + 70;
-	constexpr int kOptionYesOffsetX = kBannerX + 50;
-	constexpr int kOptionNoOffsetX = kBannerX + 250;
+	constexpr int kOptionYesOffsetX = kBannerX + 90;
+	constexpr int kOptionNoOffsetX = kBannerX + 290;
+
+	//選択矢印の位置オフセット
+	constexpr int kArrowOffsetX = -20;
+	constexpr int kArrowOffsetY = 3;
+	constexpr float kArrowScale = 1.0f;
 }
 
 void TitleScene::FadeInUpdate(Input&input)
@@ -177,12 +182,27 @@ void TitleScene::ConfirmDraw()
 	// 選択肢
 	DrawString(kOptionYesOffsetX, kOptionOffsetY, "はい", confirmSelect_ == 0 ? 0xff0000 : 0xffffff);
 	DrawString(kOptionNoOffsetX, kOptionOffsetY, "いいえ", confirmSelect_ == 1 ? 0xff0000 : 0xffffff);
+
+	int arrowX = (confirmSelect_ == 0)
+		? kOptionYesOffsetX
+		: kOptionNoOffsetX;
+
+	int arrowY = kOptionOffsetY;
+
+	DrawRotaGraph(
+		arrowX + kArrowOffsetX,
+		arrowY + kArrowOffsetY,
+		kArrowScale,
+		DX_PI_F / 2.0f,
+		selectH_,
+		true);
 }
 
 TitleScene::TitleScene(SceneController& controller) :
 	Scene(controller),
 	titleH_(-1),
 	pressStartH_(-1),
+	selectH_(-1),
 	frame_(0),
 	pressBlinkFrame_(0),
 	isDeciding_(false),
@@ -198,12 +218,14 @@ TitleScene::~TitleScene()
 {
 	DeleteGraph(titleH_);
 	DeleteGraph(pressStartH_);
+	DeleteGraph(selectH_);
 }
 
 void TitleScene::Init()
 {
 	titleH_ = LoadGraph("data/UI/title.png");
 	pressStartH_ = LoadGraph("data/UI/PressButton.png");
+	selectH_ = LoadGraph("data/Bullet/Lance.png");
 	frame_ = kFadeInterval;
 }
 
