@@ -83,12 +83,11 @@ void GameScene::NormalUpdate(Input&input)
 		return;
 	}
 
-	if (input.IsTriggered("next"))
-	{
-		controller_.ChangeScene(std::make_shared<SelectScene>(controller_));
-		return;
-	}
-
+	//if (input.IsTriggered("next"))
+	//{
+	//	controller_.ChangeScene(std::make_shared<SelectScene>(controller_));
+	//	return;
+	//}
 
 	if (pPlayer_->GetPos().y > kFallLimit)
 	{
