@@ -9,7 +9,6 @@ public:
 	bool tutorialJumped_ = false;
 	bool tutorialDoubleJumped_ = false;
 	bool tutorialAttacked_ = false;
-	bool tutorialDamaged_ = false;
 
 	//チュートリアルが完了しているかどうかを返す
 	bool IsTutorialCompleted() const
@@ -17,7 +16,6 @@ public:
 		return tutorialMoved_
 			&& tutorialJumped_
 			&& tutorialDoubleJumped_
-			&& tutorialAttacked_
-			&& tutorialDamaged_;}
+			&& tutorialAttacked_;}
 };
 

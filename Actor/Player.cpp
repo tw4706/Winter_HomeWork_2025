@@ -582,8 +582,5 @@ void Player::OnTutorialAction(TutorialAction action)
 	case TutorialAction::Attack:
 		gameProgress_->tutorialAttacked_ = true;
 		break;
-	case TutorialAction::Damaged:
-		gameProgress_->tutorialDamaged_ = true;
-		break;
 	}
 }

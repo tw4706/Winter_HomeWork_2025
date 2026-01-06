@@ -26,7 +26,6 @@ private:
 		Jump,
 		DoubleJump,
 		Attack,
-		Damaged,
 		Finish
 	};
 

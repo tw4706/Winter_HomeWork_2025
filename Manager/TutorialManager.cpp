@@ -88,14 +88,6 @@ void TutorialManager::CheckTutorialStep(const Player& player, const EnemyFactory
 		if (gameProgress_->tutorialAttacked_)
 		{
 			stepCompleted_[(int)TutorialStep::Attack] = true;
-			currentStep_ = TutorialStep::Damaged;
-		}
-		break;
-
-	case TutorialStep::Damaged:
-		if (gameProgress_->tutorialDamaged_)
-		{
-			stepCompleted_[(int)TutorialStep::Damaged] = true;
 			currentStep_ = TutorialStep::Finish;
 			isTutorialFinished_ = true;
 		}
