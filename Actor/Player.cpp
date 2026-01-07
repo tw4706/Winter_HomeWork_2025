@@ -172,11 +172,6 @@ void Player::Init()
 			false, 0
 		);
 	}
-
-	//武器は最初は全て解放されてる状態
-	isWeaponEnabled_.fill(true);
-	//短剣だけは必ず有効にする
-	isWeaponEnabled_[0] = true;
 }
 
 void Player::Update(Input& input, BulletManager& bm,StageType stage)
@@ -288,22 +283,20 @@ void Player::Update(Input& input, BulletManager& bm,StageType stage)
 	{
 		int next = static_cast<int>(currentBulletType_);
 
+		//次の武器への切り替え
 		for (int i = 0; i < kBulletNum; i++)
 		{
 			next = (next + 1) % kBulletNum;
 
-			//選ばれた武器だけに切り替える
-			if (IsWeaponEnabled(static_cast<BulletType>(next)))
+			// Torchが未解放ならスキップ
+			if (static_cast<BulletType>(next) == BulletType::Torch &&
+				!isUnlockedTorch_)
 			{
-				//たいまつ解しているか確認
-				if (next == static_cast<int>(BulletType::Torch) && !IsUnlockedTorch())
-				{
-					continue;
-				}
-
-				currentBulletType_ = static_cast<BulletType>(next);
-				break;
+				continue;
 			}
+
+			currentBulletType_ = static_cast<BulletType>(next);
+			break;
 		}
 	}
 
@@ -433,12 +426,6 @@ void Player::Jump(Input& input)
 
 void Player::Shot(Input& input, BulletManager& bm)
 {
-	//選択されていない武器は発射できないようにする
-	if (!IsWeaponEnabled(currentBulletType_))
-	{
-		return;
-	}
-
 	if (shotTimer_ > 0)
 	{
 		shotTimer_--;
@@ -452,7 +439,9 @@ void Player::Shot(Input& input, BulletManager& bm)
 			return;
 		}
 
-		const auto& config = kBulletConfigs[static_cast<int>(currentBulletType_)];
+		int idx = static_cast<int>(currentBulletType_);
+		assert(idx >= 0 && idx < kBulletNum);
+		const auto& config = kBulletConfigs[idx];
 
 		//弾の発射される位置
 		float spawnX = pos_.x + (isTurn_ ? kGunOffsetX : -kGunOffsetX);
@@ -618,43 +607,4 @@ void Player::OnTutorialAction(TutorialAction action)
 		gameProgress_->tutorialAttacked_ = true;
 		break;
 	}
-}
-
-void Player::LockWeapon(BulletType type)
-{
-	//今のままだと敵の弾も入ってしまいエラーを起こすので無視する
-	if (type == BulletType::EnemyBullet)
-	{
-		return;
-	}
-
-	int index = static_cast<int>(type);
-
-	//短剣・槍・松明のみ
-	if (index < 0 || index >= kBulletNum)
-	{
-		return;
-	}
-
-	isWeaponEnabled_.fill(false);
-	isWeaponEnabled_[index] = true;
-	currentBulletType_ = type;
-}
-
-bool Player::IsWeaponEnabled(BulletType type) const
-{
-	//こっちも同じで敵の弾は無視する
-	if (type == BulletType::EnemyBullet)
-	{
-		return false;
-	}
-
-	//短剣・槍・松明のみ
-	int index = static_cast<int>(type);
-	if (index < 0 || index >= 3)
-	{
-		return false;
-	}
-
-	return isWeaponEnabled_[index];
 }

@@ -6,7 +6,6 @@
 #include"StageType.h"
 #include<vector>
 #include<memory>
-#include<array>
 #include<functional>
 
 //プレイヤーの状態
@@ -87,14 +86,6 @@ public:
 	//チュートリアルアクションの通知を行う関数	
 	void OnTutorialAction(TutorialAction action);
 
-	//武器のロック処理
-	void LockWeapon(BulletType type);
-	//武器のアンロック処理
-	bool IsWeaponEnabled(BulletType type) const;
-
-	//プレイヤーの操作状態を設定する関数
-	void SetControlMode(PlayerControl mode) { controlMode_ = mode; }
-
 private:
 	std::vector<int>graphHandles_;//画像ハンドルの配列
 	Vector2 initializePos_;//リスポーンしたときの初期位置保存用
@@ -118,6 +109,5 @@ private:
 	BulletType currentBulletType_;//現在の弾の種類
 	std::vector<std::shared_ptr<Animation>>animations_;//アニメーションの配列
 	GameProgress* gameProgress_;//ゲームの進行状況を管理するクラスへのポインタ
-	std::array<bool, kBulletCount> isWeaponEnabled_;//武器の使用可能フラグ
 };
 

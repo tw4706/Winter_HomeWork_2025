@@ -202,18 +202,6 @@ void GameScene::NormalUpdate(Input&input)
 		}
 	}
 
-	if (!isWeaponSelected_
-		&& stageType_ == StageType::Stage2
-		&& pPlayer_->GetPos().x >= kWeaponSelectEventX_)
-	{
-		isWeaponSelected_ = true;
-		update_ = &GameScene::WeaponSelectUpdate;
-		draw_ = &GameScene::NormalDraw;
-
-		pPlayer_->SetControlMode(PlayerControl::Stop);
-		return;
-	}
-
 #ifdef _DEBUG
 	//デバッグ用：ステージクリア
 	if (input.IsTriggered("debug_warp"))
@@ -241,27 +229,6 @@ void GameScene::GoalFadeOutUpdate(Input&)
 		StageType next = GetNextStageType(stageType_);
 		controller_.ChangeScene(std::make_shared<GameScene>(controller_,next));
 	}
-}
-
-void GameScene::WeaponSelectUpdate(Input&input)
-{
-	//プレイヤーの武器切り替えを行わせる
-	pPlayer_->Update(input, bulletManager_, stageType_);
-
-	//UIの更新
-	weaponUI_.Update(*pPlayer_);
-
-	//決定
-	if (input.IsTriggered("ok"))
-	{
-		//選んでいる武器で固定される
-		pPlayer_->LockWeapon(pPlayer_->GetCurrentBulletType());
-
-		pPlayer_->SetControlMode(PlayerControl::Normal);
-
-		update_ = &GameScene::NormalUpdate;
-	}
-
 }
 
 void GameScene::FadeDraw() 
