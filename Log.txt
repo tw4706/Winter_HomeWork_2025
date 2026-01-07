@@ -1,194 +1,603 @@
 ﻿0:ChangeWindowMode実行 
-1:ウインドウモードフラグが立てられました
-4:ＤＸライブラリの初期化処理開始
-5:	システムの情報を出力します
-5:		ＤＸライブラリ Ver3.24f
-5:		論理プロセッサの数 : 16
-6:		ＯＳ  Windows11 ( Build 26200  )
-106:		現時点のＣＰＵ動作速度：大体2.48GHz
-106:		ＭＭＸ命令を使用します
-106:		ＳＳＥ命令が使用可能です
-107:		ＳＳＥ２命令が使用可能です
-107:		ＣＰＵベンダ：GenuineIntel
-109:		ＣＰＵ名：Intel(R) Core(TM) i5-14400F
-109:	ＣＯＭの初期化... 成功
+5:ウインドウモードフラグが立てられました
+6:ＤＸライブラリの初期化処理開始
+7:	システムの情報を出力します
+8:		ＤＸライブラリ Ver3.24f
+8:		論理プロセッサの数 : 20
+8:		ＯＳ  Windows11 ( Build 26200  )
+109:		現時点のＣＰＵ動作速度：大体2.10GHz
+109:		ＭＭＸ命令を使用します
+109:		ＳＳＥ命令が使用可能です
+109:		ＳＳＥ２命令が使用可能です
+110:		ＣＰＵベンダ：GenuineIntel
+111:		ＣＰＵ名：12th Gen Intel(R) Core(TM) i7-12700
+111:	ＣＯＭの初期化... 成功
 115:	非同期読み込み処理の初期化...成功
 115:	ファイルアクセス処理の初期化...成功
-116:	メモリ総量:16197.42MB  空きメモリ領域:4082.74MB 
-117:	タイマーの精度を検査します
+116:	メモリ総量:32456.73MB  空きメモリ領域:17812.53MB 
+116:	タイマーの精度を検査します
 117:	精度結果 更新回数 マルチメディアタイマー：0  パフォーマンスカウンター：60
 117:	 パフォーマンスカウンターを使用します タイマー精度 : 10000.000000 KHz 
-118:	 
-118:	ソフトの二重起動検査... 二重起動はされていませんでした
-119:	ウインドウクラスを登録します... 登録に成功しました
-120:	ウインドウモード起動用のウインドウを作成します
-120:	ディスプレイ情報のセットアップ開始
-121:		モニターの数：1  ディスプレイデバイスの数：4
-121:		No.0  モニター名：\\.\DISPLAY1　1920x1080　32bit　60Hz  96x96dpi
-149:	ディスプレイ情報のセットアップ完了
-150:	ウインドウ矩形 ( 304, 129 )-( 1600, 888 )
-153:	ウインドウの作成に成功しました
-153:	ウインドウを表示します
-175:	ＩＭＥを無効にしました
-177:	ウインドウスタイルをウインドウモード用に変更します... 完了
-205:	XInput DLL の読み込み中... 成功
-210:	DirectInput関係初期化処理
-211:		DirectInput8 の取得を試みます...成功
-230:			引き続き初期化処理... 初期化成功
-233:		ジョイパッドの初期化... 
-233:			XInput 対応コントローラーのチェックを開始します
-234:				XInput 対応コントローラー No.0 をチェック
-234:				XInput 対応コントローラー No.0 の接続は確認できませんでした
-234:				XInput 対応コントローラー No.1 をチェック
-234:				XInput 対応コントローラー No.1 の接続は確認できませんでした
-235:				XInput 対応コントローラー No.2 をチェック
-235:				XInput 対応コントローラー No.2 の接続は確認できませんでした
-235:				XInput 対応コントローラー No.3 をチェック
-236:				XInput 対応コントローラー No.3 の接続は確認できませんでした
-236:			XInput 対応コントローラーのチェック完了
-236:			DirectInput 対応ジョイパッドの列挙を開始します
-252:				DirectInput 対応入力装置を検出しました
-252:						Device Product GUID  : 0ce6054c,0000,0000,00,00,50,49,44,56,49,44
-253:						Device Instance GUID : 56812120,9e20,11ef,80,01,44,45,53,54,00,00
-253:					DirectInputDevice8 の作成... 成功
-254:					DirectInputDevice の情報を取得します... 成功
-255:						Device Product Name  : DualSense Wireless Controller
-255:						Device Instance Name : DualSense Wireless Controller
-255:					検出した DirectInput 対応入力装置が Xbox360コントローラーか確認... 不一致
-256:					検出した DirectInput 対応入力装置が XboxOneコントローラーか確認... 不一致
-257:					検出した DirectInput 対応入力装置が XInput 対応コントローラーか確認... 不一致
-648:					DirectInputDevice のデータ形式に JOYSTICK 形式を設定... 成功
-648:					DirectInputDevice の協調レベルに DISCL_FOREGROUND | DISCL_EXCLUSIVE を設定... 成功
-650:					DirectInputDevice から取得する X軸 の値の範囲を設定... 成功
-651:					DirectInputDevice から取得する Y軸 の値の範囲を設定... 成功
-651:					DirectInputDevice から取得する Z軸 の値の範囲を設定... 成功
-652:					DirectInputDevice から取得する Rx軸 の値の範囲を設定... 成功
-652:					DirectInputDevice から取得する Ry軸 の値の範囲を設定... 成功
-653:					DirectInputDevice から取得する Rz軸 の値の範囲を設定... 成功
-654:					DirectInputDevice のボタンの数を取得... 成功　ボタンの数は 15 個です
-654:					DirectInputDevice の X軸 のデッドゾーンを設定... 成功
-655:					DirectInputDevice の Y軸 のデッドゾーンを設定... 成功
-655:					DirectInputDevice の Z軸 のデッドゾーンを設定... 成功
-656:					DirectInputDevice の Rx軸 のデッドゾーンを設定... 成功
-656:					DirectInputDevice の Ry軸 のデッドゾーンを設定... 成功
-657:					DirectInputDevice の Rz軸 のデッドゾーンを設定... 成功
-657:					DirectInputDevice の DirectInputEffect No.0 を作成... 失敗 Error Code :0x80004001
-658:					DirectInputDevice の DirectInputEffect No.1 を作成... 失敗 Error Code :0x80004001
-658:					DirectInputDevice の通知処理用の Event を作成... 成功
-659:					DirectInputDevice の通知処理用の Event を DirectInputDevice に設定... 成功
-660:					DirectInputDevice のアクセス権を取得... 成功
-665:					検出した DirectInput 対応入力装置を入力ナンバー 0 で登録します
-666:				検出した DirectInput 対応入力装置の初期化は正常に終了しました
-675:			DirectInput 対応ジョイパッドの列挙終了
-675:		ジョイパッドの初期化は正常に終了しました
-676:		マウスデバイスの初期化... 初期化成功
-676:		キーボードデバイスの初期化... 初期化成功
-678:	DirectInput 関連の初期化は正常に終了しました
-681:	WASAPI の初期化を行います
-688:		デバイス名 : BenQ EX2510S (NVIDIA High Definition Audio)
-695:		デフォルト遅延時間 : 10.000 ms
-697:		最小遅延時間       : 3.000 ms
-697:		遅延時間           : 10.000 ms
-697:		チャンネル数  　   : 2 ch
-698:		量子化ビット深度   : 32 bit
-698:		有効ビット深度　   : 32 bit
-699:		サンプリングレート : 48000 Hz
-699:		データ形式         : 浮動小数点型
-723:		動作モード         : 共有モード
-724:	WASAPI の初期化は正常に終了しました
-730:	d3d11.dll の読み込み.... 成功
-734:	dxgi.dll の読み込み.... 成功
-735:	API CreateDXGIFactory2 のアドレスを取得します.... 成功
-735:	IDXGIFactory2 を作成します.... 成功
-748:	API CreateDXGIFactory6 のアドレスを取得します.... 成功
-749:	IDXGIAdapter を列挙
-749:		Adapter No.0 Desc:NVIDIA GeForce RTX 4060  VRAM:7957MB
-750:			Output Device No.0 Name:\\.\DISPLAY1 ( 0, 0 )-( 1920, 1080 )
-751:		Adapter No.1 Desc:Microsoft Basic Render Driver  VRAM:0MB
-751:	API D3D11CreateDevice のアドレスを取得します.... 成功
-751:	IDXGIAdapter を取得します.... 成功
-752:	IDXGIAdapter1 を取得します.... 成功
-753:	IDXGIAdapter2 を取得します.... 成功
-754:	IDXGIAdapter3 を取得します.... 成功
-754:	IDXGIAdapter4 を取得します.... 成功
-756:	Direct3D 11 FeatureLevel 11_0 以上を対象とします
-756:	ID3D11Device オブジェクトを取得します.... 成功
-920:	IDXGIDevice1 を取得します.... 成功
-921:	IDXGIDevice1->SetMaximunFrameLatency( 1 ); を実行しました
-921:	[ウインドウモード 1280x720 ( 320, 167 )-( 1600, 887 )]
-921:	IDXGISwapChain2 を作成します.... 成功
-925:	IDXGIFactory2->CreateSwapChainForHwnd の戻り値：0x00000000
-925:	IDXGIOutput を取得します.... 成功
-926:	Graphics Device:NVIDIA GeForce RTX 4060
-926:	画面のフォーマットは DXGI_FORMAT_R8G8B8A8_UNORM です
-927:	16bit Zバッファフォーマットは DXGI_FORMAT_D16_UNORM です
-927:	24bit Zバッファフォーマットは DXGI_FORMAT_D24_UNORM_S8_UINT です
-927:	32bit Zバッファフォーマットは DXGI_FORMAT_D32_FLOAT です
-927:	16bit カラーフォーマットは DXGI_FORMAT_B5G6R5_UNORM です
-929:	32bit カラーフォーマットは DXGI_FORMAT_B8G8R8X8_UNORM です
-929:	アルファ付き 16bit カラーフォーマットは DXGI_FORMAT_B4G4R4A4_UNORM です
-929:	アルファ付き 32bit カラーフォーマットは DXGI_FORMAT_R8G8B8A8_UNORM です
-929:	アルファテスト用 16bit カラーフォーマットは DXGI_FORMAT_B5G5R5A1_UNORM です
-929:	アルファテスト用 32bit カラーフォーマットは DXGI_FORMAT_R8G8B8A8_UNORM です
-930:	ＤＸＴ１テクスチャフォーマットは DXGI_FORMAT_BC1_UNORM です
-930:	ＤＸＴ２テクスチャフォーマットは使えません
-930:	ＤＸＴ３テクスチャフォーマットは DXGI_FORMAT_BC2_UNORM です
-931:	ＤＸＴ４テクスチャフォーマットは使えません
-931:	ＤＸＴ５テクスチャフォーマットは DXGI_FORMAT_BC3_UNORM です
-932:	BC7_UNORM テクスチャフォーマットは DXGI_FORMAT_BC7_UNORM です
-932:	BC7_UNORM_SRGB テクスチャフォーマットは DXGI_FORMAT_BC7_UNORM_SRGB です
-932:	ABGR 整数 16 ビット型カラーフォーマットは DXGI_FORMAT_R16G16B16A16_UNORM です
-933:	ABGR 浮動小数点 16 ビット型カラーフォーマットは DXGI_FORMAT_R16G16B16A16_FLOAT です
-933:	ABGR 浮動小数点 32 ビット型カラーフォーマットは DXGI_FORMAT_R32G32B32A32_FLOAT です
-933:	１チャンネル整数 8 ビット型カラーフォーマットは DXGI_FORMAT_R8_UNORM です
-934:	１チャンネル整数 16 ビット型カラーフォーマットは DXGI_FORMAT_R16_UNORM です
-934:	１チャンネル浮動小数点 16 ビット型カラーフォーマットは DXGI_FORMAT_R16_FLOAT です
-934:	１チャンネル浮動小数点 32 ビット型カラーフォーマットは DXGI_FORMAT_R32_FLOAT です
-934:	２チャンネル整数 8 ビット型カラーフォーマットは DXGI_FORMAT_R8G8_UNORM です
-935:	２チャンネル整数 16 ビット型カラーフォーマットは DXGI_FORMAT_R16G16_UNORM です
-935:	２チャンネル浮動小数点 16 ビット型カラーフォーマットは DXGI_FORMAT_R16G16_FLOAT です
-935:	２チャンネル浮動小数点 32 ビット型カラーフォーマットは DXGI_FORMAT_R32G32_FLOAT です
-935:	描画用 16bit カラーフォーマットは DXGI_FORMAT_B5G6R5_UNORM です
-935:	描画用 32bit カラーフォーマットは DXGI_FORMAT_B8G8R8X8_UNORM です
-936:	描画用アルファ付き 32bit カラーフォーマットは DXGI_FORMAT_R8G8B8A8_UNORM です
-936:	描画用 ABGR 整数 16 ビット型カラーフォーマットは DXGI_FORMAT_R16G16B16A16_UNORM です
-936:	描画用 ABGR 浮動小数点 16 ビット型カラーフォーマットは DXGI_FORMAT_R16G16B16A16_FLOAT です
-936:	描画用 ABGR 浮動小数点 32 ビット型カラーフォーマットは DXGI_FORMAT_R32G32B32A32_FLOAT です
-936:	描画用１チャンネル整数 8 ビット型カラーフォーマットは DXGI_FORMAT_R8_UNORM です
-937:	描画用１チャンネル整数 16 ビット型カラーフォーマットは DXGI_FORMAT_R16_UNORM です
-937:	描画用１チャンネル浮動小数点 16 ビット型カラーフォーマットは DXGI_FORMAT_R16_FLOAT です
-937:	描画用１チャンネル浮動小数点 32 ビット型カラーフォーマットは DXGI_FORMAT_R32_FLOAT です
-938:	描画用２チャンネル整数 8 ビット型カラーフォーマットは DXGI_FORMAT_R8G8_UNORM です
-938:	描画用２チャンネル整数 16 ビット型カラーフォーマットは DXGI_FORMAT_R16G16_UNORM です
-939:	描画用２チャンネル浮動小数点 16 ビット型カラーフォーマットは DXGI_FORMAT_R16G16_FLOAT です
-939:	描画用２チャンネル浮動小数点 32 ビット型カラーフォーマットは DXGI_FORMAT_R32G32_FLOAT です
-939:	使用する機能レベル:D3D_FEATURE_LEVEL_11_1
-940:	同時にレンダリングできるバッファの数:8
-940:	最大テクスチャサイズ　幅:16384 高さ:16384
-941:	標準描画用の頂点バッファの作成.... 成功
-942:	シェーダーコード関係の初期化.... 成功
-953:	各種シェーダー用定数バッファの作成.... 成功
-955:	各種 ID3D11InputLayout の作成.... 成功
-966:	画像の単純転送処理の初期化... 成功
-967:	深度バッファを作成します.... 成功
-974:	フォントの初期化を行います
-976:	フォントの初期化は正常に終了しました
-1057:	文字コードバッファの初期化を行います... 完了しました
-1075:ＤＸライブラリの初期化処理終了
-19749:フォントの初期化を行います
-19749:フォントの初期化は正常に終了しました
-19778:d3d11.dll の解放 1
-19779:dxgi.dll の解放 1
-19780:Direct3D11 のオブジェクト数を出力
-19780:Direct3D11 のオブジェクト合計数 : 0
-19780:DirectInput 関連の終了処理... 完了
-19781:サウンド関連の終了処理... 完了
-19797:ウィンドウ関連の終了処理... ウインドウを閉じようとしています
-19803:ウインドウが破棄されようとしています
-19804:ソフトを終了する準備が整いました
-19880:完了
-19882:ＣＯＭを終了... 完了
-19883:
-19883:Alloc memory dump
-19883:	Total size:0(0.000kb)  Alloc num:0
-19884:
+117:	 
+117:	ソフトの二重起動検査... 二重起動はされていませんでした
+118:	ウインドウクラスを登録します... 登録に成功しました
+118:	ウインドウモード起動用のウインドウを作成します
+119:	ディスプレイ情報のセットアップ開始
+119:		モニターの数：1  ディスプレイデバイスの数：8
+120:		No.0  モニター名：\\.\DISPLAY2　1920x1080　32bit　60Hz  96x96dpi
+124:	ディスプレイ情報のセットアップ完了
+124:	ウインドウ矩形 ( 304, 129 )-( 1600, 888 )
+127:	ウインドウの作成に成功しました
+127:	ウインドウを表示します
+142:	ＩＭＥを無効にしました
+143:	ウインドウスタイルをウインドウモード用に変更します... 完了
+167:	XInput DLL の読み込み中... 成功
+170:	DirectInput関係初期化処理
+171:		DirectInput8 の取得を試みます...成功
+182:			引き続き初期化処理... 初期化成功
+184:		ジョイパッドの初期化... 
+184:			XInput 対応コントローラーのチェックを開始します
+184:				XInput 対応コントローラー No.0 をチェック
+184:				XInput 対応コントローラー No.0 の接続は確認できませんでした
+185:				XInput 対応コントローラー No.1 をチェック
+185:				XInput 対応コントローラー No.1 の接続は確認できませんでした
+185:				XInput 対応コントローラー No.2 をチェック
+185:				XInput 対応コントローラー No.2 の接続は確認できませんでした
+186:				XInput 対応コントローラー No.3 をチェック
+186:				XInput 対応コントローラー No.3 の接続は確認できませんでした
+186:			XInput 対応コントローラーのチェック完了
+186:			DirectInput 対応ジョイパッドの列挙を開始します
+210:			DirectInput 対応ジョイパッドの列挙終了
+210:		ジョイパッドの初期化は正常に終了しました
+210:		マウスデバイスの初期化... 初期化成功
+210:		キーボードデバイスの初期化... 初期化成功
+214:	DirectInput 関連の初期化は正常に終了しました
+215:	WASAPI の初期化を行います
+220:		デバイス名 : PHL 273V7 (NVIDIA High Definition Audio)
+225:		デフォルト遅延時間 : 10.000 ms
+226:		最小遅延時間       : 3.000 ms
+226:		遅延時間           : 10.000 ms
+226:		チャンネル数  　   : 2 ch
+227:		量子化ビット深度   : 32 bit
+227:		有効ビット深度　   : 32 bit
+227:		サンプリングレート : 48000 Hz
+227:		データ形式         : 浮動小数点型
+242:		動作モード         : 共有モード
+242:	WASAPI の初期化は正常に終了しました
+245:	d3d11.dll の読み込み.... 成功
+247:	dxgi.dll の読み込み.... 成功
+248:	API CreateDXGIFactory2 のアドレスを取得します.... 成功
+248:	IDXGIFactory2 を作成します.... 成功
+262:	API CreateDXGIFactory6 のアドレスを取得します.... 成功
+262:	IDXGIAdapter を列挙
+263:		Adapter No.0 Desc:NVIDIA GeForce RTX 3070  VRAM:8018MB
+263:			Output Device No.0 Name:\\.\DISPLAY2 ( 0, 0 )-( 1920, 1080 )
+263:		Adapter No.1 Desc:Intel(R) UHD Graphics 770  VRAM:128MB
+264:		Adapter No.2 Desc:Microsoft Basic Render Driver  VRAM:0MB
+264:	API D3D11CreateDevice のアドレスを取得します.... 成功
+264:	IDXGIAdapter を取得します.... 成功
+265:	IDXGIAdapter1 を取得します.... 成功
+265:	IDXGIAdapter2 を取得します.... 成功
+265:	IDXGIAdapter3 を取得します.... 成功
+266:	IDXGIAdapter4 を取得します.... 成功
+266:	Direct3D 11 FeatureLevel 11_0 以上を対象とします
+266:	ID3D11Device オブジェクトを取得します.... 成功
+411:	IDXGIDevice1 を取得します.... 成功
+412:	IDXGIDevice1->SetMaximunFrameLatency( 1 ); を実行しました
+412:	[ウインドウモード 1280x720 ( 320, 167 )-( 1600, 887 )]
+412:	IDXGISwapChain2 を作成します.... 成功
+413:	IDXGIFactory2->CreateSwapChainForHwnd の戻り値：0x00000000
+413:	IDXGIOutput を取得します.... 成功
+414:	Graphics Device:NVIDIA GeForce RTX 3070
+414:	画面のフォーマットは DXGI_FORMAT_R8G8B8A8_UNORM です
+414:	16bit Zバッファフォーマットは DXGI_FORMAT_D16_UNORM です
+415:	24bit Zバッファフォーマットは DXGI_FORMAT_D24_UNORM_S8_UINT です
+415:	32bit Zバッファフォーマットは DXGI_FORMAT_D32_FLOAT です
+415:	16bit カラーフォーマットは DXGI_FORMAT_B5G6R5_UNORM です
+415:	32bit カラーフォーマットは DXGI_FORMAT_B8G8R8X8_UNORM です
+415:	アルファ付き 16bit カラーフォーマットは DXGI_FORMAT_B4G4R4A4_UNORM です
+415:	アルファ付き 32bit カラーフォーマットは DXGI_FORMAT_R8G8B8A8_UNORM です
+416:	アルファテスト用 16bit カラーフォーマットは DXGI_FORMAT_B5G5R5A1_UNORM です
+416:	アルファテスト用 32bit カラーフォーマットは DXGI_FORMAT_R8G8B8A8_UNORM です
+416:	ＤＸＴ１テクスチャフォーマットは DXGI_FORMAT_BC1_UNORM です
+416:	ＤＸＴ２テクスチャフォーマットは使えません
+417:	ＤＸＴ３テクスチャフォーマットは DXGI_FORMAT_BC2_UNORM です
+417:	ＤＸＴ４テクスチャフォーマットは使えません
+417:	ＤＸＴ５テクスチャフォーマットは DXGI_FORMAT_BC3_UNORM です
+417:	BC7_UNORM テクスチャフォーマットは DXGI_FORMAT_BC7_UNORM です
+417:	BC7_UNORM_SRGB テクスチャフォーマットは DXGI_FORMAT_BC7_UNORM_SRGB です
+417:	ABGR 整数 16 ビット型カラーフォーマットは DXGI_FORMAT_R16G16B16A16_UNORM です
+418:	ABGR 浮動小数点 16 ビット型カラーフォーマットは DXGI_FORMAT_R16G16B16A16_FLOAT です
+418:	ABGR 浮動小数点 32 ビット型カラーフォーマットは DXGI_FORMAT_R32G32B32A32_FLOAT です
+418:	１チャンネル整数 8 ビット型カラーフォーマットは DXGI_FORMAT_R8_UNORM です
+418:	１チャンネル整数 16 ビット型カラーフォーマットは DXGI_FORMAT_R16_UNORM です
+418:	１チャンネル浮動小数点 16 ビット型カラーフォーマットは DXGI_FORMAT_R16_FLOAT です
+419:	１チャンネル浮動小数点 32 ビット型カラーフォーマットは DXGI_FORMAT_R32_FLOAT です
+419:	２チャンネル整数 8 ビット型カラーフォーマットは DXGI_FORMAT_R8G8_UNORM です
+419:	２チャンネル整数 16 ビット型カラーフォーマットは DXGI_FORMAT_R16G16_UNORM です
+420:	２チャンネル浮動小数点 16 ビット型カラーフォーマットは DXGI_FORMAT_R16G16_FLOAT です
+420:	２チャンネル浮動小数点 32 ビット型カラーフォーマットは DXGI_FORMAT_R32G32_FLOAT です
+420:	描画用 16bit カラーフォーマットは DXGI_FORMAT_B5G6R5_UNORM です
+420:	描画用 32bit カラーフォーマットは DXGI_FORMAT_B8G8R8X8_UNORM です
+420:	描画用アルファ付き 32bit カラーフォーマットは DXGI_FORMAT_R8G8B8A8_UNORM です
+421:	描画用 ABGR 整数 16 ビット型カラーフォーマットは DXGI_FORMAT_R16G16B16A16_UNORM です
+421:	描画用 ABGR 浮動小数点 16 ビット型カラーフォーマットは DXGI_FORMAT_R16G16B16A16_FLOAT です
+421:	描画用 ABGR 浮動小数点 32 ビット型カラーフォーマットは DXGI_FORMAT_R32G32B32A32_FLOAT です
+421:	描画用１チャンネル整数 8 ビット型カラーフォーマットは DXGI_FORMAT_R8_UNORM です
+421:	描画用１チャンネル整数 16 ビット型カラーフォーマットは DXGI_FORMAT_R16_UNORM です
+422:	描画用１チャンネル浮動小数点 16 ビット型カラーフォーマットは DXGI_FORMAT_R16_FLOAT です
+422:	描画用１チャンネル浮動小数点 32 ビット型カラーフォーマットは DXGI_FORMAT_R32_FLOAT です
+422:	描画用２チャンネル整数 8 ビット型カラーフォーマットは DXGI_FORMAT_R8G8_UNORM です
+422:	描画用２チャンネル整数 16 ビット型カラーフォーマットは DXGI_FORMAT_R16G16_UNORM です
+422:	描画用２チャンネル浮動小数点 16 ビット型カラーフォーマットは DXGI_FORMAT_R16G16_FLOAT です
+423:	描画用２チャンネル浮動小数点 32 ビット型カラーフォーマットは DXGI_FORMAT_R32G32_FLOAT です
+423:	使用する機能レベル:D3D_FEATURE_LEVEL_11_1
+423:	同時にレンダリングできるバッファの数:8
+423:	最大テクスチャサイズ　幅:16384 高さ:16384
+423:	標準描画用の頂点バッファの作成.... 成功
+424:	シェーダーコード関係の初期化.... 成功
+434:	各種シェーダー用定数バッファの作成.... 成功
+435:	各種 ID3D11InputLayout の作成.... 成功
+445:	画像の単純転送処理の初期化... 成功
+446:	深度バッファを作成します.... 成功
+448:	フォントの初期化を行います
+449:	フォントの初期化は正常に終了しました
+538:	文字コードバッファの初期化を行います... 完了しました
+554:ＤＸライブラリの初期化処理終了
+11966:ジョイパッドの初期化... 
+11966:	XInput 対応コントローラーのチェックを開始します
+11966:		XInput 対応コントローラー No.0 をチェック
+11967:		XInput 対応コントローラー No.0 の接続は確認できませんでした
+11967:		XInput 対応コントローラー No.1 をチェック
+11968:		XInput 対応コントローラー No.1 の接続は確認できませんでした
+11968:		XInput 対応コントローラー No.2 をチェック
+11968:		XInput 対応コントローラー No.2 の接続は確認できませんでした
+11968:		XInput 対応コントローラー No.3 をチェック
+11969:		XInput 対応コントローラー No.3 の接続は確認できませんでした
+11969:	XInput 対応コントローラーのチェック完了
+11970:	DirectInput 対応ジョイパッドの列挙を開始します
+11994:	DirectInput 対応ジョイパッドの列挙終了
+11994:ジョイパッドの初期化は正常に終了しました
+15181:ジョイパッドの初期化... 
+15181:	XInput 対応コントローラーのチェックを開始します
+15181:		XInput 対応コントローラー No.0 をチェック
+15185:		XInput 対応コントローラー No.0 の接続を確認しました
+15185:		XInput 対応コントローラー No.0 を入力ナンバー 0 で登録します
+15185:		XInput 対応コントローラー No.1 をチェック
+15186:		XInput 対応コントローラー No.1 の接続は確認できませんでした
+15186:		XInput 対応コントローラー No.2 をチェック
+15186:		XInput 対応コントローラー No.2 の接続は確認できませんでした
+15186:		XInput 対応コントローラー No.3 をチェック
+15186:		XInput 対応コントローラー No.3 の接続は確認できませんでした
+15187:	XInput 対応コントローラーのチェック完了
+15187:	DirectInput 対応ジョイパッドの列挙を開始します
+15198:		DirectInput 対応入力装置を検出しました
+15198:				Device Product GUID  : c21d046d,0000,0000,00,00,50,49,44,56,49,44
+15198:				Device Instance GUID : 849e71f0,3c97,11f0,80,02,44,45,53,54,00,00
+15199:			DirectInputDevice8 の作成... 成功
+15199:			DirectInputDevice の情報を取得します... 成功
+15200:				Device Product Name  : Controller (Gamepad F310)
+15200:				Device Instance Name : Controller (Gamepad F310)
+15200:			検出した DirectInput 対応入力装置が Xbox360コントローラーか確認... 不一致
+15200:			検出した DirectInput 対応入力装置が XboxOneコントローラーか確認... 不一致
+15201:			検出した DirectInput 対応入力装置が XInput 対応コントローラーか確認... 一致
+15586:		検出した DirectInput 対応入力装置の初期化を中断します
+15604:	DirectInput 対応ジョイパッドの列挙終了
+15605:ジョイパッドの初期化は正常に終了しました
+95117:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+95134:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+95151:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+95168:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+95184:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+95201:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+95217:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+95234:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+95251:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+95267:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+95284:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+95300:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+95317:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+95334:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+95350:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+95367:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+95384:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+95400:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+95418:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+95435:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+95451:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+95472:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+95484:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+95501:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+95518:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+95534:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+95550:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+95568:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+95584:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+95601:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+95618:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+95635:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+95651:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+95668:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+95684:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+95701:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+95718:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+95734:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+95751:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+95768:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+95785:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+95802:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+95818:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+95835:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+95851:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+95868:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+95884:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+95901:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+95918:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+95935:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+96202:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+96218:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+96235:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+96251:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+96268:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+96285:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+96302:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+96318:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+96335:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+96352:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+96369:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+96385:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+96402:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+96418:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+96435:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+96452:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+96469:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+96485:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+96502:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+96519:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+96536:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+96552:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+96568:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+96585:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+96602:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+96619:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+96636:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+96652:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+96668:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+96685:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+96703:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+96719:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+96736:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+96755:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+96769:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+96786:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+96803:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+96819:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+96836:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+96853:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+96869:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+96886:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+96902:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+96919:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+96936:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+96952:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+96969:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+96986:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+97003:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+97020:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+97523:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+97539:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+97556:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+97573:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+97589:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+97606:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+97623:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+97640:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+97656:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+97673:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+97690:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+97706:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+97722:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+97739:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+97756:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+97773:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+97790:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+97806:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+97823:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+97840:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+97857:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+97873:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+97890:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+97906:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+97923:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+97940:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+97956:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+97973:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+97990:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+98007:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+98023:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+98040:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+98057:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+98073:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+98090:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+98107:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+98124:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+98140:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+98157:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+98173:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+98190:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+98206:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+98224:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+98240:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+98257:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+98274:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+98290:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+98307:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+98324:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+98344:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+98959:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+98976:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+98993:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+99009:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+99027:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+99043:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+99060:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+99076:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+99093:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+99110:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+99127:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+99143:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+99160:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+99176:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+99193:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+99210:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+99227:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+99244:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+99260:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+99276:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+99293:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+99310:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+99327:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+99343:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+99360:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+99377:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+99394:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+99410:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+99427:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+99444:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+99460:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+99477:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+99494:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+99510:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+99527:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+99544:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+99560:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+99577:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+99593:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+99610:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+99627:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+99643:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+99660:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+99677:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+99694:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+99711:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+99727:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+99744:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+99761:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+99777:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+103147:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+103165:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+103181:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+103198:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+103214:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+103231:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+103247:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+103265:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+103281:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+103298:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+103315:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+103331:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+103348:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+103365:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+103381:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+103398:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+103414:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+103431:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+103448:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+103465:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+103481:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+103498:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+103515:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+103532:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+103548:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+103565:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+103582:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+103598:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+103615:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+103631:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+103648:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+103665:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+103681:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+103698:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+103715:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+103732:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+103748:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+103765:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+103782:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+103798:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+103815:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+103832:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+103848:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+103866:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+103882:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+103898:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+103915:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+103932:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+103948:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+103966:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+107855:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+107872:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+107889:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+107906:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+107922:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+107939:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+107955:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+107972:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+107989:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+108005:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+108022:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+108039:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+108055:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+108072:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+108089:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+108106:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+108122:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+108138:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+108156:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+108173:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+108188:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+108206:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+108223:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+108238:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+108256:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+108273:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+108288:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+108306:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+108322:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+108339:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+108356:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+108373:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+108388:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+108406:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+108422:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+108439:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+108456:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+108473:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+108489:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+108506:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+108523:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+108539:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+108556:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+108573:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+108590:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+108606:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+108622:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+108640:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+108656:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+108673:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+110595:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+110611:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+110628:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+110645:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+110662:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+110678:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+110695:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+110711:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+110728:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+110745:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+110762:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+110778:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+110795:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+110812:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+110828:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+110845:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+110862:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+110878:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+110895:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+110912:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+110928:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+110945:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+110962:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+110978:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+110995:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+111012:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+111029:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+111045:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+111062:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+111079:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+111096:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+111112:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+111129:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+111146:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+111162:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+111179:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+111196:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+111212:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+111229:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+111246:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+111262:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+111279:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+111296:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+111313:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+111329:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+111346:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+111363:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+111378:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+111395:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+111412:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+112347:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+112364:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+112380:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+112397:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+112414:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+112430:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+112447:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+112464:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+112480:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+112497:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+112514:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+112531:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+112547:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+112563:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+112580:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+112597:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+112614:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+112630:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+112648:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+112663:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+112680:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+112697:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+112714:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+112730:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+112747:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+112764:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+112781:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+112797:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+112814:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+112831:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+112848:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+112864:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+112881:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+112897:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+112914:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+112930:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+112948:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+112965:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+112981:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+112998:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+113014:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+113031:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+113048:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+113065:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+113082:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+113098:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+113115:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+113131:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+113148:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+113164:画像ファイル C:\GitHub\Winter_HomeWork_2025\data\Effect\torch_land.png がありません
+126546:フォントの初期化を行います
+126547:フォントの初期化は正常に終了しました
+126665:d3d11.dll の解放 1
+126665:dxgi.dll の解放 1
+126666:Direct3D11 のオブジェクト数を出力
+126666:Direct3D11 のオブジェクト合計数 : 0
+126667:DirectInput 関連の終了処理... 完了
+126667:サウンド関連の終了処理... 完了
+126685:ウィンドウ関連の終了処理... ウインドウを閉じようとしています
+126689:ウインドウが破棄されようとしています
+126690:ソフトを終了する準備が整いました
+126764:完了
+126766:ＣＯＭを終了... 完了
+126766:
+126766:Alloc memory dump
+126767:	Total size:0(0.000kb)  Alloc num:0
+126767:

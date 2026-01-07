@@ -13,7 +13,7 @@ namespace
 {
 	constexpr int kFadeInterval = 60;
 
-	constexpr int kTitleScale = 2.0f;
+	constexpr int kTitleScale = 1.0f;
 
 	constexpr float kPressStartScale = 0.25f;
 	constexpr int kDecideBlinkFrame = 20;

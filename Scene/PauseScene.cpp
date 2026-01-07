@@ -1,5 +1,6 @@
 #include "PauseScene.h"
 #include "Input.h"
+#include"TitleScene.h"
 #include "SceneController.h"
 #include "Application.h"
 #include"Dxlib.h"
@@ -51,7 +52,7 @@ void PauseScene::DisappearUpdate(Input& input)
 {
 	if (frame_ == 0)
 	{
-		controller_.PopScene();//この時点で自分は解放されている
+		controller_.PopScene();
 		return;
 	}
 	--frame_;
@@ -68,7 +69,9 @@ void PauseScene::ExcecuteMenu()
 	} 
 	else if (menu == "タイトルに戻る") 
 	{ 
-		OutputDebugStringA("タイトルに戻る が選ばれました\n");
+		controller_.PopScene();
+		controller_.ChangeScene(std::make_shared<TitleScene>(controller_));
+		return;
 	} 
 	else if (menu == "ゲームを終了する") 
 	{
