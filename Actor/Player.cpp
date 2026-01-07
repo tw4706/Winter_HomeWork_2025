@@ -71,7 +71,7 @@ namespace
 	constexpr float kGunOffsetX = 40.0f;
 	constexpr float kGunOffsetY = 10.0f;
 
-	//たいまつの投げる位置のオフセット(特例)
+	//たいまつの投げる位置のオフセット
 	constexpr float kTorchFireOffsetY = 50.0f;
 
 	//ダメージを受けたときの無敵時間
@@ -115,7 +115,6 @@ namespace
 	constexpr int kHurtFrameInterval = 6;
 	constexpr int kDeathFrameInterval = 6;
 
-
 	//状態ごとのフレーム数とフレーム間隔
 	const int frameCounts[kGraphNum] = { kIdleFrameCount,kAttackFrameCount,kWalkFrameCount, kJumpFrameCount, kHurtFrameCount, kDeathFrameCount };
 	const int frameIntervals[kGraphNum] = { kIdleFrameInterval,
@@ -137,11 +136,14 @@ Player::Player(Vector2 pos, Vector2 vel) :
 	isDeathAnimFinished_(false),
 	autoWalkDir_(1),
 	autoWalkSpeed_(kSpeed),
+	isWeaponSelecting_(false),
+	isWeaponLocked_(false),
 	currentStage_(StageType::Stage1),
 	controlMode_(PlayerControl::Normal),
 	isUnlockedTorch_(false),
 	state_(PlayerState::Idle),
-	currentBulletType_(BulletType::Knife)
+	currentBulletType_(BulletType::Knife),
+	gameProgress_(nullptr)
 {
 	isTurn_ = true;
 }
@@ -281,6 +283,9 @@ void Player::Update(Input& input, BulletManager& bm,StageType stage)
 	//武器の切り替え
 	if (input.IsTriggered("changeWeapon"))
 	{
+		//武器がロックされているなら切り替え不可にする
+		if (isWeaponLocked_) return;
+
 		int next = static_cast<int>(currentBulletType_);
 
 		//次の武器への切り替え
@@ -607,4 +612,23 @@ void Player::OnTutorialAction(TutorialAction action)
 		gameProgress_->tutorialAttacked_ = true;
 		break;
 	}
+}
+
+void Player::StartWeaponSelect()
+{
+	controlMode_ = PlayerControl::Stop; // ←既存機能を使う
+	isWeaponSelecting_ = true;
+	vel_ = { 0.0f, 0.0f };
+	state_ = PlayerState::Idle;
+}
+
+void Player::EndWeaponSelect()
+{
+	controlMode_ = PlayerControl::Normal;
+	isWeaponSelecting_ = false;
+}
+
+void Player::LockWeapon()
+{
+	isWeaponLocked_ = true;
 }

@@ -56,6 +56,8 @@ GameScene::GameScene(SceneController& controller, StageType stage) :
 	update_(&GameScene::FadeInUpdate),
 	draw_(&GameScene::FadeDraw),
 	clearState_(ClearState::None),
+	gameProgress_(nullptr),
+	event_(Event::None),
 	frame_(fade_interval),
 	isBoss1Defeated_(false),
 	autoWalkStartX_(0)
@@ -77,6 +79,21 @@ void GameScene::FadeInUpdate(Input&)
 
 void GameScene::NormalUpdate(Input&input)
 {
+	if (event_ == Event::None &&
+		!pPlayer_->IsWeaponLocked() &&
+		pPlayer_->GetPos().x >= kWeaponSelectEventX_)
+	{
+		event_ = Event::WeaponSelect;
+
+		//プレイヤーを停止させる
+		pPlayer_->StartWeaponSelect();
+
+		//UIを選択モードに
+		weaponUI_.StartWeaponSelect();
+
+		return; //通常のUpdate処理を止める
+	}
+
 	//ポーズボタンを押したらポーズシーンに遷移
 	if (input.IsTriggered("pause"))
 	{

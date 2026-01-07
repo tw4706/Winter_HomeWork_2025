@@ -86,6 +86,16 @@ public:
 	//チュートリアルアクションの通知を行う関数	
 	void OnTutorialAction(TutorialAction action);
 
+	//ステージ2のイベント関連
+	//武器選択をさせる
+	void StartWeaponSelect();
+	//武器選択を終了させる
+	void EndWeaponSelect();
+	//武器をロックする
+	void LockWeapon();
+	//武器のロックを解除する
+	bool IsWeaponLocked() const { return isWeaponLocked_; }
+
 private:
 	std::vector<int>graphHandles_;//画像ハンドルの配列
 	Vector2 initializePos_;//リスポーンしたときの初期位置保存用
@@ -102,6 +112,8 @@ private:
 	bool isUnlockedTorch_;//たいまつが使えるかどうか
 	int autoWalkDir_;//自動移動の方向
 	float autoWalkSpeed_;//自動移動の速度
+	bool isWeaponSelecting_;//武器が選択中かどうか
+	bool isWeaponLocked_;//武器がロックされているかどうか
 
 	StageType currentStage_;//現在のステージの種類
 	PlayerControl controlMode_;//プレイヤーの操作している状態
