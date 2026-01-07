@@ -1,6 +1,7 @@
 #include "PauseScene.h"
 #include "Input.h"
 #include"TitleScene.h"
+#include"SelectScene.h"
 #include "SceneController.h"
 #include "Application.h"
 #include"Dxlib.h"
@@ -73,9 +74,11 @@ void PauseScene::ExcecuteMenu()
 		controller_.ChangeScene(std::make_shared<TitleScene>(controller_));
 		return;
 	} 
-	else if (menu == "ゲームを終了する") 
+	else if (menu == "ステージセレクトに戻る")
 	{
-		Application::GetInstance().RequestExit();
+		controller_.PopScene();
+		controller_.ChangeScene(std::make_shared<SelectScene>(controller_));
+		return;
 	} 
 }
 
@@ -160,7 +163,7 @@ PauseScene::PauseScene(SceneController& controller) :
 	menuList_ = {
 		"ゲームに戻る",
 		"タイトルに戻る",
-		"ゲームを終了する"
+		"ステージセレクトに戻る"
 	};
 }
 
@@ -175,7 +178,7 @@ void PauseScene::Init()
 		{
 			"ゲームに戻る",
 			"タイトルに戻る",
-			"ゲームを終了する"
+			"ステージセレクトに戻る"
 		};
 	}
 

@@ -46,6 +46,8 @@ namespace
 	//プレイヤーが自動で歩行する向きと距離
 	constexpr int kPlayerDir = 1;//右向き
 	constexpr float kPlayerAutoWalkX = 600.0f;
+
+	constexpr float kWeaponSelectEventX_ = 7200.0f;
 }
 
 GameScene::GameScene(SceneController& controller, StageType stage) :
@@ -55,7 +57,7 @@ GameScene::GameScene(SceneController& controller, StageType stage) :
 	draw_(&GameScene::FadeDraw),
 	clearState_(ClearState::None),
 	frame_(fade_interval),
-	isBossDefeated_(false),
+	isBoss1Defeated_(false),
 	autoWalkStartX_(0)
 {
 	//bgにステージに対応するマップデータをセット
@@ -75,19 +77,12 @@ void GameScene::FadeInUpdate(Input&)
 
 void GameScene::NormalUpdate(Input&input)
 {
-
 	//ポーズボタンを押したらポーズシーンに遷移
 	if (input.IsTriggered("pause"))
 	{
 		controller_.PushScene(std::make_shared<PauseScene>(controller_));
 		return;
 	}
-
-	//if (input.IsTriggered("next"))
-	//{
-	//	controller_.ChangeScene(std::make_shared<SelectScene>(controller_));
-	//	return;
-	//}
 
 	if (pPlayer_->GetPos().y > kFallLimit)
 	{
@@ -136,13 +131,13 @@ void GameScene::NormalUpdate(Input&input)
 	//敵の弾 × プレイヤーの当たり判定
 	CollisionManager::EnemyBulletsVsPlayer(bulletManager_.GetBullets(),*pPlayer_);
 
-
+	//プレイヤーが死亡していて死亡アニメーションが終了している場合は
+	// ゲームオーバーシーンへ遷移
 	if (pPlayer_->IsDead() && pPlayer_->IsDeadAnimFinished())
 	{
 		update_ = &GameScene::FadeOutUpdate;
 		draw_ = &GameScene::FadeDraw;
 		frame_ = 0;
-
 		return;
 	}
 
@@ -151,19 +146,18 @@ void GameScene::NormalUpdate(Input&input)
 		pPlayer_->GetColRect(),
 		enemyFactory_.GetEnemies());
 
-	//敵に当たっていて、プレイヤーが死んでいない場合ダメージ処理を行う
+	//敵に当たっていてプレイヤーが死んでいない場合ダメージ処理を行う
 	if (hitEnemy && !pPlayer_->IsDead())
 	{
 		pPlayer_->OnDamage(hitEnemy->GetPos().x);
 	}
-
 
 	//ボスを倒すとクリアシーンに遷移
 	for (auto& enemy : enemyFactory_.GetEnemies())
 	{
 		auto boss2 = enemyFactory_.GetBoss2();
 
-		//敵がボス+死亡している場合
+		//敵がボスかつ死亡している場合
 		if (enemy->IsBoss() && enemy->IsDead()
 			&& clearState_ == ClearState::None)
 		{
@@ -180,6 +174,8 @@ void GameScene::NormalUpdate(Input&input)
 		}
 	}
 
+	//クリア状態がボスを倒した後のカメラ揺らし状態の場合は
+	//カメラの揺れが終了するまで待機する
 	if (clearState_ == ClearState::BossCameraShake)
 	{
 		if (!pCamera_->IsShaking())
@@ -191,6 +187,8 @@ void GameScene::NormalUpdate(Input&input)
 		}
 	}
 
+	//クリア状態が自動歩行状態の場合は
+	//一定距離進んだらクリアシーンへ遷移する
 	if (clearState_ == ClearState::AutoWalk)
 	{
 		float nowX = pPlayer_->GetPos().x;
@@ -202,6 +200,18 @@ void GameScene::NormalUpdate(Input&input)
 			frame_ = 0;
 			return;
 		}
+	}
+
+	if (!isWeaponSelected_
+		&& stageType_ == StageType::Stage2
+		&& pPlayer_->GetPos().x >= kWeaponSelectEventX_)
+	{
+		isWeaponSelected_ = true;
+		update_ = &GameScene::WeaponSelectUpdate;
+		draw_ = &GameScene::NormalDraw;
+
+		pPlayer_->SetControlMode(PlayerControl::Stop);
+		return;
 	}
 
 #ifdef _DEBUG
@@ -218,7 +228,7 @@ void GameScene::FadeOutUpdate(Input&)
 {
 	if (frame_++ >= fade_interval)
 	{
-		controller_.ChangeScene(std::make_shared<GameOverScene>(controller_));
+		controller_.ChangeScene(std::make_shared<GameOverScene>(controller_,stageType_));
 		return;
 	}
 }
@@ -231,6 +241,27 @@ void GameScene::GoalFadeOutUpdate(Input&)
 		StageType next = GetNextStageType(stageType_);
 		controller_.ChangeScene(std::make_shared<GameScene>(controller_,next));
 	}
+}
+
+void GameScene::WeaponSelectUpdate(Input&input)
+{
+	//プレイヤーの武器切り替えを行わせる
+	pPlayer_->Update(input, bulletManager_, stageType_);
+
+	//UIの更新
+	weaponUI_.Update(*pPlayer_);
+
+	//決定
+	if (input.IsTriggered("ok"))
+	{
+		//選んでいる武器で固定される
+		pPlayer_->LockWeapon(pPlayer_->GetCurrentBulletType());
+
+		pPlayer_->SetControlMode(PlayerControl::Normal);
+
+		update_ = &GameScene::NormalUpdate;
+	}
+
 }
 
 void GameScene::FadeDraw() 

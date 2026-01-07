@@ -6,6 +6,7 @@
 #include"StageType.h"
 #include<vector>
 #include<memory>
+#include<array>
 #include<functional>
 
 //プレイヤーの状態
@@ -23,7 +24,8 @@ enum class PlayerState
 enum class PlayerControl
 {
 	Normal,
-	AutoWalking
+	AutoWalking,
+	Stop
 };
 
 enum class TutorialAction
@@ -73,10 +75,6 @@ public:
 	void UnlockTorch() { isUnlockedTorch_ = true; }
 	bool IsUnlockedTorch() const { return isUnlockedTorch_; }
 
-	//ステージ1のボスを倒したかどうか
-	void SetBoss1Defeated() { isDefeatedBoss1_ = true; }
-	bool IsBoss1Defeated() const { return isDefeatedBoss1_; }
-
 	//ボスを倒した後の自動移動
 	void StartAutoWalk(int dir);
 
@@ -88,6 +86,15 @@ public:
 
 	//チュートリアルアクションの通知を行う関数	
 	void OnTutorialAction(TutorialAction action);
+
+	//武器のロック処理
+	void LockWeapon(BulletType type);
+	//武器のアンロック処理
+	bool IsWeaponEnabled(BulletType type) const;
+
+	//プレイヤーの操作状態を設定する関数
+	void SetControlMode(PlayerControl mode) { controlMode_ = mode; }
+
 private:
 	std::vector<int>graphHandles_;//画像ハンドルの配列
 	Vector2 initializePos_;//リスポーンしたときの初期位置保存用
@@ -102,7 +109,6 @@ private:
 	bool isAlive_;//生存しているかどうか
 	bool isDeathAnimFinished_;//死亡アニメーションが終了したかどうか
 	bool isUnlockedTorch_;//たいまつが使えるかどうか
-	bool isDefeatedBoss1_;//ステージ1のボスを倒したかどうか
 	int autoWalkDir_;//自動移動の方向
 	float autoWalkSpeed_;//自動移動の速度
 
@@ -112,5 +118,6 @@ private:
 	BulletType currentBulletType_;//現在の弾の種類
 	std::vector<std::shared_ptr<Animation>>animations_;//アニメーションの配列
 	GameProgress* gameProgress_;//ゲームの進行状況を管理するクラスへのポインタ
+	std::array<bool, kBulletCount> isWeaponEnabled_;//武器の使用可能フラグ
 };
 

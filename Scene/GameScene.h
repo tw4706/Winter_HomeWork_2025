@@ -17,6 +17,12 @@ enum class ClearState
 	AutoWalk
 };
 
+enum class Event
+{
+	None,
+	WeaponSelect
+};
+
 class Player;
 class Bg;
 class GameProgress;
@@ -30,6 +36,7 @@ private:
 	void NormalUpdate(Input& input);
 	void FadeOutUpdate(Input&);
 	void GoalFadeOutUpdate(Input&);
+	void WeaponSelectUpdate(Input&input);
 	using UpdateFunc_t = void (GameScene::*)(Input&);
 	UpdateFunc_t update_;//update系を受け取るメンバ関数ポインタ
 
@@ -59,6 +66,10 @@ private:
 	std::unique_ptr<TutorialManager> tutorialManager_;
 	GameProgress*gameProgress_;
 
-	bool isBossDefeated_;
-	int autoWalkStartX_;
+	bool isBoss1Defeated_;//ボス1撃破フラグ
+	int autoWalkStartX_;//自動で移動する開始位置
+
+	//ステージ2の武器選択イベント
+	Event sceneEvent_ = Event::None;//イベントの状態
+	bool isWeaponSelected_ = false;//武器を選択したかどうか
 };

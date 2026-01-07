@@ -2,6 +2,7 @@
 #include "SceneController.h"
 #include "TitleScene.h"
 #include "SelectScene.h"
+#include "GameScene.h"
 #include "ClearScene.h"
 #include "Input.h"
 #include <DxLib.h>
@@ -40,7 +41,8 @@ void GameOverScene::FadeOutUpdate(Input& input)
 	frame_++;
 	if (frame_ >= kFadeDuration)
 	{
-		controller_.ChangeScene(std::make_shared<SelectScene>(controller_));
+		controller_.ChangeScene(std::make_shared<GameScene>(controller_,stageType_));
+		return;
 	}
 }
 
@@ -58,10 +60,12 @@ void GameOverScene::FadeDraw()
 void GameOverScene::NormalDraw()
 {
 	DrawString(400, 300, "GAME OVER", GetColor(255, 0, 0));
-	DrawString(360, 360, "Press any key to continue...", GetColor(255, 255, 255));
+	DrawString(360, 360, "Press any key to restart...", GetColor(255, 255, 255));
 }
 
-GameOverScene::GameOverScene(SceneController& controller):Scene(controller)
+GameOverScene::GameOverScene(SceneController& controller,StageType stage):
+	Scene(controller),
+	stageType_(stage)
 {
 	update_ = &GameOverScene::FadeInUpdate;
 	draw_ = &GameOverScene::FadeDraw;

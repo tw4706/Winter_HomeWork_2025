@@ -11,8 +11,11 @@ enum class BulletType
 	Knife,
 	Lance,
 	Torch,
-	EnemyBullet
+	EnemyBullet,
+
+	Count
 };
+constexpr int kBulletCount = static_cast<int>(BulletType::Count);
 
 //’e‚Ìî•ñ
 struct BulletConfig

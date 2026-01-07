@@ -1,9 +1,13 @@
 #pragma once
 #include "Scene.h"
+#include "StageType.h"
+
+
 class GameOverScene :public Scene
 {
 private:
 	int frame_ = 0;
+	StageType stageType_;
 
 	void FadeInUpdate(Input&);
 	void NormalUpdate(Input&input);
@@ -17,11 +21,10 @@ private:
 	DrawFunc_t draw_;
 
 public:
-	GameOverScene(SceneController& controller);
+	GameOverScene(SceneController& controller, StageType stage);
 
 	void Init()override;
 	void Update(Input& input)override;
 	void Draw()override;
-
 };
 

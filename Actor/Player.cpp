@@ -135,7 +135,6 @@ Player::Player(Vector2 pos, Vector2 vel) :
 	shotTimer_(0),
 	isAlive_(true),
 	isDeathAnimFinished_(false),
-	isDefeatedBoss1_(false),
 	autoWalkDir_(1),
 	autoWalkSpeed_(kSpeed),
 	currentStage_(StageType::Stage1),
@@ -173,11 +172,25 @@ void Player::Init()
 			false, 0
 		);
 	}
+
+	//武器は最初は全て解放されてる状態
+	isWeaponEnabled_.fill(true);
+	//短剣だけは必ず有効にする
+	isWeaponEnabled_[0] = true;
 }
 
 void Player::Update(Input& input, BulletManager& bm,StageType stage)
 {
 	currentStage_ = stage;
+
+	//武器を選択する時に停止させる
+	if (controlMode_ == PlayerControl::Stop)
+	{
+		vel_ = { 0.0f,0.0f };
+		state_ = PlayerState::Idle;
+		animations_[static_cast<int>(state_)]->Update();
+		return;
+	}
 
 	GameObject::Update();
 
@@ -273,15 +286,25 @@ void Player::Update(Input& input, BulletManager& bm,StageType stage)
 	//武器の切り替え
 	if (input.IsTriggered("changeWeapon"))
 	{
-		int next = (static_cast<int>(currentBulletType_) + 1) % kBulletNum;
+		int next = static_cast<int>(currentBulletType_);
 
-		//たいまつ解放ならスキップ
-		if (next == static_cast<int>(BulletType::Torch) && !IsUnlockedTorch())
+		for (int i = 0; i < kBulletNum; i++)
 		{
 			next = (next + 1) % kBulletNum;
-		}
 
-		currentBulletType_ = static_cast<BulletType>(next);
+			//選ばれた武器だけに切り替える
+			if (IsWeaponEnabled(static_cast<BulletType>(next)))
+			{
+				//たいまつ解しているか確認
+				if (next == static_cast<int>(BulletType::Torch) && !IsUnlockedTorch())
+				{
+					continue;
+				}
+
+				currentBulletType_ = static_cast<BulletType>(next);
+				break;
+			}
+		}
 	}
 
 #ifdef _DEBUG
@@ -323,6 +346,12 @@ void Player::Draw()
 #ifdef _DEBUG
 	//当たり判定の矩形の色を変える
 	colRect_.DrawAndCamera(cameraOffset_, isDamaged_ ? 0x0000ff : 0xff0000, false);
+	DrawFormatString(
+		20,
+		20,
+		GetColor(255, 255, 255),
+		"Player X : %.1f",
+		pos_.x);
 #endif
 }
 
@@ -404,6 +433,12 @@ void Player::Jump(Input& input)
 
 void Player::Shot(Input& input, BulletManager& bm)
 {
+	//選択されていない武器は発射できないようにする
+	if (!IsWeaponEnabled(currentBulletType_))
+	{
+		return;
+	}
+
 	if (shotTimer_ > 0)
 	{
 		shotTimer_--;
@@ -583,4 +618,43 @@ void Player::OnTutorialAction(TutorialAction action)
 		gameProgress_->tutorialAttacked_ = true;
 		break;
 	}
+}
+
+void Player::LockWeapon(BulletType type)
+{
+	//今のままだと敵の弾も入ってしまいエラーを起こすので無視する
+	if (type == BulletType::EnemyBullet)
+	{
+		return;
+	}
+
+	int index = static_cast<int>(type);
+
+	//短剣・槍・松明のみ
+	if (index < 0 || index >= kBulletNum)
+	{
+		return;
+	}
+
+	isWeaponEnabled_.fill(false);
+	isWeaponEnabled_[index] = true;
+	currentBulletType_ = type;
+}
+
+bool Player::IsWeaponEnabled(BulletType type) const
+{
+	//こっちも同じで敵の弾は無視する
+	if (type == BulletType::EnemyBullet)
+	{
+		return false;
+	}
+
+	//短剣・槍・松明のみ
+	int index = static_cast<int>(type);
+	if (index < 0 || index >= 3)
+	{
+		return false;
+	}
+
+	return isWeaponEnabled_[index];
 }
