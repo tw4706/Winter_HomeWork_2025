@@ -74,6 +74,9 @@ namespace
 	//たいまつの投げる位置のオフセット
 	constexpr float kTorchFireOffsetY = 50.0f;
 
+	//攻撃をしている間の時間
+	constexpr int kAttackDuration = 30;
+
 	//ダメージを受けたときの無敵時間
 	constexpr int kDamageDuration = 60;
 
@@ -102,16 +105,16 @@ namespace
 	constexpr int kDeathFrameCount = 4;
 
 	//攻撃・ジャンプのアニメーションはさらに部分だけ切り取る
-	constexpr int kAttackStartFrame = 5;
-	constexpr int kAttackEndFrame = 7;
-	constexpr int kJumpStartFrame = 5;
-	constexpr int kJumpEndFrame = 7;
+	constexpr int kAttackStartFrame = 3;
+	constexpr int kAttackEndFrame = 8;
+	constexpr int kJumpStartFrame = 4;
+	constexpr int kJumpEndFrame = 8;
 
 	//各状態遷移のフレーム間隔
 	constexpr int kIdleFrameInterval = 6;
-	constexpr int kAttackFrameInterval = 4;
+	constexpr int kAttackFrameInterval = 5;
 	constexpr int kWalkFrameInterval = 5;
-	constexpr int kJumpFrameInterval = 6;
+	constexpr int kJumpFrameInterval = 9;
 	constexpr int kHurtFrameInterval = 6;
 	constexpr int kDeathFrameInterval = 6;
 
@@ -130,18 +133,18 @@ Player::Player(Vector2 pos, Vector2 vel) :
 	isDamaged_(false),
 	isTouching_(false),
 	isAttacking_(false),
+	attackTimer_(0),
 	damageTimer_(0),
 	shotTimer_(0),
 	isAlive_(true),
 	isDeathAnimFinished_(false),
 	autoWalkDir_(1),
 	autoWalkSpeed_(kSpeed),
-	isWeaponSelecting_(false),
-	isWeaponLocked_(false),
 	currentStage_(StageType::Stage1),
 	controlMode_(PlayerControl::Normal),
 	isUnlockedTorch_(false),
 	state_(PlayerState::Idle),
+	prevState_(PlayerState::Idle),
 	currentBulletType_(BulletType::Knife),
 	gameProgress_(nullptr)
 {
@@ -244,6 +247,30 @@ void Player::Update(Input& input, BulletManager& bm,StageType stage)
 	//発射処理
 	Shot(input, bm);
 
+	//状態がかわったらアニメーションをリセットする
+	if (state_ != prevState_)
+	{
+		auto anim = animations_[static_cast<int>(state_)];
+		anim->Reset();
+
+		if (state_ == PlayerState::Jump)
+		{
+			anim->Setloop(false);
+			anim->SetFrame(kJumpStartFrame);
+		}
+		else if (state_ == PlayerState::Attack)
+		{
+			anim->Setloop(false);
+			anim->SetFrame(kAttackStartFrame);
+		}
+		else
+		{
+			anim->Setloop(true);
+		}
+
+		prevState_ = state_;
+	}
+
 	//アニメーションの更新
 	animations_[static_cast<int>(state_)]->Update();
 
@@ -283,9 +310,6 @@ void Player::Update(Input& input, BulletManager& bm,StageType stage)
 	//武器の切り替え
 	if (input.IsTriggered("changeWeapon"))
 	{
-		//武器がロックされているなら切り替え不可にする
-		if (isWeaponLocked_) return;
-
 		int next = static_cast<int>(currentBulletType_);
 
 		//次の武器への切り替え
@@ -322,28 +346,7 @@ void Player::Draw()
 	int animIndex = static_cast<int>(state_);
 	int frame = animations_[animIndex]->GetFrameCount();
 
-	if (state_ == PlayerState::Attack)
-	{
-		if (frame >= kAttackStartFrame && frame <= kAttackEndFrame)
-		{
-			animations_[animIndex]->Draw(drawX, drawY - kPosYOffset, !isTurn_);
-		}
-	}
-	else if (state_ == PlayerState::Jump)
-	{
-		if (frame >= kJumpStartFrame && frame <= kJumpEndFrame)
-		{
-			animations_[animIndex]->Draw(drawX, drawY - kPosYOffset, !isTurn_);
-		}
-		else
-		{
-			animations_[animIndex]->Draw(drawX, drawY - kPosYOffset, !isTurn_);
-		}
-	}
-	else
-	{
-		animations_[animIndex]->Draw(drawX, drawY - kPosYOffset, !isTurn_);
-	}
+	animations_[animIndex]->Draw(drawX, drawY - kPosYOffset, !isTurn_);
 
 #ifdef _DEBUG
 	//当たり判定の矩形の色を変える
@@ -440,8 +443,17 @@ void Player::Shot(Input& input, BulletManager& bm)
 		shotTimer_--;
 	}
 
+	//攻撃処理
 	if (input.IsTriggered("shot") && shotTimer_ <= 0)
 	{
+		isAttacking_ = true;
+		attackTimer_ = kAttackDuration;
+
+		auto anim = animations_[static_cast<int>(PlayerState::Attack)];
+		anim->Reset();
+		anim->Setloop(true);
+		anim->SetFrame(kAttackStartFrame);
+
 		//たいまつが使えないステージなら発射出来ないようにする
 		if (currentBulletType_ == BulletType::Torch && !IsUnlockedTorch())
 		{
@@ -550,15 +562,13 @@ void Player::UpdateState(Input& input)
 		return;
 	}
 
-	//攻撃のアニメーションをループさせないための処理
+	//攻撃中なら攻撃状態
 	if (isAttacking_)
 	{
 		state_ = PlayerState::Attack;
 
-		auto attackAnim = animations_[static_cast<int>(PlayerState::Attack)];
-
-		//アニメーションが終了したら攻撃状態を解除
-		if (attackAnim->IsAnimFinished())
+		attackTimer_--;
+		if (attackTimer_ <= 0)
 		{
 			isAttacking_ = false;
 		}
@@ -616,23 +626,4 @@ void Player::OnTutorialAction(TutorialAction action)
 		gameProgress_->tutorialAttacked_ = true;
 		break;
 	}
-}
-
-void Player::StartWeaponSelect()
-{
-	controlMode_ = PlayerControl::Stop; // ←既存機能を使う
-	isWeaponSelecting_ = true;
-	vel_ = { 0.0f, 0.0f };
-	state_ = PlayerState::Idle;
-}
-
-void Player::EndWeaponSelect()
-{
-	controlMode_ = PlayerControl::Normal;
-	isWeaponSelecting_ = false;
-}
-
-void Player::LockWeapon()
-{
-	isWeaponLocked_ = true;
 }

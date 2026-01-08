@@ -15,18 +15,27 @@ Animation::~Animation() {}
 void Animation::Update()
 {
     frameTimer_++;
-    if (frameTimer_ >= frameInterval_)
+
+	//フレーム更新間隔に達していなければ何もしない
+    if (frameTimer_ < frameInterval_)
     {
-        frameTimer_ = 0;
-        currentFrame_++;
-        if (isLoop_)
-        {
-            currentFrame_ %= frameCount_;
-        }
-        if (currentFrame_ >= frameCount_)
-        {
-            currentFrame_ = 0;
-        }
+        return;
+	}
+
+	frameTimer_ = 0;
+
+	//ループしない場合、最後のフレームで止まるようにする
+    if (!isLoop_ && currentFrame_ >= frameCount_ - 1)
+    {
+        return;
+    }
+
+    currentFrame_++;
+
+	//ループする場合、最後のフレームを超えたら最初のフレームに戻る
+    if (isLoop_ && currentFrame_ >= frameCount_)
+    {
+        currentFrame_ = 0;
     }
 }
 
@@ -54,10 +63,17 @@ void Animation::Reset()
 
 void Animation::SetFrame(int frame)
 {
-    if (frame < 0) frame = 0;
-    if (frame >= frameCount_) frame = frameCount_ - 1;
+    if (frame < 0) 
+    {
+        frame = 0;
+    }
+
+    if (frame >= frameCount_)
+    {
+        frame = frameCount_ - 1;
+    }
 
     currentFrame_ = frame;
-    frameTimer_ = 0; // 更新タイマーもリセットしておくと安全
+    frameTimer_ = 0; //更新タイマーもリセットする
 }
 
