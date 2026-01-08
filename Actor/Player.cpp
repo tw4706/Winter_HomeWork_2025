@@ -29,9 +29,9 @@ namespace
 	const std::string kGraphName[kGraphNum] =
 	{
 		"data/Player/Idle.png",
-		"data/Player/Attack.png",
+		"data/Player/Attack_correction.png",
 		"data/Player/Walk.png",
-		"data/Player/Jump.png",
+		"data/Player/Jump1.png",
 		"data/Player/Hurt.png",
 		"data/Player/Dead.png"
 
@@ -101,17 +101,17 @@ namespace
 	constexpr int kHurtFrameCount = 4;
 	constexpr int kDeathFrameCount = 4;
 
-	//攻撃のアニメーションはさらに攻撃部分だけ切り取る
-	constexpr int kAttackStartFrame = 4;
+	//攻撃・ジャンプのアニメーションはさらに部分だけ切り取る
+	constexpr int kAttackStartFrame = 5;
 	constexpr int kAttackEndFrame = 7;
-	constexpr int kJumpStartFrame = 2;
-	constexpr int kJumpEndFrame = 8;
+	constexpr int kJumpStartFrame = 5;
+	constexpr int kJumpEndFrame = 7;
 
 	//各状態遷移のフレーム間隔
 	constexpr int kIdleFrameInterval = 6;
-	constexpr int kAttackFrameInterval = 6;
+	constexpr int kAttackFrameInterval = 4;
 	constexpr int kWalkFrameInterval = 5;
-	constexpr int kJumpFrameInterval = 5;
+	constexpr int kJumpFrameInterval = 6;
 	constexpr int kHurtFrameInterval = 6;
 	constexpr int kDeathFrameInterval = 6;
 
@@ -329,9 +329,13 @@ void Player::Draw()
 			animations_[animIndex]->Draw(drawX, drawY - kPosYOffset, !isTurn_);
 		}
 	}
-	if (state_ == PlayerState::Jump)
+	else if (state_ == PlayerState::Jump)
 	{
 		if (frame >= kJumpStartFrame && frame <= kJumpEndFrame)
+		{
+			animations_[animIndex]->Draw(drawX, drawY - kPosYOffset, !isTurn_);
+		}
+		else
 		{
 			animations_[animIndex]->Draw(drawX, drawY - kPosYOffset, !isTurn_);
 		}

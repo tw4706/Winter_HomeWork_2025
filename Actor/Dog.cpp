@@ -18,8 +18,8 @@ namespace
 
 	const std::string kGraphName[kGraphNum] =
 	{
-		"data/Enemy/dog.png",
-		"data/Enemy/dog_jump.png"
+		"data/Enemy/dog_correction.png",
+		"data/Enemy/dog_jump_correction.png"
 	};
 
 	const int frameCounts[kGraphNum] = { 11, 6 };
