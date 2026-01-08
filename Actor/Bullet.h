@@ -87,6 +87,9 @@ public:
 	//プレイヤーの弾かどうかを返す関数
 	bool IsPlayerBullet() const;
 
+	//画面外に出たかどうかを返す関数
+	bool IsOutOfScreen() const;
+
 	//ダメージ量を返す関数
 	int GetDamage() const;
 

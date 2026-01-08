@@ -17,6 +17,7 @@ namespace
 
 	//弾のダメージ設定
 	constexpr int kMaxDamage = 3;
+	constexpr int kMinDamage = 1;
 
 	//重力
 	constexpr float kGravity = 0.2f;
@@ -33,6 +34,9 @@ namespace
 
 	constexpr int kColOffsetX = 20;
 	constexpr int kColOffsetY = 20;
+
+	//画面外判定用定数
+	constexpr int kScreenOutOffset = 100;
 }
 
 Bullet::Bullet(Vector2 pos, Vector2 vel, BulletType bulletType, std::shared_ptr<Bg>bg) :
@@ -226,11 +230,10 @@ void Bullet::Draw()
 
 void Bullet::OnHit()
 {
-	const auto& config = kBulletConfigs[static_cast<int>(bulletType_)];
-
 	if (!isAlive_) return;
 
-	isAlive_ = false;// 弾を消す
+	//const auto& config = kBulletConfigs[static_cast<int>(bulletType_)];
+	isAlive_ = false;//弾を消す
 }
 
 void Bullet::SpawnHadou()
@@ -291,7 +294,7 @@ void Bullet::UpdateHadou(std::vector<std::shared_ptr<Enemy>>& enemies)
 
 			if (h.rect_.IsCollision(enemy->GetColRect()))
 			{
-				enemy->OnHit(kMaxDamage);
+				enemy->OnHit(kMinDamage);
 			}
 		}
 
@@ -370,14 +373,23 @@ bool Bullet::IsPlayerBullet() const
 		bulletType_ == BulletType::Torch;
 }
 
+bool Bullet::IsOutOfScreen() const
+{
+	if (pos_.x + cameraOffset_.x < -kScreenOutOffset || pos_.x + cameraOffset_.x > Game::kScreenWidth + kScreenOutOffset ||
+		pos_.y + cameraOffset_.y < -kScreenOutOffset || pos_.y + cameraOffset_.y > Game::kScreenHeight + kScreenOutOffset)
+	{
+		return true;
+	}
+	return false;
+}
+
 int Bullet::GetDamage() const
 {
 	switch (bulletType_)
 	{
-	case BulletType::Knife:
-		return 1;
-
+	case BulletType::Knife:	
 	case BulletType::Lance:
+		return kMinDamage;
 	case BulletType::Torch:
 		return kMaxDamage;
 

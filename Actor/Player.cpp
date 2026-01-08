@@ -107,14 +107,14 @@ namespace
 	//攻撃・ジャンプのアニメーションはさらに部分だけ切り取る
 	constexpr int kAttackStartFrame = 3;
 	constexpr int kAttackEndFrame = 8;
-	constexpr int kJumpStartFrame = 4;
+	constexpr int kJumpStartFrame = 3;
 	constexpr int kJumpEndFrame = 8;
 
 	//各状態遷移のフレーム間隔
 	constexpr int kIdleFrameInterval = 6;
 	constexpr int kAttackFrameInterval = 5;
 	constexpr int kWalkFrameInterval = 5;
-	constexpr int kJumpFrameInterval = 9;
+	constexpr int kJumpFrameInterval = 8;
 	constexpr int kHurtFrameInterval = 6;
 	constexpr int kDeathFrameInterval = 6;
 
