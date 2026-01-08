@@ -79,20 +79,20 @@ void GameScene::FadeInUpdate(Input&)
 
 void GameScene::NormalUpdate(Input&input)
 {
-	if (event_ == Event::None &&
-		!pPlayer_->IsWeaponLocked() &&
-		pPlayer_->GetPos().x >= kWeaponSelectEventX_)
-	{
-		event_ = Event::WeaponSelect;
+	//if (event_ == Event::None &&
+	//	!pPlayer_->IsWeaponLocked() &&
+	//	pPlayer_->GetPos().x >= kWeaponSelectEventX_)
+	//{
+	//	event_ = Event::WeaponSelect;
 
-		//プレイヤーを停止させる
-		pPlayer_->StartWeaponSelect();
+	//	//プレイヤーを停止させる
+	//	pPlayer_->StartWeaponSelect();
 
-		//UIを選択モードに
-		weaponUI_.StartWeaponSelect();
+	//	//UIを選択モードに
+	//	weaponUI_.StartWeaponSelect();
 
-		return; //通常のUpdate処理を止める
-	}
+	//	return; //通常のUpdate処理を止める
+	//}
 
 	//ポーズボタンを押したらポーズシーンに遷移
 	if (input.IsTriggered("pause"))
