@@ -85,6 +85,7 @@ void EnemyFactory::Init(std::shared_ptr<Player> player, std::shared_ptr<Bg> bg)
         enemy->Init();
         enemy->SetPlayer(player);
         enemy->SetBg(bg);
+        enemy->SetEffectManager(pEffectManager_);
     }
 }
 
@@ -95,7 +96,6 @@ void EnemyFactory::Update()
     {
         if (!enemy->IsDead()) 
         {
-            enemy->SetEffectManager(pEffectManager_);
             enemy->Update();
         }
     }
@@ -132,5 +132,10 @@ void EnemyFactory::AddBoss2(Vector2 pos, Vector2 vel,
     boss2_->Init();
     boss2_->SetPlayer(player);
     enemies_.push_back(boss2_);
+}
+
+void EnemyFactory::SetEffectManager(EffectManager*effect)
+{
+    pEffectManager_ = effect;
 }
 

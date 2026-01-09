@@ -29,6 +29,8 @@ public:
     std::shared_ptr<Boss1> GetBoss1() const { return boss1_; }
     std::shared_ptr<Boss2> GetBoss2() const { return boss2_; }
 
+    void SetEffectManager(EffectManager* effectManager);
+
 private:
     std::vector<std::shared_ptr<Enemy>> enemies_;
     std::shared_ptr<Boss1> boss1_ = nullptr;

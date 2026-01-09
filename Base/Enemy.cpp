@@ -28,8 +28,6 @@ void Enemy::Update()
 {
 	if (isDead_)return;
 
-	Move();
-
 	GameObject::Update();
 
 	colRect_.SetCenter(pos_.x, pos_.y, colSize_, colSize_);
@@ -53,7 +51,7 @@ void Enemy::OnHit(int damage)
 				16, 16,
 				4,
 				4,
-				2.0f));
+				3.0f));
 	}
 
 	hp_ -= damage;
@@ -67,11 +65,11 @@ void Enemy::OnHit(int damage)
 				std::make_shared<SpriteEffect>(
 					pos_,
 					"data/Effect/enemy_explosion.png",
-					224, 160,
+					176, 176,
 					16, 16,
 					4,
 					4,
-					2.0f));
+					3.0f));
 		}
 		Dead();
 	}

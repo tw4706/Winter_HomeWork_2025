@@ -2,18 +2,9 @@
 #include<Dxlib.h>
 
 
-SpriteEffect::SpriteEffect(
-    const Vector2& pos,
-    const char* filePath,
-    int srcX,
-    int srcY,
-    int frameW,
-    int frameH,
-    int frameCount,
-    int frameInterval,
-    float scale
-)
-    : srcX_(srcX),
+SpriteEffect::SpriteEffect(const Vector2& pos,const char* filePath,
+    int srcX,int srcY,int frameW,int frameH,int frameCount,int frameInterval,float scale):
+    srcX_(srcX),
     srcY_(srcY),
     frameW_(frameW),
     frameH_(frameH),

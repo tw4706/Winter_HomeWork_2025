@@ -93,7 +93,7 @@ void Zombie::Init()
 
 		if (i == kWalkGraph)
 		{
-			isLoop = true;   //Walk状態ははループさせる
+			isLoop = true;//Walk状態ははループさせる
 		}
 
 		graphHandles_[i] = LoadGraph(kGraphName[i].c_str());
@@ -234,7 +234,7 @@ void Zombie::Move()
 void Zombie::OnHit(int damage)
 {
 	//無敵ならダメージを受けない
-	if (isInvincibled_) return;
+	//if (isInvincibled_) return;
 
 	Enemy::OnHit(damage);
 }

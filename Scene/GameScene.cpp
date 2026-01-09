@@ -102,6 +102,7 @@ void GameScene::NormalUpdate(Input&input)
 	//UIの更新
 	weaponUI_.Update(*pPlayer_);
 
+	//敵の更新処理
 	enemyFactory_.Update();
 
 	//弾の更新処理
@@ -292,6 +293,7 @@ void GameScene::Init()
 	pCamera_->Init(pPlayer_);
 
 	//敵の初期化
+	enemyFactory_.SetEffectManager(&effectManager_);
 	enemyFactory_.LoadFromCSV(stageType_, &bulletManager_);
 	if (stageType_ == StageType::Stage1)
 	{

@@ -17,4 +17,3 @@ private:
 	std::vector<std::shared_ptr<Effect>> effects_;
 	Vector2 cameraOffset_;
 };
-
