@@ -9,6 +9,7 @@
 class GameScene;
 class Boss1;
 class Boss2;
+class EffectManager;
 class EnemyFactory
 {
 
@@ -34,5 +35,6 @@ private:
     std::shared_ptr<Boss1> boss1_ = nullptr;
     std::shared_ptr<Boss2> boss2_ = nullptr;
     StageType stageType_;
+    EffectManager* pEffectManager_=nullptr;//エフェクトマネージャのポインタ
 };
 

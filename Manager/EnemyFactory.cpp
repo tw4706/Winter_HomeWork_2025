@@ -94,6 +94,7 @@ void EnemyFactory::Update()
     {
         if (!enemy->IsDead()) 
         {
+            enemy->SetEffectManager(pEffectManager_);
             enemy->Update();
         }
     }

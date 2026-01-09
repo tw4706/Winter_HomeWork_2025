@@ -29,6 +29,7 @@ public:
 	//プレイヤーの弾を追加
 	std::vector<std::shared_ptr<Bullet>>& GetBullets();
 
+	//エフェクトマネージャーの設定
 	void SetEffectManager(EffectManager*effectManager)
 	{
 		pEffectManager_ = effectManager;

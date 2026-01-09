@@ -11,7 +11,8 @@ namespace
 }
 
 BulletManager::BulletManager():
-	GameObject()
+	GameObject(),
+	pEffectManager_(nullptr)
 {
 	//’e‚Ì”‚ğŒˆ‚ß‚é
 	bulletLimits_ = {

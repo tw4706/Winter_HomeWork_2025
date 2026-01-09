@@ -6,6 +6,7 @@
 #include<string>
 
 class Player;
+class EffectManager;
 class Enemy:public GameObject
 {
 public:
@@ -19,6 +20,7 @@ protected:
 	int hp_;						//体力
 	int currentState_;
 	std::vector<std::shared_ptr<Animation>> animations_;//アニメーション配列
+	EffectManager* pEffectManager_;
 
 public:
 	Enemy(Vector2 pos,Vector2 vel);
@@ -43,5 +45,7 @@ public:
 
 	virtual bool IsBoss() const { return false; }
 
+	//エフェクトマネージャーのセット
+	void SetEffectManager(EffectManager* effect);
 };
 
