@@ -169,7 +169,7 @@ void Bullet::Draw()
 			int srcX = static_cast<int>(kHadouSrcX + frame * kHadouW);
 			int srcY = kHadouSrcY;
 
-			isTurn_ = (hadouDir_ < 0);
+			bool flip = (hadouDir_ < 0);
 
 			DrawRectRotaGraph3(
 				(int)drawX, (int)drawY,
@@ -179,7 +179,7 @@ void Bullet::Draw()
 				kScale, kScale,
 				0.0f,
 				hadouH_,
-				TRUE, isTurn_);
+				TRUE, flip);
 
 #ifdef _DEBUG
 			h.rect_.DrawAndCamera(cameraOffset_, 0x00ffff, false);
@@ -243,7 +243,7 @@ void Bullet::SpawnHadou()
 	isHadouSpawned_ = true;
 	hadouRects_.clear();
 
-	hadouDir_ = (vel_.x >= 0) ? 1.0f : -1.0f;
+	hadouDir_ = prevHadouDir_;
 
 	for (int i = 0; i < kHadouNum; ++i)
 	{
@@ -371,6 +371,11 @@ bool Bullet::IsPlayerBullet() const
 	return bulletType_ == BulletType::Knife ||
 		bulletType_ == BulletType::Lance ||
 		bulletType_ == BulletType::Torch;
+}
+
+void Bullet::SetDirection(bool isRight)
+{
+	prevHadouDir_ = isRight ? 1.0f : -1.0f;
 }
 
 bool Bullet::IsOutOfScreen() const

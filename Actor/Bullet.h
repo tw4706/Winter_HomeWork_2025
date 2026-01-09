@@ -87,6 +87,9 @@ public:
 	//プレイヤーの弾かどうかを返す関数
 	bool IsPlayerBullet() const;
 
+	//弾の向きをセットする関数
+	void SetDirection(bool isRight);
+
 	//画面外に出たかどうかを返す関数
 	bool IsOutOfScreen() const;
 
@@ -110,6 +113,7 @@ private:
 	//波動関連
 	int hadouH_;
 	float hadouDir_;
+	float prevHadouDir_;			//波動の向きの保存用
 	bool isHadouSpawned_;			//波動を生成したかどうか
 	std::vector<Hadou> hadouRects_;	//波動の当たり判定用の矩形
 };

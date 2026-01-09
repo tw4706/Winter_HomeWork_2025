@@ -45,12 +45,12 @@ void Enemy::OnHit(int damage)
 	{
 		pEffectManager_->AddEffect(
 			std::make_shared<SpriteEffect>(
-				pos_,
+				Vector2{ pos_.x,pos_.y - 20 },
 				"data/Effect/enemy_explosion.png",
-				240, 16,
+				128,80,
 				16, 16,
-				4,
-				4,
+				2,
+				6,
 				3.0f));
 	}
 
@@ -63,13 +63,13 @@ void Enemy::OnHit(int damage)
 		{
 			pEffectManager_->AddEffect(
 				std::make_shared<SpriteEffect>(
-					pos_,
+					Vector2{pos_.x,pos_.y-10},
 					"data/Effect/enemy_explosion.png",
-					176, 176,
+					240, 32,
 					16, 16,
 					4,
-					4,
-					3.0f));
+					5,
+					4.0f));
 		}
 		Dead();
 	}

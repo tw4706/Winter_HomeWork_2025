@@ -479,6 +479,7 @@ void Player::Shot(Input& input, BulletManager& bm)
 		auto bullet = std::make_shared<Bullet>(spawnPos, bulletVel, currentBulletType_, pBg_);
 		bullet->Init();
 		bullet->SetBg(pBg_);
+		bullet->SetDirection(isTurn_);
 		bm.Init(bullet);
 
 		OnTutorialAction(TutorialAction::Attack);
