@@ -5,6 +5,7 @@
 #include "Boss1.h"
 #include "Boss2.h"
 #include "GameScene.h"
+#include"EffectManager.h"
 #include<Dxlib.h>
 #include <fstream>
 #include <sstream>

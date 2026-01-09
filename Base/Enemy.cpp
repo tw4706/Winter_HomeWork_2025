@@ -42,30 +42,32 @@ void Enemy::Draw()
 
 void Enemy::OnHit(int damage)
 {
-	hp_ -= damage;
-
+	//敵のヒットエフェクト
 	if (pEffectManager_)
 	{
 		pEffectManager_->AddEffect(
 			std::make_shared<SpriteEffect>(
 				pos_,
 				"data/Effect/enemy_explosion.png",
-				240, 32,
+				240, 16,
 				16, 16,
 				4,
 				4,
 				2.0f));
 	}
 
+	hp_ -= damage;
+
 	if(hp_ <= 0)
 	{
+		//死ぬときのエフェクト
 		if (pEffectManager_)
 		{
 			pEffectManager_->AddEffect(
 				std::make_shared<SpriteEffect>(
 					pos_,
 					"data/Effect/enemy_explosion.png",
-					240, 160,
+					224, 160,
 					16, 16,
 					4,
 					4,

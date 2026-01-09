@@ -30,8 +30,10 @@ public:
 	virtual void Update()=0;
 	virtual void Draw() = 0;
 	virtual void Move() = 0;
+
 	//弾が当たった時の処理
 	virtual void OnHit(int damage);
+
 	//死亡時の処理
 	virtual void Dead();
 
@@ -40,12 +42,14 @@ public:
 
 	//当たり判定の矩形を取得する関数
 	const Rect& GetColRect() const { return colRect_; }
+
 	//死亡フラグを取得する関数
 	bool IsDead() const { return isDead_; }
 
+	//ボスかどうか
 	virtual bool IsBoss() const { return false; }
 
-	//エフェクトマネージャーのセット
+	//エフェクトマネージャーのセッター
 	void SetEffectManager(EffectManager* effect);
 };
 
