@@ -93,8 +93,8 @@ void PauseScene::IntervalDraw()
 
 	int frame_height = (wsize.h - frame_margin) - center_y;//最終的になポーズ枠の高さ
 	int frame_width = (wsize.w - frame_margin) - center_x;//最終的になポーズ枠の高さ
-	frame_height *= rate;
-	frame_width *= rate;
+	frame_height *= static_cast<int>(rate);
+	frame_width *= static_cast<int>(rate);
 
 	//黒くて薄いセロファンを張る
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 128);

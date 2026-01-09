@@ -97,7 +97,7 @@ void SelectScene::FadeOutUpdate(Input&)
 void SelectScene::FadeDraw()
 {
 	float rate = static_cast<float>(frame_) / kFadeDuration;
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255 * rate);
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255 * static_cast<int>(rate));
 	DrawBox(0, 0, 1280, 720, 0x000000, TRUE);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 }

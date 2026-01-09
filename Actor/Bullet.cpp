@@ -83,10 +83,10 @@ void Bullet::Init()
 	hadouH_ = LoadGraph("data/Bullet/hadou.png");
 	assert(hadouH_ >= 0);
 
-	colSize_ = config.height;
+	colSize_ = static_cast<float>(config.height);
 
 	//当たり判定の初期化
-	colRect_.SetCenter(pos_.x, pos_.y, config.width, config.height);
+	colRect_.SetCenter(pos_.x, pos_.y, static_cast<float>(config.width), static_cast<float>(config.height));
 }
 
 //弾の種別ごとの更新処理
@@ -167,7 +167,7 @@ void Bullet::Draw()
 
 			int frame = h.animations_->GetCurrentFrame();
 
-			int srcX = kHadouSrcX + frame * kHadouW;
+			int srcX = static_cast<int>(kHadouSrcX + frame * kHadouW);
 			int srcY = kHadouSrcY;
 
 			bool flip = (hadouDir_ < 0);
@@ -175,8 +175,8 @@ void Bullet::Draw()
 			DrawRectRotaGraph3(
 				(int)drawX, (int)drawY,
 				srcX, srcY,
-				kHadouW, kHadouH,
-				kHadouW / 2, kHadouH / 2,
+				static_cast<int>(kHadouW), static_cast<int>(kHadouH),
+				static_cast<int>(kHadouW / 2), static_cast<int>(kHadouH / 2),
 				kScale, kScale,
 				0.0f,
 				hadouH_,
@@ -206,7 +206,7 @@ void Bullet::Draw()
 
 		if (bulletType_ == BulletType::Knife || bulletType_ == BulletType::Lance)
 		{
-			angle = (vel_.x >= 0) ? DX_PI / 2.0f : DX_PI + DX_PI / 2.0f;
+			angle = static_cast<float>((vel_.x >= 0) ? DX_PI / 2.0f : DX_PI + DX_PI / 2.0f);
 		}
 		if (bulletType_ == BulletType::EnemyBullet)
 		{
@@ -215,7 +215,7 @@ void Bullet::Draw()
 		else
 		{
 			DrawRectRotaGraph(
-				drawX, drawY,
+				static_cast<int>(drawX), static_cast<int>(drawY),
 				srcX, srcY,        // 切り取り開始位置
 				frameW, frameH,    // 切り取りサイズ
 				kScale, angle,
@@ -243,7 +243,7 @@ void Bullet::SpawnHadou()
 	isHadouSpawned_ = true;
 	hadouRects_.clear();
 
-	hadouDir_ = (vel_.x >= 0) ? 1 : -1;
+	hadouDir_ = (vel_.x >= 0) ? 1.0f : -1.0f;
 
 	for (int i = 0; i < kHadouNum; ++i)
 	{
@@ -254,7 +254,7 @@ void Bullet::SpawnHadou()
 			kHadouH*kScale);
 
 		//コンストラクタを使う
-		Hadou h(rect, i * kHadouSpawnInterval, kHadouLifetime);
+		Hadou h(rect, static_cast<int>(i * kHadouSpawnInterval), kHadouLifetime);
 
 		h.animations_ = std::make_unique<Animation>(
 			hadouH_,

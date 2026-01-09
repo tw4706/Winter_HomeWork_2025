@@ -171,14 +171,13 @@ void Bg::DrawMidBg(std::shared_ptr<Camera> pCamera)
 
 	// 縦位置を固定
 	int drawX = static_cast<int>(midBgScrollX_);
-	midPosY_ = Game::kScreenHeight / 2 - graphHeight / 2; // 好みのY位置に固定
+	midPosY_ = Game::kScreenHeight / 2 - static_cast<float>(graphHeight / 2); // 好みのY位置に固定
 
 	for (int x = drawX % graphWidth - graphWidth; x < Game::kScreenWidth; x += graphWidth)
 	{
-		DrawGraph(x, midPosY_, midbgHandle_, true);
+		DrawGraph(x, static_cast<int>(midPosY_), midbgHandle_, true);
 	}
 }
-
 
 void Bg::DrawMapChip(std::shared_ptr<Camera>pCamera)
 {

@@ -34,10 +34,8 @@ namespace
 		"data/Player/Jump1.png",
 		"data/Player/Hurt.png",
 		"data/Player/Dead.png"
-
 	};
 	static_assert(static_cast<int>(kGraphNum) == _countof(kGraphName));
-
 
 	//プレイヤーの画像サイズ
 	constexpr int kGraphWidth = 128;
@@ -53,7 +51,7 @@ namespace
 	constexpr float kSpeed = 5.0f;
 
 	//ジャンプ時の横移動速度
-	constexpr float kHalfSpeed = 1.5f;
+	constexpr float kHalfSpeed = 2.5f;
 
 	//ジャンプの高さ
 	constexpr float kJumpPower = 12.0f;
@@ -174,8 +172,7 @@ void Player::Init()
 			frameCounts[i],
 			frameIntervals[i],
 			kScale,
-			false, 0
-		);
+			false, 0);
 	}
 }
 
@@ -203,15 +200,14 @@ void Player::Update(Input& input, BulletManager& bm,StageType stage)
 
 	float colX = pos_.x + colOffsetX;
 
-	//自動で移動する時の処理
+	//ボス1撃破後の自動で移動する際の処理
 	if (controlMode_ == PlayerControl::AutoWalking)
 	{
 		vel_.x = autoWalkSpeed_ * autoWalkDir_;
 		vel_.y += kGravity;
 
 		colRect_.SetCenter(
-			colX,
-			pos_.y - kColPosYOffset,
+			colX,pos_.y - kColPosYOffset,
 			kGraphHalfWidth,
 			kGraphHeight - kColYOffset);
 
@@ -220,7 +216,8 @@ void Player::Update(Input& input, BulletManager& bm,StageType stage)
 		return;
 	}
 
-	colRect_.SetCenter(colX, pos_.y - kColPosYOffset, kGraphHalfWidth, kGraphHeight - kColYOffset);
+	colRect_.SetCenter(colX, pos_.y - kColPosYOffset,
+		kGraphHalfWidth, kGraphHeight - kColYOffset);
 
 	//状態遷移の更新
 	UpdateState(input);
@@ -284,7 +281,7 @@ void Player::Update(Input& input, BulletManager& bm,StageType stage)
 		return;
 	}
 
-	//摩擦
+	//ノックバック
 	if (isDamaged_)
 	{
 		vel_.x *= kKnockBackSpeed;
@@ -317,7 +314,7 @@ void Player::Update(Input& input, BulletManager& bm,StageType stage)
 		{
 			next = (next + 1) % kBulletNum;
 
-			// Torchが未解放ならスキップ
+			//たいまつが未解放ならスキップ
 			if (static_cast<BulletType>(next) == BulletType::Torch &&
 				!isUnlockedTorch_)
 			{
@@ -333,7 +330,6 @@ void Player::Update(Input& input, BulletManager& bm,StageType stage)
 	//デバッグ用
 	DrawFormatString(0, 0, GetColor(255, 255, 255), "PlayerX:%f", pos_.x);
 	DrawFormatString(0, 20, GetColor(255, 255, 255), "PlayerY:%f", pos_.y);
-
 #endif
 }
 

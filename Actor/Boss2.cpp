@@ -24,23 +24,22 @@ namespace
 
 	constexpr int kStartY[kAnimNum] =
 	{
-		kGraphH * 0, // Idle
-		kGraphH * 1, // Attack
-		kGraphH * 2, // Fly
-		kGraphH * 3, // Hurt
-		kGraphH * 4  // Dead
+		kGraphH * 0, //Idle
+		kGraphH * 1, //Attack
+		kGraphH * 2, //Move
+		kGraphH * 3, //Hurt
+		kGraphH * 4  //Dead
 	};
 
 	constexpr int kFrameCount[kAnimNum] =
 	{
 		6,	//Idle
 		10, //Attack
-		14, //Fly
+		14, //Move
 		7,	//Hurt
 		16  //Dead
 	};
 }
-
 
 void Boss2::Init()
 {
@@ -66,7 +65,7 @@ void Boss2::Init()
 			kStartY[i]);
 	}
 
-	//起動前も地面にいさせる
+	//重力適用
 	SetUseGravity(true);
 
 	currentState_ = BossState::Idle;

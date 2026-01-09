@@ -112,7 +112,7 @@ private:
 	
 	//”g“®ŠÖ˜A
 	int hadouH_;
-	int hadouDir_;
+	float hadouDir_;
 	bool isHadouSpawned_;			//”g“®‚ğ¶¬‚µ‚½‚©‚Ç‚¤‚©
 	std::vector<Hadou> hadouRects_;	//”g“®‚Ì“–‚½‚è”»’è—p‚Ì‹éŒ`
 };
