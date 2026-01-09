@@ -46,23 +46,22 @@ Bullet::Bullet(Vector2 pos, Vector2 vel, BulletType bulletType, std::shared_ptr<
 	damage_(1),
 	hitCount_(0),
 	hadouH_(-1),
-	hadouDir_(0),
+	hadouDir_(1.0f),
 	isHadouSpawned_(false),
 	bulletType_(bulletType),
-	pBg_(bg)
+	pBg_(bg),
+	pEffectManager_(nullptr)
 {
 	GameObject::SetUseGravity(false);
 }
 
 Bullet::~Bullet()
 {
+	DeleteGraph(hadouH_);
 }
 
 void Bullet::Init()
 {
-
-	hadouDir_ = 1.0f;
-
 	//画像の初期化(弾の種別によって画像を読み込む)
 	const auto& config = kBulletConfigs[static_cast<int>(bulletType_)];
 	bulletH_ = LoadGraph(config.imagePath);
@@ -86,7 +85,7 @@ void Bullet::Init()
 	colSize_ = static_cast<float>(config.height);
 
 	//当たり判定の初期化
-	colRect_.SetCenter(pos_.x, pos_.y, static_cast<float>(config.width), static_cast<float>(config.height));
+	colRect_.SetCenter(pos_.x, pos_.y, colSize_, colSize_);
 }
 
 //弾の種別ごとの更新処理
@@ -155,7 +154,7 @@ void Bullet::Update(Input& input, std::vector<std::shared_ptr<Enemy>>& enemies)
 
 void Bullet::Draw()
 {
-	//弾の種類が松明で波動が発生している場合
+	//弾の種類が松明で波動が発生している場合の波動の描画
 	if (bulletType_ == BulletType::Torch && isHadouSpawned_)
 	{
 		for (auto& h : hadouRects_)
@@ -170,7 +169,7 @@ void Bullet::Draw()
 			int srcX = static_cast<int>(kHadouSrcX + frame * kHadouW);
 			int srcY = kHadouSrcY;
 
-			bool flip = (hadouDir_ < 0);
+			isTurn_ = (hadouDir_ < 0);
 
 			DrawRectRotaGraph3(
 				(int)drawX, (int)drawY,
@@ -180,7 +179,7 @@ void Bullet::Draw()
 				kScale, kScale,
 				0.0f,
 				hadouH_,
-				TRUE, flip);
+				TRUE, isTurn_);
 
 #ifdef _DEBUG
 			h.rect_.DrawAndCamera(cameraOffset_, 0x00ffff, false);
@@ -204,6 +203,7 @@ void Bullet::Draw()
 
 		float angle = 0.0f;
 
+		//ナイフと槍の場合は画像を回転させて描画
 		if (bulletType_ == BulletType::Knife || bulletType_ == BulletType::Lance)
 		{
 			angle = static_cast<float>((vel_.x >= 0) ? DX_PI / 2.0f : DX_PI + DX_PI / 2.0f);
@@ -216,8 +216,8 @@ void Bullet::Draw()
 		{
 			DrawRectRotaGraph(
 				static_cast<int>(drawX), static_cast<int>(drawY),
-				srcX, srcY,        // 切り取り開始位置
-				frameW, frameH,    // 切り取りサイズ
+				srcX, srcY,        //切り取り開始位置
+				frameW, frameH,    //切り取りサイズ
 				kScale, angle,
 				bulletH_,
 				TRUE);
@@ -347,7 +347,7 @@ void Bullet::CheckBulletAndMapCollision()
 			return;
 		}
 
-		//短剣や槍の着弾エフェクト
+		//マップチップに当たったら短剣や槍の着弾エフェクトを出す
 		if (pEffectManager_)
 		{
 			pEffectManager_->AddEffect(
@@ -396,4 +396,9 @@ int Bullet::GetDamage() const
 	default:
 		return 0;
 	}
+}
+
+void Bullet::SetEffectManager(EffectManager* effect)
+{
+	pEffectManager_ = effect;
 }
