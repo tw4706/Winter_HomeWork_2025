@@ -17,12 +17,6 @@ enum class ClearState
 	AutoWalk
 };
 
-enum class Event
-{
-	None,
-	WeaponSelect
-};
-
 class Player;
 class Bg;
 class GameProgress;
@@ -64,7 +58,6 @@ private:
 	PlayerWeaponUI weaponUI_;
 	std::unique_ptr<TutorialManager> tutorialManager_;
 	GameProgress*gameProgress_;
-	Event event_;//ゲーム内のイベント管理
 
 	bool isBoss1Defeated_;//ボス1撃破フラグ
 	int autoWalkStartX_;//自動で移動する開始位置

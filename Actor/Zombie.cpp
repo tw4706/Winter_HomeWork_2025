@@ -66,8 +66,8 @@ namespace
 Zombie::Zombie(Vector2 pos, Vector2 vel) :
 	Enemy(pos, vel),
 	zombieState_(ZombieState::Idle),
-	isIdlePlayed_(false),
-	isInvincibled_(false)
+	isInvincibled_(false),
+	isIdleAnimPlayed_(false)
 {
 
 }
@@ -89,6 +89,13 @@ void Zombie::Init()
 
 	for (int i = 0; i < kGraphNum; i++)
 	{
+		bool isLoop = false;
+
+		if (i == kWalkGraph)
+		{
+			isLoop = true;   //Walk状態ははループさせる
+		}
+
 		graphHandles_[i] = LoadGraph(kGraphName[i].c_str());
 		animations_[i] = std::make_shared<Animation>(
 			graphHandles_[i],
@@ -97,13 +104,15 @@ void Zombie::Init()
 			frameCounts[i],
 			frameIntervals[i],
 			kScale,
-			false,0
+			isLoop,0
 		);
 	}
 
 	//当たり判定の更新
 	colRect_.SetCenter(pos_.x, pos_.y, kGraphWidth, kGraphHeight);
 	zombieState_ = ZombieState::Idle;
+	animations_[static_cast<int>(zombieState_)]->SetFrame(0);
+	isIdleAnimPlayed_ = false;
 }
 
 void Zombie::Update()
@@ -120,7 +129,7 @@ void Zombie::Update()
 	//当たり判定の更新
 	auto idleAnim = animations_[static_cast<int>(ZombieState::Idle)];
 
-	if (zombieState_ == ZombieState::Idle && !idleAnim->IsAnimFinished())
+	if (zombieState_ == ZombieState::Idle && isIdleAnimPlayed_)
 	{
 		//潜っているときは当たり判定をなしにする
 		colRect_.SetCenter(pos_.x, pos_.y, 0, 0);
@@ -156,67 +165,41 @@ void Zombie::UpdateAnim()
 	auto idleAnim = animations_[static_cast<int>(ZombieState::Idle)];
 	auto walkAnim = animations_[static_cast<int>(ZombieState::Walk)];
 
+	//状態ごとの制御
 	switch (zombieState_)
 	{
 	case ZombieState::Idle:
-		//Idleアニメーション終了かつプレイヤーが近づいたらWalkへ
-		if (isIdlePlayed_ && idleAnim->IsAnimFinished() && distance < kDistance)
+		if (!isIdleAnimPlayed_ && distance < kIdleTriggerDistance)
 		{
-			zombieState_ = ZombieState::Walk;
-			walkAnim->Reset();
+			idleAnim->Reset();
+			isIdleAnimPlayed_ = true;
+		}
+		//Idleアニメーションが再生中ならUpdateする
+		if (isIdleAnimPlayed_)
+		{
+			idleAnim->Update();
+
+			//Idleアニメーションが完了したらWalk状態に遷移する
+			if (idleAnim->IsAnimFinished() && distance < kDistance)
+			{
+				zombieState_ = ZombieState::Walk;
+				walkAnim->Reset();
+				isIdleAnimPlayed_ = false;
+			}
 		}
 		break;
 
 	case ZombieState::Walk:
-		//プレイヤーが離れたらIdleに戻す
-		if (distance >= kDistance)
-		{
-			zombieState_ = ZombieState::Idle;
-			isIdlePlayed_ = false;
-		}
-		break;
-	}
+		walkAnim->Update();
 
-	//Idleアニメーション制御
-	if (zombieState_ == ZombieState::Idle)
-	{
-		auto idleAnim = animations_[static_cast<int>(ZombieState::Idle)];
-
-		if (!isIdlePlayed_ && distance < kIdleTriggerDistance)
-		{
-			//まだ再生していない場合だけ Reset
-			idleAnim->Reset();
-			isIdlePlayed_ = true;
-		}
-
-		if (isIdlePlayed_)
-		{
-			// 再生中は Update
-			if (!idleAnim->IsAnimFinished())
-			{
-				idleAnim->Update();
-			}
-			else
-			{
-				// 最後まで再生されたら停止
-				idleAnim->SetFrame(idleAnim->GetFrameCount() - 1);
-			}
-		}
-		else
-		{
-			// 遠い場合は最初のフレームで停止
-			idleAnim->SetFrame(0);
-		}
-
-		// プレイヤーが遠くなったらフラグをリセット
+		//離れたらまた潜らせる
 		if (distance >= kIdleTriggerDistance)
 		{
-			isIdlePlayed_ = false;
+			zombieState_ = ZombieState::Idle;
+			idleAnim->SetFrame(idleAnim->GetFrameCount() - 1); // 最後のコマ
+			isIdleAnimPlayed_ = false;
 		}
-	}
-	else if (zombieState_ == ZombieState::Walk)
-	{
-		walkAnim->Update();
+		break;
 	}
 }
 

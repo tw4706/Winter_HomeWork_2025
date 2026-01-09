@@ -21,7 +21,8 @@ public:
 	//アニメーションが終了したかどうか
 	bool IsAnimFinished() const { return (!isLoop_ && currentFrame_ >= frameCount_ - 1); }
 
-
+	//ループ設定
+	void Setloop(bool loop) { isLoop_ = loop; }
 
 private:
     int handle_;            //画像ハンドル

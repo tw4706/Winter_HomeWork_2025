@@ -10,8 +10,6 @@ enum class ZombieState
 
 class Player;
 class Zombie :public Enemy
-
-
 {
 public:
 	Zombie(Vector2 pos,Vector2 vel);
@@ -29,7 +27,7 @@ public:
 private:
 	std::vector<int>graphHandles_;
 	ZombieState zombieState_;
-	bool isIdlePlayed_;//Idアニメーション再生済みかどうか
 	bool isInvincibled_; //無敵状態かどうか
+	bool isIdleAnimPlayed_; //Idleアニメーションが再生されたかどうか
 };
 
