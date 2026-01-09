@@ -15,7 +15,6 @@ namespace
 		kGraphNum
 	};
 
-
 	const std::string kGraphName[kGraphNum] =
 	{
 		"data/Enemy/flower_idle.png",
@@ -69,8 +68,7 @@ void SkullFlower::Init()
 			frameCount[i],
 			frameIntervals[i],
 			kScale,
-			i == kIdleGraph,192
-		);
+			i == kIdleGraph,192);
 	}
 
 	flowerState_ = SkullFlowerState::Idle;
@@ -87,7 +85,6 @@ void SkullFlower::Update()
 	{
 		Shot();
 	}
-
 
 	GameObject::Update();
 	

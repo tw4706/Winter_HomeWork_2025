@@ -12,7 +12,6 @@ void SceneController::ResetScene(std::shared_ptr<Scene> scene)
 
 void SceneController::ChangeScene(std::shared_ptr<Scene> scene)
 {
-
     if (!scene) return;
 
     if (!scenes_.empty()) 
@@ -22,7 +21,6 @@ void SceneController::ChangeScene(std::shared_ptr<Scene> scene)
     scenes_.push_back(scene); //V‚µ‚¢ƒV[ƒ“‚ð’Ç‰Á
 
 	scene->Init();
-
 }
 
 void SceneController::PushScene(std::shared_ptr<Scene> scene)

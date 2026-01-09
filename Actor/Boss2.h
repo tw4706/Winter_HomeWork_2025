@@ -38,7 +38,6 @@ protected:
     void UpdateExposed() override;
 	void UpdateHurt() override;
 
-
 private:
     void AttackKnife();
     void AttackLance();

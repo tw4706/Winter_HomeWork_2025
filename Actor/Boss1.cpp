@@ -78,7 +78,7 @@ Boss1::Boss1(Vector2 pos, Vector2 vel,
 	BulletManager* bm,
 	std::shared_ptr<Camera> camera)
 	:Boss(pos, vel, player, bm, camera),
-	escapeTimer_(0.0f),
+	escapeTimer_(0),
 	knockbackDir_(0),
 	chargeVel_(0.0f)
 {

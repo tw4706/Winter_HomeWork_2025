@@ -53,11 +53,11 @@ namespace
 	//拡大率
 	constexpr float kScale = 2.0f;
 
-	//プレイヤーとの距離
-	const float kDistance = 200.0f;
-
 	constexpr int kPosYOffset = 20;
 	constexpr int kPosYDrawOffset = 30;
+
+	//プレイヤーとの距離
+	const float kDistance = 220.0f;
 
 	//Idleアニメーション再生トリガー
 	constexpr float kIdleTriggerDistance = 270.0f;
@@ -104,8 +104,7 @@ void Zombie::Init()
 			frameCounts[i],
 			frameIntervals[i],
 			kScale,
-			isLoop,0
-		);
+			isLoop,0);
 	}
 
 	//当たり判定の更新
@@ -195,8 +194,8 @@ void Zombie::UpdateAnim()
 		//離れたらまた潜らせる
 		if (distance >= kIdleTriggerDistance)
 		{
+			idleAnim->Reset();
 			zombieState_ = ZombieState::Idle;
-			idleAnim->SetFrame(idleAnim->GetFrameCount() - 1); // 最後のコマ
 			isIdleAnimPlayed_ = false;
 		}
 		break;

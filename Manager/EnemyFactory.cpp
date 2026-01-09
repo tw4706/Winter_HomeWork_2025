@@ -5,6 +5,7 @@
 #include "Boss1.h"
 #include "Boss2.h"
 #include "GameScene.h"
+#include"EffectManager.h"
 #include<Dxlib.h>
 #include <fstream>
 #include <sstream>
@@ -66,7 +67,7 @@ void EnemyFactory::LoadFromCSV(StageType stageType, BulletManager* bulletManager
             int id = std::stoi(cell);
             if (id != 0 && enemyFactory.count(id)) 
             {
-                Vector2 pos{ col * cellSize, row * cellSize+kEnemyOffsetY };
+                Vector2 pos{ static_cast<float>(col * cellSize), static_cast<float>(row * cellSize+kEnemyOffsetY) };
                 enemies_.push_back(enemyFactory[id](pos));
             }
             col++;
@@ -94,6 +95,7 @@ void EnemyFactory::Update()
     {
         if (!enemy->IsDead()) 
         {
+            enemy->SetEffectManager(pEffectManager_);
             enemy->Update();
         }
     }

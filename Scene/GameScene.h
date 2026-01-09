@@ -60,5 +60,5 @@ private:
 	GameProgress*gameProgress_;
 
 	bool isBoss1Defeated_;//ボス1撃破フラグ
-	int autoWalkStartX_;//自動で移動する開始位置
+	float autoWalkStartX_;//自動で移動する開始位置
 };

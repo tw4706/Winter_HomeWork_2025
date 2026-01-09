@@ -11,7 +11,8 @@ namespace
 }
 
 BulletManager::BulletManager():
-	GameObject()
+	GameObject(),
+	pEffectManager_(nullptr)
 {
 	//’e‚Ì”‚ğŒˆ‚ß‚é
 	bulletLimits_ = {
@@ -54,7 +55,7 @@ void BulletManager::Update(Input& input, std::vector<std::shared_ptr<Enemy>>&ene
 	{
 		if (!bullet->IsAlive()) continue;
 
-		//Bullet ‘¤‚É‘S‚Ä‚Ìˆ—‚ğ”C‚¹‚é
+		//Bullet‘¤‚É‘S‚Ä‚Ìˆ—‚ğ”C‚¹‚é
 		bullet->SetEffectManager(pEffectManager_);
 		bullet->Update(input, enemies);
 	}

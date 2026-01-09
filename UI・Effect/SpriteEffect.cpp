@@ -53,14 +53,9 @@ void SpriteEffect::Draw()
     int srcY = srcY_;
 
     DrawRectRotaGraph(
-        drawX,
-        drawY,
-        srcX,
-        srcY,
-        frameW_,
-        frameH_,
-        scale_,
-        0.0f,
-        graphH_,
-        TRUE);
+        static_cast<int>(drawX),static_cast<int>(drawY),
+        srcX,srcY,
+        frameW_,frameH_,
+        scale_,0.0f,
+        graphH_,TRUE);
 }

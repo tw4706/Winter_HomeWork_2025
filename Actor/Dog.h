@@ -17,13 +17,14 @@ public:
 	void Update()override;
 	void Draw()override;
 
-	void Move()override;//移動処理
+	//移動処理
+	void Move()override;
 
 	void UpdateAnim();
 
 private:
 	std::vector<int>graphHandles_;
 	DogState dogState_;
-	float timer_;			//タイマー
+	float timer_;//タイマー
 };
 

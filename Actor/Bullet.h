@@ -94,10 +94,7 @@ public:
 	int GetDamage() const;
 
 	//エフェクトマネージャーのセット
-	void SetEffectManager(EffectManager* effect)
-	{
-		pEffectManager_ = effect;
-	}
+	void SetEffectManager(EffectManager* effect);
 
 private:
 	bool isAlive_;		//弾が存在しているかどうか
@@ -108,11 +105,11 @@ private:
 	BulletType bulletType_;
 	std::shared_ptr<Bg> pBg_;
 	std::shared_ptr<Animation> animations_;//弾のアニメーション
-	EffectManager* pEffectManager_ = nullptr;//エフェクトマネージャーのポインタ
+	EffectManager* pEffectManager_;//エフェクトマネージャーのポインタ
 	
 	//波動関連
 	int hadouH_;
-	int hadouDir_;
+	float hadouDir_;
 	bool isHadouSpawned_;			//波動を生成したかどうか
 	std::vector<Hadou> hadouRects_;	//波動の当たり判定用の矩形
 };

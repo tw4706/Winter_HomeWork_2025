@@ -59,7 +59,7 @@ GameScene::GameScene(SceneController& controller, StageType stage) :
 	gameProgress_(nullptr),
 	frame_(fade_interval),
 	isBoss1Defeated_(false),
-	autoWalkStartX_(0)
+	autoWalkStartX_(0.0f)
 {
 	//bgにステージに対応するマップデータをセット
 	bg_ = std::make_shared<Bg>(stageType_);
@@ -118,7 +118,7 @@ void GameScene::NormalUpdate(Input&input)
 
 		if (tutorialManager_->IsTutorialFinished())
 		{
-			// フェードして Stage1 へ
+			//フェードして Stage1 へ
 			update_ = &GameScene::GoalFadeOutUpdate;
 			draw_ = &GameScene::FadeDraw;
 			frame_ = 0;
@@ -134,7 +134,7 @@ void GameScene::NormalUpdate(Input&input)
 	CollisionManager::EnemyBulletsVsPlayer(bulletManager_.GetBullets(),*pPlayer_);
 
 	//プレイヤーが死亡していて死亡アニメーションが終了している場合は
-	// ゲームオーバーシーンへ遷移
+	//ゲームオーバーシーンへ遷移
 	if (pPlayer_->IsDead() && pPlayer_->IsDeadAnimFinished())
 	{
 		update_ = &GameScene::FadeOutUpdate;
@@ -211,7 +211,6 @@ void GameScene::NormalUpdate(Input&input)
 		pPlayer_->SetPos(Vector2{ 8300,1740 });
 	}
 #endif
-
 }
 
 void GameScene::FadeOutUpdate(Input&) 
@@ -237,7 +236,7 @@ void GameScene::FadeDraw()
 {
 	//フェードの描画
 	auto rate = static_cast<float>(frame_) / static_cast<float>(fade_interval);
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255 * rate);
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, static_cast <int>(255 * rate));
 	DrawBox(0, 0, Game::kScreenWidth, Game::kScreenHeight, 0x000000, true);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);//ブレンドしない
 }
@@ -272,10 +271,6 @@ void GameScene::NormalDraw()
 	{
 		tutorialManager_->Draw();
 	}
-
-	//ステージ2表示
-	DrawFormatString(Game::kScreenWidth, Game::kScreenHeight,
-		GetColor(255, 255, 0),"STAGE %d", stageType_);
 }
 
 void GameScene::Init()
@@ -307,7 +302,7 @@ void GameScene::Init()
 	{
 		BulletType weapon = pPlayer_->GetCurrentBulletType();
 
-		enemyFactory_.AddBoss2(Vector2{ kBoss2SpawnPosX, kBoss2SpawnPosY },Vector2{ 0,0 },
+		enemyFactory_.AddBoss2(Vector2{ kBoss2SpawnPosX,kBoss2SpawnPosY },Vector2{ 0,0 },
 			pPlayer_,&bulletManager_,pCamera_,weapon);
 	}
 	else if (stageType_ == StageType::BossDebugStage)

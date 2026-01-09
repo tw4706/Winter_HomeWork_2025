@@ -98,7 +98,7 @@ private:
 	int attackTimer_;//攻撃のタイマー
 	int damageTimer_;//ダメージを受けてからのタイマー
 	int shotTimer_;//弾の発射間隔タイマー
-	bool isAlive_;//生存しているかどうか
+	bool isAlive_;//プレイヤーが生きているかどうか
 	bool isDeathAnimFinished_;//死亡アニメーションが終了したかどうか
 	bool isUnlockedTorch_;//たいまつが使えるかどうか
 	int autoWalkDir_;//自動移動の方向
