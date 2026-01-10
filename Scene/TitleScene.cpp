@@ -227,6 +227,10 @@ void TitleScene::Init()
 	pressStartH_ = LoadGraph("data/UI/PressButton.png");
 	selectH_ = LoadGraph("data/Bullet/Lance.png");
 	frame_ = kFadeInterval;
+
+	//ƒ^ƒCƒgƒ‹BGMÄ¶
+	Application::GetInstance().GetBGMManager().PlayBGM(BGM::Title);
+
 }
 
 void TitleScene::Update(Input&input)

@@ -319,6 +319,9 @@ void GameScene::Init()
 	//UI‚Ì‰Šú‰»
 	weaponUI_.Init();
 
+	//BGM‚ÌÄ¶
+	Application::GetInstance().GetBGMManager().PlayBGM(BGM::Game);
+
 	//‚½‚¢‚Ü‚Â‚ÌƒAƒ“ƒƒbƒN‚·‚é‚½‚ß‚Ìˆ—
 	auto& progress = controller_.GetProgress();
 

@@ -4,6 +4,7 @@
 #include "SelectScene.h"
 #include "GameScene.h"
 #include "ClearScene.h"
+#include "Application.h"
 #include "Input.h"
 #include <DxLib.h>
 
@@ -74,6 +75,8 @@ GameOverScene::GameOverScene(SceneController& controller,StageType stage):
 void GameOverScene::Init()
 {
 	frame_ = kFadeDuration;
+	//BGMçƒê∂
+	Application::GetInstance().GetBGMManager().PlayBGM(BGM::GameOver);
 }
 
 void GameOverScene::Update(Input& input)

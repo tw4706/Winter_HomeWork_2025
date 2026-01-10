@@ -36,10 +36,11 @@ bool Application::Init()
 	{
 		return false;			// エラーが起きたら直ちに終了
 	}
-	else
-	{
-		return true;
-	}
+
+	//ここでBGMManagerの初期化を行う
+	bgmManager_.Init();
+
+	return true;
 }
 
 void Application::Run()

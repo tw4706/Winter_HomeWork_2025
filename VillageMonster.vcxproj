@@ -140,6 +140,8 @@
     <ClCompile Include="Actor\Boss.cpp" />
     <ClCompile Include="Actor\Boss1.cpp" />
     <ClCompile Include="Actor\Boss2.cpp" />
+    <ClCompile Include="Manager\BGMManager.cpp" />
+    <ClCompile Include="Manager\SEManager.cpp" />
     <ClCompile Include="UI・Effect\Effect.cpp" />
     <ClCompile Include="Manager\EffectManager.cpp" />
     <ClCompile Include="UI・Effect\PlayerWeaponUI.cpp" />
@@ -177,6 +179,8 @@
     <ClInclude Include="Actor\Boss.h" />
     <ClInclude Include="Actor\Boss1.h" />
     <ClInclude Include="Actor\Boss2.h" />
+    <ClInclude Include="Manager\BGMManager.h" />
+    <ClInclude Include="SEManager.h" />
     <ClInclude Include="UI・Effect\Effect.h" />
     <ClInclude Include="Manager\EffectManager.h" />
     <ClInclude Include="UI・Effect\PlayerWeaponUI.h" />
