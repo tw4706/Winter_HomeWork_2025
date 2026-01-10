@@ -9,13 +9,24 @@ public:
 	bool tutorialJumped_ = false;
 	bool tutorialDoubleJumped_ = false;
 	bool tutorialAttacked_ = false;
+	bool tutorialWeaponChanged_ = false;
 
-	//チュートリアルが完了しているかどうかを返す
+public:
+
+	//チュートリアル進捗状況取得関数
+	bool IsMoved() const { return tutorialMoved_; }
+	bool IsJumped() const { return tutorialJumped_; }
+	bool IsDoubleJumped() const { return tutorialDoubleJumped_; }
+	bool IsAttacked() const { return tutorialAttacked_; }
+	bool IsWeaponChanged() const { return tutorialWeaponChanged_; }
+
 	bool IsTutorialCompleted() const
 	{
-		return tutorialMoved_
-			&& tutorialJumped_
-			&& tutorialDoubleJumped_
-			&& tutorialAttacked_;}
+		return IsMoved()
+			&& IsJumped()
+			&& IsDoubleJumped()
+			&& IsAttacked()
+			&& IsWeaponChanged();
+	}
 };
 

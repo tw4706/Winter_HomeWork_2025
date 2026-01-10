@@ -229,7 +229,7 @@ void TitleScene::Init()
 	frame_ = kFadeInterval;
 
 	//ƒ^ƒCƒgƒ‹BGMÄ¶
-	Application::GetInstance().GetBGMManager().PlayBGM(BGM::Title);
+	//Application::GetInstance().GetBGMManager().PlayBGM(BGM::Title);
 
 }
 

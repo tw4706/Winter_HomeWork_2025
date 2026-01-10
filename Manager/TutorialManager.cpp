@@ -4,49 +4,72 @@
 #include"GameProgress.h"
 #include<DxLib.h>
 
+namespace
+{
+	// チュートリアル発生地点（X だけで管理する簡易版）
+	const float kTutorialX[] =
+	{
+		300.0f,   //Move
+		700.0f,   //Jump
+		1100.0f,  //DoubleJump
+		1500.0f,  //Attack
+		1900.0f   //WeaponChange
+	};
+
+	const char* kTutorialText[] =
+	{
+		"Move with Arrow Keys",
+		"Press Jump Button",
+		"Try Double Jump",
+		"Attack!",
+		"Change Weapon"
+	};
+}
+
 void TutorialManager::Init(GameProgress* progress)
 {
 	gameProgress_ = progress;
 	isTutorialFinished_ = false;
 	currentStep_ = TutorialStep::Move;
+
+	isWaitingAction_ = false;
+	waitingMessage_ = nullptr;
 }
 
-void TutorialManager::Update(const Player& player, const EnemyFactory& ef)
+void TutorialManager::Update(Player& player)
 {
 	if (isTutorialFinished_)return;
 	if (!gameProgress_) return;
 
-	CheckTutorialStep(player, ef);
+	if (!isWaitingAction_)
+	{
+		int stepIndex = (int)currentStep_;
+
+		if (currentStep_ != TutorialStep::Finish &&
+			player.GetPos().x >= kTutorialX[stepIndex])
+		{
+			isWaitingAction_ = true;
+			waitingMessage_ = kTutorialText[stepIndex];
+			//移動以外のチュートリアル中は操作不可にする
+			if (currentStep_ != TutorialStep::Move)
+			{
+				player.SetControllable(false);
+			}
+		}
+	}
+
+	CheckTutorialStep(player);
 }
 
 void TutorialManager::Draw() const
 {
-	const int baseX = 40;    // 画面左
-	const int baseY = 80;    // 画面上
-	const int lineHeight = 28;
+	if (!waitingMessage_) return;
 
-	const char* texts[] =
-	{
-		"Move",
-		"Jump",
-		"Double Jump",
-		"Attack",
-		"Damaged"
-	};
+	//背景
+	DrawBox(300, 400, 980, 520, GetColor(0, 0, 0), TRUE);
 
-	for (int i = 0; i < (int)TutorialStep::Finish; ++i)
-	{
-		int drawX = baseX;
-		int drawY = baseY + i * lineHeight;
-
-		DrawString(drawX, drawY,
-			stepCompleted_[i] ? "〇" : "×",
-			GetColor(255, 255, 255));
-
-		DrawString(drawX + 24, drawY,
-			texts[i],
-			GetColor(255, 255, 255));
-	}
+	//テキスト
+	DrawString(340, 440, waitingMessage_, GetColor(255, 255, 255));
 }
 
 bool TutorialManager::IsTutorialFinished() const
@@ -54,44 +77,64 @@ bool TutorialManager::IsTutorialFinished() const
 	return isTutorialFinished_;
 }
 
-void TutorialManager::CheckTutorialStep(const Player& player, const EnemyFactory& ef)
+void TutorialManager::CheckTutorialStep(Player& player)
 {
-	if (!gameProgress_) return;
+	if (!isWaitingAction_) return;
 
 	switch (currentStep_)
 	{
 	case TutorialStep::Move:
 		if (gameProgress_->tutorialMoved_)
 		{
-			stepCompleted_[(int)TutorialStep::Move] = true;
 			currentStep_ = TutorialStep::Jump;
+			isWaitingAction_ = false;
+			waitingMessage_ = nullptr;
+			player.SetControllable(true);
 		}
 		break;
 
 	case TutorialStep::Jump:
 		if (gameProgress_->tutorialJumped_)
 		{
-			stepCompleted_[(int)TutorialStep::Jump] = true;
 			currentStep_ = TutorialStep::DoubleJump;
+			isWaitingAction_ = false;
+			waitingMessage_ = nullptr;
+			player.SetControllable(true);
 		}
 		break;
 
 	case TutorialStep::DoubleJump:
 		if (gameProgress_->tutorialDoubleJumped_)
 		{
-			stepCompleted_[(int)TutorialStep::DoubleJump] = true;
 			currentStep_ = TutorialStep::Attack;
+			isWaitingAction_ = false;
+			waitingMessage_ = nullptr;
+			player.SetControllable(true);
 		}
 		break;
 
 	case TutorialStep::Attack:
 		if (gameProgress_->tutorialAttacked_)
 		{
-			stepCompleted_[(int)TutorialStep::Attack] = true;
-			currentStep_ = TutorialStep::Finish;
-			isTutorialFinished_ = true;
+			currentStep_ = TutorialStep::WeaponChange;
+			isWaitingAction_ = false;
+			waitingMessage_ = nullptr;
+			player.SetControllable(true);
 		}
 		break;
+
+	case TutorialStep::WeaponChange:
+		if (gameProgress_->tutorialWeaponChanged_)
+		{
+			currentStep_ = TutorialStep::Finish;
+			isTutorialFinished_ = true;
+
+			isWaitingAction_ = false;
+			waitingMessage_ = nullptr;
+			player.SetControllable(true);
+		}
+		break;
+
 	default:
 		break;
 	}

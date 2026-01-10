@@ -2,7 +2,6 @@
 #include "Geometry.h"
 
 class Player;
-class Camera;
 class EnemyFactory;
 class GameProgress;
 class TutorialManager
@@ -12,8 +11,7 @@ public:
 	TutorialManager() = default;
 
 	void Init(GameProgress* progress);
-	void Update(const Player&player,
-		const EnemyFactory&ef);
+	void Update(Player&player);
 	void Draw() const;
 
 	//チュートリアルが終了したかどうかを返す
@@ -26,13 +24,14 @@ private:
 		Jump,
 		DoubleJump,
 		Attack,
+		WeaponChange,
 		Finish
 	};
 
 	//各チュートリアルステップの進捗具合
-	void CheckTutorialStep(const Player&player,
-		const EnemyFactory& ef);
+	void CheckTutorialStep(Player&player);
 
+private:
 	//ゲーム進行状況のポインタ
 	GameProgress* gameProgress_;
 
@@ -41,7 +40,9 @@ private:
 
 	//現在のチュートリアルステップ
 	TutorialStep currentStep_=TutorialStep::Move;
-	//進捗状況表示用
-	bool stepCompleted_[(int)TutorialStep::Finish]{};
+
+	//チュートリアルの内容で止める地点関連
+	bool isWaitingAction_ = false;
+	const char* waitingMessage_ = nullptr;
 };
 

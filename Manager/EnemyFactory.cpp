@@ -128,7 +128,6 @@ void EnemyFactory::AddBoss2(Vector2 pos, Vector2 vel,
     BulletManager* bm, std::shared_ptr<Camera> camera,BulletType playerWeapon)
 {
     boss2_ = std::make_shared<Boss2>(pos, vel, player, bm, camera);
-    boss2_->SetPlayerWeapon(playerWeapon);
     boss2_->Init();
     boss2_->SetPlayer(player);
     enemies_.push_back(boss2_);

@@ -46,8 +46,6 @@ namespace
 	//プレイヤーが自動で歩行する向きと距離
 	constexpr int kPlayerDir = 1;//右向き
 	constexpr float kPlayerAutoWalkX = 600.0f;
-
-	constexpr float kWeaponSelectEventX_ = 7200.0f;
 }
 
 GameScene::GameScene(SceneController& controller, StageType stage) :
@@ -99,6 +97,11 @@ void GameScene::NormalUpdate(Input&input)
 
 	pPlayer_->Update(input, bulletManager_,stageType_);
 
+	if (tutorialManager_ && !tutorialManager_->IsTutorialFinished())
+	{
+		tutorialManager_->Update(*pPlayer_);
+	}
+
 	//UIの更新
 	weaponUI_.Update(*pPlayer_);
 
@@ -111,21 +114,6 @@ void GameScene::NormalUpdate(Input&input)
 
 	effectManager_.SetCameraOffset(pCamera_->GetOffset());
 	effectManager_.Update();
-
-	//チュートリアルステージの更新処理
-	if (tutorialManager_)
-	{
-		tutorialManager_->Update(*pPlayer_, enemyFactory_);
-
-		if (tutorialManager_->IsTutorialFinished())
-		{
-			//フェードして Stage1 へ
-			update_ = &GameScene::GoalFadeOutUpdate;
-			draw_ = &GameScene::FadeDraw;
-			frame_ = 0;
-			return;
-		}
-	}
 
 	//プレイヤーの弾 × 敵の当たり判定
 	CollisionManager::PlayerBulletsVsEnemies(
@@ -272,6 +260,16 @@ void GameScene::NormalDraw()
 	{
 		tutorialManager_->Draw();
 	}
+
+	if (tutorialManager_ && !tutorialManager_->IsTutorialFinished())
+	{
+		DrawFormatString(
+			20, 80,
+			GetColor(255, 255, 0),
+			"Player X : %.1f",
+			pPlayer_->GetPos().x
+		);
+	}
 }
 
 void GameScene::Init()
@@ -320,7 +318,7 @@ void GameScene::Init()
 	weaponUI_.Init();
 
 	//BGMの再生
-	Application::GetInstance().GetBGMManager().PlayBGM(BGM::Game);
+	//Application::GetInstance().GetBGMManager().PlayBGM(BGM::Game);
 
 	//たいまつのアンロックするための処理
 	auto& progress = controller_.GetProgress();

@@ -324,6 +324,8 @@ void Player::Update(Input& input, BulletManager& bm,StageType stage)
 			currentBulletType_ = static_cast<BulletType>(next);
 			break;
 		}
+		//チュートリアル用のフラグを立てる
+		OnTutorialAction(TutorialAction::WeaponChange);
 	}
 
 #ifdef _DEBUG
@@ -499,7 +501,6 @@ void Player::OnDamage(float enemyX)
 	if (isDamaged_) return;
 
 	hp_--;
-	OnTutorialAction(TutorialAction::Damaged);
 
 	if(hp_ <= 0)
 	{
@@ -622,5 +623,20 @@ void Player::OnTutorialAction(TutorialAction action)
 	case TutorialAction::Attack:
 		gameProgress_->tutorialAttacked_ = true;
 		break;
+	case TutorialAction::WeaponChange:
+		gameProgress_->tutorialWeaponChanged_ = true;
+		break;
 	}
+}
+
+void Player::SetControllable(bool canControl)
+{
+	//プレイヤーの操作を可能にするかどうか
+	controlMode_ = canControl ? PlayerControl::Normal : PlayerControl::Stop;
+}
+
+bool Player::IsControllable() const
+{
+	//プレイヤーが操作可能かどうかを返す
+	return controlMode_ != PlayerControl::Stop;
 }

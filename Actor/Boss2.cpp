@@ -74,11 +74,6 @@ void Boss2::Init()
 
 void Boss2::Update()
 {
-	if (isActive_ && !isModeDecided_)
-	{
-		DecideAttackMode(pPlayer_->GetCurrentBulletType());
-		isModeDecided_ = true;
-	}
 	Boss::Update();
 
 	colRect_.SetCenter(pos_.x, pos_.y-100, kColSizeX, kColSizeY);
@@ -96,52 +91,6 @@ void Boss2::Draw()
 #ifdef _DEBUG
 	colRect_.DrawAndCamera(cameraOffset_, 0xff0000, false);
 #endif
-}
-
-bool Boss2::IsDamageable() const
-{
-	//ダメージを与えられる状態だけTrueを返す
-	switch (bossMode_)
-	{
-	case BossAttackMode::Knife:
-		return true;
-
-	case BossAttackMode::Lance:
-		return currentState_ == BossState::Exposed;
-
-	case BossAttackMode::Torch:
-		return currentState_ == BossState::Idle;
-
-	default:
-		return true;
-	}
-}
-
-void Boss2::SetPlayerWeapon(BulletType weapon)
-{
-	playerWeapon_ = weapon;
-}
-
-void Boss2::DecideAttackMode(BulletType playerWeapon)
-{
-	switch (playerWeapon)
-	{
-	case BulletType::Knife:
-		bossMode_ = BossAttackMode::Knife;
-		hp_ = 50;
-		break;
-	case BulletType::Lance:
-		bossMode_ = BossAttackMode::Lance;
-		hp_ = 30;
-		break;
-	case BulletType::Torch:
-		bossMode_ = BossAttackMode::Torch;
-		hp_ = 40;
-		break;
-	default:
-		bossMode_ = BossAttackMode::Knife;
-		break;
-	}
 }
 
 int Boss2::GetGraphIndex(BossState state) const
@@ -178,18 +127,6 @@ void Boss2::UpdateIdle()
 
 void Boss2::UpdateAttack()
 {
-	switch (bossMode_)
-	{
-	case BossAttackMode::Knife:
-		AttackKnife();
-		break;
-	case BossAttackMode::Lance:
-		AttackLance();
-		break;
-	case BossAttackMode::Torch:
-		AttackTorch();
-		break;
-	}
 }
 
 void Boss2::UpdateMove()
@@ -229,18 +166,7 @@ void Boss2::UpdateHurt()
 	pos_.x += isTurn_ ? 2.0f : -2.0f;
 	pos_.y += sinf(stateTimer_ * 0.3f) * 0.3f;
 
-	if (stateTimer_ > 30)
-	{
-		switch (bossMode_)
-		{
-		case BossAttackMode::Lance:
-			ChangeState(BossState::Exposed);
-			break;
-		default:
-			ChangeState(BossState::Idle);
-			break;
-		}
-	}
+	if (stateTimer_ > 30){}
 }
 
 void Boss2::OnHit(int damage)
@@ -251,79 +177,11 @@ void Boss2::OnHit(int damage)
 	//Hurt中・死亡中は無視する
 	if (currentState_ == BossState::Hurt ||currentState_ == BossState::Dead)return;
 
-	//ダメージが通らない状態でもHurt状態へ移行
-	if (!IsDamageable())
-	{
-		ChangeState(BossState::Hurt);
-		return;
-	}
-
 	Boss::OnHit(damage);
 
 	//槍の場合はすぐに戻る
-	if (bossMode_ == BossAttackMode::Lance &&
-		currentState_ != BossState::Dead)
+	if (currentState_ != BossState::Dead)
 	{
-		ChangeState(BossState::Idle);
-	}
-}
-
-
-void Boss2::AttackKnife()
-{
-	//ナイフの場合は左右に揺れ動く
-	vel_.x = sinf(stateTimer_ * 0.15f) * 1.5f;
-	stateTimer_++;
-
-	if (stateTimer_ > 90)
-	{
-		vel_.x = 0.0f;
-		ChangeState(BossState::Idle);
-	}
-}
-
-void Boss2::AttackLance()
-{
-	if (stateTimer_ == 0)
-	{
-		isInvincible_ = true;
-		//大ジャンプ
-		vel_.y = -15.0f;
-	}
-
-	stateTimer_++;
-
-	vel_.x = isTurn_ ? -4.0f : 4.0f;
-
-	//一定時間で停止
-	if (isGround_ && stateTimer_ > 30)
-	{
-		vel_ = { 0.0f, 0.0f };
-		isInvincible_ = false;
-		//ダメージチャンス
-		ChangeState(BossState::Exposed);
-	}
-}
-
-void Boss2::AttackTorch()
-{
-	stateTimer_++;
-
-	//空中は無敵
-	isInvincible_ = !isGround_;
-
-	if (stateTimer_ == 1 && isGround_)
-	{
-		vel_.y = -12.0f;
-	}
-
-	vel_.x = isTurn_ ? -2.5f : 2.5f;
-
-	//着地後の隙
-	if (isGround_ && stateTimer_ > 40)
-	{
-		isInvincible_ = false;
-		vel_.x = 0.0f;
 		ChangeState(BossState::Idle);
 	}
 }

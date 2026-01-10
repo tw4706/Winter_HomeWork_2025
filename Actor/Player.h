@@ -33,7 +33,7 @@ enum class TutorialAction
 	Jump,
 	DoubleJump,
 	Attack,
-	Damaged
+	WeaponChange
 };
 
 class Input;
@@ -85,6 +85,10 @@ public:
 
 	//チュートリアルアクションの通知を行う関数	
 	void OnTutorialAction(TutorialAction action);
+
+	//プレイヤーが操作可能かどうかの設定と取得
+	void SetControllable(bool canControl);
+	bool IsControllable() const;
 
 private:
 	std::vector<int>graphHandles_;//画像ハンドルの配列
