@@ -99,7 +99,7 @@ void GameScene::NormalUpdate(Input&input)
 
 	if (tutorialManager_ && !tutorialManager_->IsTutorialFinished())
 	{
-		tutorialManager_->Update(*pPlayer_);
+		tutorialManager_->Update(*pPlayer_,input);
 	}
 
 	//UI‚ÌXV

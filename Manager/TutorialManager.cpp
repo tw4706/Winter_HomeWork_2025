@@ -1,6 +1,7 @@
 #include "TutorialManager.h"
 #include "Player.h"
 #include"Camera.h"
+#include"Input.h"
 #include"GameProgress.h"
 #include<DxLib.h>
 
@@ -36,7 +37,7 @@ void TutorialManager::Init(GameProgress* progress)
 	waitingMessage_ = nullptr;
 }
 
-void TutorialManager::Update(Player& player)
+void TutorialManager::Update(Player& player, Input& input)
 {
 	if (isTutorialFinished_)return;
 	if (!gameProgress_) return;
@@ -49,6 +50,7 @@ void TutorialManager::Update(Player& player)
 			player.GetPos().x >= kTutorialX[stepIndex])
 		{
 			isWaitingAction_ = true;
+			isWaitingConfirm_ = true;
 			waitingMessage_ = kTutorialText[stepIndex];
 			//移動以外のチュートリアル中は操作不可にする
 			if (currentStep_ != TutorialStep::Move)
@@ -56,6 +58,16 @@ void TutorialManager::Update(Player& player)
 				player.SetControllable(false);
 			}
 		}
+	}
+
+	if (isWaitingConfirm_)
+	{
+		if (input.IsTriggered("next"))
+		{
+			isWaitingConfirm_ = false;
+			player.SetControllable(true);
+		}
+		return;
 	}
 
 	CheckTutorialStep(player);
@@ -79,7 +91,7 @@ bool TutorialManager::IsTutorialFinished() const
 
 void TutorialManager::CheckTutorialStep(Player& player)
 {
-	if (!isWaitingAction_) return;
+	if (!isWaitingAction_ || isWaitingConfirm_) return;
 
 	switch (currentStep_)
 	{

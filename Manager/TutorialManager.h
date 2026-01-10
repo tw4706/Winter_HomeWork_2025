@@ -2,6 +2,7 @@
 #include "Geometry.h"
 
 class Player;
+class Input;
 class EnemyFactory;
 class GameProgress;
 class TutorialManager
@@ -11,7 +12,7 @@ public:
 	TutorialManager() = default;
 
 	void Init(GameProgress* progress);
-	void Update(Player&player);
+	void Update(Player&player,Input&input);
 	void Draw() const;
 
 	//チュートリアルが終了したかどうかを返す
@@ -37,6 +38,9 @@ private:
 
 	//チュートリアルが終了したかどうか
 	bool isTutorialFinished_=false;
+
+	//テキスト確認待ちのフラグ
+	bool isWaitingConfirm_ = false;
 
 	//現在のチュートリアルステップ
 	TutorialStep currentStep_=TutorialStep::Move;
