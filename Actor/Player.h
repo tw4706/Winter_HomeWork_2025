@@ -24,7 +24,8 @@ enum class PlayerControl
 {
 	Normal,
 	AutoWalking,
-	Stop
+	Stop,
+	TitleDemo
 };
 
 enum class TutorialAction
@@ -89,6 +90,12 @@ public:
 	//プレイヤーが操作可能かどうかの設定と取得
 	void SetControllable(bool canControl);
 	bool IsControllable() const;
+
+	//タイトル画面演出として攻撃を開始させる関数
+	void StartTitleDemo();
+	void UpdateTitleDemo(BulletManager& bm);
+	void ShotDemo(BulletManager& bm);
+	void ForceChangeWeapon(BulletType type);
 
 private:
 	std::vector<int>graphHandles_;//画像ハンドルの配列

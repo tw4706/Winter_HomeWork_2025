@@ -67,7 +67,8 @@ Zombie::Zombie(Vector2 pos, Vector2 vel) :
 	Enemy(pos, vel),
 	zombieState_(ZombieState::Idle),
 	isInvincibled_(false),
-	isIdleAnimPlayed_(false)
+	isIdleAnimPlayed_(false),
+	effectiveWeapon_(EffectiveWeapon::Torch)
 {
 
 }
@@ -233,8 +234,17 @@ void Zombie::Move()
 
 void Zombie::OnHit(int damage)
 {
-	//無敵ならダメージを受けない
-	//if (isInvincibled_) return;
+	if (effectiveWeapon_ != EffectiveWeapon::Torch)
+	{
+		//効かない
+		return;
+	}
 
 	Enemy::OnHit(damage);
+}
+
+void Zombie::SetTitleDemo()
+{
+	//タイトルデモでは「たいまつ以外無効」にしたい
+	effectiveWeapon_ = EffectiveWeapon::Torch;
 }

@@ -2,10 +2,13 @@
 #include "TitleScene.h"
 #include<Dxlib.h>
 #include"Input.h"
+#include"Player.h"
+#include"Zombie.h"
 #include"StageType.h"
 #include"Application.h"
 #include "GameScene.h"
 #include "SelectScene.h"
+#include"BulletManager.h"
 #include "SceneController.h"
 #include"GlobalConstants.h"
 
@@ -40,8 +43,9 @@ void TitleScene::FadeInUpdate(Input&input)
 {
 	if (--frame_ <= 0)
 	{
-		update_ = &TitleScene::NormalUpdate;
-		draw_ = &TitleScene::NormalDraw;
+		titleState_ = TitleState::Demo;
+		update_ = &TitleScene::DemoUpdate;
+		draw_ = &TitleScene::DemoDraw;
 		return;
 	}
 }
@@ -87,32 +91,84 @@ void TitleScene::NormalUpdate(Input&input)
 
 void TitleScene::FadeOutUpdate(Input&input)
 {
-	if (frame_++ >= kFadeInterval) {
+	if (frame_++ >= kFadeInterval) 
+	{
+#ifdef _DEBUG
 		controller_.ChangeScene(std::make_shared<SelectScene>(controller_));
+#endif
+		controller_.ChangeScene(std::make_shared<GameScene>(controller_,nextStage_));
 		return;
+	}
+}
+
+void TitleScene::DemoUpdate(Input&)
+{
+	demoFrame_++;
+
+	demoPlayer_->Update(dummyInput_, demoBulletManager_, StageType::Stage1);
+	demoZombie_->Update();
+
+	// ① 最初は効かない武器
+	if (demoFrame_ < 120)
+	{
+		// ずっと攻撃しているが倒れない
+	}
+	// ② 武器切り替え
+	else if (demoFrame_ == 120)
+	{
+		demoPlayer_->ForceChangeWeapon(BulletType::Torch);
+	}
+	// ③ 撃破後
+	else if (demoZombie_->IsDead())
+	{
+		demoPlayer_->StartTitleDemo();
+		titleState_ = TitleState::Normal;
+		update_ = &TitleScene::NormalUpdate;
+		draw_ = &TitleScene::NormalDraw;
 	}
 }
 
 void TitleScene::ConfirmUpdate(Input&input)
 {
-	//選択変更
-	if (input.IsTriggered("left") || input.IsTriggered("up")) confirmSelect_ = 0;
-	if (input.IsTriggered("right") || input.IsTriggered("down")) confirmSelect_ = 1;
+	if (input.IsTriggered("left") || input.IsTriggered("up"))
+		confirmSelect_ = 0;
+	if (input.IsTriggered("right") || input.IsTriggered("down"))
+		confirmSelect_ = 1;
 
-	//決定
 	if (input.IsTriggered("next"))
 	{
-		if (confirmSelect_ == 0)
+		nextStage_ = (confirmSelect_ == 0)
+			? StageType::Tutorial
+			: StageType::Stage1;
+
+		titleState_ = TitleState::Exit;
+		exitPhase_ = ExitPhase::Walk;
+
+		demoPlayer_->StartAutoWalk(+1); // ★右に歩く
+		update_ = &TitleScene::ExitUpdate;
+		draw_ = &TitleScene::NormalDraw;
+	}
+}
+
+void TitleScene::ExitUpdate(Input&)
+{
+	demoPlayer_->Update(dummyInput_, demoBulletManager_, StageType::Stage1);
+
+	if (exitPhase_ == ExitPhase::Walk)
+	{
+		if (demoPlayer_->GetPos().x > Game::kScreenWidth + 50)
 		{
-			auto stageType = StageType::Tutorial;
-			//はいの場合はチュートリアル
-			controller_.ChangeScene(std::make_shared<GameScene>(controller_,stageType));
+			frame_ = 0;
+			exitPhase_ = ExitPhase::Fade;
+			draw_ = &TitleScene::FadeDraw;
 		}
-		else
+	}
+	else if (exitPhase_ == ExitPhase::Fade)
+	{
+		if (frame_++ >= kFadeInterval)
 		{
-			auto stageType = StageType::Stage1;
-			//いいえの場合はステージ1
-			controller_.ChangeScene(std::make_shared<GameScene>(controller_, stageType));
+			controller_.ChangeScene(
+				std::make_shared<GameScene>(controller_, nextStage_));
 		}
 	}
 }
@@ -155,6 +211,12 @@ void TitleScene::NormalDraw()
 
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	}
+
+	if (demoPlayer_)
+	{
+		demoPlayer_->Draw();
+		demoZombie_->Draw();
+	}
 }
 
 void TitleScene::FadeDraw()
@@ -164,6 +226,14 @@ void TitleScene::FadeDraw()
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255 * rate);//αブレンド
 	DrawBox(0, 0, Game::kScreenWidth, Game::kScreenHeight, 0xffffff, true);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);// ブレンドしない
+}
+
+void TitleScene::DemoDraw()
+{
+	NormalDraw(); // タイトル背景
+
+	demoPlayer_->Draw();
+	demoZombie_->Draw();
 }
 
 void TitleScene::ConfirmDraw()
@@ -196,6 +266,10 @@ void TitleScene::ConfirmDraw()
 		DX_PI_F / 2.0f,
 		selectH_,
 		true);
+}
+
+void TitleScene::ExitDraw()
+{
 }
 
 TitleScene::TitleScene(SceneController& controller) :
@@ -231,6 +305,23 @@ void TitleScene::Init()
 	//タイトルBGM再生
 	//Application::GetInstance().GetBGMManager().PlayBGM(BGM::Title);
 
+
+		// デモ用キャラ生成
+	demoPlayer_ = std::make_shared<Player>(
+		Vector2{ 300, 500 }, Vector2{ 0,0 });
+	demoPlayer_->Init();
+	demoPlayer_->StartTitleDemo(); // ← 入力無視モード
+
+	demoZombie_ = std::make_shared<Zombie>(
+		Vector2{ 650, 500 }, Vector2{ 0,0 });
+	demoZombie_->Init();
+	demoZombie_->SetTitleDemo(); // 無敵 or 特定武器のみ有効
+
+	demoFrame_ = 0;
+
+	titleState_ = TitleState::Normal;
+	update_ = &TitleScene::FadeInUpdate;
+	draw_ = &TitleScene::FadeDraw;
 }
 
 void TitleScene::Update(Input&input)

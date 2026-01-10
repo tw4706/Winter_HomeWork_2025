@@ -52,6 +52,7 @@ void TutorialManager::Update(Player& player, Input& input)
 			isWaitingAction_ = true;
 			isWaitingConfirm_ = true;
 			waitingMessage_ = kTutorialText[stepIndex];
+
 			//移動以外のチュートリアル中は操作不可にする
 			if (currentStep_ != TutorialStep::Move)
 			{

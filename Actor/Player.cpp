@@ -178,6 +178,13 @@ void Player::Init()
 
 void Player::Update(Input& input, BulletManager& bm,StageType stage)
 {
+	if (controlMode_ == PlayerControl::TitleDemo)
+	{
+		UpdateTitleDemo(bm);
+		animations_[static_cast<int>(state_)]->Update();
+		return;
+	}
+
 	currentStage_ = stage;
 
 	//ïêäÌÇëIëÇ∑ÇÈéûÇ…í‚é~Ç≥ÇπÇÈ
@@ -639,4 +646,70 @@ bool Player::IsControllable() const
 {
 	//ÉvÉåÉCÉÑÅ[Ç™ëÄçÏâ¬î\Ç©Ç«Ç§Ç©Çï‘Ç∑
 	return controlMode_ != PlayerControl::Stop;
+}
+
+void Player::StartTitleDemo()
+{
+	controlMode_ = PlayerControl::TitleDemo;
+
+	vel_ = { 0.0f, 0.0f };
+	state_ = PlayerState::Idle;
+
+	isAttacking_ = false;
+	shotTimer_ = 0;
+
+	//ç≈èâÇÕëäéËÇ™çUåÇÇéÛÇØÇ»Ç¢ïêäÌ
+	currentBulletType_ = BulletType::Knife;
+}
+
+void Player::UpdateTitleDemo(BulletManager& bm)
+{
+	if (shotTimer_ > 0)
+	{
+		shotTimer_--;
+		return;
+	}
+
+	// é©ìÆçUåÇ
+	ShotDemo(bm);
+
+	shotTimer_ = 40;
+}
+
+void Player::ShotDemo(BulletManager& bm)
+{
+	state_ = PlayerState::Attack;
+
+	auto anim = animations_[static_cast<int>(state_)];
+	anim->Reset();
+	anim->Setloop(false);
+	anim->SetFrame(kAttackStartFrame);
+
+	int idx = static_cast<int>(currentBulletType_);
+	const auto& config = kBulletConfigs[idx];
+
+	Vector2 spawnPos =
+	{
+		pos_.x + kGunOffsetX,
+		pos_.y - kGunOffsetY
+	};
+
+	Vector2 vel = { config.speed, 0.0f };
+
+	auto bullet = std::make_shared<Bullet>(
+		spawnPos, vel, currentBulletType_, pBg_);
+	bullet->Init();
+	bullet->SetDirection(true);
+
+	bm.Init(bullet);
+}
+
+void Player::ForceChangeWeapon(BulletType type)
+{
+	currentBulletType_ = type;
+
+	if (type == BulletType::Torch)
+	{
+		isUnlockedTorch_ = true;
+	}
 }

@@ -267,8 +267,7 @@ void GameScene::NormalDraw()
 			20, 80,
 			GetColor(255, 255, 0),
 			"Player X : %.1f",
-			pPlayer_->GetPos().x
-		);
+			pPlayer_->GetPos().x);
 	}
 }
 
