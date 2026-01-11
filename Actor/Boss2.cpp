@@ -45,6 +45,10 @@ void Boss2::Init()
 {
 	Boss::Init();
 
+	barrierHP_ = 30;
+	currentWeakPoint_ = WeakPointType::Barrier;
+	weakDamageRate_ = 1.0f;
+
 	int graph = LoadGraph("data/Enemy/Boss2.png");
 
 	graphHandles_.resize(kAnimNum);
@@ -179,9 +183,31 @@ void Boss2::OnHit(int damage)
 
 	Boss::OnHit(damage);
 
-	//ëÑÇÃèÍçáÇÕÇ∑ÇÆÇ…ñﬂÇÈ
 	if (currentState_ != BossState::Dead)
 	{
 		ChangeState(BossState::Idle);
+	}
+}
+
+void Boss2::SelectWeakPoint()
+{
+	int r = GetRand(2); // 0Å`2
+
+	currentWeakPoint_ = static_cast<WeakPointType>(r);
+
+	switch (currentWeakPoint_)
+	{
+	case WeakPointType::BarrierCore:
+		barrierHP_ = 30;
+		weakDamageRate_ = 2.0f;
+		break;
+
+	case WeakPointType::CenterCore:
+		weakDamageRate_ = 2.0f;
+		break;
+
+	case WeakPointType::GroundCore:
+		weakDamageRate_ = 1.5f;
+		break;
 	}
 }
