@@ -78,8 +78,12 @@ public:
 
 	// 弾が消えたかどうかを返す
 	bool IsAlive() const { return isAlive_; }
+
 	//弾の種類を返す
 	const BulletType& GetType() const { return bulletType_; }
+
+	//当たった数を増やす関数
+	void RegisterHit();
 
 	//たいまつの波動とマップの当たり判定を行う関数
 	void CheckBulletAndMapCollision();

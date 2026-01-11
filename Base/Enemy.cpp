@@ -78,7 +78,6 @@ void Enemy::OnHit(int damage)
 void Enemy::Dead()
 {
 	isDead_ = true;
-	colRect_.SetCenter(-9999,-9999,0,0);
 }
 
 void Enemy::SetEffectManager(EffectManager* effect)

@@ -18,6 +18,7 @@ namespace
 	//弾のダメージ設定
 	constexpr int kMaxDamage = 3;
 	constexpr int kMinDamage = 1;
+	constexpr int kMaxHitCount = 2;
 
 	//重力
 	constexpr float kGravity = 0.2f;
@@ -47,6 +48,7 @@ Bullet::Bullet(Vector2 pos, Vector2 vel, BulletType bulletType, std::shared_ptr<
 	hitCount_(0),
 	hadouH_(-1),
 	hadouDir_(1.0f),
+	prevHadouDir_(1.0f),
 	isHadouSpawned_(false),
 	bulletType_(bulletType),
 	pBg_(bg),
@@ -132,7 +134,6 @@ void Bullet::UpdateShot()
 
 void Bullet::Update(Input& input, std::vector<std::shared_ptr<Enemy>>& enemies)
 {
-
 	if (!isAlive_) return;
 
 	//衝突判定
@@ -309,6 +310,19 @@ void Bullet::UpdateHadou(std::vector<std::shared_ptr<Enemy>>& enemies)
 		hadouRects_.end());
 
 	if (hadouRects_.empty())
+	{
+		isAlive_ = false;
+	}
+}
+
+void Bullet::RegisterHit()
+{
+	hitCount_++;
+
+	if (bulletType_ == BulletType::Lance)
+		return;
+
+	if(hitCount_ >= kMaxHitCount)
 	{
 		isAlive_ = false;
 	}
