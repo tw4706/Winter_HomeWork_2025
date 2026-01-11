@@ -8,6 +8,11 @@ void BGMManager::Init()
 	bgmHandles_[BGM::Game] = LoadSoundMem("data/BGM・SE/GameBGM.mp3");
 	bgmHandles_[BGM::GameOver] = LoadSoundMem("data/BGM・SE/GameOverBGM.mp3");
 	bgmHandles_[BGM::GameClear] = LoadSoundMem("data/BGM・SE/GameClearBGM.mp3");
+
+	bgmBaseVolume_[BGM::Title] = 100;
+	bgmBaseVolume_[BGM::Game] = 60;
+	bgmBaseVolume_[BGM::GameOver] = 100;
+	bgmBaseVolume_[BGM::GameClear] = 100;
 }
 
 void BGMManager::PlayBGM(BGM bgm)
@@ -24,7 +29,9 @@ void BGMManager::PlayBGM(BGM bgm)
 	//再生中のBGMを更新する
 	currentHandle_ = handle;
 
-	ChangeVolumeSoundMem(volume_ * 255 / 100, currentHandle_);
+	int finalVol =volume_ * bgmBaseVolume_[bgm] / 100 * 255 / 100;
+
+	ChangeVolumeSoundMem(finalVol, currentHandle_);
 
 	//ループ再生でBGMを再生する
 	PlaySoundMem(currentHandle_, DX_PLAYTYPE_LOOP);

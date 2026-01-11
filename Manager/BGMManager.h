@@ -21,6 +21,8 @@ public:
 
 private:
 	std::map<BGM, int>bgmHandles_;
+	std::map<BGM, int> bgmBaseVolume_;//BGM‚²‚Æ‚ÌŠî–{‚Ì‰¹—Ê
+
 	int currentHandle_ = -1;
 	int volume_ = 100;
 };
