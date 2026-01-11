@@ -1,5 +1,6 @@
 #pragma once
 #include"Geometry.h"
+#include"SEManager.h"
 #include "BGMManager.h"
 
 //アプリケーションを管理する
@@ -16,6 +17,7 @@ private:
 	bool requestedExit_ = false;
 
 	BGMManager bgmManager_;//BGM管理クラス
+	SEManager seManager_;//SE管理クラス
 
 public:
 	~Application();
@@ -40,5 +42,8 @@ public:
 
 	//BGMManagerを取得する関数
 	BGMManager& GetBGMManager() { return bgmManager_; }
+
+	SEManager& GetSEManager() { return seManager_; }
+
 };
 

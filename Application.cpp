@@ -39,6 +39,7 @@ bool Application::Init()
 
 	//‚±‚±‚ÅBGMManager‚Ì‰Šú‰»‚ğs‚¤
 	bgmManager_.Init();
+	seManager_.Init();
 
 	return true;
 }

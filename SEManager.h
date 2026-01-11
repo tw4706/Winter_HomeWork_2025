@@ -18,9 +18,10 @@ public:
 	void Init();
 	void PlaySE(SE se);
 	void SetVolume(int volume);
+	int GetVolume() const;
 
 private:
 	std::map<SE, int>seHandles_;
-	int volume_ = 200;
+	int volume_ = 100;
 };
 

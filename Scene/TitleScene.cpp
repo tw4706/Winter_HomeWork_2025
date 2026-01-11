@@ -82,6 +82,16 @@ void TitleScene::NormalUpdate(Input&input)
 		draw_ = &TitleScene::FadeDraw;
 		return;
 #endif
+		if(isSkipedConfirm_)
+		{
+			//確認画面をスキップしている場合、直接フェードアウトへ
+			nextStage_ = StageType::Stage1;
+			frame_ = 0;
+			update_ = &TitleScene::FadeOutUpdate;
+			draw_ = &TitleScene::FadeDraw;
+			return;
+		}
+
 		isDeciding_ = true;
 		pressBlinkFrame_ = 0;
 		decideBlinkCount_ = 0;
@@ -217,6 +227,7 @@ TitleScene::TitleScene(SceneController& controller) :
 	pressBlinkFrame_(0),
 	isDeciding_(false),
 	decideBlinkCount_(0),
+	isSkipedConfirm_(false),
 	nextStage_(StageType::Tutorial),
 	titleState_(TitleState::Normal),
 	confirmSelect_(0)
@@ -240,7 +251,16 @@ void TitleScene::Init()
 	frame_ = kFadeInterval;
 
 	//タイトルBGM再生
-	//Application::GetInstance().GetBGMManager().PlayBGM(BGM::Title);
+	Application::GetInstance().GetBGMManager().PlayBGM(BGM::Title);
+
+	auto& progress = controller_.GetProgress();
+
+	if (progress.IsReturnFromGame())
+	{
+		isSkipedConfirm_ = true;
+
+		progress.SetReturnFromGame(false);
+	}
 }
 
 void TitleScene::Update(Input&input)

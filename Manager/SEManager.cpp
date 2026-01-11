@@ -1,5 +1,6 @@
 #include "SEManager.h"
 #include<DxLib.h>
+#include <algorithm>
 
 void SEManager::Init()
 {
@@ -23,5 +24,16 @@ void SEManager::PlaySE(SE se)
 
 void SEManager::SetVolume(int volume)
 {
-	volume_ = volume;
+	volume_ = std::clamp(volume, 0, 100);
+
+	int dxVol = volume_ * 255 / 100;
+	for (auto& [se, handle] : seHandles_)
+	{
+		ChangeVolumeSoundMem(dxVol, handle);
+	}
+}
+
+int SEManager::GetVolume() const
+{
+	return volume_;
 }

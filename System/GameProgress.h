@@ -11,6 +11,9 @@ public:
 	bool tutorialAttacked_ = false;
 	bool tutorialWeaponChanged_ = false;
 
+	//ゲームからのタイトルに戻って来たかのフラグ
+	bool isReturnFromGame_ = false;
+
 public:
 
 	//チュートリアル進捗状況取得関数
@@ -28,5 +31,9 @@ public:
 			&& IsAttacked()
 			&& IsWeaponChanged();
 	}
+
+	//ゲームからのタイトルに戻って来たかどうかの取得・設定関数
+	bool IsReturnFromGame() const { return isReturnFromGame_; }
+	void SetReturnFromGame(bool flag) { isReturnFromGame_ = flag; }
 };
 

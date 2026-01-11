@@ -1,5 +1,6 @@
 #include "BGMManager.h"
 #include<Dxlib.h>
+#include <algorithm>
 
 void BGMManager::Init()
 {
@@ -23,6 +24,8 @@ void BGMManager::PlayBGM(BGM bgm)
 	//再生中のBGMを更新する
 	currentHandle_ = handle;
 
+	ChangeVolumeSoundMem(volume_ * 255 / 100, currentHandle_);
+
 	//ループ再生でBGMを再生する
 	PlaySoundMem(currentHandle_, DX_PLAYTYPE_LOOP);
 }
@@ -35,4 +38,23 @@ void BGMManager::StopBGM()
 		StopSoundMem(currentHandle_);
 		currentHandle_ = -1;
 	}
+}
+
+void BGMManager::SetVolume(int volume)
+{
+	volume_ = std::clamp(volume, 0, 100);
+
+	// DxLib は 0～255
+	int dxVolume = volume_ * 255 / 100;
+
+	// 全BGMに反映（重要）
+	for (auto& [bgm, handle] : bgmHandles_)
+	{
+		ChangeVolumeSoundMem(dxVolume, handle);
+	}
+}
+
+int BGMManager::GetVolume() const
+{
+	return volume_;
 }

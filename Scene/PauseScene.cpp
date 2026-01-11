@@ -2,6 +2,8 @@
 #include "Input.h"
 #include"TitleScene.h"
 #include"SelectScene.h"
+#include "BGMManager.h"
+#include "SEManager.h"
 #include "SceneController.h"
 #include "Application.h"
 #include"Dxlib.h"
@@ -26,26 +28,13 @@ void PauseScene::AppearUpdate(Input& input)
 
 void PauseScene::NormalUpdate(Input& input)
 {
-	if (menuList_.empty())return;
-	//最初の枠出現アニメーション中は何もしない
-	if (frame_ < appear_interval) return;
-
-	if (input.IsTriggered("pause"))
+	if (pauseMode_ == PauseMode::Menu)
 	{
-		update_ = &PauseScene::DisappearUpdate;
-		draw_ = &PauseScene::IntervalDraw;
-		frame_ = appear_interval;
-		return;
+		MenuUpdate(input);
 	}
-	if (input.IsTriggered("up")) {
-		selectIndex_ = (selectIndex_ + menuList_.size() - 1) % menuList_.size();
-	}
-	if (input.IsTriggered("down")) {
-		selectIndex_ = (selectIndex_ + 1) % menuList_.size();
-	}
-	if (input.IsTriggered("next")) 
+	else if (pauseMode_ == PauseMode::Volume)
 	{
-		ExcecuteMenu();
+		VolumeUpdate(input);
 	}
 }
 
@@ -58,6 +47,69 @@ void PauseScene::DisappearUpdate(Input& input)
 	}
 	--frame_;
 }
+void PauseScene::MenuUpdate(Input& input)
+{
+	if (input.IsTriggered("up"))
+		selectIndex_ = (selectIndex_ + menuList_.size() - 1) % menuList_.size();
+
+	if (input.IsTriggered("down"))
+		selectIndex_ = (selectIndex_ + 1) % menuList_.size();
+
+	if (input.IsTriggered("next"))
+	{
+		if (menuList_[selectIndex_] == "音量設定")
+		{
+			pauseMode_ = PauseMode::Volume;
+			volumeSelectIdx_ = 0; // BGMから
+		}
+		else
+		{
+			ExcecuteMenu();
+		}
+	}
+}
+
+void PauseScene::VolumeUpdate(Input& input)
+{
+	if (input.IsTriggered("up") || input.IsTriggered("down"))
+	{
+		volumeSelectIdx_ = 1 - volumeSelectIdx_;
+	}
+
+	if (input.IsTriggered("left"))
+	{
+		if (volumeSelectIdx_ == 0)
+		{
+			auto& bgm = Application::GetInstance().GetBGMManager();
+			bgm.SetVolume(bgm.GetVolume() - 5);
+		}
+		else
+		{
+			auto& se = Application::GetInstance().GetSEManager();
+			se.SetVolume(se.GetVolume() - 5);
+		}
+	}
+
+	if (input.IsTriggered("right"))
+	{
+		if (volumeSelectIdx_ == 0)
+		{
+			auto& bgm = Application::GetInstance().GetBGMManager();
+			bgm.SetVolume(bgm.GetVolume() + 5);
+		}
+		else
+		{
+			auto& se = Application::GetInstance().GetSEManager();
+			se.SetVolume(se.GetVolume() + 5);
+		}
+	}
+
+	if (input.IsTriggered("next") || input.IsTriggered("pause"))
+	{
+		pauseMode_ = PauseMode::Menu;
+	}
+}
+
 void PauseScene::ExcecuteMenu() 
 {
 	if (menuList_.empty()) return;
@@ -70,16 +122,14 @@ void PauseScene::ExcecuteMenu()
 	} 
 	else if (menu == "タイトルに戻る") 
 	{ 
+		//タイトルに戻る処理
+		auto& progress = controller_.GetProgress();
+		progress.SetReturnFromGame(true);//ゲームシーンから戻ってきたことを記録する
+
 		controller_.PopScene();
 		controller_.ChangeScene(std::make_shared<TitleScene>(controller_));
 		return;
-	} 
-	else if (menu == "ステージセレクトに戻る")
-	{
-		controller_.PopScene();
-		controller_.ChangeScene(std::make_shared<SelectScene>(controller_));
-		return;
-	} 
+	}
 }
 
 void PauseScene::IntervalDraw()
@@ -93,8 +143,8 @@ void PauseScene::IntervalDraw()
 
 	int frame_height = (wsize.h - frame_margin) - center_y;//最終的になポーズ枠の高さ
 	int frame_width = (wsize.w - frame_margin) - center_x;//最終的になポーズ枠の高さ
-	frame_height *= static_cast<int>(rate);
-	frame_width *= static_cast<int>(rate);
+	frame_height = static_cast<int>(frame_height * rate);
+	frame_width = static_cast<int>(frame_width * rate);
 
 	//黒くて薄いセロファンを張る
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 128);
@@ -128,10 +178,18 @@ void PauseScene::NormalDraw()
 
 	//ポーズシーンの文字列表示
 	DrawString(280, frame_margin + 10, "Pause Scene", 0xffffff);
-	DrawMenu();
+
+	if (pauseMode_ == PauseMode::Menu)
+	{
+		MenuDraw();
+	}
+	else if (pauseMode_ == PauseMode::Volume)
+	{
+		VolumeDraw();
+	}
 }
 
-void PauseScene::DrawMenu()
+void PauseScene::MenuDraw()
 {
 
 	int menuStartX = frame_margin + menu_left_margin;
@@ -155,6 +213,24 @@ void PauseScene::DrawMenu()
 	}
 }
 
+void PauseScene::VolumeDraw()
+{
+	int x = frame_margin + menu_left_margin;
+	int y = frame_margin + menu_top_margin;
+
+	int bgmVol = Application::GetInstance().GetBGMManager().GetVolume();
+	int seVol = Application::GetInstance().GetSEManager().GetVolume();
+
+	DrawString(x - 30, y + volumeSelectIdx_ * menu_row_height,
+		"⇒", 0xffaaaa);
+
+	DrawFormatString(x, y, 0xffffff, "BGM : %d", bgmVol);
+	DrawFormatString(x, y + menu_row_height, 0xffffff, "SE  : %d", seVol);
+
+	DrawString(x, y + menu_row_height * 2 + 20,
+		"← → で調整 / 決定で戻る", 0xaaaaaa);
+}
+
 PauseScene::PauseScene(SceneController& controller) :
 	Scene(controller),
 	update_(&PauseScene::AppearUpdate),
@@ -162,23 +238,23 @@ PauseScene::PauseScene(SceneController& controller) :
 {
 	menuList_ = {
 		"ゲームに戻る",
-		"タイトルに戻る",
-		"ステージセレクトに戻る"
-	};
+		"音量設定",
+		"タイトルに戻る"};
 }
 
 void PauseScene::Init()
 {
 	frame_ = 0;
 	selectIndex_ = 0;
+	pauseMode_ = PauseMode::Menu;
 
 	if (menuList_.empty())
 	{
 		menuList_ =
 		{
 			"ゲームに戻る",
+			"音量設定",
 			"タイトルに戻る",
-			"ステージセレクトに戻る"
 		};
 	}
 

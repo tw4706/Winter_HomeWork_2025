@@ -5,6 +5,12 @@
 #include<functional>//ラムダ式を書くために必要
 #include<string>
 
+enum class PauseMode
+{
+	Menu,
+	Volume
+};
+
 /// <summary>
 /// ポーズシーン
 /// </summary>
@@ -14,21 +20,26 @@ private:
 
 	int frame_ = 0;
 	int selectIndex_ = 0;//現在選択中のインデックス
+	std::vector<std::string>menuList_;//ポーズ画面中に表示するメニューリスト
+	PauseMode pauseMode_ = PauseMode::Menu;
+	int volumeSelectIdx_ = 0;
 
-	using UpdateFunc_t = void(PauseScene::*)(Input& input);
-	UpdateFunc_t update_;
 	void AppearUpdate(Input& input);
 	void NormalUpdate(Input& input);
 	void DisappearUpdate(Input& input);
+	void MenuUpdate(Input& input);
+	void VolumeUpdate(Input& input);
+	using UpdateFunc_t = void(PauseScene::*)(Input& input);
+	UpdateFunc_t update_;
 
 	void ExcecuteMenu();
 
-	using DrawFunc_t = void(PauseScene::*)();
-	DrawFunc_t draw_;
 	void IntervalDraw();
 	void NormalDraw();
-	std::vector<std::string>menuList_;//ポーズ画面中に表示するメニューリスト
-	void DrawMenu();
+	void MenuDraw();
+	void VolumeDraw();
+	using DrawFunc_t = void(PauseScene::*)();
+	DrawFunc_t draw_;
 
 public:
 	PauseScene(SceneController& controller);

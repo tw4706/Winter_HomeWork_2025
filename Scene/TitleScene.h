@@ -21,6 +21,7 @@ private:
 	int pressBlinkFrame_;//PressStart点滅用フレーム
 	bool isDeciding_;//決定中かどうか
 	int decideBlinkCount_;//決定時の点滅カウント
+	bool isSkipedConfirm_;//確認をスキップしたかどうか
 	StageType nextStage_;//次のステージ
 
 	TitleState titleState_;//シーンの状態
