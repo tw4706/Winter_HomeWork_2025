@@ -51,7 +51,6 @@ void Application::Run()
 	SceneController controller;
 	controller.ChangeScene(std::make_shared<TitleScene>(controller));
 
-
 	while (ProcessMessage() != -1 && !requestedExit_)
 	{
 		// このフレームの開始時間を取得

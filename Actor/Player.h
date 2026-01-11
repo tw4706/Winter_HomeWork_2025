@@ -91,12 +91,6 @@ public:
 	void SetControllable(bool canControl);
 	bool IsControllable() const;
 
-	//タイトル画面演出として攻撃を開始させる関数
-	void StartTitleDemo();
-	void UpdateTitleDemo(BulletManager& bm);
-	void ShotDemo(BulletManager& bm);
-	void ForceChangeWeapon(BulletType type);
-
 private:
 	std::vector<int>graphHandles_;//画像ハンドルの配列
 	Vector2 initializePos_;//リスポーンしたときの初期位置保存用

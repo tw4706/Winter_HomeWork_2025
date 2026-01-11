@@ -2,7 +2,6 @@
 #include "Scene.h"
 #include"Input.h"
 #include"StageType.h"
-#include"BulletManager.h"
 #include<memory>
 
 //タイトルシーンの状態
@@ -41,7 +40,6 @@ private:
 	using DrawFunc_t = void(TitleScene::*)();
 	DrawFunc_t draw_;
 
-
 public:
 	TitleScene(SceneController&);
 	~TitleScene();
@@ -49,5 +47,6 @@ public:
 	void Init()override;
 	void Update(Input&)override;
 	void Draw()override;
+
 };
 

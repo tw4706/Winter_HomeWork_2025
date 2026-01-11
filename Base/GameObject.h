@@ -42,6 +42,15 @@ public:
 	//位置を取得する関数(ゲッター関数)
 	const Vector2& GetPos()const { return pos_; }
 
+	//速度を取得する関数
+	Vector2 GetVelocity() const { return vel_; }
+
+	// 速度をセットする関数
+	void SetVelocity(const Vector2& v) { vel_ = v; }
+
+	float GetVelX() const { return vel_.x; }
+	void SetVelX(float x) { vel_.x = x; }
+
 	//Bg関連
 	//Bgクラスを設定する関数
 	void SetBg(std::shared_ptr<Bg>bg) { pBg_ = bg; }
@@ -58,8 +67,6 @@ public:
 	void CheckMapCollision(Rect& chipRect);
 	//マップチップとの足元の判定処理
 	bool IsOnGround();
-
-
 
 	//重力の使用設定
 	void SetUseGravity(bool enable);
