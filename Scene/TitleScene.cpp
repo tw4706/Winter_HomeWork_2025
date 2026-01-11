@@ -43,9 +43,8 @@ void TitleScene::FadeInUpdate(Input&input)
 {
 	if (--frame_ <= 0)
 	{
-		titleState_ = TitleState::Demo;
-		update_ = &TitleScene::DemoUpdate;
-		draw_ = &TitleScene::DemoDraw;
+		update_ = &TitleScene::NormalUpdate;
+		draw_ = &TitleScene::NormalDraw;
 		return;
 	}
 }
@@ -101,33 +100,6 @@ void TitleScene::FadeOutUpdate(Input&input)
 	}
 }
 
-void TitleScene::DemoUpdate(Input&)
-{
-	demoFrame_++;
-
-	demoPlayer_->Update(dummyInput_, demoBulletManager_, StageType::Stage1);
-	demoZombie_->Update();
-
-	// ① 最初は効かない武器
-	if (demoFrame_ < 120)
-	{
-		// ずっと攻撃しているが倒れない
-	}
-	// ② 武器切り替え
-	else if (demoFrame_ == 120)
-	{
-		demoPlayer_->ForceChangeWeapon(BulletType::Torch);
-	}
-	// ③ 撃破後
-	else if (demoZombie_->IsDead())
-	{
-		demoPlayer_->StartTitleDemo();
-		titleState_ = TitleState::Normal;
-		update_ = &TitleScene::NormalUpdate;
-		draw_ = &TitleScene::NormalDraw;
-	}
-}
-
 void TitleScene::ConfirmUpdate(Input&input)
 {
 	if (input.IsTriggered("left") || input.IsTriggered("up"))
@@ -137,39 +109,21 @@ void TitleScene::ConfirmUpdate(Input&input)
 
 	if (input.IsTriggered("next"))
 	{
-		nextStage_ = (confirmSelect_ == 0)
-			? StageType::Tutorial
-			: StageType::Stage1;
-
-		titleState_ = TitleState::Exit;
-		exitPhase_ = ExitPhase::Walk;
-
-		demoPlayer_->StartAutoWalk(+1); // ★右に歩く
-		update_ = &TitleScene::ExitUpdate;
-		draw_ = &TitleScene::NormalDraw;
-	}
-}
-
-void TitleScene::ExitUpdate(Input&)
-{
-	demoPlayer_->Update(dummyInput_, demoBulletManager_, StageType::Stage1);
-
-	if (exitPhase_ == ExitPhase::Walk)
-	{
-		if (demoPlayer_->GetPos().x > Game::kScreenWidth + 50)
+		if (confirmSelect_ == 0)
 		{
-			frame_ = 0;
-			exitPhase_ = ExitPhase::Fade;
-			draw_ = &TitleScene::FadeDraw;
+			//はい：チュートリアルステージへ
+			nextStage_ = StageType::Tutorial;
 		}
-	}
-	else if (exitPhase_ == ExitPhase::Fade)
-	{
-		if (frame_++ >= kFadeInterval)
+		else
 		{
-			controller_.ChangeScene(
-				std::make_shared<GameScene>(controller_, nextStage_));
+			//いいえ：ステージ1へ
+			nextStage_ = StageType::Stage1;
 		}
+
+		//フェードアウトへ遷移
+		frame_ = 0;
+		update_ = &TitleScene::FadeOutUpdate;
+		draw_ = &TitleScene::FadeDraw;
 	}
 }
 
@@ -211,12 +165,6 @@ void TitleScene::NormalDraw()
 
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	}
-
-	if (demoPlayer_)
-	{
-		demoPlayer_->Draw();
-		demoZombie_->Draw();
-	}
 }
 
 void TitleScene::FadeDraw()
@@ -226,14 +174,6 @@ void TitleScene::FadeDraw()
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255 * rate);//αブレンド
 	DrawBox(0, 0, Game::kScreenWidth, Game::kScreenHeight, 0xffffff, true);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);// ブレンドしない
-}
-
-void TitleScene::DemoDraw()
-{
-	NormalDraw(); // タイトル背景
-
-	demoPlayer_->Draw();
-	demoZombie_->Draw();
 }
 
 void TitleScene::ConfirmDraw()
@@ -268,10 +208,6 @@ void TitleScene::ConfirmDraw()
 		true);
 }
 
-void TitleScene::ExitDraw()
-{
-}
-
 TitleScene::TitleScene(SceneController& controller) :
 	Scene(controller),
 	titleH_(-1),
@@ -281,6 +217,7 @@ TitleScene::TitleScene(SceneController& controller) :
 	pressBlinkFrame_(0),
 	isDeciding_(false),
 	decideBlinkCount_(0),
+	nextStage_(StageType::Tutorial),
 	titleState_(TitleState::Normal),
 	confirmSelect_(0)
 {
@@ -304,24 +241,6 @@ void TitleScene::Init()
 
 	//タイトルBGM再生
 	//Application::GetInstance().GetBGMManager().PlayBGM(BGM::Title);
-
-
-		// デモ用キャラ生成
-	demoPlayer_ = std::make_shared<Player>(
-		Vector2{ 300, 500 }, Vector2{ 0,0 });
-	demoPlayer_->Init();
-	demoPlayer_->StartTitleDemo(); // ← 入力無視モード
-
-	demoZombie_ = std::make_shared<Zombie>(
-		Vector2{ 650, 500 }, Vector2{ 0,0 });
-	demoZombie_->Init();
-	demoZombie_->SetTitleDemo(); // 無敵 or 特定武器のみ有効
-
-	demoFrame_ = 0;
-
-	titleState_ = TitleState::Normal;
-	update_ = &TitleScene::FadeInUpdate;
-	draw_ = &TitleScene::FadeDraw;
 }
 
 void TitleScene::Update(Input&input)
