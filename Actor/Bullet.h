@@ -4,6 +4,7 @@
 #include"Animation.h"
 #include<memory>
 #include<vector>
+#include <unordered_set>
 
 //プレイヤーの玉の種別
 enum class BulletType
@@ -85,6 +86,11 @@ public:
 	//当たった数を増やす関数
 	void RegisterHit();
 
+	//貫通を実装すために必要な関数
+	bool HasHitEnemy(Enemy*enemy)const;
+
+	void ResetHitEnemies(Enemy*enemy);
+
 	//たいまつの波動とマップの当たり判定を行う関数
 	void CheckBulletAndMapCollision();
 
@@ -111,6 +117,7 @@ private:
 	std::vector<int>hadouTimers_;
 	BulletType bulletType_;
 	std::shared_ptr<Bg> pBg_;
+	std::unordered_set<Enemy*> hitEnemies_;//当たった敵の記憶しておくための変数
 	std::shared_ptr<Animation> animations_;//弾のアニメーション
 	EffectManager* pEffectManager_;//エフェクトマネージャーのポインタ
 	

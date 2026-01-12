@@ -43,10 +43,16 @@ void CollisionManager::PlayerBulletsVsEnemies(
 
             if (bullet->GetColRect().IsCollision(enemy->GetColRect()))
             {
+				//‚·‚Å‚É‚±‚Ì“G‚É“–‚½‚Á‚Ä‚¢‚é‚È‚çƒXƒ‹[
+                if (bullet->HasHitEnemy(enemy.get()))
+                {
+                    continue;
+                }
+
                 //“G‚ª€‚ñ‚Å‚¢‚Ä‚à hitCount ‚Í‘‚â‚·
                 if (bullet->GetType() == BulletType::Lance)
                 {
-                    bullet->RegisterHit();
+                    bullet->ResetHitEnemies(enemy.get());
                 }
                 else
                 {

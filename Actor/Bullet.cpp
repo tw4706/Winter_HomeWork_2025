@@ -328,6 +328,16 @@ void Bullet::RegisterHit()
 	}
 }
 
+bool Bullet::HasHitEnemy(Enemy* enemy) const
+{
+	return hitEnemies_.count(enemy) > 0;
+}
+
+void Bullet::ResetHitEnemies(Enemy* enemy)
+{
+	hitEnemies_.insert(enemy);
+}
+
 void Bullet::CheckBulletAndMapCollision()
 {
 	if (!pBg_) return;
