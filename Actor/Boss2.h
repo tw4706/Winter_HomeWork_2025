@@ -2,11 +2,13 @@
 #include "Boss.h"
 #include "Bullet.h" 
 
-enum class WeakPointType
+enum class AttackPattern
 {
-    BarrierCore,
-    CenterCore,
-	GroundCore
+    Idle,
+    Barrier,
+	Spear,
+    Hadou,
+    Count
 };
 
 class Boss2 : public Boss
@@ -18,11 +20,15 @@ public:
 	void Update() override;
     void Draw()override;
     void OnHit(int damage) override;
-    void OnHitByBoss2(Bullet& bullet) override;
 
-	void OnHitWeakPoint(WeakPointType weakType,int damage);
+	//各攻撃パターンの選択
+    void SelectRandomAttack();
+	//各攻撃パターンの関数
+    void KnifeAttack();
+    void SpearAttack();
+    void HadouAttack();
 
-    void SelectWeakPoint();
+	void SetBulletManager(BulletManager* bm) { pBulletManager_ = bm; }
 
 protected:
     void LoadResources() override {};
@@ -31,18 +37,16 @@ protected:
     void UpdateIdle() override;
     void UpdateAttack() override;
     void UpdateMove() override;
-    void UpdateExposed() override;
 	void UpdateHurt() override;
   
 private:
-    WeakPointType currentWeakPoint_;
+    int invincibleTimer_ = 0;//無敵時間用タイマー
+    int barrierInvincibleTimer_;
+    int centerInvincibleTimer_;
+    int groundInvincibleTimer_;
+    BulletManager* pBulletManager_ = nullptr;
 
-	//各弱点の当たり判定
-    Rect barrierRect_;
-    Rect centerRect_;
-    Rect groundRect_;
+    AttackPattern currentAttack_ = AttackPattern::Idle;
 
-	//各弱点の体力
-    int barrierHP_;
-    float weakDamageRate_;
+    int barrierHP_ = 0;//バリアの耐久値
 };

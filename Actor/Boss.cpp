@@ -104,9 +104,6 @@ void Boss::Update()
 	case BossState::Move:
 		UpdateMove();
 		break;
-	case BossState::Exposed:
-		UpdateExposed();
-		break;
 	case BossState::Hurt:
 		UpdateHurt();
 		break;

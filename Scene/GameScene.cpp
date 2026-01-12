@@ -45,7 +45,7 @@ namespace
 
 	//プレイヤーが自動で歩行する向きと距離
 	constexpr int kPlayerDir = 1;//右向き
-	constexpr float kPlayerAutoWalkX = 600.0f;
+	constexpr float kPlayerAutoWalkX = 500.0f;
 }
 
 GameScene::GameScene(SceneController& controller, StageType stage) :

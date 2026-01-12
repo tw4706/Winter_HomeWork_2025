@@ -60,8 +60,6 @@ void CollisionManager::PlayerBulletsVsEnemies(
                     bullet->OnHit();
                 }
 
-				enemy->OnHitByBoss2(*bullet);
-
                 //ƒ‰ƒ“ƒX‚ÍÅ‘åƒqƒbƒg”‚É’B‚µ‚Ä‚¢‚È‚¯‚ê‚ÎŽŸ‚Ì“G‚É“–‚½‚ê‚é
                 if (bullet->GetType() != BulletType::Lance)
                 {

@@ -50,9 +50,6 @@ public:
 	//ボスかどうか
 	virtual bool IsBoss() const { return false; }
 
-	//ボス2の弾が当たった時の処理
-	virtual void OnHitByBoss2(Bullet& bullet);
-
 	//エフェクトマネージャーのセッター
 	void SetEffectManager(EffectManager* effect);
 };

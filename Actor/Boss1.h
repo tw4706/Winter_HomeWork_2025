@@ -23,7 +23,6 @@ protected:
     void UpdateIdle() override;
     void UpdateAttack() override;
     void UpdateMove() override;
-    void UpdateExposed() override {};
 	void UpdateHurt() override;
     int GetGraphIndex(BossState state) const override;
 

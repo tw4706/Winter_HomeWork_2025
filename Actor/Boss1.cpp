@@ -122,7 +122,8 @@ void Boss1::LoadResources()
 			frameCounts[i],
 			frameIntervals[i],
 			kScale,
-			false, 0);
+			(i != kHurtGraph && i != kDeadGraph),
+			0);
 	}
 }
 

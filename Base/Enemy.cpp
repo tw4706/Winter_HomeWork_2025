@@ -81,11 +81,6 @@ void Enemy::Dead()
 	isDead_ = true;
 }
 
-void Enemy::OnHitByBoss2(Bullet& bullet)
-{
-	OnHit(bullet.GetDamage());
-}
-
 void Enemy::SetEffectManager(EffectManager* effect)
 {
 	pEffectManager_ = effect;

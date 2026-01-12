@@ -10,7 +10,6 @@ public:
 		Idle,
 		Attack,
 		Move,
-		Exposed,
 		Hurt,
 		Dead
 	};
@@ -39,7 +38,6 @@ protected:
 	virtual void UpdateIdle() = 0;
 	virtual void UpdateAttack() = 0;
 	virtual void UpdateMove() = 0;
-	virtual void UpdateExposed() = 0;
 	virtual void UpdateHurt();
 	virtual void UpdateDead();
 

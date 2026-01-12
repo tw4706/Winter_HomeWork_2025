@@ -45,13 +45,6 @@ void Boss2::Init()
 {
 	Boss::Init();
 
-	barrierHP_ = 30;
-	currentWeakPoint_ = WeakPointType::BarrierCore;
-	weakDamageRate_ = 0.0f;
-
-	//é„ì_ÇÉâÉìÉ_ÉÄëIë
-	SelectWeakPoint();
-
 	int graph = LoadGraph("data/Enemy/Boss2.png");
 
 	graphHandles_.resize(kAnimNum);
@@ -68,7 +61,7 @@ void Boss2::Init()
 			kFrameCount[i],
 			kFrameInterval,
 			kScale,
-			false,
+			(i != Anim::Hurt && i != Anim::Dead),
 			kStartY[i]);
 	}
 
@@ -83,10 +76,7 @@ void Boss2::Update()
 {
 	Boss::Update();
 
-	colRect_.SetCenter(pos_.x, pos_.y-100, kColSizeX, kColSizeY);
-	barrierRect_.SetCenter(pos_.x, pos_.y - 200, 80, 80);
-	centerRect_.SetCenter(pos_.x, pos_.y - 120, 60, 60);
-	groundRect_.SetCenter(pos_.x, pos_.y - 40, 100, 40);
+	colRect_.SetCenter(pos_.x, pos_.y - 100, kColSizeX, kColSizeY);
 }
 
 void Boss2::Draw()
@@ -94,12 +84,13 @@ void Boss2::Draw()
 	int graphIndex = GetGraphIndex(currentState_);
 
 	float drawX = pos_.x + cameraOffset_.x;
-	float drawY = pos_.y + cameraOffset_.y-150;
+	float drawY = pos_.y + cameraOffset_.y - 150;
 
 	animations_[graphIndex]->Draw(drawX, drawY, !isTurn_);
 
 #ifdef _DEBUG
-	colRect_.DrawAndCamera(cameraOffset_, 0xff0000, false);
+	//ìñÇΩÇËîªíËï\é¶
+	colRect_.DrawAndCamera(cameraOffset_, GetColor(255, 0, 0), false);
 #endif
 }
 
@@ -113,11 +104,9 @@ int Boss2::GetGraphIndex(BossState state) const
 		return Anim::Attack;
 	case BossState::Move:
 		return Anim::Fly;
-	case BossState::Exposed:
-		return Anim::Idle;
 	case BossState::Hurt:
 		return Anim::Hurt;
-	case BossState::Dead: 
+	case BossState::Dead:
 		return Anim::Dead;
 	default:
 		return Anim::Idle;
@@ -128,7 +117,7 @@ void Boss2::UpdateIdle()
 {
 	stateTimer_++;
 
-	// àÍíËéûä‘Ç≈çUåÇÇ÷
+	//àÍíËéûä‘Ç≈çUåÇÇ÷
 	if (stateTimer_ > 60)
 	{
 		ChangeState(BossState::Attack);
@@ -137,6 +126,13 @@ void Boss2::UpdateIdle()
 
 void Boss2::UpdateAttack()
 {
+	stateTimer_++;
+
+	// çUåÇèIóπîªíË
+	if (stateTimer_ > 90)
+	{
+		ChangeState(BossState::Idle);
+	}
 }
 
 void Boss2::UpdateMove()
@@ -154,26 +150,9 @@ void Boss2::UpdateMove()
 	}
 }
 
-void Boss2::UpdateExposed()
-{
-	stateTimer_++;
-
-	//ñ≥ñhîıíÜÇÕñ≥ìGâèú
-	isInvincible_ = false;
-
-	//àÍíËéûä‘Ç≈çƒçsìÆ
-	if (stateTimer_ > 90)
-	{
-		ChangeState(BossState::Idle);
-	}
-}
-
 void Boss2::UpdateHurt()
 {
 	stateTimer_++;
-
-	pos_.x += isTurn_ ? 2.0f : -2.0f;
-	pos_.y += sinf(stateTimer_ * 0.3f) * 0.3f;
 
 	if (stateTimer_ > 30)
 	{
@@ -183,96 +162,14 @@ void Boss2::UpdateHurt()
 
 void Boss2::OnHit(int damage)
 {
-	//îÌíeíÜÅEñ≥ìGèÛë‘Ç»ÇÁñ≥éãÇ∑ÇÈ
-	if (isHitInvincible_) return;
-
-	//HurtíÜÅEéÄñSíÜÇÕñ≥éãÇ∑ÇÈ
-	if (currentState_ == BossState::Hurt ||currentState_ == BossState::Dead)return;
-
-	//Boss::OnHit(damage);
-
-	if (currentState_ != BossState::Dead)
-	{
-		ChangeState(BossState::Idle);
-	}
-}
-
-void Boss2::OnHitByBoss2(Bullet& bullet)
-{
-	if (isHitInvincible_ || currentState_ == BossState::Dead) return;
-
-	const Rect& b = bullet.GetColRect();
-
-	if (b.IsCollision(barrierRect_))
-	{
-		OnHitWeakPoint(WeakPointType::BarrierCore, bullet.GetDamage());
-		ChangeState(BossState::Hurt);
+	if (currentState_ == BossState::Hurt || currentState_ == BossState::Dead)
 		return;
-	}
 
-	if (b.IsCollision(centerRect_))
-	{
-		OnHitWeakPoint(WeakPointType::CenterCore, bullet.GetDamage());
-		ChangeState(BossState::Hurt);
-		return;
-	}
-
-	if (b.IsCollision(groundRect_))
-	{
-		OnHitWeakPoint(WeakPointType::GroundCore, bullet.GetDamage());
-		ChangeState(BossState::Hurt);
-		return;
-	}
-
-	// ÇªÇÍà»äO
-	Boss::OnHit(1);
-}
-
-void Boss2::OnHitWeakPoint(WeakPointType weakType, int damage)
-{
-	if (weakType != currentWeakPoint_) return;
-
-	// ÉoÉäÉA
-	if (currentWeakPoint_ == WeakPointType::BarrierCore)
-	{
-		barrierHP_--;
-		if (barrierHP_ <= 0)
-		{
-			SelectWeakPoint();
-		}
-		return;
-	}
-
-	//ëÑÇ‚èºñæÇ≈çUåÇÇ≥ÇÍÇΩèÍçáÇÃî{ó¶É_ÉÅÅ[ÉW
-	int finalDamage = static_cast<int>(damage * weakDamageRate_);
-	Boss::OnHit(finalDamage);
+	Boss::OnHit(damage);
 
 	if (currentState_ != BossState::Dead)
 	{
 		ChangeState(BossState::Hurt);
-		SelectWeakPoint();
-	}
-}
-
-void Boss2::SelectWeakPoint()
-{
-	int r = GetRand(2);
-
-	currentWeakPoint_ = static_cast<WeakPointType>(r);
-
-	switch (currentWeakPoint_)
-	{
-	case WeakPointType::BarrierCore:
-		barrierHP_ = 30;
-		weakDamageRate_ = 0.0f;
-		break;
-
-	case WeakPointType::CenterCore:
-		weakDamageRate_ = 2.0f;
-		break;
-
-	case WeakPointType::GroundCore:
-		weakDamageRate_ = 1.5f;
-		break;
+		stateTimer_ = 0;
 	}
 }
