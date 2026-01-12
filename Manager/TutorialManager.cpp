@@ -19,11 +19,11 @@ namespace
 
 	const char* kTutorialText[] =
 	{
-		"←→で移動",
-		"Bボタンでジャンプ",
-		"さらにBボタンでダブルジャンプが可能",
-		"Aボタンで攻撃だ"
-		"Xボタンで武器変更ができる"
+	"←→で移動",
+	"Bボタンでジャンプ",
+	"さらにBボタンでダブルジャンプが可能",
+	"Aボタンで攻撃だ",
+	"Xボタンで武器変更ができる"
 	};
 
 	//チュートリアル内容の総数
@@ -37,6 +37,8 @@ void TutorialManager::Init()
 	waitingMessage_ = nullptr;
 
 	textFrameHandle_ = LoadGraph("data/UI/TutorialFrame.png");
+
+	goalRect_.SetLT(4700.0f, 1734.0f, 64.0f, 64.0f);
 }
 
 void TutorialManager::Update(Player& player, Input& input)
@@ -60,8 +62,18 @@ void TutorialManager::Update(Player& player, Input& input)
 	}
 }
 
-void TutorialManager::Draw() const
+void TutorialManager::Draw(const Camera& camera)
 {
+
+	if (!IsTutorialFinished())
+	{
+		goalRect_.DrawAndCamera(
+			camera.GetOffset(),
+			GetColor(255, 255, 0),
+			false
+		);
+	}
+
 	if (!waitingMessage_) return;
 
 	// フレーム表示座標とサイズ
@@ -70,13 +82,10 @@ void TutorialManager::Draw() const
 	const int frameWidth = 680;  // 好きな横幅に変更
 	const int frameHeight = 120; // 好きな縦幅に変更
 
-	if (textFrameHandle_ != -1) {
+	if (textFrameHandle_ != -1) 
+	{
 		// 画像を指定サイズに拡大/縮小して描画
 		DrawExtendGraph(frameX, frameY, frameX + frameWidth, frameY + frameHeight, textFrameHandle_, TRUE);
-	}
-	else {
-		// フレーム画像がない場合はボックスで代用
-		DrawBox(frameX, frameY, frameX + frameWidth, frameY + frameHeight, GetColor(0, 0, 0), TRUE);
 	}
 
 	// テキストをフレーム中央に配置

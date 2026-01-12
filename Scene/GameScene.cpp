@@ -143,7 +143,23 @@ void GameScene::NormalUpdate(Input&input)
 		pPlayer_->OnDamage(hitEnemy->GetPos().x);
 	}
 
-	//ボスを倒すとクリアシーンに遷移
+	//チュートリアルステージの更新処理
+	if (tutorialManager_ && !tutorialManager_->IsTutorialFinished())
+	{
+		const auto& goalRect = tutorialManager_->GetGoalRect();
+		const auto& playerRect = pPlayer_->GetColRect();
+
+		if (goalRect.IsCollision(playerRect))
+		{
+			//ゴール到達したらフェードアウトして次のシーンへ遷移
+			update_ = &GameScene::GoalFadeOutUpdate;
+			draw_ = &GameScene::FadeDraw;
+			frame_ = 0;
+			return;
+		}
+	}
+
+	//ボスを倒すとクリアシーンに遷移する
 	for (auto& enemy : enemyFactory_.GetEnemies())
 	{
 		auto boss2 = enemyFactory_.GetBoss2();
@@ -258,16 +274,7 @@ void GameScene::NormalDraw()
 	//チュートリアルステージの描画
 	if (tutorialManager_ && !tutorialManager_->IsTutorialFinished())
 	{
-		tutorialManager_->Draw();
-	}
-
-	if (tutorialManager_ && !tutorialManager_->IsTutorialFinished())
-	{
-		DrawFormatString(
-			20, 80,
-			GetColor(255, 255, 0),
-			"Player X : %.1f",
-			pPlayer_->GetPos().x);
+		tutorialManager_->Draw(*pCamera_);
 	}
 }
 

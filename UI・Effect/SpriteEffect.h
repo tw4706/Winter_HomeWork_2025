@@ -20,6 +20,11 @@ public:
     void Update() override;
     void Draw() override;
 
+    Vector2 GetPos() const { return pos_; }
+    int GetFrameWidth() const { return frameW_; }
+    int GetFrameHeight() const { return frameH_; }
+    float GetScale() const { return scale_; }
+
 private:
 	//アニメーションに必要な変数
     int graphH_;
