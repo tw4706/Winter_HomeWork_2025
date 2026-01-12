@@ -43,28 +43,24 @@ void CollisionManager::PlayerBulletsVsEnemies(
 
             if (bullet->GetColRect().IsCollision(enemy->GetColRect()))
             {
-				//すでにこの敵に当たっているならスルー
-                if (bullet->HasHitEnemy(enemy.get()))
+                if (!bullet->HasHitEnemy(enemy.get()))
                 {
-                    continue;
-                }
+                    // 敵にダメージを与える
+                    enemy->OnHit(bullet->GetDamage());
 
-                //敵が死んでいても hitCount は増やす
-                if (bullet->GetType() == BulletType::Lance)
-                {
-                    bullet->ResetHitEnemies(enemy.get());
-                }
-                else
-                {
-                    //ナイフ・松明は当たったら消すs
-                    bullet->OnHit();
-                }
+                    if (bullet->GetType() == BulletType::Lance)
+                    {
+                        bullet->ResetHitEnemies(enemy.get());
+                    }
+                    else
+                    {
+                        // ナイフや松明は弾を消す
+                        bullet->OnHit();
+                    }
 
-                //ランスは最大ヒット数に達していなければ次の敵に当たれる
-                if (bullet->GetType() != BulletType::Lance)
-                {
-                    // ナイフ・松明は1回でループを抜ける
-                    break;
+                    // ナイフ・松明は1回でループ抜け
+                    if (bullet->GetType() != BulletType::Lance)
+                        break;
                 }
             }
         }

@@ -3,15 +3,13 @@
 
 class Player;
 class Input;
-class EnemyFactory;
-class GameProgress;
 class TutorialManager
 {
 public:
 	//使わないのでデフォルトコンストラクタのみ
 	TutorialManager() = default;
 
-	void Init(GameProgress* progress);
+	void Init();
 	void Update(Player&player,Input&input);
 	void Draw() const;
 
@@ -19,31 +17,9 @@ public:
 	bool IsTutorialFinished() const;
 
 private:
-	enum class TutorialStep
-	{
-		Move,
-		Jump,
-		DoubleJump,
-		Attack,
-		WeaponChange,
-		Finish
-	};
-
-	//各チュートリアルステップの進捗具合
-	void CheckTutorialStep(Player&player);
-
-private:
-	//ゲーム進行状況のポインタ
-	GameProgress* gameProgress_;
-
-	//チュートリアルが終了したかどうか
-	bool isTutorialFinished_=false;
-
-	//テキスト確認待ちのフラグ
-	bool isWaitingConfirm_ = false;
 
 	//現在のチュートリアルステップ
-	TutorialStep currentStep_=TutorialStep::Move;
+	int currentStep_ = 0;
 
 	//チュートリアルの内容で止める地点関連
 	bool isWaitingAction_ = false;

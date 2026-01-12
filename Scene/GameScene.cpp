@@ -331,7 +331,10 @@ void GameScene::Init()
 	if (stageType_ == StageType::Tutorial)
 	{
 		tutorialManager_ = std::make_unique<TutorialManager>();
-		tutorialManager_->Init(gameProgress_);
+		tutorialManager_->Init();
+
+		enemyFactory_.LoadFromCSV(StageType::Tutorial, &bulletManager_);
+		enemyFactory_.Init(pPlayer_, bg_);
 	}
 	else
 	{

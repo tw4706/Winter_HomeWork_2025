@@ -404,12 +404,8 @@ void Bullet::SetDirection(bool isRight)
 
 bool Bullet::IsOutOfScreen() const
 {
-	if (pos_.x + cameraOffset_.x < -kScreenOutOffset || pos_.x + cameraOffset_.x > Game::kScreenWidth + kScreenOutOffset ||
-		pos_.y + cameraOffset_.y < -kScreenOutOffset || pos_.y + cameraOffset_.y > Game::kScreenHeight + kScreenOutOffset)
-	{
-		return true;
-	}
-	return false;
+	return pos_.x < -kScreenOutOffset || pos_.x > Game::kScreenWidth + kScreenOutOffset ||
+		pos_.y < -kScreenOutOffset || pos_.y > Game::kScreenHeight + kScreenOutOffset;
 }
 
 int Bullet::GetDamage() const

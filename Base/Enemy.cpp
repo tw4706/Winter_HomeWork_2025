@@ -3,6 +3,7 @@
 #include"Animation.h"
 #include"SpriteEffect.h"
 #include"EffectManager.h"
+#include"GlobalConstants.h"
 #include<Dxlib.h>
 
 namespace
