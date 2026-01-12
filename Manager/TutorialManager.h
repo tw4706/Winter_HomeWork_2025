@@ -2,10 +2,12 @@
 #include "Rect.h"
 #include "Geometry.h"
 #include "SpriteEffect.h"
+#include "GoalAnimation.h"
 #include <memory>
 
 class Player;
 class Input;
+class SpriteEffect;
 class TutorialManager
 {
 public:
@@ -34,5 +36,5 @@ private:
 
 	Rect goalRect_;
 	bool goalReached_ = false;
+	std::unique_ptr<GoalAnimation> goalAnim_;
 };
-

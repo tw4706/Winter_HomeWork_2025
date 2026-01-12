@@ -22,6 +22,7 @@ void EffectManager::Draw()
 	//エフェクトの描画
 	for (auto& effect : effects_)
 	{
+		effect->SetCameraOffset(cameraOffset_);
 		effect->Draw();
 	}
 }

@@ -38,11 +38,28 @@ void TutorialManager::Init()
 
 	textFrameHandle_ = LoadGraph("data/UI/TutorialFrame.png");
 
-	goalRect_.SetLT(4700.0f, 1734.0f, 64.0f, 64.0f);
+	goalRect_.SetLT(4900.0f, 1724.0f, 64.0f, 64.0f);
+
+	int goalHandle = LoadGraph("data/Effect/bullet_effect.png");
+
+	goalAnim_ = std::make_unique<GoalAnimation>(
+		goalHandle,
+		16, 16,     // フレームサイズ
+		6,          // 使用フレーム数
+		6,
+		5.0f,
+		496,
+		0,
+		true);
 }
 
 void TutorialManager::Update(Player& player, Input& input)
 {
+	if (goalAnim_)
+	{
+		goalAnim_->Update();
+	}
+
 	if (currentStep_ >= kTutorialCount) return;
 
 	//到達地点でテキスト表示
@@ -64,14 +81,12 @@ void TutorialManager::Update(Player& player, Input& input)
 
 void TutorialManager::Draw(const Camera& camera)
 {
-
-	if (!IsTutorialFinished())
+	if (goalAnim_)
 	{
-		goalRect_.DrawAndCamera(
-			camera.GetOffset(),
-			GetColor(255, 255, 0),
-			false
-		);
+		float drawX = goalRect_.GetLeft() + camera.GetOffset().x;
+		float drawY = goalRect_.GetTop()+ camera.GetOffset().y;
+
+		goalAnim_->Draw(drawX, drawY);
 	}
 
 	if (!waitingMessage_) return;
