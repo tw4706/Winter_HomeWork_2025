@@ -1,4 +1,5 @@
 #include "Enemy.h"
+#include"Bullet.h"
 #include"Animation.h"
 #include"SpriteEffect.h"
 #include"EffectManager.h"
@@ -78,6 +79,11 @@ void Enemy::OnHit(int damage)
 void Enemy::Dead()
 {
 	isDead_ = true;
+}
+
+void Enemy::OnHitByBoss2(Bullet& bullet)
+{
+	OnHit(bullet.GetDamage());
 }
 
 void Enemy::SetEffectManager(EffectManager* effect)

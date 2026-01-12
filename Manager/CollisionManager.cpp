@@ -2,6 +2,7 @@
 #include "Enemy.h"
 #include "Player.h"
 #include "Bullet.h"
+#include "Boss2.h"
 #include "BulletManager.h"
 
 //プレイヤーと敵の当たり判定
@@ -26,7 +27,7 @@ bool CollisionManager::PlayerVsKey(const Rect& playerRect,const Rect& keyRect)
     return playerRect.IsCollision(keyRect);
 }
 
-// プレイヤー弾と敵
+//プレイヤー弾と敵
 void CollisionManager::PlayerBulletsVsEnemies(
     std::vector<std::shared_ptr<Bullet>>& bullets,
     std::vector<std::shared_ptr<Enemy>>& enemies)
@@ -42,27 +43,23 @@ void CollisionManager::PlayerBulletsVsEnemies(
 
             if (bullet->GetColRect().IsCollision(enemy->GetColRect()))
             {
-                // 敵が死んでいても hitCount は増やす
+                //敵が死んでいても hitCount は増やす
                 if (bullet->GetType() == BulletType::Lance)
                 {
                     bullet->RegisterHit();
                 }
                 else
                 {
-                    // ナイフ・松明は当たったら消す
+                    //ナイフ・松明は当たったら消すs
                     bullet->OnHit();
                 }
 
-                // 敵が生きていればダメージ
-                if (!enemy->IsDead())
-                {
-                    enemy->OnHit(bullet->GetDamage());
-                }
+				enemy->OnHitByBoss2(*bullet);
 
-                // ランスは最大ヒット数に達していなければ次の敵に当たれる
+                //ランスは最大ヒット数に達していなければ次の敵に当たれる
                 if (bullet->GetType() != BulletType::Lance)
                 {
-                    // ナイフ・松明は1回でループ抜け
+                    // ナイフ・松明は1回でループを抜ける
                     break;
                 }
             }

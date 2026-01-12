@@ -46,8 +46,11 @@ void Boss2::Init()
 	Boss::Init();
 
 	barrierHP_ = 30;
-	currentWeakPoint_ = WeakPointType::Barrier;
-	weakDamageRate_ = 1.0f;
+	currentWeakPoint_ = WeakPointType::BarrierCore;
+	weakDamageRate_ = 0.0f;
+
+	//弱点をランダム選択
+	SelectWeakPoint();
 
 	int graph = LoadGraph("data/Enemy/Boss2.png");
 
@@ -81,6 +84,9 @@ void Boss2::Update()
 	Boss::Update();
 
 	colRect_.SetCenter(pos_.x, pos_.y-100, kColSizeX, kColSizeY);
+	barrierRect_.SetCenter(pos_.x, pos_.y - 200, 80, 80);
+	centerRect_.SetCenter(pos_.x, pos_.y - 120, 60, 60);
+	groundRect_.SetCenter(pos_.x, pos_.y - 40, 100, 40);
 }
 
 void Boss2::Draw()
@@ -166,11 +172,13 @@ void Boss2::UpdateHurt()
 {
 	stateTimer_++;
 
-	//ノックバック
 	pos_.x += isTurn_ ? 2.0f : -2.0f;
 	pos_.y += sinf(stateTimer_ * 0.3f) * 0.3f;
 
-	if (stateTimer_ > 30){}
+	if (stateTimer_ > 30)
+	{
+		ChangeState(BossState::Idle);
+	}
 }
 
 void Boss2::OnHit(int damage)
@@ -181,7 +189,7 @@ void Boss2::OnHit(int damage)
 	//Hurt中・死亡中は無視する
 	if (currentState_ == BossState::Hurt ||currentState_ == BossState::Dead)return;
 
-	Boss::OnHit(damage);
+	//Boss::OnHit(damage);
 
 	if (currentState_ != BossState::Dead)
 	{
@@ -189,9 +197,66 @@ void Boss2::OnHit(int damage)
 	}
 }
 
+void Boss2::OnHitByBoss2(Bullet& bullet)
+{
+	if (isHitInvincible_ || currentState_ == BossState::Dead) return;
+
+	const Rect& b = bullet.GetColRect();
+
+	if (b.IsCollision(barrierRect_))
+	{
+		OnHitWeakPoint(WeakPointType::BarrierCore, bullet.GetDamage());
+		ChangeState(BossState::Hurt);
+		return;
+	}
+
+	if (b.IsCollision(centerRect_))
+	{
+		OnHitWeakPoint(WeakPointType::CenterCore, bullet.GetDamage());
+		ChangeState(BossState::Hurt);
+		return;
+	}
+
+	if (b.IsCollision(groundRect_))
+	{
+		OnHitWeakPoint(WeakPointType::GroundCore, bullet.GetDamage());
+		ChangeState(BossState::Hurt);
+		return;
+	}
+
+	// それ以外
+	Boss::OnHit(1);
+}
+
+void Boss2::OnHitWeakPoint(WeakPointType weakType, int damage)
+{
+	if (weakType != currentWeakPoint_) return;
+
+	// バリア
+	if (currentWeakPoint_ == WeakPointType::BarrierCore)
+	{
+		barrierHP_--;
+		if (barrierHP_ <= 0)
+		{
+			SelectWeakPoint();
+		}
+		return;
+	}
+
+	//槍や松明で攻撃された場合の倍率ダメージ
+	int finalDamage = static_cast<int>(damage * weakDamageRate_);
+	Boss::OnHit(finalDamage);
+
+	if (currentState_ != BossState::Dead)
+	{
+		ChangeState(BossState::Hurt);
+		SelectWeakPoint();
+	}
+}
+
 void Boss2::SelectWeakPoint()
 {
-	int r = GetRand(2); // 0～2
+	int r = GetRand(2);
 
 	currentWeakPoint_ = static_cast<WeakPointType>(r);
 
@@ -199,7 +264,7 @@ void Boss2::SelectWeakPoint()
 	{
 	case WeakPointType::BarrierCore:
 		barrierHP_ = 30;
-		weakDamageRate_ = 2.0f;
+		weakDamageRate_ = 0.0f;
 		break;
 
 	case WeakPointType::CenterCore:

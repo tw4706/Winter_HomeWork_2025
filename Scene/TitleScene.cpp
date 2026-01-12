@@ -104,8 +104,9 @@ void TitleScene::FadeOutUpdate(Input&input)
 	{
 #ifdef _DEBUG
 		controller_.ChangeScene(std::make_shared<SelectScene>(controller_));
-#endif
+#else
 		controller_.ChangeScene(std::make_shared<GameScene>(controller_,nextStage_));
+#endif
 		return;
 	}
 }

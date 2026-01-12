@@ -18,6 +18,9 @@ public:
 	void Update() override;
     void Draw()override;
     void OnHit(int damage) override;
+    void OnHitByBoss2(Bullet& bullet) override;
+
+	void OnHitWeakPoint(WeakPointType weakType,int damage);
 
     void SelectWeakPoint();
 
@@ -33,6 +36,11 @@ protected:
   
 private:
     WeakPointType currentWeakPoint_;
+
+	//各弱点の当たり判定
+    Rect barrierRect_;
+    Rect centerRect_;
+    Rect groundRect_;
 
 	//各弱点の体力
     int barrierHP_;
