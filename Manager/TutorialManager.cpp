@@ -13,7 +13,7 @@ namespace
 		300.0f,   //Move
 		1900.0f,   //Jump
 		2300.0f,  //DoubleJump
-		1200.0f,  //Attack
+		3200.0f,  //Attack
 		4000.0f   //WeaponChange
 	};
 
@@ -21,9 +21,9 @@ namespace
 	{
 		"←→で移動",
 		"Bボタンでジャンプ",
-		"さらにBボタンでダブルジャンプが可能!",
-		"Aボタンで攻撃だ！",
-		""
+		"さらにBボタンでダブルジャンプが可能",
+		"Aボタンで攻撃だ"
+		"Xボタンで武器変更ができる"
 	};
 
 	//チュートリアル内容の総数
@@ -35,13 +35,15 @@ void TutorialManager::Init()
 	currentStep_ = 0;
 	isWaitingAction_ = false;
 	waitingMessage_ = nullptr;
+
+	textFrameHandle_ = LoadGraph("data/UI/TutorialFrame.png");
 }
 
 void TutorialManager::Update(Player& player, Input& input)
 {
 	if (currentStep_ >= kTutorialCount) return;
 
-	// 到達地点でテキスト表示
+	//到達地点でテキスト表示
 	if (!isWaitingAction_ && player.GetPos().x >= kTutorialX[currentStep_])
 	{
 		isWaitingAction_ = true;
@@ -62,11 +64,28 @@ void TutorialManager::Draw() const
 {
 	if (!waitingMessage_) return;
 
-	//背景
-	DrawBox(300, 200, 980, 320, GetColor(0, 0, 0), TRUE);
+	// フレーム表示座標とサイズ
+	const int frameX = 300;
+	const int frameY = 200;
+	const int frameWidth = 680;  // 好きな横幅に変更
+	const int frameHeight = 120; // 好きな縦幅に変更
 
-	//テキスト
-	DrawString(340, 240, waitingMessage_, GetColor(255, 255, 255));
+	if (textFrameHandle_ != -1) {
+		// 画像を指定サイズに拡大/縮小して描画
+		DrawExtendGraph(frameX, frameY, frameX + frameWidth, frameY + frameHeight, textFrameHandle_, TRUE);
+	}
+	else {
+		// フレーム画像がない場合はボックスで代用
+		DrawBox(frameX, frameY, frameX + frameWidth, frameY + frameHeight, GetColor(0, 0, 0), TRUE);
+	}
+
+	// テキストをフレーム中央に配置
+	int textWidth = GetDrawStringWidth(waitingMessage_, strlen(waitingMessage_));
+	int textHeight = 16; // 文字の高さの目安
+	int textX = frameX + (frameWidth - textWidth) / 2;
+	int textY = frameY + (frameHeight - textHeight) / 2;
+
+	DrawString(textX, textY, waitingMessage_, GetColor(255, 255, 255));
 }
 
 bool TutorialManager::IsTutorialFinished() const

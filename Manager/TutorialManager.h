@@ -17,9 +17,9 @@ public:
 	bool IsTutorialFinished() const;
 
 private:
-
 	//現在のチュートリアルステップ
 	int currentStep_ = 0;
+	int textFrameHandle_ = -1;
 
 	//チュートリアルの内容で止める地点関連
 	bool isWaitingAction_ = false;
