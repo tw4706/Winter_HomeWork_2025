@@ -1,4 +1,5 @@
 #include "Boss2.h"
+#include"Camera.h"
 #include"BulletManager.h"
 #include<Dxlib.h>
 
@@ -10,7 +11,9 @@ namespace
 	constexpr float kColSizeX = 128.0f;
 	constexpr float kColSizeY = 256.0f;
 
-	constexpr int kBarrierHP = 20;
+	constexpr int kMaxHP = 50;
+
+	constexpr int kGuardTime = 120;
 	constexpr int kBarrierBreakDamage = 10;
 
 	constexpr int kShieldSrcX = 312;
@@ -79,6 +82,7 @@ void Boss2::Init()
 
 	currentState_ = BossState::Idle;
 	stateTimer_ = 0;
+	hp_ = kMaxHP;
 }
 
 void Boss2::Update()
@@ -115,7 +119,23 @@ void Boss2::Draw()
 #ifdef _DEBUG
 	//当たり判定表示
 	colRect_.DrawAndCamera(cameraOffset_, GetColor(255, 0, 0), false);
+
+	// デバッグ用HP表示（右上）
+	char buf[64];
+	sprintf_s(buf, "Boss2 HP: %d / %d", hp_, kMaxHP);
+
+	// 右上表示（画面右端から文字幅分だけ左に寄せる）
+	int textWidth = GetDrawStringWidth(buf, strlen(buf));
+	int posX = 1280 - textWidth - 10; // 右端から10px内側
+	int posY = 10; // 上から10px下
+
+	DrawString(posX, posY, buf, GetColor(255, 255, 255));
 #endif
+}
+
+void Boss2::OnHit(int damage)
+{
+	OnHit(damage, BulletType::Knife);
 }
 
 int Boss2::GetGraphIndex(BossState state) const
@@ -126,6 +146,10 @@ int Boss2::GetGraphIndex(BossState state) const
 		return Anim::Idle;
 	case BossState::Move:
 		return Anim::Move;
+	case BossState::Guard:
+		return Anim::Idle;
+	case BossState::JumpAttack:
+		return Anim::Attack;
 	case BossState::Hurt:
 		return Anim::Hurt;
 	case BossState::Dead:
@@ -187,25 +211,27 @@ void Boss2::UpdateGuard()
 	if (stateTimer_ == 0)
 	{
 		isBarrierActive_ = true;
-		barrierHp_ = kBarrierHP;
 	}
 
 	stateTimer_++;
-	vel_.x = 0.0f;
+
+	if (stateTimer_ > kGuardTime)
+	{
+		isBarrierActive_ = false;
+		ChangeState(BossState::Idle);
+	}
 }
 
 void Boss2::UpdateJumpAttack()
 {
 	stateTimer_++;
 
-	// 溜め
 	if (stateTimer_ < 30)
 	{
-		vel_.x = 0.0f;
+		vel_.x = 0.0f; // 溜め
 		return;
 	}
 
-	// ジャンプ開始
 	if (stateTimer_ == 30)
 	{
 		vel_.y = -8.0f;
@@ -213,10 +239,14 @@ void Boss2::UpdateJumpAttack()
 		isJumping_ = true;
 	}
 
-	// 着地
+	// 着地したら Idle に戻す
 	if (isJumping_ && isGround_)
 	{
 		isJumping_ = false;
+		if(pCamera_)
+		{
+			pCamera_->Shake(10, 8.0f); // 着地演出
+		}
 		ChangeState(BossState::Idle);
 	}
 }
@@ -239,26 +269,49 @@ void Boss2::DecideAttack()
 	}
 }
 
-void Boss2::OnHit(int damage)
+void Boss2::OnHit(int damage, const BulletType& type)
 {
-	if (currentState_ == BossState::Guard &&
-		attackType_ == Boss2AttackType::Barrier &&
-		isBarrierActive_)
+	if (isHitInvincible_) return; // 無敵中は無視
+	if (currentState_ == BossState::Dead) return;
+
+	// バリア処理
+	if (currentState_ == BossState::Guard && isBarrierActive_)
 	{
-		barrierHp_ -= damage;
-		if (barrierHp_ <= 0)
+		if (type == BulletType::Torch)
+		{
+			damage /= 2; // Torchだけ半減
+		}
+
+		// バリア破壊判定
+		if (damage >= kBarrierBreakDamage)
 		{
 			isBarrierActive_ = false;
-
-			Boss::OnHit(kBarrierBreakDamage);
-			ChangeState(BossState::Hurt);
+			ChangeState(BossState::Idle);
 		}
+		else
+		{
+			// バリア中はそれ以下のダメージは無効
+			damage = 0;
+		}
+	}
+
+	// HP減少
+	hp_ -= damage;
+	if (hp_ < 0) hp_ = 0;
+
+	// 無敵時間開始
+	isHitInvincible_ = true;
+	hitInvincibleTimer_ = 20; // 適当なフレーム数
+
+	// HP 0 で死亡
+	if (hp_ <= 0)
+	{
+		if (pCamera_) pCamera_->Shake(60, 15.0f);
+		ChangeState(BossState::Dead);
 		return;
 	}
-	Boss::OnHit(damage);
 
-	if (currentState_ != BossState::Dead)
-	{
-		ChangeState(BossState::Hurt);
-	}
+	// 被弾演出
+	if (damage > 0 && pCamera_) pCamera_->Shake(10, 8.0f);
+	if (damage > 0) ChangeState(BossState::Hurt);
 }

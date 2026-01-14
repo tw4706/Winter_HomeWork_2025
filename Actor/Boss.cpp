@@ -168,7 +168,8 @@ void Boss::ChangeState(BossState nextState)
 
 	//状態変更時に速度0にする
 	vel_.x = 0.0f;
-	if (nextState != BossState::Attack)
+	if (nextState != BossState::Attack &&
+		nextState != BossState::JumpAttack)
 	{
 		vel_.y = 0.0f;
 	}
@@ -218,6 +219,7 @@ void Boss::OnHit(int damage)
 	if (currentState_ == BossState::Dead) return;
 
 	hp_ -= damage;
+	StartHitInvincible();
 
 	//体力が0以下ならカメラを大きく揺らして死亡状態へ
 	if (hp_ <= 0)

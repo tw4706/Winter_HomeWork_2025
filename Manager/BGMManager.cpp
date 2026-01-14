@@ -9,7 +9,7 @@ void BGMManager::Init()
 	bgmHandles_[BGM::GameOver] = LoadSoundMem("data/BGMÅESE/GameOverBGM.mp3");
 	bgmHandles_[BGM::GameClear] = LoadSoundMem("data/BGMÅESE/GameClearBGM.mp3");
 
-	bgmBaseVolume_[BGM::Title] = 100;
+	bgmBaseVolume_[BGM::Title] = 80;
 	bgmBaseVolume_[BGM::Game] = 60;
 	bgmBaseVolume_[BGM::GameOver] = 100;
 	bgmBaseVolume_[BGM::GameClear] = 100;

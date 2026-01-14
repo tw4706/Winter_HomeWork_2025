@@ -18,6 +18,7 @@ public:
 	void Update() override;
     void Draw()override;
     void OnHit(int damage) override;
+    void OnHit(int damage, const BulletType& type);
 
     void UpdateGuard() override;
     void UpdateJumpAttack() override;
@@ -38,7 +39,6 @@ private:
     int guardTimer_=0;//ÉKÅ[Éhéûä‘
     int jumpCoolTimer_ = 0;
     bool isJumping_=false;
-    int barrierHp_ = 0;
     bool isBarrierActive_=false;
     int barrierGraphHandle_ = -1;
 

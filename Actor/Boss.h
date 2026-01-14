@@ -33,6 +33,8 @@ public:
 	//”í’eó‘ÔŠJn
 	void StartHitInvincible();
 
+	void SetCamera(std::shared_ptr<Camera> camera) { pCamera_ = camera; }
+
 protected:
 	//‰æ‘œ‚Ì“Ç‚İ‚İ
 	virtual void LoadResources() = 0;
