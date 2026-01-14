@@ -8,10 +8,10 @@ public:
 	enum class BossState
 	{
 		Idle,
+		Move,
 		Attack,
 		Guard,
 		JumpAttack,
-		Move,
 		Hurt,
 		Dead
 	};
@@ -38,8 +38,8 @@ protected:
 	virtual void LoadResources() = 0;
 	virtual int GetGraphIndex(BossState state) const = 0;
 	virtual void UpdateIdle() = 0;
-	virtual void UpdateAttack() = 0;
 	virtual void UpdateMove() = 0;
+	virtual void UpdateAttack() = 0;
 	virtual void UpdateGuard() {}
 	virtual void UpdateJumpAttack() {}
 	virtual void UpdateHurt();

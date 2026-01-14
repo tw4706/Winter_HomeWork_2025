@@ -13,6 +13,11 @@ namespace
 	constexpr int kBarrierHP = 20;
 	constexpr int kBarrierBreakDamage = 10;
 
+	constexpr int kShieldSrcX = 312;
+	constexpr int kShieldSrcY = 216;
+	constexpr int kShieldSize = 24;
+	constexpr float kShieldScale = 10.0f;
+
 	constexpr int kFrameInterval = 6;
 
 	enum Anim
@@ -97,14 +102,14 @@ void Boss2::Draw()
 		// 少し前に出す（向き対応）
 		float offsetX = isTurn_ ? -40.0f : 40.0f;
 
-		DrawRotaGraph(
-			static_cast<int>(drawX + offsetX),
-			static_cast<int>(drawY),
-			1.0,
-			0.0,
-			barrierGraphHandle_,
-			TRUE
-		);
+		DrawRectRotaGraph3(
+			drawX, drawY+50,
+			kShieldSrcX, kShieldSrcY,
+			kShieldSize, kShieldSize,
+			kShieldSize / 2, kShieldSize / 2,
+			kShieldScale, kShieldScale,
+			0.0f,
+			barrierGraphHandle_, true);
 	}
 
 #ifdef _DEBUG
@@ -205,11 +210,13 @@ void Boss2::UpdateJumpAttack()
 	{
 		vel_.y = -8.0f;
 		vel_.x = isTurn_ ? -3.0f : 3.0f;
+		isJumping_ = true;
 	}
 
 	// 着地
-	if (isGround_)
+	if (isJumping_ && isGround_)
 	{
+		isJumping_ = false;
 		ChangeState(BossState::Idle);
 	}
 }

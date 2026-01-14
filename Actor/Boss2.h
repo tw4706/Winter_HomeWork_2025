@@ -19,8 +19,8 @@ public:
     void Draw()override;
     void OnHit(int damage) override;
 
-    void UpdateGuard();
-    void UpdateJumpAttack();
+    void UpdateGuard() override;
+    void UpdateJumpAttack() override;
     //攻撃パターンをランダムで決める関数
     void DecideAttack();
 

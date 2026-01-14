@@ -98,11 +98,17 @@ void Boss::Update()
 	case BossState::Idle:
 		UpdateIdle();
 		break;
+	case BossState::Move:
+		UpdateMove();
+		break;
 	case BossState::Attack:
 		UpdateAttack();
 		break;
-	case BossState::Move:
-		UpdateMove();
+	case BossState::Guard:
+		UpdateGuard();
+		break;
+	case BossState::JumpAttack:
+		UpdateJumpAttack();
 		break;
 	case BossState::Hurt:
 		UpdateHurt();
