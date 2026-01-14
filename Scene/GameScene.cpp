@@ -66,6 +66,8 @@ GameScene::GameScene(SceneController& controller, StageType stage) :
 
 void GameScene::FadeInUpdate(Input&)
 {
+	pCamera_->Update(pPlayer_);
+
 	if (frame_-- <= 0) 
 	{
 		update_ = &GameScene::NormalUpdate;
@@ -92,26 +94,27 @@ void GameScene::NormalUpdate(Input&input)
 		return;
 	}
 
-	//各クラスの更新処理
+	//各クラスの更新
 	pCamera_->Update(pPlayer_);
 
 	pPlayer_->Update(input, bulletManager_,stageType_);
 
-	if (tutorialManager_ && !tutorialManager_->IsTutorialFinished())
+	if (tutorialManager_)
 	{
-		tutorialManager_->Update(*pPlayer_,input);
+		tutorialManager_->Update(*pPlayer_, input);
 	}
 
 	//UIの更新
 	weaponUI_.Update(*pPlayer_);
 
-	//敵の更新処理
+	//敵の更新
 	enemyFactory_.Update();
 
-	//弾の更新処理
+	//弾の更新
 	bulletManager_.SetEffectManager(&effectManager_);
 	bulletManager_.Update(input, enemyFactory_.GetEnemies(), *pPlayer_);
 
+	//エフェクトの更新
 	effectManager_.SetCameraOffset(pCamera_->GetOffset());
 	effectManager_.Update();
 
@@ -239,6 +242,8 @@ void GameScene::GoalFadeOutUpdate(Input&)
 
 void GameScene::FadeDraw() 
 {
+	NormalDraw();
+
 	//フェードの描画
 	auto rate = static_cast<float>(frame_) / static_cast<float>(fade_interval);
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, static_cast <int>(255 * rate));
@@ -272,7 +277,7 @@ void GameScene::NormalDraw()
 	weaponUI_.Draw();
 
 	//チュートリアルステージの描画
-	if (tutorialManager_ && !tutorialManager_->IsTutorialFinished())
+	if (tutorialManager_)
 	{
 		tutorialManager_->Draw(*pCamera_);
 	}

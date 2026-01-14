@@ -9,6 +9,8 @@ public:
 	{
 		Idle,
 		Attack,
+		Guard,
+		JumpAttack,
 		Move,
 		Hurt,
 		Dead
@@ -42,18 +44,18 @@ protected:
 	virtual void UpdateDead();
 
 protected:
-	int hp_;//体力
-	BossState currentState_;//現在の状態
-	int stateTimer_;//状態遷移用タイマー
-	float shotTimer_;//弾を撃つまでの時間
-	float shotInterval_;//弾を撃つ間隔
-	bool hasShot_;//弾を撃ったかどうかのフラグ
+	int hp_;					//体力
+	BossState currentState_;	//現在の状態
+	int stateTimer_;			//状態遷移用タイマー
+	float shotTimer_;			//弾を撃つまでの時間
+	float shotInterval_;		//弾を撃つ間隔
+	bool hasShot_;				//弾を撃ったかどうかのフラグ
 	bool isActive_;
-	bool isCharging_;     //突進中か
-	bool isInvincible_;//無敵状態かどうか
-	Vector2 backPos_;//戻る位置を保存する変数
-	int hitInvincibleTimer_;//被弾無敵時間用タイマー
-	bool isHitInvincible_;//被弾無敵状態かどうか
+	bool isCharging_;			//突進中か
+	bool isInvincible_;			//無敵状態かどうか
+	Vector2 backPos_;			//戻る位置を保存する変数
+	int hitInvincibleTimer_;	//被弾無敵時間用タイマー
+	bool isHitInvincible_;		//被弾無敵状態かどうか
 
 	//グラフィックハンドルの配列
 	std::vector<int>graphHandles_;

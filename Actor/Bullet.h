@@ -72,10 +72,10 @@ public:
 	void OnHit();
 
 	//”g“®‚Ì¶¬
-	void SpawnHadou();
+	void SpawnWave();
 
 	//”g“®‚ÌXVˆ—
-	void UpdateHadou(std::vector<std::shared_ptr<Enemy>>& enemies);
+	void UpdateWave(std::vector<std::shared_ptr<Enemy>>& enemies);
 
 	// ’e‚ªÁ‚¦‚½‚©‚Ç‚¤‚©‚ğ•Ô‚·
 	bool IsAlive() const { return isAlive_; }
@@ -123,9 +123,9 @@ private:
 	
 	//”g“®ŠÖ˜A
 	int hadouH_;
-	float hadouDir_;
-	float prevHadouDir_;			//”g“®‚ÌŒü‚«‚Ì•Û‘¶—p
-	bool isHadouSpawned_;			//”g“®‚ğ¶¬‚µ‚½‚©‚Ç‚¤‚©
-	std::vector<Hadou> hadouRects_;	//”g“®‚Ì“–‚½‚è”»’è—p‚Ì‹éŒ`
+	float waveDir_;
+	float prevWaveDir_;			//”g“®‚ÌŒü‚«‚Ì•Û‘¶—p
+	bool isWaveSpawned_;			//”g“®‚ğ¶¬‚µ‚½‚©‚Ç‚¤‚©
+	std::vector<Hadou> waveRects_;	//”g“®‚Ì“–‚½‚è”»’è—p‚Ì‹éŒ`
 };
 

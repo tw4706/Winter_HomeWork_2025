@@ -26,12 +26,12 @@ namespace
 	//波動関連の定数
 	constexpr int kHadouSrcX = 192;
 	constexpr int kHadouSrcY = 192;
-	constexpr int kHadouNum = 3;
-	constexpr float kHadouSpacing = 40.0f;
-	constexpr float kHadouW = 32.0f;
-	constexpr float kHadouH = 32.0f;
-	constexpr float kHadouSpawnInterval = 10;
-	constexpr int kHadouLifetime = 30;
+	constexpr int kWaveNum = 3;
+	constexpr float kWaveSpacing = 40.0f;
+	constexpr float kWaveW = 32.0f;
+	constexpr float kWaveH = 32.0f;
+	constexpr float kWaveSpawnInterval = 10;
+	constexpr int kWaveLifetime = 30;
 
 	constexpr int kColOffsetX = 20;
 	constexpr int kColOffsetY = 20;
@@ -47,9 +47,9 @@ Bullet::Bullet(Vector2 pos, Vector2 vel, BulletType bulletType, std::shared_ptr<
 	damage_(1),
 	hitCount_(0),
 	hadouH_(-1),
-	hadouDir_(1.0f),
-	prevHadouDir_(1.0f),
-	isHadouSpawned_(false),
+	waveDir_(1.0f),
+	prevWaveDir_(1.0f),
+	isWaveSpawned_(false),
 	bulletType_(bulletType),
 	pBg_(bg),
 	pEffectManager_(nullptr)
@@ -117,9 +117,9 @@ void Bullet::UpdateShot()
 		vel_.y += kGravity;
 
 		//松明の下端がマップチップの上面に触れたら波動発生
-		if (isGround_ && !isHadouSpawned_)
+		if (isGround_ && !isWaveSpawned_)
 		{
-			SpawnHadou();
+			SpawnWave();
 			vel_ = Vector2(0.0f, 0.0f);
 		}
 		break;
@@ -132,7 +132,7 @@ void Bullet::UpdateShot()
 
 void Bullet::Update(Input& input, std::vector<std::shared_ptr<Enemy>>& enemies)
 {
-	if (!isAlive_) return;
+	if (!isAlive_ && !isWaveSpawned_) return;
 
 	//衝突判定
 	CheckBulletAndMapCollision();
@@ -148,18 +148,18 @@ void Bullet::Update(Input& input, std::vector<std::shared_ptr<Enemy>>& enemies)
 
 	UpdateShot();
 
-	if (isHadouSpawned_)
+	if (isWaveSpawned_)
 	{
-		UpdateHadou(enemies);
+		UpdateWave(enemies);
 	}
 }
 
 void Bullet::Draw()
 {
 	//弾の種類が松明で波動が発生している場合の波動の描画
-	if (bulletType_ == BulletType::Torch && isHadouSpawned_)
+	if (bulletType_ == BulletType::Torch && isWaveSpawned_)
 	{
-		for (auto& h : hadouRects_)
+		for (auto& h : waveRects_)
 		{
 			if (h.appearTimer_ > 0) continue;
 
@@ -168,16 +168,16 @@ void Bullet::Draw()
 
 			int frame = h.animations_->GetCurrentFrame();
 
-			int srcX = static_cast<int>(kHadouSrcX + frame * kHadouW);
+			int srcX = static_cast<int>(kHadouSrcX + frame * kWaveW);
 			int srcY = kHadouSrcY;
 
-			bool flip = (hadouDir_ < 0);
+			bool flip = (waveDir_ < 0);
 
 			DrawRectRotaGraph3(
 				(int)drawX, (int)drawY,
 				srcX, srcY,
-				static_cast<int>(kHadouW), static_cast<int>(kHadouH),
-				static_cast<int>(kHadouW / 2), static_cast<int>(kHadouH / 2),
+				static_cast<int>(kWaveW), static_cast<int>(kWaveH),
+				static_cast<int>(kWaveW / 2), static_cast<int>(kWaveH / 2),
 				kScale, kScale,
 				0.0f,
 				hadouH_,
@@ -238,45 +238,43 @@ void Bullet::OnHit()
 	isAlive_ = false;//弾を消す
 }
 
-void Bullet::SpawnHadou()
+void Bullet::SpawnWave()
 {
-	if (isHadouSpawned_) return;
+	if (isWaveSpawned_) return;
 
-	isHadouSpawned_ = true;
-	hadouRects_.clear();
+	isWaveSpawned_ = true;
+	waveRects_.clear();
 
-	hadouDir_ = prevHadouDir_;
+	waveDir_ = prevWaveDir_;
 
-	for (int i = 0; i < kHadouNum; ++i)
+	for (int i = 0; i < kWaveNum; ++i)
 	{
 		Rect rect;
-		rect.SetLT(pos_.x + hadouDir_ * (i + 1) * kHadouSpacing,
-			pos_.y - kHadouH / 2-20,
-			kHadouW*kScale,
-			kHadouH*kScale);
+		rect.SetLT(pos_.x + waveDir_ * (i + 1) * kWaveSpacing,
+			pos_.y - kWaveH / 2-20,kWaveW*kScale,kWaveH*kScale);
 
 		//コンストラクタを使う
-		Hadou h(rect, static_cast<int>(i * kHadouSpawnInterval), kHadouLifetime);
+		Hadou h(rect, static_cast<int>(i * kWaveSpawnInterval), kWaveLifetime);
 
 		h.animations_ = std::make_unique<Animation>(
 			hadouH_,
-			kHadouW,        //32
-			kHadouH,        //32
+			kWaveW,        //32
+			kWaveH,        //32
 			4,              //アニメーションの総フレーム
 			5,              //フレーム間隔
 			1.0f,
 			true,
 			kHadouSrcY);
 
-		hadouRects_.push_back(std::move(h));
+		waveRects_.push_back(std::move(h));
 	}
 }
 
-void Bullet::UpdateHadou(std::vector<std::shared_ptr<Enemy>>& enemies)
+void Bullet::UpdateWave(std::vector<std::shared_ptr<Enemy>>& enemies)
 {
-	if (!isHadouSpawned_) return;
+	if (!isWaveSpawned_) return;
 
-	for (auto& h : hadouRects_)
+	for (auto& h : waveRects_)
 	{
 		if (h.appearTimer_ > 0)
 		{
@@ -303,18 +301,16 @@ void Bullet::UpdateHadou(std::vector<std::shared_ptr<Enemy>>& enemies)
 		h.lifetime--;
 	}
 
-	hadouRects_.erase(
-		std::remove_if(
-			hadouRects_.begin(),
-			hadouRects_.end(),
+	waveRects_.erase(
+		std::remove_if(waveRects_.begin(),waveRects_.end(),
 			[](const Hadou& h) {return h.appearTimer_ <= 0 && h.lifetime <= 0; }),
-		hadouRects_.end());
+		waveRects_.end());
 
-	if (hadouRects_.empty())
+	if (waveRects_.empty())
 	{
+		isAlive_ = false;
 		return;
 	}
-	isAlive_ = false;
 }
 
 void Bullet::RegisterHit()
@@ -377,6 +373,7 @@ void Bullet::CheckBulletAndMapCollision()
 							4,
 							1.0f));
 				}
+				return;
 			}
 			else
 			{
@@ -413,7 +410,7 @@ bool Bullet::IsPlayerBullet() const
 
 void Bullet::SetDirection(bool isRight)
 {
-	prevHadouDir_ = isRight ? 1.0f : -1.0f;
+	prevWaveDir_ = isRight ? 1.0f : -1.0f;
 }
 
 bool Bullet::IsOutOfScreen() const
@@ -431,7 +428,6 @@ int Bullet::GetDamage() const
 		return kMinDamage;
 	case BulletType::Torch:
 		return kMaxDamage;
-
 	default:
 		return 0;
 	}

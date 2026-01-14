@@ -49,7 +49,7 @@ void GameOverScene::FadeOutUpdate(Input& input)
 
 void GameOverScene::FadeDraw()
 {
-	DrawString(400, 300, "GAME OVER", GetColor(255, 0, 0));
+	NormalDraw();
 
 	//フェード
 	int alpha = (frame_ * 255) / kFadeDuration;
@@ -64,11 +64,6 @@ void GameOverScene::NormalDraw()
 	DrawGraph(300, 560, deadCircleHandle_, true);
 
 	pAnimation_->Draw(360, 500, false);
-	// フレーム表示座標とサイズ
-	const int frameX = 300;
-	const int frameY = 300;
-	const int frameWidth = 680;  // 好きな横幅に変更
-	const int frameHeight = 150; // 好きな縦幅に変更
 
 	if (frameHandle_ != -1)
 	{
@@ -78,7 +73,6 @@ void GameOverScene::NormalDraw()
 
 	DrawString(400, 300, "GAME OVER", GetColor(255, 0, 0));
 	DrawString(360, 360, "Press any key to restart...", GetColor(255, 255, 255));
-	//DrawGraph(360, 500, playerDeadGraphHandle_, true);
 }
 
 GameOverScene::GameOverScene(SceneController& controller, StageType stage) :

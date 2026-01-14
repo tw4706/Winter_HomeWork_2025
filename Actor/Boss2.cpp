@@ -10,6 +10,9 @@ namespace
 	constexpr float kColSizeX = 128.0f;
 	constexpr float kColSizeY = 256.0f;
 
+	constexpr int kBarrierHP = 20;
+	constexpr int kBarrierBreakDamage = 10;
+
 	constexpr int kFrameInterval = 6;
 
 	enum Anim
@@ -100,8 +103,6 @@ int Boss2::GetGraphIndex(BossState state) const
 	{
 	case BossState::Idle:
 		return Anim::Idle;
-	case BossState::Attack:
-		return Anim::Attack;
 	case BossState::Move:
 		return Anim::Move;
 	case BossState::Hurt:
@@ -120,7 +121,7 @@ void Boss2::UpdateIdle()
 	//一定時間で攻撃へ
 	if (stateTimer_ > 60)
 	{
-		ChangeState(BossState::Attack);
+		DecideAttack();
 	}
 }
 
@@ -160,16 +161,82 @@ void Boss2::UpdateHurt()
 	}
 }
 
+void Boss2::UpdateGuard()
+{
+	if (stateTimer_ == 0)
+	{
+		isBarrierActive_ = true;
+		barrierHp_ = kBarrierHP;
+	}
+
+	stateTimer_++;
+	vel_.x = 0.0f;
+}
+
+void Boss2::UpdateJumpAttack()
+{
+	stateTimer_++;
+
+	// 溜め
+	if (stateTimer_ < 30)
+	{
+		vel_.x = 0.0f;
+		return;
+	}
+
+	// ジャンプ開始
+	if (stateTimer_ == 30)
+	{
+		vel_.y = -8.0f;
+		vel_.x = isTurn_ ? -3.0f : 3.0f;
+	}
+
+	// 着地
+	if (isGround_)
+	{
+		ChangeState(BossState::Idle);
+	}
+}
+
+void Boss2::DecideAttack()
+{
+	stateTimer_ = 0;
+
+	int r = GetRand(1);
+
+	if (r == 0)
+	{
+		attackType_ = Boss2AttackType::Barrier;
+		ChangeState(BossState::Guard);
+	}
+	else
+	{
+		attackType_ = Boss2AttackType::JumpAttack;
+		ChangeState(BossState::JumpAttack);
+	}
+
+}
+
 void Boss2::OnHit(int damage)
 {
-	if (currentState_ == BossState::Hurt || currentState_ == BossState::Dead)
-		return;
+	if (currentState_ == BossState::Guard &&
+		attackType_ == Boss2AttackType::Barrier &&
+		isBarrierActive_)
+	{
+		barrierHp_ -= damage;
+		if (barrierHp_ <= 0)
+		{
+			isBarrierActive_ = false;
 
+			Boss::OnHit(kBarrierBreakDamage);
+			ChangeState(BossState::Hurt);
+		}
+		return;
+	}
 	Boss::OnHit(damage);
 
 	if (currentState_ != BossState::Dead)
 	{
 		ChangeState(BossState::Hurt);
-		stateTimer_ = 0;
 	}
 }
