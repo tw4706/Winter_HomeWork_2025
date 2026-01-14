@@ -49,6 +49,7 @@ void Boss2::Init()
 	Boss::Init();
 
 	int graph = LoadGraph("data/Enemy/Boss2.png");
+	barrierGraphHandle_ = LoadGraph("data/UI/Icon.png");
 
 	graphHandles_.resize(kAnimNum);
 	animations_.resize(kAnimNum);
@@ -90,6 +91,21 @@ void Boss2::Draw()
 	float drawY = pos_.y + cameraOffset_.y - 150;
 
 	animations_[graphIndex]->Draw(drawX, drawY, !isTurn_);
+
+	if (currentState_ == BossState::Guard && isBarrierActive_)
+	{
+		// 少し前に出す（向き対応）
+		float offsetX = isTurn_ ? -40.0f : 40.0f;
+
+		DrawRotaGraph(
+			static_cast<int>(drawX + offsetX),
+			static_cast<int>(drawY),
+			1.0,
+			0.0,
+			barrierGraphHandle_,
+			TRUE
+		);
+	}
 
 #ifdef _DEBUG
 	//当たり判定表示
@@ -214,7 +230,6 @@ void Boss2::DecideAttack()
 		attackType_ = Boss2AttackType::JumpAttack;
 		ChangeState(BossState::JumpAttack);
 	}
-
 }
 
 void Boss2::OnHit(int damage)

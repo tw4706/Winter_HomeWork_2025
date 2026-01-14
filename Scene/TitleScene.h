@@ -23,6 +23,7 @@ private:
 	bool isDeciding_;//決定中かどうか
 	int decideBlinkCount_;//決定時の点滅カウント
 	bool isSkipedConfirm_;//確認をスキップしたかどうか
+	int shieldHandle_;
 	StageType nextStage_;//次のステージ
 
 	TitleState titleState_;//シーンの状態

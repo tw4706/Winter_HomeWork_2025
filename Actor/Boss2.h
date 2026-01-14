@@ -40,6 +40,7 @@ private:
     bool isJumping_=false;
     int barrierHp_ = 0;
     bool isBarrierActive_=false;
+    int barrierGraphHandle_ = -1;
 
     Boss2AttackType attackType_ = Boss2AttackType::None;
 };

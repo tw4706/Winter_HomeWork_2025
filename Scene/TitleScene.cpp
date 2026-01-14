@@ -148,6 +148,10 @@ void TitleScene::ConfirmUpdate(Input&input)
 
 void TitleScene::NormalDraw()
 {
+	DrawRectGraph(0,
+		Game::kScreenHeight / 2,
+		64,64,64,64,shieldHandle_,false);
+
 	float scale = 1.0f + sinf(frame_ * 0.05f) * 0.01f;
 	DrawRotaGraph(Game::kScreenWidth / 2, Game::kScreenHeight/2-100 , scale, 0.0f, titleH_, true);
 
@@ -236,6 +240,7 @@ TitleScene::TitleScene(SceneController& controller) :
 	isDeciding_(false),
 	decideBlinkCount_(0),
 	isSkipedConfirm_(false),
+	shieldHandle_(-1),
 	nextStage_(StageType::Tutorial),
 	titleState_(TitleState::Normal),
 	confirmSelect_(0)
@@ -256,6 +261,7 @@ void TitleScene::Init()
 	titleH_ = LoadGraph("data/UI/title.png");
 	pressStartH_ = LoadGraph("data/UI/PressButton.png");
 	selectH_ = LoadGraph("data/Bullet/Lance.png");
+	shieldHandle_ = LoadGraph("data/UI/64Å~64.png");
 	frame_ = kFadeInterval;
 
 	//É^ÉCÉgÉãBGMçƒê∂
