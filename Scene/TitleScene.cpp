@@ -82,6 +82,7 @@ void TitleScene::NormalUpdate(Input&input)
 		draw_ = &TitleScene::FadeDraw;
 		return;
 #endif
+		Application::GetInstance().GetSEManager().PlaySE(SE::Decide);
 		if(isSkipedConfirm_)
 		{
 			//確認画面をスキップしている場合、直接フェードアウトへ
@@ -114,12 +115,19 @@ void TitleScene::FadeOutUpdate(Input&input)
 void TitleScene::ConfirmUpdate(Input&input)
 {
 	if (input.IsTriggered("left") || input.IsTriggered("up"))
+	{
 		confirmSelect_ = 0;
+		Application::GetInstance().GetSEManager().PlaySE(SE::Select);
+	}
 	if (input.IsTriggered("right") || input.IsTriggered("down"))
+	{
 		confirmSelect_ = 1;
+		Application::GetInstance().GetSEManager().PlaySE(SE::Select);
+	}
 
 	if (input.IsTriggered("next"))
 	{
+		Application::GetInstance().GetSEManager().PlaySE(SE::Decide);
 		if (confirmSelect_ == 0)
 		{
 			//はい：チュートリアルステージへ
@@ -140,7 +148,8 @@ void TitleScene::ConfirmUpdate(Input&input)
 
 void TitleScene::NormalDraw()
 {
-	DrawRotaGraph(Game::kScreenWidth / 2, Game::kScreenHeight/2-100 , kTitleScale, 0.0f, titleH_, true);
+	float scale = 1.0f + sinf(frame_ * 0.05f) * 0.01f;
+	DrawRotaGraph(Game::kScreenWidth / 2, Game::kScreenHeight/2-100 , scale, 0.0f, titleH_, true);
 
 	//PressStartUIの点滅表示
 	if (isDeciding_)
@@ -165,7 +174,6 @@ void TitleScene::NormalDraw()
 		int alpha = static_cast<int>(128 + 127 * sinf(pressBlinkFrame_ * 0.05f));
 
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
-
 		DrawRotaGraph(
 			Game::kScreenWidth / 2,
 			Game::kScreenHeight / 2 + 100,
@@ -173,7 +181,6 @@ void TitleScene::NormalDraw()
 			0.0f,
 			pressStartH_,
 			true);
-
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	}
 }

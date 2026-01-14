@@ -120,9 +120,7 @@ void Bullet::UpdateShot()
 		if (isGround_ && !isHadouSpawned_)
 		{
 			SpawnHadou();
-			isHadouSpawned_ = true;
 			vel_ = Vector2(0.0f, 0.0f);
-			return;
 		}
 		break;
 	case BulletType::EnemyBullet:
@@ -150,7 +148,10 @@ void Bullet::Update(Input& input, std::vector<std::shared_ptr<Enemy>>& enemies)
 
 	UpdateShot();
 
-	UpdateHadou(enemies);
+	if (isHadouSpawned_)
+	{
+		UpdateHadou(enemies);
+	}
 }
 
 void Bullet::Draw()
@@ -311,8 +312,9 @@ void Bullet::UpdateHadou(std::vector<std::shared_ptr<Enemy>>& enemies)
 
 	if (hadouRects_.empty())
 	{
-		isAlive_ = false;
+		return;
 	}
+	isAlive_ = false;
 }
 
 void Bullet::RegisterHit()
@@ -342,6 +344,8 @@ void Bullet::CheckBulletAndMapCollision()
 {
 	if (!pBg_) return;
 
+	Vector2 prevPos = pos_;
+
 	pos_ += vel_;
 	colRect_.SetCenter(pos_.x, pos_.y, colSize_, colSize_);
 
@@ -351,24 +355,34 @@ void Bullet::CheckBulletAndMapCollision()
 		//松明
 		if (bulletType_ == BulletType::Torch)
 		{
-			isGround_ = true;
-			vel_ = Vector2(0.0f, 0.0f);
+			bool isLanding =
+				prevPos.y + colSize_ / 2 <= chipRect_.GetTop() &&
+				vel_.y > 0;
 
-			//松明のエフェクト
-			if (pEffectManager_)
+			if (isLanding)
 			{
-				pEffectManager_->AddEffect(
-					std::make_shared<SpriteEffect>(
-						Vector2{ pos_.x, chipRect_.GetTop() },
-						"data/Effect/torch_land.png",
-						128, 32,
-						16, 16,
-						4,
-						4,
-						1.0f));
-			}
+				isGround_ = true;
+				vel_ = Vector2(0.0f, 0.0f);
 
-			return;
+				// 着地エフェクト
+				if (pEffectManager_)
+				{
+					pEffectManager_->AddEffect(
+						std::make_shared<SpriteEffect>(
+							Vector2{ pos_.x, chipRect_.GetTop() },
+							"data/Effect/torch_land.png",
+							128, 32,
+							16, 16,
+							4,
+							4,
+							1.0f));
+				}
+			}
+			else
+			{
+				isAlive_ = false;
+				return;
+			}
 		}
 
 		//マップチップに当たったら短剣や槍の着弾エフェクトを出す

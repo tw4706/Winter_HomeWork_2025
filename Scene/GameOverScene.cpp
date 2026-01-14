@@ -28,11 +28,9 @@ void GameOverScene::FadeInUpdate(Input&)
 void GameOverScene::NormalUpdate(Input& input)
 {
 	pAnimation_->Update();
-	if (input.IsTriggered("shot") ||
-		input.IsTriggered("jump") ||
-		input.IsTriggered("left") ||
-		input.IsTriggered("right"))
+	if (input.IsTriggered("next"))
 	{
+		Application::GetInstance().GetSEManager().PlaySE(SE::Decide);
 		update_ = &GameOverScene::FadeOutUpdate;
 		draw_ = &GameOverScene::FadeDraw;
 		frame_ = 0;

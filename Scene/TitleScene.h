@@ -8,6 +8,7 @@
 enum class TitleState
 {
 	Normal,//通常
+	Demo,
 	Confirm//初回プレイか確認中
 };
 
