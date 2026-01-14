@@ -86,6 +86,20 @@ void GameScene::NormalUpdate(Input&input)
 		return;
 	}
 
+	//チュートリアルでテキスト表示中ならゲーム更新を停止させる
+	bool isTutorialPaused = false;
+	if (tutorialManager_ && !tutorialManager_->IsTutorialFinished())
+	{
+		tutorialManager_->Update(*pPlayer_, input);
+		if (tutorialManager_->IsGamePaused())
+		{
+			isTutorialPaused = true;
+		}
+	}
+
+	// ゲーム更新を停止
+	if (isTutorialPaused) return;
+
 	if (pPlayer_->GetPos().y > kFallLimit)
 	{
 		update_ = &GameScene::FadeOutUpdate;
@@ -146,8 +160,8 @@ void GameScene::NormalUpdate(Input&input)
 		pPlayer_->OnDamage(hitEnemy->GetPos().x);
 	}
 
-	//チュートリアルステージの更新処理
-	if (tutorialManager_ && !tutorialManager_->IsTutorialFinished())
+	//チュートリアルステージのゴール判定処理
+	if (tutorialManager_)
 	{
 		const auto& goalRect = tutorialManager_->GetGoalRect();
 		const auto& playerRect = pPlayer_->GetColRect();

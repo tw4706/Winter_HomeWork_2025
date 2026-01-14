@@ -25,6 +25,9 @@ public:
 	bool IsGoalReached() const { return goalReached_; }
 	const Rect& GetGoalRect() const { return goalRect_; }
 
+	//ゲームが一時停止中かどうかを返す
+	bool IsGamePaused() const { return isWaitingAction_; }
+
 private:
 	//現在のチュートリアルステップ
 	int currentStep_ = 0;

@@ -90,6 +90,13 @@ void TutorialManager::Draw(const Camera& camera)
 		goalAnim_->Draw(drawX, drawY);
 	}
 
+	int left = static_cast<int>(goalRect_.GetLeft() + camera.GetOffset().x);
+	int top = static_cast<int>(goalRect_.GetTop() + camera.GetOffset().y);
+	int right = static_cast<int>(goalRect_.GetRight() + camera.GetOffset().x);
+	int bottom = static_cast<int>(goalRect_.GetBottom() + camera.GetOffset().y);
+
+	DrawBox(left, top, right, bottom, GetColor(255, 0, 0), FALSE); // 赤枠で表示
+
 	if (!waitingMessage_) return;
 
 	// フレーム表示座標とサイズ
