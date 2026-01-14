@@ -38,7 +38,6 @@ Bg::Bg(StageType stageType):
 	graphChipNumX_ = (graphWidth > 0) ? graphWidth / kChipSize : 1;
 	graphChipNumY_ = (graphHeight > 0) ? graphHeight / kChipSize : 1;
 
-
 	//マップデータの読み込み
 	LoadMapData(stageType_);
 }

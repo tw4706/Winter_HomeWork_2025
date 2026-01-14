@@ -28,6 +28,7 @@ enum class PlayerControl
 	TitleDemo
 };
 
+//チュートリアルで行ってほしいアクション
 enum class TutorialAction
 {
 	Move,

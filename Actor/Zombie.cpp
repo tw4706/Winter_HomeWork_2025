@@ -9,7 +9,6 @@
 // エネミーに関する定数
 namespace
 {
-
 	enum Graph
 	{
 		kIdleGraph,
@@ -53,6 +52,7 @@ namespace
 	//拡大率
 	constexpr float kScale = 2.0f;
 
+	//Y座標のオフセット
 	constexpr int kPosYOffset = 20;
 	constexpr int kPosYDrawOffset = 30;
 
@@ -60,15 +60,14 @@ namespace
 	const float kDistance = 220.0f;
 
 	//Idleアニメーション再生トリガー
-	constexpr float kIdleTriggerDistance = 270.0f;
+	constexpr float kIdleTriggerDistance = 250.0f;
 }
 
 Zombie::Zombie(Vector2 pos, Vector2 vel) :
 	Enemy(pos, vel),
 	zombieState_(ZombieState::Idle),
 	isInvincibled_(false),
-	isIdleAnimPlayed_(false),
-	effectiveWeapon_(EffectiveWeapon::Torch)
+	isIdleAnimPlayed_(false)
 {
 
 }
@@ -94,7 +93,7 @@ void Zombie::Init()
 
 		if (i == kWalkGraph)
 		{
-			isLoop = true;//Walk状態ははループさせる
+			isLoop = true;//Walk状態はループさせる
 		}
 
 		graphHandles_[i] = LoadGraph(kGraphName[i].c_str());
@@ -228,23 +227,9 @@ void Zombie::Move()
 	{
 		vel_.x = 0.0f;
 	}
-	//DrawFormatString(0, 80, GetColor(255, 255, 255), "ZombieDx:%f", dx);
-	//DrawFormatString(0, 100, GetColor(255, 255, 255), "ZombieDistance:%f", distance);
-}
 
-void Zombie::OnHit(int damage)
-{
-	if (effectiveWeapon_ != EffectiveWeapon::Torch)
-	{
-		//効かない
-		return;
-	}
-
-	Enemy::OnHit(damage);
-}
-
-void Zombie::SetTitleDemo()
-{
-	//タイトルデモでは「たいまつ以外無効」にしたい
-	effectiveWeapon_ = EffectiveWeapon::Torch;
+#ifdef _DEBUG
+	DrawFormatString(0, 80, GetColor(255, 255, 255), "ZombieDx:%f", dx);
+	DrawFormatString(0, 100, GetColor(255, 255, 255), "ZombieDistance:%f", distance);
+#endif
 }

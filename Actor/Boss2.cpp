@@ -16,7 +16,7 @@ namespace
 	{
 		Idle,
 		Attack,
-		Fly,
+		Move,
 		Hurt,
 		Dead,
 		kAnimNum
@@ -103,7 +103,7 @@ int Boss2::GetGraphIndex(BossState state) const
 	case BossState::Attack:
 		return Anim::Attack;
 	case BossState::Move:
-		return Anim::Fly;
+		return Anim::Move;
 	case BossState::Hurt:
 		return Anim::Hurt;
 	case BossState::Dead:
@@ -128,7 +128,7 @@ void Boss2::UpdateAttack()
 {
 	stateTimer_++;
 
-	// UŒ‚I—¹”»’è
+	//UŒ‚I—¹”»’è
 	if (stateTimer_ > 90)
 	{
 		ChangeState(BossState::Idle);

@@ -22,7 +22,7 @@ namespace
 	"←→で移動",
 	"Bボタンでジャンプ",
 	"さらにBボタンでダブルジャンプが可能",
-	"Aボタンで攻撃だ",
+	"Aボタンでアタックだ",
 	"Xボタンで武器変更ができる"
 	};
 
@@ -51,6 +51,7 @@ void TutorialManager::Init()
 		496,
 		0,
 		true);
+	fontHandle_ = CreateFontToHandle("g_コミックホラー悪党-教漢", 24, -1, -1);
 }
 
 void TutorialManager::Update(Player& player, Input& input)
@@ -84,7 +85,7 @@ void TutorialManager::Draw(const Camera& camera)
 	if (goalAnim_)
 	{
 		float drawX = goalRect_.GetLeft() + camera.GetOffset().x;
-		float drawY = goalRect_.GetTop()+ camera.GetOffset().y;
+		float drawY = goalRect_.GetTop() + camera.GetOffset().y;
 
 		goalAnim_->Draw(drawX, drawY);
 	}
@@ -97,7 +98,7 @@ void TutorialManager::Draw(const Camera& camera)
 	const int frameWidth = 680;  // 好きな横幅に変更
 	const int frameHeight = 120; // 好きな縦幅に変更
 
-	if (textFrameHandle_ != -1) 
+	if (textFrameHandle_ != -1)
 	{
 		// 画像を指定サイズに拡大/縮小して描画
 		DrawExtendGraph(frameX, frameY, frameX + frameWidth, frameY + frameHeight, textFrameHandle_, TRUE);
@@ -105,11 +106,11 @@ void TutorialManager::Draw(const Camera& camera)
 
 	// テキストをフレーム中央に配置
 	int textWidth = GetDrawStringWidth(waitingMessage_, strlen(waitingMessage_));
-	int textHeight = 16; // 文字の高さの目安
-	int textX = frameX + (frameWidth - textWidth) / 2;
+	int textHeight = 15; //文字の高さの目安
+	int textX = (frameX + (frameWidth - textWidth) / 2) - 50;
 	int textY = frameY + (frameHeight - textHeight) / 2;
 
-	DrawString(textX, textY, waitingMessage_, GetColor(255, 255, 255));
+	DrawStringToHandle(textX, textY, waitingMessage_, GetColor(255, 255, 255), fontHandle_);
 }
 
 bool TutorialManager::IsTutorialFinished() const

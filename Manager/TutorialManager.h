@@ -37,4 +37,5 @@ private:
 	Rect goalRect_;
 	bool goalReached_ = false;
 	std::unique_ptr<GoalAnimation> goalAnim_;
+	int fontHandle_;
 };

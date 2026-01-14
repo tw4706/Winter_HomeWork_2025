@@ -37,6 +37,8 @@ bool Application::Init()
 		return false;			// エラーが起きたら直ちに終了
 	}
 
+	AddFontResourceEx("data/UI/g_comichorrorB_freeR.ttf", FR_PRIVATE, NULL);
+
 	//ここでBGMManagerの初期化を行う
 	bgmManager_.Init();
 	seManager_.Init();
@@ -85,6 +87,7 @@ void Application::Run()
 
 void Application::Terminate()
 {
+	RemoveFontResourceEx("data/UI/g_comichorrorB_freeR.ttf", FR_PRIVATE, NULL);
 	DxLib_End();				//ＤＸライブラリ使用の終了処理
 }
 
