@@ -84,7 +84,7 @@ void TutorialManager::Draw(const Camera& camera)
 {
 	if (goalAnim_)
 	{
-		float drawX = goalRect_.GetLeft() + camera.GetOffset().x;
+		float drawX = (goalRect_.GetLeft() + camera.GetOffset().x)-50;
 		float drawY = goalRect_.GetTop() + camera.GetOffset().y;
 
 		goalAnim_->Draw(drawX, drawY);
