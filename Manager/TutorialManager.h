@@ -2,7 +2,7 @@
 #include "Rect.h"
 #include "Geometry.h"
 #include "SpriteEffect.h"
-#include "GoalAnimation.h"
+#include "SpriteAnimation.h"
 #include <memory>
 
 class Player;
@@ -39,6 +39,6 @@ private:
 
 	Rect goalRect_;
 	bool goalReached_ = false;
-	std::unique_ptr<GoalAnimation> goalAnim_;
+	std::unique_ptr<SpriteAnimation> goalAnim_;
 	int fontHandle_;
 };

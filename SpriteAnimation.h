@@ -1,10 +1,10 @@
 #pragma once
 #include <DxLib.h>
 
-class GoalAnimation
+class SpriteAnimation
 {
 public:
-    GoalAnimation(
+    SpriteAnimation(
         int handle,
         int frameW,
         int frameH,

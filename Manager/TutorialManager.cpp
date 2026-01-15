@@ -13,8 +13,8 @@ namespace
 		300.0f,   //Move
 		1900.0f,   //Jump
 		2350.0f,  //DoubleJump
-		3050.0f,  //Attack
-		3800.0f   //WeaponChange
+		3100.0f,  //Attack
+		3900.0f   //WeaponChange
 	};
 
 	const char* kTutorialText[] =
@@ -42,7 +42,7 @@ void TutorialManager::Init()
 
 	int goalHandle = LoadGraph("data/Effect/bullet_effect.png");
 
-	goalAnim_ = std::make_unique<GoalAnimation>(
+	goalAnim_ = std::make_unique<SpriteAnimation>(
 		goalHandle,
 		16, 16,     // フレームサイズ
 		6,          // 使用フレーム数

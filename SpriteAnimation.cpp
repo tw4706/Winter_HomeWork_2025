@@ -1,6 +1,6 @@
-#include "GoalAnimation.h"
+#include "SpriteAnimation.h"
 
-GoalAnimation::GoalAnimation(
+SpriteAnimation::SpriteAnimation(
     int handle,
     int frameW,
     int frameH,
@@ -9,8 +9,8 @@ GoalAnimation::GoalAnimation(
     float scale,
     int startX,
     int startY,
-    bool loop)
-    : handle_(handle),
+    bool loop):
+    handle_(handle),
     frameW_(frameW),
     frameH_(frameH),
     frameCount_(frameCount),
@@ -24,7 +24,7 @@ GoalAnimation::GoalAnimation(
 {
 }
 
-void GoalAnimation::Update()
+void SpriteAnimation::Update()
 {
     frameTimer_++;
     if (frameTimer_ < frameInterval_)
@@ -47,7 +47,7 @@ void GoalAnimation::Update()
     }
 }
 
-void GoalAnimation::Draw(float x, float y, bool flip)
+void SpriteAnimation::Draw(float x, float y, bool flip)
 {
     int sx = startX_ + currentFrame_ * frameW_;
     int sy = startY_;
@@ -66,7 +66,7 @@ void GoalAnimation::Draw(float x, float y, bool flip)
     );
 }
 
-void GoalAnimation::Reset()
+void SpriteAnimation::Reset()
 {
     currentFrame_ = 0;
     frameTimer_ = 0;
