@@ -29,16 +29,17 @@ public:
 	bool IsGamePaused() const { return isWaitingAction_; }
 
 private:
+	int fontHandle_;
+	int textButtonHandle_;
 	//現在のチュートリアルステップ
 	int currentStep_ = 0;
 	int textFrameHandle_ = -1;
-
+	Rect goalRect_;
+	bool goalReached_ = false;
 	//チュートリアルの内容で止める地点関連
 	bool isWaitingAction_ = false;
 	const char* waitingMessage_ = nullptr;
 
-	Rect goalRect_;
-	bool goalReached_ = false;
 	std::unique_ptr<SpriteAnimation> goalAnim_;
-	int fontHandle_;
+	std::unique_ptr<SpriteAnimation> buttonAnim_;
 };

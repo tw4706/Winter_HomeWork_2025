@@ -7,7 +7,7 @@ void BGMManager::Init()
 	bgmHandles_[BGM::Title] = LoadSoundMem("data/BGM・SE/TitleBGM.mp3");
 	bgmHandles_[BGM::Game] = LoadSoundMem("data/BGM・SE/GameBGM.mp3");
 	bgmHandles_[BGM::GameOver] = LoadSoundMem("data/BGM・SE/GameOverBGM.mp3");
-	bgmHandles_[BGM::GameClear] = LoadSoundMem("data/BGM・SE/GameClearBGM.mp3");
+	bgmHandles_[BGM::GameClear] = LoadSoundMem("data/BGM・SE/夏の思い出.mp3");
 
 	bgmBaseVolume_[BGM::Title] = 80;
 	bgmBaseVolume_[BGM::Game] = 60;

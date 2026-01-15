@@ -8,9 +8,9 @@ void SEManager::Init()
 	seHandles_[SE::Cancel] = LoadSoundMem("data/BGM・SE/キャンセル5.mp3");
 	seHandles_[SE::Select] = LoadSoundMem("data/BGM・SE/カーソル移動5.mp3");
 	seHandles_[SE::Shot] = LoadSoundMem("data/BGM・SE/Shot.wav");
-	seHandles_[SE::Hit] = LoadSoundMem("data/BGM・SE/Hit.wav");
-	seHandles_[SE::Damage] = LoadSoundMem("data/BGM・SE/Damage.wav");
-	seHandles_[SE::WeaponChange] = LoadSoundMem("data/BGM・SE/WeaponChange.wav");
+	seHandles_[SE::Hit] = LoadSoundMem("data/BGM・SE/ダメージ音02.mp3");
+	seHandles_[SE::Damage] = LoadSoundMem("data/BGM・SE/ダメージ音02.mp3");
+	seHandles_[SE::WeaponChange] = LoadSoundMem("data/BGM・SE/ショットガンのポンプアクション2.mp3");
 }
 
 void SEManager::PlaySE(SE se)

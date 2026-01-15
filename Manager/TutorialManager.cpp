@@ -7,6 +7,12 @@
 
 namespace
 {
+	constexpr int kButtonAreaWidth = 84;
+	constexpr int kTextPadding = 16;
+
+	//テキストとボタンの間隔
+	constexpr int kButtonTextSpacing = 200;
+
 	// チュートリアル発生地点（X だけで管理する簡易版）
 	const float kTutorialX[] =
 	{
@@ -37,6 +43,7 @@ void TutorialManager::Init()
 	waitingMessage_ = nullptr;
 
 	textFrameHandle_ = LoadGraph("data/UI/TutorialFrame.png");
+	textButtonHandle_ = LoadGraph("data/UI/gdb-switch-2.png");
 
 	goalRect_.SetLT(4900.0f, 1724.0f, 64.0f, 64.0f);
 
@@ -51,6 +58,15 @@ void TutorialManager::Init()
 		496,
 		0,
 		true);
+
+	buttonAnim_ = std::make_unique<SpriteAnimation>(
+		textButtonHandle_,
+		16, 16,   // 1フレームサイズ
+		4,        // フレーム数
+		8,        // 切り替え間隔
+		3.0f,
+		64,48,
+		true);
 	fontHandle_ = CreateFontToHandle("g_コミックホラー悪党-教漢", 24, -1, -1);
 }
 
@@ -59,6 +75,11 @@ void TutorialManager::Update(Player& player, Input& input)
 	if (goalAnim_)
 	{
 		goalAnim_->Update();
+	}
+
+	if (buttonAnim_)
+	{
+		buttonAnim_->Update();
 	}
 
 	if (currentStep_ >= kTutorialCount) return;
@@ -114,8 +135,16 @@ void TutorialManager::Draw(const Camera& camera)
 	// テキストをフレーム中央に配置
 	int textWidth = GetDrawStringWidth(waitingMessage_, strlen(waitingMessage_));
 	int textHeight = 15; //文字の高さの目安
-	int textX = (frameX + (frameWidth - textWidth) / 2) - 50;
-	int textY = frameY + (frameHeight - textHeight) / 2;
+	int textX = frameX + kButtonAreaWidth;
+	int textY = frameY + (frameHeight - textHeight) / 2-10;
+
+	if (buttonAnim_)
+	{
+		int buttonX = textX + textWidth + kButtonTextSpacing;
+		int buttonY = (frameY + frameHeight / 2)-10;
+
+		buttonAnim_->Draw(buttonX, buttonY);
+	}
 
 	DrawStringToHandle(textX, textY, waitingMessage_, GetColor(255, 255, 255), fontHandle_);
 }

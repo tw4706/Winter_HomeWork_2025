@@ -1,5 +1,7 @@
 #include "ClearScene.h"
 #include "TitleScene.h"
+#include"Application.h"
+#include"BGMManager.h"
 #include "SceneController.h"
 #include"input.h"
 #include<Dxlib.h>
@@ -67,6 +69,8 @@ void ClearScene::NormalDraw()
 void ClearScene::Init()
 {
 	frame_ = kFadeDuration;
+
+	Application::GetInstance().GetBGMManager().PlayBGM(BGM::GameClear);
 }
 
 void ClearScene::Update(Input&input)

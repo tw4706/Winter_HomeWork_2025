@@ -1,6 +1,7 @@
 #include "Enemy.h"
 #include"Bullet.h"
 #include"Animation.h"
+#include"Application.h"
 #include"SpriteEffect.h"
 #include"EffectManager.h"
 #include"GlobalConstants.h"
@@ -42,6 +43,8 @@ void Enemy::Draw()
 
 void Enemy::OnHit(int damage)
 {
+	Application::GetInstance().GetSEManager().PlaySE(SE::Hit);
+
 	//敵のヒットエフェクト
 	if (pEffectManager_)
 	{
