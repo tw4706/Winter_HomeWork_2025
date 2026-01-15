@@ -60,6 +60,8 @@ protected:
 	Vector2 backPos_;			//戻る位置を保存する変数
 	int hitInvincibleTimer_;	//被弾無敵時間用タイマー
 	bool isHitInvincible_;		//被弾無敵状態かどうか
+	//描画オフセット
+	Vector2 drawOffset_{ 0.0f, 0.0f };
 
 	//グラフィックハンドルの配列
 	std::vector<int>graphHandles_;

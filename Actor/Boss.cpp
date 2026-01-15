@@ -26,6 +26,7 @@ namespace
 
 	//被弾無敵時間
 	constexpr int kHitInvincibleTime = 20;
+	constexpr int kBlinkInterval = 6;
 }
 
 Boss::Boss(Vector2 pos, Vector2 vel, std::shared_ptr<Player>player, BulletManager*bm,std::shared_ptr<Camera>camera):
@@ -87,7 +88,7 @@ void Boss::Update()
 	//常にプレイヤーの方向を向く
 	isTurn_ = (pPlayer_->GetPos().x < pos_.x);
 
-	colRect_.SetCenter(pos_.x-20, pos_.y, colSize_ * kColScale, colSize_ * kColScale);
+	colRect_.SetCenter(pos_.x, pos_.y, colSize_ * kColScale, colSize_ * kColScale);
 
 	//アニメーションの更新
 	int graphIdx = GetGraphIndex(currentState_);
@@ -145,10 +146,18 @@ void Boss::Update()
 
 void Boss::Draw()
 {
+	if (isHitInvincible_)
+	{
+		if ((hitInvincibleTimer_ / kBlinkInterval) % 2 == 0)
+		{
+			return; // このフレームは描画しない
+		}
+	}
+
 	int graphIndex = GetGraphIndex(currentState_);
 
-	float drawX = pos_.x + cameraOffset_.x;
-	float drawY = pos_.y + cameraOffset_.y;
+	float drawX = pos_.x + cameraOffset_.x + drawOffset_.x;
+	float drawY = pos_.y + cameraOffset_.y + drawOffset_.y;
 
 	animations_[graphIndex]->Draw(drawX, drawY, !isTurn_);
 

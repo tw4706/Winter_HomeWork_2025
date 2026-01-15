@@ -83,6 +83,7 @@ void Boss2::Init()
 	currentState_ = BossState::Idle;
 	stateTimer_ = 0;
 	hp_ = kMaxHP;
+	drawOffset_.y = -(kGraphH * 0.5f+80);
 }
 
 void Boss2::Update()
@@ -94,20 +95,22 @@ void Boss2::Update()
 
 void Boss2::Draw()
 {
+
+	Boss::Draw();
+
 	int graphIndex = GetGraphIndex(currentState_);
-
-	float drawX = pos_.x + cameraOffset_.x;
-	float drawY = pos_.y + cameraOffset_.y - 150;
-
-	animations_[graphIndex]->Draw(drawX, drawY, !isTurn_);
 
 	if (currentState_ == BossState::Guard && isBarrierActive_)
 	{
+		float drawX = pos_.x + cameraOffset_.x;
+		float drawY = pos_.y + cameraOffset_.y;
 		// 少し前に出す（向き対応）
 		float offsetX = isTurn_ ? -40.0f : 40.0f;
+		float offsetY = -100.0f;
 
 		DrawRectRotaGraph3(
-			drawX, drawY+50,
+			drawX + offsetX,
+			drawY + offsetY,
 			kShieldSrcX, kShieldSrcY,
 			kShieldSize, kShieldSize,
 			kShieldSize / 2, kShieldSize / 2,
@@ -234,9 +237,10 @@ void Boss2::UpdateJumpAttack()
 
 	if (stateTimer_ == 30)
 	{
-		vel_.y = -8.0f;
-		vel_.x = isTurn_ ? -3.0f : 3.0f;
+		vel_.y = -20.0f;
+		vel_.x = isTurn_ ? -4.0f : 4.0f;
 		isJumping_ = true;
+		isGround_ = false;
 	}
 
 	// 着地したら Idle に戻す
@@ -294,24 +298,5 @@ void Boss2::OnHit(int damage, const BulletType& type)
 			damage = 0;
 		}
 	}
-
-	// HP減少
-	hp_ -= damage;
-	if (hp_ < 0) hp_ = 0;
-
-	// 無敵時間開始
-	isHitInvincible_ = true;
-	hitInvincibleTimer_ = 20; // 適当なフレーム数
-
-	// HP 0 で死亡
-	if (hp_ <= 0)
-	{
-		if (pCamera_) pCamera_->Shake(60, 15.0f);
-		ChangeState(BossState::Dead);
-		return;
-	}
-
-	// 被弾演出
-	if (damage > 0 && pCamera_) pCamera_->Shake(10, 8.0f);
-	if (damage > 0) ChangeState(BossState::Hurt);
+	Boss::OnHit(damage);
 }
