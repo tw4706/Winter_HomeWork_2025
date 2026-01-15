@@ -12,9 +12,9 @@ namespace
 	{
 		300.0f,   //Move
 		1900.0f,   //Jump
-		2300.0f,  //DoubleJump
-		3200.0f,  //Attack
-		4000.0f   //WeaponChange
+		2350.0f,  //DoubleJump
+		3050.0f,  //Attack
+		3800.0f   //WeaponChange
 	};
 
 	const char* kTutorialText[] =
@@ -71,12 +71,12 @@ void TutorialManager::Update(Player& player, Input& input)
 		return;
 	}
 
-	// テキスト表示中なら決定ボタンで消す
+	//テキスト表示中なら決定ボタンで消す
 	if (isWaitingAction_ && input.IsTriggered("next"))
 	{
 		isWaitingAction_ = false;
 		waitingMessage_ = nullptr;
-		currentStep_++;  // 次のステップへ
+		currentStep_++;  //次のステップへ
 	}
 }
 
