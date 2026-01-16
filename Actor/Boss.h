@@ -30,6 +30,9 @@ public:
 	void ChangeState(BossState nextState);
 	virtual void OnHit(int damage);
 
+	bool IsDead() const { return isDead_; }
+	bool IsDeadAnimFinished() const { return isDeadAnimFinished_; }
+
 	//被弾状態開始
 	void StartHitInvincible();
 
@@ -60,6 +63,8 @@ protected:
 	Vector2 backPos_;			//戻る位置を保存する変数
 	int hitInvincibleTimer_;	//被弾無敵時間用タイマー
 	bool isHitInvincible_;		//被弾無敵状態かどうか
+	bool isDead_ = false;
+	bool isDeadAnimFinished_ = false;
 	//描画オフセット
 	Vector2 drawOffset_{ 0.0f, 0.0f };
 

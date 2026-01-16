@@ -29,8 +29,8 @@ namespace
 	constexpr int kBlinkInterval = 6;
 }
 
-Boss::Boss(Vector2 pos, Vector2 vel, std::shared_ptr<Player>player, BulletManager*bm,std::shared_ptr<Camera>camera):
-	Enemy(pos,vel),
+Boss::Boss(Vector2 pos, Vector2 vel, std::shared_ptr<Player>player, BulletManager* bm, std::shared_ptr<Camera>camera) :
+	Enemy(pos, vel),
 	pPlayer_(player),
 	pBm_(bm),
 	pCamera_(camera),
@@ -88,7 +88,8 @@ void Boss::Update()
 	//常にプレイヤーの方向を向く
 	isTurn_ = (pPlayer_->GetPos().x < pos_.x);
 
-	colRect_.SetCenter(pos_.x, pos_.y, colSize_ * kColScale, colSize_ * kColScale);
+	colRect_.SetCenter(pos_.x, pos_.y,
+		colSize_ * kColScale, colSize_ * kColScale);
 
 	//アニメーションの更新
 	int graphIdx = GetGraphIndex(currentState_);
@@ -141,7 +142,6 @@ void Boss::Update()
 		return;
 	}
 #endif
-
 }
 
 void Boss::Draw()
@@ -150,7 +150,7 @@ void Boss::Draw()
 	{
 		if ((hitInvincibleTimer_ / kBlinkInterval) % 2 == 0)
 		{
-			return; // このフレームは描画しない
+			return; //このフレームは描画しない
 		}
 	}
 
@@ -168,8 +168,6 @@ void Boss::Draw()
 
 void Boss::ChangeState(BossState nextState)
 {
-	isInvincible_ = false;
-
 	if (!isActive_ && nextState != BossState::Idle)return;
 
 	currentState_ = nextState;
@@ -184,14 +182,21 @@ void Boss::ChangeState(BossState nextState)
 	}
 
 	animations_[GetGraphIndex(nextState)]->Reset();
+	if (nextState != BossState::Hurt && nextState != BossState::Dead)
+	{
+		// Hurt 以外の状態では通常通り無敵解除
+		isHitInvincible_ = true;
+	}
 }
 
 void Boss::UpdateHurt()
 {
-    stateTimer_++;
+	isHitInvincible_ = false;
 
-    // 演出だけ
-    pos_.y += sin(stateTimer_ * 0.3f) * 0.3f;
+	stateTimer_++;
+
+	// 演出だけ
+	pos_.y += sin(stateTimer_ * 0.3f) * 0.3f;
 
 	int animIndex = GetGraphIndex(BossState::Hurt);
 	if (animations_[animIndex]->IsAnimFinished())
@@ -203,42 +208,49 @@ void Boss::UpdateHurt()
 void Boss::UpdateDead()
 {
 	stateTimer_++;
-	vel_.y += kGravity; //重力
-	pos_.y += vel_.y;
 
-	if (pos_.y > kGround)
+	// 死亡アニメの更新
+	int animIdx = GetGraphIndex(BossState::Dead);
+	animations_[animIdx]->Update();
+
+	// 落下処理（必要なら）
+	if (pos_.y < kGround)
+	{
+		vel_.y += kGravity;
+		pos_.y += vel_.y;
+	}
+	else
 	{
 		pos_.y = kGround;
 		vel_.y = 0.0f;
 	}
 
-	//死亡アニメーションが終わったらガチの死亡
-	int animIdx = GetGraphIndex(BossState::Dead);
-	if (stateTimer_ > 0 && animations_[animIdx]->IsAnimFinished())
+	// 死亡アニメが終わったらフラグを立てる
+	if (animations_[animIdx]->IsAnimFinished())
 	{
-		isDead_ = true;
+		isDead_ = true;                 // ボスは死亡状態
+		isDeadAnimFinished_ = true;     // アニメ終了
 	}
 }
 
 void Boss::OnHit(int damage)
 {
 	//被弾中・無敵状態・死亡状態なら無視
-	if (isHitInvincible_) return;
-	if (isInvincible_) return;
-	if (currentState_ == BossState::Dead) return;
+	if (!isHitInvincible_&&currentState_==BossState::Hurt) return;
 
 	hp_ -= damage;
 	StartHitInvincible();
 
-	//体力が0以下ならカメラを大きく揺らして死亡状態へ
-	if (hp_ <= 0)
+	// HP が 0 以下になったら死亡ステートへ
+	if (hp_ <= 0 && currentState_ != BossState::Dead)
 	{
 		pCamera_->Shake(60, 15.0f);
 		ChangeState(BossState::Dead);
+		stateTimer_ = 0;
 		return;
 	}
 
-	//カメラを揺らす
+	// HP が残っていれば被弾演出
 	pCamera_->Shake(kCameraDuration, kCameraMagnitude);
 	ChangeState(BossState::Hurt);
 }

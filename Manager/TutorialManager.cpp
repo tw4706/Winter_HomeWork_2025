@@ -17,19 +17,19 @@ namespace
 	const float kTutorialX[] =
 	{
 		300.0f,   //Move
-		1900.0f,   //Jump
-		2350.0f,  //DoubleJump
-		3100.0f,  //Attack
-		3900.0f   //WeaponChange
+		1300.0f,   //Attack
+		2000.0f,  //Jump
+		2400.0f,  //DoubleJump
+		3800.0f   //WeaponChange
 	};
 
 	const char* kTutorialText[] =
 	{
 	"←→で移動",
+	"Aボタンでアタックだ",
 	"Bボタンでジャンプ",
 	"さらにBボタンでダブルジャンプが可能",
-	"Aボタンでアタックだ",
-	"Xボタンで武器変更ができる"
+	"Xボタンで武器チェンジが可能"
 	};
 
 	//チュートリアル内容の総数

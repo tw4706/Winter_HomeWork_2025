@@ -132,7 +132,11 @@ void Bullet::UpdateShot()
 
 void Bullet::Update(Input& input, std::vector<std::shared_ptr<Enemy>>& enemies)
 {
-	if (!isAlive_ && !isWaveSpawned_) return;
+	if (!isAlive_ && isWaveSpawned_)
+	{
+		UpdateWave(enemies);
+		return;
+	}
 
 	//è’ìÀîªíË
 	CheckBulletAndMapCollision();
@@ -308,6 +312,7 @@ void Bullet::UpdateWave(std::vector<std::shared_ptr<Enemy>>& enemies)
 
 	if (waveRects_.empty())
 	{
+		isWaveSpawned_ = false;
 		isAlive_ = false;
 		return;
 	}
@@ -339,6 +344,8 @@ void Bullet::ResetHitEnemies(Enemy* enemy)
 void Bullet::CheckBulletAndMapCollision()
 {
 	if (!pBg_) return;
+
+	if (bulletType_ == BulletType::Torch && isWaveSpawned_)return;
 
 	Vector2 prevPos = pos_;
 
@@ -411,12 +418,6 @@ bool Bullet::IsPlayerBullet() const
 void Bullet::SetDirection(bool isRight)
 {
 	prevWaveDir_ = isRight ? 1.0f : -1.0f;
-}
-
-bool Bullet::IsOutOfScreen() const
-{
-	return pos_.x < -kScreenOutOffset || pos_.x > Game::kScreenWidth + kScreenOutOffset ||
-		pos_.y < -kScreenOutOffset || pos_.y > Game::kScreenHeight + kScreenOutOffset;
 }
 
 int Bullet::GetDamage() const

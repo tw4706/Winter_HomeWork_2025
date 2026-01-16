@@ -81,7 +81,7 @@ namespace
 	//被弾した時のノックバックの強さ
 	constexpr float kKnockBackX = 10.0f;
 	constexpr float kKnockBackY = 5.0f;
-	constexpr float kKnockBackSpeed = 0.96f;
+	constexpr float kKnockBackSpeed = 0.92f;
 
 	//重力
 	constexpr float kGravity = 1.0f;

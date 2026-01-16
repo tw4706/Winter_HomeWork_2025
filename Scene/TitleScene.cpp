@@ -175,7 +175,7 @@ void TitleScene::NormalDraw()
 	else
 	{
 		//í èÌéûÇÃì_ñ≈
-		int alpha = static_cast<int>(128 + 127 * sinf(pressBlinkFrame_ * 0.05f));
+		int alpha = static_cast<int>(128+127 * sinf(pressBlinkFrame_ * 0.05f));
 
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
 		DrawRotaGraph(

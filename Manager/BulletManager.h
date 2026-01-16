@@ -18,7 +18,8 @@ public:
 	void Update()override {};
 	void Draw()override;
 
-	void SetCameraOffset(Vector2 offset);
+	//画面外に出たかどうかを返す関数
+	bool IsOutOfScreen(const std::shared_ptr<Bullet>& bullet) const;
 
 	//プレイヤーの弾の種別を判定
 	bool IsPlayerBullet(BulletType type)const;
@@ -29,6 +30,8 @@ public:
 	//プレイヤーの弾を追加
 	std::vector<std::shared_ptr<Bullet>>& GetBullets();
 
+	//カメラの設定
+	void SetCameraOffset(Vector2 offset);
 	//エフェクトマネージャーの設定
 	void SetEffectManager(EffectManager*effectManager)
 	{

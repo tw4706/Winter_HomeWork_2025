@@ -177,24 +177,19 @@ void GameScene::NormalUpdate(Input&input)
 	}
 
 	//ボスを倒すとクリアシーンに遷移する
-	for (auto& enemy : enemyFactory_.GetEnemies())
+	auto boss2 = enemyFactory_.GetBoss2();
+	if (boss2)
 	{
-		auto boss2 = enemyFactory_.GetBoss2();
-
-		//敵がボスかつ死亡している場合
-		if (enemy->IsBoss() && enemy->IsDead()
-			&& clearState_ == ClearState::None)
+		// ボスが死亡アニメ終了していたらクリア処理開始
+		if (boss2->IsDeadAnimFinished() && clearState_ == ClearState::None)
 		{
 			clearState_ = ClearState::BossCameraShake;
 
 			//ボスを倒したことをプレイヤーに伝える
 			controller_.GetProgress().isDefeatedBoss1_ = true;
-		}
-		if (boss2 && boss2->IsDead())
-		{
-			controller_.ChangeScene(std::make_shared<ClearScene>(controller_));
 
-			return;
+			//カメラ揺れ
+			pCamera_->Shake(30, 6.0f);
 		}
 	}
 

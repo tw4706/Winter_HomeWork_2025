@@ -58,6 +58,11 @@ void BulletManager::Update(Input& input, std::vector<std::shared_ptr<Enemy>>&ene
 		//Bullet側に全ての処理を任せる
 		bullet->SetEffectManager(pEffectManager_);
 		bullet->Update(input, enemies);
+
+		if (IsOutOfScreen(bullet))
+		{
+			//bullet->SetAlive(false);
+		}
 	}
 
 	//弾の削除
@@ -80,6 +85,23 @@ void BulletManager::Draw()
 	//デバッグ用
 	screenRect_.DrawAndCamera(Vector2{ 0,0 }, 0xff0000, false);
 #endif
+}
+
+bool BulletManager::IsOutOfScreen(const std::shared_ptr<Bullet>& bullet) const
+{
+	//Vector2 pos = bullet->GetPos();
+	//Vector2 cam = bullet->GetCameraOffset();
+
+	//float screenX = pos.x + cam.x;
+	//float screenY = pos.y + cam.y;
+
+	//constexpr int kMargin = 100;
+
+	//return screenX < -kMargin ||
+	//	screenX > Game::kScreenWidth + kMargin ||
+	//	screenY < -kMargin ||
+	//	screenY > Game::kScreenHeight + kMargin;
+	return true;
 }
 
 void BulletManager::SetCameraOffset(Vector2 offset)

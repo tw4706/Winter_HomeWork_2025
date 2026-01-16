@@ -36,8 +36,8 @@ namespace
 	constexpr int kStartY[kAnimNum] =
 	{
 		kGraphH * 0, //Idle
-		kGraphH * 1, //Attack
-		kGraphH * 2, //Move
+		kGraphH * 2, //Attack
+		kGraphH * 1, //Move
 		kGraphH * 3, //Hurt
 		kGraphH * 4  //Dead
 	};
@@ -45,8 +45,8 @@ namespace
 	constexpr int kFrameCount[kAnimNum] =
 	{
 		6,	//Idle
-		10, //Attack
-		14, //Move
+		14, //Attack
+		10, //Move
 		7,	//Hurt
 		16  //Dead
 	};
@@ -83,14 +83,27 @@ void Boss2::Init()
 	currentState_ = BossState::Idle;
 	stateTimer_ = 0;
 	hp_ = kMaxHP;
-	drawOffset_.y = -(kGraphH * 0.5f+80);
+	drawOffset_.y = -(kGraphH * 0.5f + 80);
 }
 
 void Boss2::Update()
 {
 	Boss::Update();
 
-	colRect_.SetCenter(pos_.x, pos_.y - 100, kColSizeX, kColSizeY);
+	if (currentState_ == BossState::Dead)
+	{
+		UpdateDead();
+		return;
+	}
+
+	if (!isHitInvincible_)
+	{
+		colRect_.SetCenter(
+			pos_.x,
+			pos_.y - 100,
+			kColSizeX,
+			kColSizeY);
+	}
 }
 
 void Boss2::Draw()
@@ -109,8 +122,8 @@ void Boss2::Draw()
 		float offsetY = -100.0f;
 
 		DrawRectRotaGraph3(
-			drawX + offsetX,
-			drawY + offsetY,
+			static_cast<int>(drawX + offsetX),
+			static_cast<int>(drawY + offsetY),
 			kShieldSrcX, kShieldSrcY,
 			kShieldSize, kShieldSize,
 			kShieldSize / 2, kShieldSize / 2,
@@ -123,14 +136,14 @@ void Boss2::Draw()
 	//当たり判定表示
 	colRect_.DrawAndCamera(cameraOffset_, GetColor(255, 0, 0), false);
 
-	// デバッグ用HP表示（右上）
+	//デバッグ用HP表示
 	char buf[64];
 	sprintf_s(buf, "Boss2 HP: %d / %d", hp_, kMaxHP);
 
-	// 右上表示（画面右端から文字幅分だけ左に寄せる）
+	//右上表示（画面右端から文字幅分だけ左に寄せる）
 	int textWidth = GetDrawStringWidth(buf, strlen(buf));
-	int posX = 1280 - textWidth - 10; // 右端から10px内側
-	int posY = 10; // 上から10px下
+	int posX = 1280 - textWidth - 10; //右端から10px内側
+	int posY = 10; //上から10px下
 
 	DrawString(posX, posY, buf, GetColor(255, 255, 255));
 #endif
@@ -203,7 +216,9 @@ void Boss2::UpdateHurt()
 {
 	stateTimer_++;
 
-	if (stateTimer_ > 30)
+	pos_.y += sin(stateTimer_ * 0.3f) * 0.3f;
+
+	if (animations_[GetGraphIndex(BossState::Hurt)]->IsAnimFinished())
 	{
 		ChangeState(BossState::Idle);
 	}
@@ -275,18 +290,18 @@ void Boss2::DecideAttack()
 
 void Boss2::OnHit(int damage, const BulletType& type)
 {
-	if (isHitInvincible_) return; // 無敵中は無視
+	if (isHitInvincible_) return; //無敵中は無視
 	if (currentState_ == BossState::Dead) return;
 
-	// バリア処理
+	//バリア処理
 	if (currentState_ == BossState::Guard && isBarrierActive_)
 	{
 		if (type == BulletType::Torch)
 		{
-			damage /= 2; // Torchだけ半減
+			damage /= 2; //Torchだけ半減
 		}
 
-		// バリア破壊判定
+		//バリア破壊判定
 		if (damage >= kBarrierBreakDamage)
 		{
 			isBarrierActive_ = false;
@@ -294,7 +309,7 @@ void Boss2::OnHit(int damage, const BulletType& type)
 		}
 		else
 		{
-			// バリア中はそれ以下のダメージは無効
+			//バリア中はそれ以下のダメージは無効
 			damage = 0;
 		}
 	}
