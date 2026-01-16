@@ -8,6 +8,9 @@ namespace
 	constexpr int kBulletLimit = 3;//’e‚ÌÅ‘å”
 	constexpr int kLanceLimit = 2;//‘„‚ÌÅ‘å”
 	constexpr int kTorchLimit = 1;//‚½‚¢‚Ü‚Â‚ÌÅ‘å”
+
+	//’e‚ğ‰æ–ÊŠO‚ÅÁ‚·ˆ—‚É‘«‚·—]”’
+	constexpr int kMargin = 10;
 }
 
 BulletManager::BulletManager():
@@ -58,11 +61,6 @@ void BulletManager::Update(Input& input, std::vector<std::shared_ptr<Enemy>>&ene
 		//Bullet‘¤‚É‘S‚Ä‚Ìˆ—‚ğ”C‚¹‚é
 		bullet->SetEffectManager(pEffectManager_);
 		bullet->Update(input, enemies);
-
-		if (IsOutOfScreen(bullet))
-		{
-			//bullet->SetAlive(false);
-		}
 	}
 
 	//’e‚Ìíœ
@@ -89,19 +87,7 @@ void BulletManager::Draw()
 
 bool BulletManager::IsOutOfScreen(const std::shared_ptr<Bullet>& bullet) const
 {
-	//Vector2 pos = bullet->GetPos();
-	//Vector2 cam = bullet->GetCameraOffset();
-
-	//float screenX = pos.x + cam.x;
-	//float screenY = pos.y + cam.y;
-
-	//constexpr int kMargin = 100;
-
-	//return screenX < -kMargin ||
-	//	screenX > Game::kScreenWidth + kMargin ||
-	//	screenY < -kMargin ||
-	//	screenY > Game::kScreenHeight + kMargin;
-	return true;
+	return false;
 }
 
 void BulletManager::SetCameraOffset(Vector2 offset)

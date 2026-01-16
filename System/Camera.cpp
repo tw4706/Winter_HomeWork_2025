@@ -69,7 +69,6 @@ void Camera::Update(std::shared_ptr<Player> player)
 		drawOffset_.x += offsetX;
 		drawOffset_.y += offsetY;
 	}
-
 }
 
 void Camera::Shake(int duration, float magnitude)

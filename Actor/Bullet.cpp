@@ -367,7 +367,7 @@ void Bullet::CheckBulletAndMapCollision()
 				isGround_ = true;
 				vel_ = Vector2(0.0f, 0.0f);
 
-				// 着地エフェクト
+				//着地エフェクト
 				if (pEffectManager_)
 				{
 					pEffectManager_->AddEffect(

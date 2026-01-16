@@ -108,7 +108,6 @@ void Boss2::Update()
 
 void Boss2::Draw()
 {
-
 	Boss::Draw();
 
 	int graphIndex = GetGraphIndex(currentState_);

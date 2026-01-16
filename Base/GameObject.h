@@ -60,7 +60,8 @@ public:
 	//カメラ関連
 	//カメラのオフセット関連
 	void SetDrawOffset(const Vector2& offset) { cameraOffset_ = offset; }
-	Vector2 SetCameraOffset(const Vector2& offset) { return cameraOffset_ = offset; }
+	void SetCameraOffset(const Vector2& offset) { cameraOffset_ = offset; }
+	Vector2 GetCameraOffset() const { return cameraOffset_; }
 
 	//マップチップ関連
 	//マップチップとの当たり判定
@@ -71,6 +72,5 @@ public:
 	//重力の使用設定
 	void SetUseGravity(bool enable);
 	bool IsUsingGravity() { return useGravity_; }
-
 };
 
