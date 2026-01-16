@@ -43,12 +43,7 @@ void BulletManager::Init(std::shared_ptr<Bullet> bullets)
 			bulletCount++;
 		}
 	}
-
 	bullets_.push_back(bullets);
-}
-
-void BulletManager::Init()
-{
 }
 
 void BulletManager::Update(Input& input, std::vector<std::shared_ptr<Enemy>>&enemies, Player&player)
@@ -79,8 +74,8 @@ void BulletManager::Draw()
 
 		bullet->Draw();
 	}
+
 #ifdef _DEBUG
-	//デバッグ用
 	screenRect_.DrawAndCamera(Vector2{ 0,0 }, 0xff0000, false);
 #endif
 }
@@ -96,6 +91,11 @@ void BulletManager::SetCameraOffset(Vector2 offset)
 	{
 		bullet->SetCameraOffset(offset);
 	}
+}
+
+void BulletManager::SetEffectManager(EffectManager* effectManager)
+{
+	pEffectManager_ = effectManager;
 }
 
 bool BulletManager::IsPlayerBullet(BulletType type) const

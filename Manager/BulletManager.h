@@ -13,7 +13,7 @@ public:
 	~BulletManager();
 
 	void Init(std::shared_ptr<Bullet>bullets);
-	void Init()override;
+	void Init()override {};
 	void Update(Input& input, std::vector<std::shared_ptr<Enemy>>&enemies, Player&player);
 	void Update()override {};
 	void Draw()override;
@@ -32,12 +32,9 @@ public:
 
 	//カメラの設定
 	void SetCameraOffset(Vector2 offset);
-	//エフェクトマネージャーの設定
-	void SetEffectManager(EffectManager*effectManager)
-	{
-		pEffectManager_ = effectManager;
-	}
 
+	//エフェクトマネージャーの設定
+	void SetEffectManager(EffectManager* effectManager);
 private:
 	std::vector<std::shared_ptr<Bullet>>bullets_;
 	std::map<BulletType, int>bulletLimits_;

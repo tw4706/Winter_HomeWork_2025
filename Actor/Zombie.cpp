@@ -57,7 +57,7 @@ namespace
 	constexpr int kPosYDrawOffset = 30;
 
 	//プレイヤーとの距離
-	const float kDistance = 220.0f;
+	const float kDistance = 230.0f;
 
 	//Idleアニメーション再生トリガー
 	constexpr float kIdleTriggerDistance = 250.0f;
