@@ -25,7 +25,7 @@ namespace
 	constexpr int kCameraMagnitude = 8;
 
 	//被弾無敵時間
-	constexpr int kHitInvincibleTime = 20;
+	constexpr int kHitInvincibleTime = 60;
 	constexpr int kBlinkInterval = 6;
 }
 
@@ -106,9 +106,6 @@ void Boss::Update()
 	case BossState::Attack:
 		UpdateAttack();
 		break;
-	case BossState::Guard:
-		UpdateGuard();
-		break;
 	case BossState::JumpAttack:
 		UpdateJumpAttack();
 		break;
@@ -182,11 +179,6 @@ void Boss::ChangeState(BossState nextState)
 	}
 
 	animations_[GetGraphIndex(nextState)]->Reset();
-	if (nextState != BossState::Hurt && nextState != BossState::Dead)
-	{
-		// Hurt 以外の状態では通常通り無敵解除
-		isHitInvincible_ = true;
-	}
 }
 
 void Boss::UpdateHurt()

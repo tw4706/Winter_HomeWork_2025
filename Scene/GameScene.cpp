@@ -132,9 +132,17 @@ void GameScene::NormalUpdate(Input&input)
 	effectManager_.SetCameraOffset(pCamera_->GetOffset());
 	effectManager_.Update();
 
-	//プレイヤーの弾 × 敵の当たり判定
+	//プレイヤーの弾 × 敵の当たり判定(ボスのOnHitは専用なので個別で当たり判定をする)
 	CollisionManager::PlayerBulletsVsEnemies(
 		bulletManager_.GetBullets(),enemyFactory_.GetEnemies());
+
+	auto boss2 = enemyFactory_.GetBoss2();
+	if (boss2)
+	{
+		CollisionManager::PlayerBulletsVsBoss2(
+			bulletManager_.GetBullets(),
+			*boss2);
+	}
 
 	//敵の弾 × プレイヤーの当たり判定
 	CollisionManager::EnemyBulletsVsPlayer(bulletManager_.GetBullets(),*pPlayer_);
@@ -155,9 +163,26 @@ void GameScene::NormalUpdate(Input&input)
 		enemyFactory_.GetEnemies());
 
 	//敵に当たっていてプレイヤーが死んでいない場合ダメージ処理を行う
+	//ただしボス2の場合は当たり判定が別途あるため除外する
 	if (hitEnemy && !pPlayer_->IsDead())
 	{
-		pPlayer_->OnDamage(hitEnemy->GetPos().x);
+		if (dynamic_cast<Boss2*>(hitEnemy) == nullptr)
+		{
+			pPlayer_->OnDamage(hitEnemy->GetPos().x);
+		}
+	}
+
+	//プレイヤーとボス2の当たり判定
+	if (boss2)
+	{
+		if (!pPlayer_->IsDead())
+		{
+			if (CollisionManager::PlayerVsBoss2(
+				pPlayer_->GetColRect(), *boss2))
+			{
+				pPlayer_->OnDamage(boss2->GetPos().x);
+			}
+		}
 	}
 
 	//チュートリアルステージのゴール判定処理
@@ -177,7 +202,6 @@ void GameScene::NormalUpdate(Input&input)
 	}
 
 	//ボスを倒すとクリアシーンに遷移する
-	auto boss2 = enemyFactory_.GetBoss2();
 	if (boss2)
 	{
 		// ボスが死亡アニメ終了していたらクリア処理開始

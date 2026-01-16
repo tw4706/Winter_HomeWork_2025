@@ -21,6 +21,47 @@ Enemy* CollisionManager::PlayerVsEnemies(const Rect& playerRect,
     return nullptr;
 }
 
+bool CollisionManager::PlayerVsBoss2(const Rect& playerRect, Boss2& boss)
+{
+    //ボスが死んでいたら判定しない
+    if (boss.IsDead()) return false;
+
+    if (playerRect.IsCollision(boss.GetColRect()))
+    {
+        return true;
+    }
+
+    return false;
+}
+
+void CollisionManager::PlayerBulletsVsBoss2(std::vector<std::shared_ptr<Bullet>>& bullets, Boss2& boss)
+{
+    if (boss.IsDead()) return;
+
+    for (auto& bullet : bullets)
+    {
+        if (!bullet->IsAlive()) continue;
+        if (!bullet->IsPlayerBullet()) continue;
+
+        if (bullet->GetColRect().IsCollision(boss.GetColRect()))
+        {
+            if (bullet->HasHitEnemy(&boss))
+                continue;
+
+            boss.OnHit(bullet->GetDamage(), bullet->GetType());
+
+            if (bullet->GetType() == BulletType::Lance)
+            {
+                bullet->ResetHitEnemies(&boss);
+            }
+            else
+            {
+                bullet->OnHit();
+            }
+        }
+    }
+}
+
 //プレイヤーと鍵の当たり判定
 bool CollisionManager::PlayerVsKey(const Rect& playerRect,const Rect& keyRect)
 {
@@ -40,6 +81,12 @@ void CollisionManager::PlayerBulletsVsEnemies(
         for (auto& enemy : enemies)
         {
             if (enemy->IsDead()) continue;
+
+			//ボス2には当たらないようにする
+            if (dynamic_cast<Boss2*>(enemy.get()) != nullptr)
+            {
+                continue;
+            }
 
             if (bullet->GetColRect().IsCollision(enemy->GetColRect()))
             {

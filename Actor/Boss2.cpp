@@ -13,13 +13,17 @@ namespace
 
 	constexpr int kMaxHP = 50;
 
-	constexpr int kGuardTime = 120;
-	constexpr int kBarrierBreakDamage = 10;
-
 	constexpr int kShieldSrcX = 312;
 	constexpr int kShieldSrcY = 216;
 	constexpr int kShieldSize = 24;
 	constexpr float kShieldScale = 10.0f;
+
+	constexpr int kShieldMaxHP = 30;
+	constexpr int kShieldBreakTime = 180;
+
+	constexpr int   kShieldReactTime = 20;   //ヒット反応保持時間
+	constexpr float kShieldMaxAlpha = 120;  //半透明
+	constexpr float kShieldFadeSpeed = 10.0f;
 
 	constexpr int kFrameInterval = 6;
 
@@ -84,6 +88,14 @@ void Boss2::Init()
 	stateTimer_ = 0;
 	hp_ = kMaxHP;
 	drawOffset_.y = -(kGraphH * 0.5f + 80);
+	isBarrierActive_ = true;
+	isShieldBroken_ = false;
+	shieldMaxHP_ = kShieldMaxHP;
+	shieldHP_ = shieldMaxHP_;
+	shieldBreakTimer_ = 0;
+
+	shieldAlpha_ = 0.0f;
+	shieldHitTimer_ = 0;
 }
 
 void Boss2::Update()
@@ -95,14 +107,25 @@ void Boss2::Update()
 		UpdateDead();
 		return;
 	}
+	colRect_.SetCenter(pos_.x, pos_.y - 100, kColSizeX, kColSizeY);
 
-	if (!isHitInvincible_)
+	//シールドの更新
+	if (shieldHitTimer_ > 0)
 	{
-		colRect_.SetCenter(
-			pos_.x,
-			pos_.y - 100,
-			kColSizeX,
-			kColSizeY);
+		shieldHitTimer_--;
+	}
+
+	//シールドの破壊判定
+	if (isShieldBroken_)
+	{
+		shieldBreakTimer_--;
+		if (shieldBreakTimer_ <= 0)
+		{
+			// シールド復活
+			isShieldBroken_ = false;
+			isBarrierActive_ = true;
+			shieldHP_ = shieldMaxHP_;
+		}
 	}
 }
 
@@ -110,41 +133,44 @@ void Boss2::Draw()
 {
 	Boss::Draw();
 
-	int graphIndex = GetGraphIndex(currentState_);
-
-	if (currentState_ == BossState::Guard && isBarrierActive_)
+	if (shieldHitTimer_ > 0 && isBarrierActive_)
 	{
-		float drawX = pos_.x + cameraOffset_.x;
-		float drawY = pos_.y + cameraOffset_.y;
-		// 少し前に出す（向き対応）
-		float offsetX = isTurn_ ? -40.0f : 40.0f;
-		float offsetY = -100.0f;
+		// 点滅（2フレームごと）
+		if ((shieldHitTimer_ / 2) % 2 == 0)
+		{
+			float rate = (float)shieldHP_ / shieldMaxHP_;
+			int alpha = (int)(kShieldMaxAlpha * rate);
 
-		DrawRectRotaGraph3(
-			static_cast<int>(drawX + offsetX),
-			static_cast<int>(drawY + offsetY),
-			kShieldSrcX, kShieldSrcY,
-			kShieldSize, kShieldSize,
-			kShieldSize / 2, kShieldSize / 2,
-			kShieldScale, kShieldScale,
-			0.0f,
-			barrierGraphHandle_, true);
+			SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
+
+			float drawX = pos_.x + cameraOffset_.x;
+			float drawY = pos_.y + cameraOffset_.y;
+
+			float offsetX = isTurn_ ? -40.0f : 40.0f;
+			float offsetY = -100.0f;
+
+			DrawRectRotaGraph3(
+				(int)(drawX + offsetX),
+				(int)(drawY + offsetY),
+				kShieldSrcX, kShieldSrcY,
+				kShieldSize, kShieldSize,
+				kShieldSize / 2, kShieldSize / 2,
+				kShieldScale, kShieldScale,
+				0.0f,
+				barrierGraphHandle_, true);
+
+			SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+		}
 	}
 
 #ifdef _DEBUG
 	//当たり判定表示
 	colRect_.DrawAndCamera(cameraOffset_, GetColor(255, 0, 0), false);
 
-	//デバッグ用HP表示
-	char buf[64];
-	sprintf_s(buf, "Boss2 HP: %d / %d", hp_, kMaxHP);
 
-	//右上表示（画面右端から文字幅分だけ左に寄せる）
-	int textWidth = GetDrawStringWidth(buf, strlen(buf));
-	int posX = 1280 - textWidth - 10; //右端から10px内側
-	int posY = 10; //上から10px下
-
-	DrawString(posX, posY, buf, GetColor(255, 255, 255));
+	char buf2[64];
+	sprintf_s(buf2, "Shield HP: %d / %d", shieldHP_, shieldMaxHP_);
+	DrawString(10, 30, buf2, GetColor(0, 255, 255));
 #endif
 }
 
@@ -161,8 +187,6 @@ int Boss2::GetGraphIndex(BossState state) const
 		return Anim::Idle;
 	case BossState::Move:
 		return Anim::Move;
-	case BossState::Guard:
-		return Anim::Idle;
 	case BossState::JumpAttack:
 		return Anim::Attack;
 	case BossState::Hurt:
@@ -223,24 +247,9 @@ void Boss2::UpdateHurt()
 	}
 }
 
-void Boss2::UpdateGuard()
-{
-	if (stateTimer_ == 0)
-	{
-		isBarrierActive_ = true;
-	}
-
-	stateTimer_++;
-
-	if (stateTimer_ > kGuardTime)
-	{
-		isBarrierActive_ = false;
-		ChangeState(BossState::Idle);
-	}
-}
-
 void Boss2::UpdateJumpAttack()
 {
+
 	stateTimer_++;
 
 	if (stateTimer_ < 30)
@@ -261,7 +270,8 @@ void Boss2::UpdateJumpAttack()
 	if (isJumping_ && isGround_)
 	{
 		isJumping_ = false;
-		if(pCamera_)
+		isBarrierActive_ = true;
+		if (pCamera_)
 		{
 			pCamera_->Shake(10, 8.0f); // 着地演出
 		}
@@ -273,44 +283,55 @@ void Boss2::DecideAttack()
 {
 	stateTimer_ = 0;
 
-	int r = GetRand(1);
-
-	if (r == 0)
-	{
-		attackType_ = Boss2AttackType::Barrier;
-		ChangeState(BossState::Guard);
-	}
-	else
-	{
-		attackType_ = Boss2AttackType::JumpAttack;
-		ChangeState(BossState::JumpAttack);
-	}
+	ChangeState(BossState::JumpAttack);
 }
 
 void Boss2::OnHit(int damage, const BulletType& type)
 {
-	if (isHitInvincible_) return; //無敵中は無視
 	if (currentState_ == BossState::Dead) return;
 
-	//バリア処理
-	if (currentState_ == BossState::Guard && isBarrierActive_)
+	// シールドが有効な場合
+	if (isBarrierActive_ && !isShieldBroken_)
 	{
-		if (type == BulletType::Torch)
+		shieldHitTimer_ = kShieldReactTime;
+		shieldAlpha_ = kShieldMaxAlpha;
+
+		int shieldDamage = 0;
+
+		switch (type)
 		{
-			damage /= 2; //Torchだけ半減
+		case BulletType::Knife:
+			shieldDamage = 1;
+			break;
+
+		case BulletType::Lance:
+			shieldDamage = 10;
+			break;
+
+		case BulletType::Torch:
+			shieldDamage = 6;
+			break;
 		}
 
-		//バリア破壊判定
-		if (damage >= kBarrierBreakDamage)
+		shieldHP_ -= shieldDamage;
+
+		// シールド破壊
+		if (shieldHP_ <= 0)
 		{
+			isShieldBroken_ = true;
 			isBarrierActive_ = false;
-			ChangeState(BossState::Idle);
+			shieldBreakTimer_ = kShieldBreakTime;
+			shieldAlpha_ = 0.0f;
+
+			// 破壊ボーナスダメージ
+			Boss::OnHit(damage * 2);
+			return;
 		}
-		else
-		{
-			//バリア中はそれ以下のダメージは無効
-			damage = 0;
-		}
+
+		// まだシールドがあるなら本体は無傷
+		return;
 	}
+
+	// シールドが無いときは普通にダメージ
 	Boss::OnHit(damage);
 }

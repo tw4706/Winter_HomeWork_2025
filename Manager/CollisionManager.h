@@ -6,6 +6,7 @@
 class Player;
 class Enemy;
 class Bullet;
+class Boss2;
 class CollisionManager
 {
 public:
@@ -13,6 +14,11 @@ public:
     // プレイヤー × 敵
     static Enemy*PlayerVsEnemies(const Rect& playerRect,
         const std::vector<std::shared_ptr<Enemy>>& enemies);
+
+    //プレイヤーとBoss2
+    static bool PlayerVsBoss2(const Rect& playerRect,Boss2& boss);
+
+    static void PlayerBulletsVsBoss2(std::vector<std::shared_ptr<Bullet>>& bullets, Boss2& boss);
 
     // プレイヤー × 鍵
     static bool PlayerVsKey(const Rect& playerRect,const Rect& keyRect);

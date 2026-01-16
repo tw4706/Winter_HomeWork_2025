@@ -2,13 +2,6 @@
 #include "Boss.h"
 #include "Bullet.h" 
 
-enum class Boss2AttackType
-{
-    None,
-    Barrier,
-    JumpAttack
-};
-
 class Boss2 : public Boss
 {
 public:
@@ -20,7 +13,6 @@ public:
     void OnHit(int damage) override;
     void OnHit(int damage, const BulletType& type);
 
-    void UpdateGuard() override;
     void UpdateJumpAttack() override;
     //攻撃パターンをランダムで決める関数
     void DecideAttack();
@@ -39,8 +31,13 @@ private:
     int guardTimer_=0;//ガード時間
     int jumpCoolTimer_ = 0;
     bool isJumping_=false;
-    bool isBarrierActive_=false;
+    bool isBarrierActive_=true;
     int barrierGraphHandle_ = -1;
+    int   shieldHitTimer_ = 0;
+    float shieldAlpha_ = 0.0f;
 
-    Boss2AttackType attackType_ = Boss2AttackType::None;
+    int  shieldHP_;
+    int  shieldMaxHP_;
+    bool isShieldBroken_;
+    int  shieldBreakTimer_;
 };
