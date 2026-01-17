@@ -23,6 +23,7 @@ void GameOverScene::FadeInUpdate(Input&)
 	if (frame_ <= 0)
 	{
 		frame_ = 0;
+		isSelecting_ = true;
 		update_ = &GameOverScene::NormalUpdate;
 		draw_ = &GameOverScene::NormalDraw;
 	}
@@ -97,15 +98,13 @@ void GameOverScene::NormalDraw()
 		DrawExtendGraph(0, 0, 1280, 720, frameHandle_, TRUE);
 	}
 
-	DrawString(400, 300, "GAME OVER", GetColor(255, 0, 0));
-
-	DrawString(360, 360, "Select an option:", GetColor(255, 255, 255));
+	DrawString(400, 200, "GAME OVER", GetColor(255, 0, 0));
 
 	// 選択肢を描画
 	for (int i = 0; i < kOptionCount; ++i)
 	{
 		int color = (i == selectIdx_) ? GetColor(255, 255, 0) : GetColor(255, 255, 255);
-		DrawString(400, 400 + i * 40, kOptions[i], color);
+		DrawStringToHandle(640, 360 + i * 40, kOptions[i], color, fontHandle_);
 	}
 
 }
@@ -116,6 +115,7 @@ GameOverScene::GameOverScene(SceneController& controller, StageType stage) :
 	frame_(0),
 	bgHandle_(-1),
 	frameHandle_(-1),
+	fontHandle_(-1),
 	deadCircleHandle_(-1),
 	playerDeadGraphHandle_(-1),
 	selectIdx_(0),
@@ -128,6 +128,8 @@ GameOverScene::GameOverScene(SceneController& controller, StageType stage) :
 void GameOverScene::Init()
 {
 	frame_ = kFadeDuration;
+
+	fontHandle_ = CreateFontToHandle("g_コミックホラー悪党-教漢", 48, -1, -1);
 
 	bgHandle_ = LoadGraph("data/map/bg.png");
 	frameHandle_ = LoadGraph("data/UI/Tutorialframe.png");

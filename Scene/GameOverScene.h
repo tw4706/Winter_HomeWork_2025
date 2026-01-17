@@ -28,6 +28,7 @@ private:
 	int frame_ = 0;
 	int bgHandle_;
 	int frameHandle_;
+	int fontHandle_;
 	int deadCircleHandle_;
 	int playerDeadGraphHandle_;
 	int selectIdx_;
