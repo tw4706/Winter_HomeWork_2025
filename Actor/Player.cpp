@@ -40,13 +40,14 @@ namespace
 	//プレイヤーの画像サイズ
 	constexpr int kGraphWidth = 128;
 	constexpr int kGraphHeight = 128;
-	constexpr int kGraphHalfWidth = 128 / 2;
+	constexpr int kGraphHalfWidth = 48.0f;
 	constexpr int kGraphHalfHeight = 128 / 2;
 	constexpr float kGraphColSize = 64.0f;
 	constexpr int kMaxHp = 2;
 
 	//拡大率
 	constexpr float kScale = 1.5f;
+
 	//移動速度
 	constexpr float kSpeed = 5.0f;
 

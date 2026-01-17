@@ -5,6 +5,7 @@
 #include"Input.h"
 #include"Player.h"
 #include"Zombie.h"
+#include"Boss1.h"
 #include"Boss2.h"
 #include"GameProgress.h"
 #include"Application.h"
@@ -23,7 +24,6 @@
 
 namespace 
 {
-
 	//プレイヤーのスポーン位置
 	constexpr float kPlayerSpawnPosX = 200.0f;
 	constexpr float kPlayerSpawnPosY = 1744.0f;
@@ -172,6 +172,18 @@ void GameScene::NormalUpdate(Input&input)
 		}
 	}
 
+	auto boss1 = enemyFactory_.GetBoss1();
+	if (boss1 && boss1->IsDeadAnimFinished() && clearState_ == ClearState::None)
+	{
+		clearState_ = ClearState::BossCameraShake;
+
+		// ボス1撃破フラグ
+		controller_.GetProgress().isDefeatedBoss1_ = true;
+
+		// カメラ揺れ
+		pCamera_->Shake(30, 6.0f);
+	}
+
 	//プレイヤーとボス2の当たり判定
 	if (boss2)
 	{
@@ -207,13 +219,7 @@ void GameScene::NormalUpdate(Input&input)
 		// ボスが死亡アニメ終了していたらクリア処理開始
 		if (boss2->IsDeadAnimFinished() && clearState_ == ClearState::None)
 		{
-			clearState_ = ClearState::BossCameraShake;
-
-			//ボスを倒したことをプレイヤーに伝える
-			controller_.GetProgress().isDefeatedBoss1_ = true;
-
-			//カメラ揺れ
-			pCamera_->Shake(30, 6.0f);
+			controller_.ChangeScene(std::make_shared<ClearScene>(controller_));
 		}
 	}
 
