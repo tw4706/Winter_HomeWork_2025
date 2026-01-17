@@ -31,14 +31,16 @@ public:
 	std::vector<std::shared_ptr<Bullet>>& GetBullets();
 
 	//カメラの設定
+	void SetCamera(Camera* camera);
 	void SetCameraOffset(Vector2 offset);
 
 	//エフェクトマネージャーの設定
 	void SetEffectManager(EffectManager* effectManager);
 private:
+	Rect screenRect_;
 	std::vector<std::shared_ptr<Bullet>>bullets_;
 	std::map<BulletType, int>bulletLimits_;
-	Rect screenRect_;
+	Camera* pCamera_;//カメラのポインタS
 	EffectManager* pEffectManager_;//エフェクトマネージャーのポインタ
 };
 

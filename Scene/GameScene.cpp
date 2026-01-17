@@ -334,6 +334,8 @@ void GameScene::Init()
 	//ƒJƒƒ‰‚Ì‰Šú‰»
 	pCamera_->Init(pPlayer_);
 
+	bulletManager_.SetCamera(pCamera_.get());
+
 	//“G‚Ì‰Šú‰»
 	enemyFactory_.SetEffectManager(&effectManager_);
 	enemyFactory_.LoadFromCSV(stageType_, &bulletManager_);

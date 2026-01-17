@@ -15,7 +15,8 @@ namespace
 
 BulletManager::BulletManager():
 	GameObject(),
-	pEffectManager_(nullptr)
+	pEffectManager_(nullptr),
+	pCamera_(nullptr)
 {
 	//’e‚Ì”‚ğŒˆ‚ß‚é
 	bulletLimits_ = {
@@ -48,6 +49,19 @@ void BulletManager::Init(std::shared_ptr<Bullet> bullets)
 
 void BulletManager::Update(Input& input, std::vector<std::shared_ptr<Enemy>>&enemies, Player&player)
 {
+	if (pCamera_)
+	{
+		Vector2 camLT = pCamera_->GetLeftTop();
+		Vector2 camRB = pCamera_->GetRightBottom();
+
+		screenRect_.SetLT(
+			camLT.x,
+			camLT.y,
+			camRB.x - camLT.x,
+			camRB.y - camLT.y
+		);
+	}
+
 	//’e‚ÌXV
 	for (auto& bullet : bullets_)
 	{
@@ -56,6 +70,12 @@ void BulletManager::Update(Input& input, std::vector<std::shared_ptr<Enemy>>&ene
 		//Bullet‘¤‚É‘S‚Ä‚Ìˆ—‚ğ”C‚¹‚é
 		bullet->SetEffectManager(pEffectManager_);
 		bullet->Update(input, enemies);
+
+		//‰æ–ÊŠO‚Éo‚½‚ç’e‚ğÁ‚·
+		if (IsOutOfScreen(bullet))
+		{
+			bullet->OnHit();
+		}
 	}
 
 	//’e‚Ìíœ
@@ -82,7 +102,20 @@ void BulletManager::Draw()
 
 bool BulletManager::IsOutOfScreen(const std::shared_ptr<Bullet>& bullet) const
 {
+	const Vector2 pos = bullet->GetPos();
+
+	// ‰æ–Ê‹éŒ` + —]”’
+	if (pos.x < screenRect_.GetLeft() - kMargin) return true;
+	if (pos.x > screenRect_.GetRight() + kMargin) return true;
+	if (pos.y < screenRect_.GetTop() - kMargin) return true;
+	if (pos.y > screenRect_.GetBottom() + kMargin) return true;
+
 	return false;
+}
+
+void BulletManager::SetCamera(Camera* camera)
+{
+	pCamera_ = camera;
 }
 
 void BulletManager::SetCameraOffset(Vector2 offset)

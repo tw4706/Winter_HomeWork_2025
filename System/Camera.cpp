@@ -71,6 +71,20 @@ void Camera::Update(std::shared_ptr<Player> player)
 	}
 }
 
+Vector2 Camera::GetLeftTop() const
+{
+	return Vector2{
+	pos_.x - Game::kScreenWidth * 0.5f,
+	pos_.y - Game::kScreenHeight * 0.5f};
+}
+
+Vector2 Camera::GetRightBottom() const
+{
+	return Vector2{
+	pos_.x + Game::kScreenWidth * 0.5f,
+	pos_.y + Game::kScreenHeight * 0.5f };
+}
+
 void Camera::Shake(int duration, float magnitude)
 {
 	shakeDuration_ = duration;

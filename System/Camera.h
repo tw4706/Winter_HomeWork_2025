@@ -12,6 +12,10 @@ public:
 	//カメラのオフセットを取得
 	const Vector2& GetOffset() const { return drawOffset_; }
 
+	//カメラの左上座標と右下座標を取得
+	Vector2 GetLeftTop() const;
+	Vector2 GetRightBottom() const;
+
 	//カメラを揺らす
 	void Shake(int duration, float magnitude);
 
