@@ -27,7 +27,7 @@ namespace
 	//確認バナー表示位置
 	constexpr int kBannerX = Game::kScreenWidth / 2 - kBannerW / 2;
 	constexpr int kBannerY = Game::kScreenHeight / 2 - kBannerH / 2;
-	constexpr int kConfirmMessageX = kBannerX + 75;
+	constexpr int kConfirmMessageX = kBannerX + 25;
 	constexpr int kConfirmMessageY = kBannerY + 20;
 	constexpr int kOptionOffsetY = kBannerY + 70;
 	constexpr int kOptionYesOffsetX = kBannerX + 90;
@@ -209,11 +209,11 @@ void TitleScene::ConfirmDraw()
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
 	//メッセージ
-	DrawString(kConfirmMessageX, kConfirmMessageY, "このゲームを初めて遊びますか？", 0xffffff);
+	DrawStringToHandle(kConfirmMessageX, kConfirmMessageY, "このゲームを初めて遊びますか？", 0xffffff,fontH_);
 
 	// 選択肢
-	DrawString(kOptionYesOffsetX, kOptionOffsetY, "はい", confirmSelect_ == 0 ? 0xff0000 : 0xffffff);
-	DrawString(kOptionNoOffsetX, kOptionOffsetY, "いいえ", confirmSelect_ == 1 ? 0xff0000 : 0xffffff);
+	DrawStringToHandle(kOptionYesOffsetX, kOptionOffsetY, "はい", confirmSelect_ == 0 ? 0xff0000 : 0xffffff, fontH_);
+	DrawStringToHandle(kOptionNoOffsetX, kOptionOffsetY, "いいえ", confirmSelect_ == 1 ? 0xff0000 : 0xffffff, fontH_);
 
 	int arrowX = (confirmSelect_ == 0)
 		? kOptionYesOffsetX
@@ -235,6 +235,7 @@ TitleScene::TitleScene(SceneController& controller) :
 	titleH_(-1),
 	pressStartH_(-1),
 	selectH_(-1),
+	fontH_(-1),
 	frame_(0),
 	pressBlinkFrame_(0),
 	isDeciding_(false),
@@ -261,6 +262,7 @@ void TitleScene::Init()
 	titleH_ = LoadGraph("data/UI/title.png");
 	pressStartH_ = LoadGraph("data/UI/PressButton.png");
 	selectH_ = LoadGraph("data/Bullet/Lance.png");
+	fontH_ = CreateFontToHandle("g_コミックホラー悪党-教漢", 24, -1, -1);
 	shieldHandle_ = LoadGraph("data/UI/64×64.png");
 	frame_ = kFadeInterval;
 

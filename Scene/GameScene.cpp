@@ -38,7 +38,7 @@ namespace
 
 	//フェードまでの間隔
 	constexpr int fade_interval = 60;
-	constexpr float kColSize = 32;
+	constexpr float kColSize = 32.0f;
 
 	//落下判定となる座標
 	constexpr float kFallLimit = 1900.0f;
@@ -78,7 +78,6 @@ void GameScene::FadeInUpdate(Input&)
 
 void GameScene::NormalUpdate(Input&input)
 {
-
 	//ポーズボタンを押したらポーズシーンに遷移
 	if (input.IsTriggered("pause"))
 	{
@@ -147,8 +146,7 @@ void GameScene::NormalUpdate(Input&input)
 	//敵の弾 × プレイヤーの当たり判定
 	CollisionManager::EnemyBulletsVsPlayer(bulletManager_.GetBullets(),*pPlayer_);
 
-	//プレイヤーが死亡していて死亡アニメーションが終了している場合は
-	//ゲームオーバーシーンへ遷移
+	//プレイヤーが死亡していて死亡アニメーションが終了している場合はゲームオーバーシーンへ遷移
 	if (pPlayer_->IsDead() && pPlayer_->IsDeadAnimFinished())
 	{
 		update_ = &GameScene::FadeOutUpdate;
