@@ -26,11 +26,14 @@ private:
 	DrawFunc_t draw_;
 private:
 	int frame_ = 0;
-	StageType stageType_;
 	int bgHandle_;
 	int frameHandle_;
 	int deadCircleHandle_;
 	int playerDeadGraphHandle_;
+	int selectIdx_;
+	bool isSelecting_;
+
+	StageType stageType_;
 	std::shared_ptr<Animation>pAnimation_;
 };
 

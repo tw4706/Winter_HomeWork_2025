@@ -12,6 +12,9 @@
 namespace
 {
 	constexpr int kFadeDuration = 60;
+
+	const char* kOptions[] = { "Restart", "Title" };
+	const int kOptionCount = 2;
 }
 
 void GameOverScene::FadeInUpdate(Input&)
@@ -28,12 +31,29 @@ void GameOverScene::FadeInUpdate(Input&)
 void GameOverScene::NormalUpdate(Input& input)
 {
 	pAnimation_->Update();
-	if (input.IsTriggered("next"))
+	if (isSelecting_)
 	{
-		Application::GetInstance().GetSEManager().PlaySE(SE::Decide);
-		update_ = &GameOverScene::FadeOutUpdate;
-		draw_ = &GameOverScene::FadeDraw;
-		frame_ = 0;
+		// 上下で選択
+		if (input.IsTriggered("up"))
+		{
+			selectIdx_--;
+			if (selectIdx_ < 0) selectIdx_ = kOptionCount - 1;
+		}
+		else if (input.IsTriggered("down"))
+		{
+			selectIdx_++;
+			if (selectIdx_ >= kOptionCount) selectIdx_ = 0;
+		}
+
+		// 決定
+		if (input.IsTriggered("next"))
+		{
+			Application::GetInstance().GetSEManager().PlaySE(SE::Decide);
+			isSelecting_ = false; // 選択終了
+			update_ = &GameOverScene::FadeOutUpdate;
+			draw_ = &GameOverScene::FadeDraw;
+			frame_ = 0;
+		}
 	}
 }
 
@@ -42,8 +62,14 @@ void GameOverScene::FadeOutUpdate(Input& input)
 	frame_++;
 	if (frame_ >= kFadeDuration)
 	{
-		controller_.ChangeScene(std::make_shared<GameScene>(controller_, stageType_));
-		return;
+		if (selectIdx_ == 0) //リスタート
+		{
+			controller_.ChangeScene(std::make_shared<GameScene>(controller_, stageType_));
+		}
+		else //タイトルへ戻る
+		{
+			controller_.ChangeScene(std::make_shared<TitleScene>(controller_));
+		}
 	}
 }
 
@@ -72,16 +98,28 @@ void GameOverScene::NormalDraw()
 	}
 
 	DrawString(400, 300, "GAME OVER", GetColor(255, 0, 0));
-	DrawString(360, 360, "Press any key to restart...", GetColor(255, 255, 255));
+
+	DrawString(360, 360, "Select an option:", GetColor(255, 255, 255));
+
+	// 選択肢を描画
+	for (int i = 0; i < kOptionCount; ++i)
+	{
+		int color = (i == selectIdx_) ? GetColor(255, 255, 0) : GetColor(255, 255, 255);
+		DrawString(400, 400 + i * 40, kOptions[i], color);
+	}
+
 }
 
 GameOverScene::GameOverScene(SceneController& controller, StageType stage) :
 	Scene(controller),
 	stageType_(stage),
+	frame_(0),
 	bgHandle_(-1),
 	frameHandle_(-1),
 	deadCircleHandle_(-1),
-	playerDeadGraphHandle_(-1)
+	playerDeadGraphHandle_(-1),
+	selectIdx_(0),
+	isSelecting_(false)
 {
 	update_ = &GameOverScene::FadeInUpdate;
 	draw_ = &GameOverScene::FadeDraw;
