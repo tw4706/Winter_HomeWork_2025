@@ -112,6 +112,10 @@ void Zombie::Init()
 	zombieState_ = ZombieState::Idle;
 	animations_[static_cast<int>(zombieState_)]->SetFrame(0);
 	isIdleAnimPlayed_ = false;
+
+	idleReverseFrame_ = 0;
+	idleReverseTimer_ = 0;
+	isReverseIdle_ = false;
 }
 
 void Zombie::Update()
@@ -128,9 +132,11 @@ void Zombie::Update()
 	//当たり判定の更新
 	auto idleAnim = animations_[static_cast<int>(ZombieState::Idle)];
 
-	if (zombieState_ == ZombieState::Idle && isIdleAnimPlayed_)
+	//ゾンビがIdle状態でかつIdleアニメーションの最初のフレームの場合は当たり判定をなくす
+	bool isBuried =(zombieState_ == ZombieState::Idle &&idleAnim->GetCurrentFrame() == 0);
+
+	if (isBuried)
 	{
-		//潜っているときは当たり判定をなしにする
 		colRect_.SetCenter(pos_.x, pos_.y, 0, 0);
 		isInvincibled_ = true;
 	}
@@ -168,7 +174,7 @@ void Zombie::UpdateAnim()
 	switch (zombieState_)
 	{
 	case ZombieState::Idle:
-		if (!isIdleAnimPlayed_ && distance < kIdleTriggerDistance)
+		if (!isIdleAnimPlayed_ && !isReverseIdle_ && distance < kIdleTriggerDistance)
 		{
 			idleAnim->Reset();
 			isIdleAnimPlayed_ = true;
@@ -186,6 +192,26 @@ void Zombie::UpdateAnim()
 				isIdleAnimPlayed_ = false;
 			}
 		}
+		//逆再生処理(アニメーションに入れると複数のキャラにも適用させないといけないので
+		// ここで実装)
+		if (isReverseIdle_)
+		{
+			idleReverseTimer_++;
+
+			if (idleReverseTimer_ >= kIdleFrameInterval)
+			{
+				idleReverseTimer_ = 0;
+				idleReverseFrame_--;
+
+				if (idleReverseFrame_ <= 0)
+				{
+					idleReverseFrame_ = 0;
+					isReverseIdle_ = false; //完全に潜った
+				}
+
+				idleAnim->SetFrame(idleReverseFrame_);
+			}
+		}
 		break;
 
 	case ZombieState::Walk:
@@ -194,9 +220,14 @@ void Zombie::UpdateAnim()
 		//離れたらまた潜らせる
 		if (distance >= kIdleTriggerDistance)
 		{
-			idleAnim->Reset();
 			zombieState_ = ZombieState::Idle;
+
+			isReverseIdle_ = true;
 			isIdleAnimPlayed_ = false;
+
+			idleReverseFrame_ = idleAnim->GetFrameCount() - 1;
+			idleReverseTimer_ = 0;
+			idleAnim->SetFrame(idleReverseFrame_);
 		}
 		break;
 	}
