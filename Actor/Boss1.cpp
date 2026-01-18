@@ -68,7 +68,7 @@ namespace
 	constexpr float kEscapeSpeed = 1.8f;
 	constexpr float kBulletSpeed = 3.0f;
 	constexpr float kShotInterval = 5.0f;
-	constexpr int KMaxHp = 30;
+	constexpr int KMaxHp = 5;
 	constexpr float kRushSpeed = 4.5f;   //突進する速度
 	constexpr int   kRushTime = 18;     //突進するフレーム数
 }
@@ -76,8 +76,8 @@ namespace
 Boss1::Boss1(Vector2 pos, Vector2 vel,
 	std::shared_ptr<Player> player,
 	BulletManager* bm,
-	std::shared_ptr<Camera> camera)
-	:Boss(pos, vel, player, bm, camera),
+	std::shared_ptr<Camera> camera, EffectManager* effectMgr)
+	:Boss(pos, vel, player, bm, camera,effectMgr),
 	escapeTimer_(0),
 	knockbackDir_(0),
 	chargeVel_(0.0f)

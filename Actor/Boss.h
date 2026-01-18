@@ -15,8 +15,9 @@ public:
 		Dead
 	};
 	Boss(Vector2 pos, Vector2 vel,std::shared_ptr<Player>player,
-		BulletManager*bm,std::shared_ptr<Camera>camera);
-	virtual~Boss() = 0;
+		BulletManager*bm,std::shared_ptr<Camera>camera,
+		EffectManager* effectMgr);
+	~Boss() {};
 
 	void Init()override;
 	void Update()override;
@@ -29,8 +30,9 @@ public:
 	void ChangeState(BossState nextState);
 	virtual void OnHit(int damage);
 
-	bool IsDead() const { return isDead_; }
-	bool IsDeadAnimFinished() const { return isDeadAnimFinished_; }
+	void Dead() override {}
+	bool IsDead() const { return false; }
+	bool IsDeadAnimFinished() const override{return isDeadAnimFinished_;}
 
 	//被弾状態開始
 	void StartHitInvincible();
@@ -49,8 +51,6 @@ protected:
 	virtual void UpdateDead();
 
 protected:
-	int hp_;					//体力
-	BossState currentState_;	//現在の状態
 	int stateTimer_;			//状態遷移用タイマー
 	float shotTimer_;			//弾を撃つまでの時間
 	float shotInterval_;		//弾を撃つ間隔
@@ -58,27 +58,29 @@ protected:
 	bool isActive_;
 	bool isCharging_;			//突進中か
 	bool isInvincible_;			//無敵状態かどうか
-	Vector2 backPos_;			//戻る位置を保存する変数
 	int hitInvincibleTimer_;	//被弾無敵時間用タイマー
 	bool isHitInvincible_;		//被弾無敵状態かどうか
-	bool isDead_ = false;
 	bool isDeadAnimFinished_ = false;
+
+	int explosionSEHandle_;
+	int bossDeathSEHandle_;
+
+	// 死亡演出フラグ
+	bool isPlayingDeathEffect_ = false;
+	int deathEffectStep_ = 0;
+
+	Vector2 backPos_;			//戻る位置を保存する変数
+	BossState currentState_;	//現在の状態
 	//描画オフセット
 	Vector2 drawOffset_{ 0.0f, 0.0f };
 
-	//グラフィックハンドルの配列
-	std::vector<int>graphHandles_;
-
-	//プレイヤーのポインタ
-	std::shared_ptr<Player>pPlayer_;
-
 	//弾管理クラスのポインタ
 	BulletManager* pBm_;
-
+	//グラフィックハンドルの配列
+	std::vector<int>graphHandles_;
+	//プレイヤーのポインタ
+	std::shared_ptr<Player>pPlayer_;
 	//カメラのポインタ
 	std::shared_ptr<Camera>pCamera_;
-
-	//アニメーションの配列
-	std::vector<std::shared_ptr<Animation>>animations_;
 };
 

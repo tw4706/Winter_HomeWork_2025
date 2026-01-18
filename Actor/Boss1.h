@@ -8,7 +8,7 @@ public:
     Boss1(Vector2 pos, Vector2 vel,
         std::shared_ptr<Player> player,
         BulletManager* bm,
-        std::shared_ptr<Camera> camera);
+        std::shared_ptr<Camera> camera, EffectManager* effectMgr);
 
 	~Boss1() override;
 

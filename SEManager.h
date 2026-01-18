@@ -9,6 +9,8 @@ enum class SE
 	Shot,
 	Hit,
 	Damage,
+	BossDeath,
+	Explosion,
 	WeaponChange,
 };
 
@@ -19,6 +21,7 @@ public:
 	void PlaySE(SE se);
 	void SetVolume(int volume);
 	int GetVolume() const;
+	int GetHandle(SE se);
 
 private:
 	std::map<SE, int>seHandles_;

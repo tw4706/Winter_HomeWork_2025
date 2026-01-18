@@ -47,6 +47,8 @@ public:
 	//死亡フラグを取得する関数
 	bool IsDead() const { return isDead_; }
 
+	virtual bool IsDeadAnimFinished() const { return isDead_; }
+
 	//ボスかどうか
 	virtual bool IsBoss() const { return false; }
 

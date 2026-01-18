@@ -1,7 +1,10 @@
 ﻿#include "Boss.h"
 #include "Player.h"
 #include"Camera.h"
+#include"Application.h"
+#include"SpriteEffect.h"
 #include "BulletManager.h"
+#include "EffectManager.h"
 #include<Dxlib.h>
 #include<cassert>
 #include<string>
@@ -13,7 +16,7 @@ namespace
 
 	constexpr float kActiveDistance = 500.0f;
 	constexpr float kShotInterval = 5.0f;
-	constexpr int KMaxHp = 30;
+	constexpr int KMaxHp = 5;
 
 	//地形・距離関連
 	constexpr float kGravity = 0.5f;
@@ -29,29 +32,31 @@ namespace
 	constexpr int kBlinkInterval = 6;
 }
 
-Boss::Boss(Vector2 pos, Vector2 vel, std::shared_ptr<Player>player, BulletManager* bm, std::shared_ptr<Camera>camera) :
+Boss::Boss(Vector2 pos, Vector2 vel,
+	std::shared_ptr<Player>player, BulletManager* bm, 
+	std::shared_ptr<Camera>camera, EffectManager* effectMgr) :
 	Enemy(pos, vel),
-	pPlayer_(player),
-	pBm_(bm),
-	pCamera_(camera),
 	currentState_(BossState::Idle),
 	stateTimer_(0),
 	shotTimer_(0.0f),
 	shotInterval_(kShotInterval),
-	hp_(KMaxHp),
 	backPos_(pos),
 	hasShot_(false),
 	isActive_(false),
 	isCharging_(false),
 	isInvincible_(false),
 	hitInvincibleTimer_(0),
-	isHitInvincible_(false)
+	isHitInvincible_(false),
+	isDeadAnimFinished_(false),
+	explosionSEHandle_(-1),
+	bossDeathSEHandle_(-1)
 {
+	pPlayer_ = player;
+	pBm_ = bm;
+	pCamera_ = camera;
+	pEffectManager_ = effectMgr;
+	hp_ = KMaxHp;
 	colSize_ = kColSize;
-}
-
-Boss::~Boss()
-{
 }
 
 void Boss::Init()
@@ -80,7 +85,10 @@ void Boss::Update()
 			//Idleアニメだけ更新
 			animations_[GetGraphIndex(BossState::Idle)]->Update();
 
-			Enemy::Update();
+			if (currentState_ != BossState::Dead)
+			{
+				Enemy::Update();
+			}
 			return;
 		}
 	}
@@ -164,10 +172,11 @@ void Boss::Draw()
 #ifdef _DEBUG
 	colRect_.DrawAndCamera(cameraOffset_, 0xff0000, false);
 
-	DrawFormatString(50, 50, GetColor(255, 255, 255),
-		"BossState=%d Frame=%d",
-		static_cast<int>(currentState_),
-		animations_[GetGraphIndex(currentState_)]->GetCurrentFrame());
+	DrawFormatString(50, 80, GetColor(255, 255, 0),
+		"State=%d Dead=%d DeadAnimFin=%d",
+		(int)currentState_,
+		isDead_,
+		isDeadAnimFinished_);
 #endif
 }
 
@@ -186,7 +195,11 @@ void Boss::ChangeState(BossState nextState)
 		vel_.y = 0.0f;
 	}
 
-	animations_[GetGraphIndex(nextState)]->Reset();
+	//死亡アニメーションの時は演出があるためリセットしないようにする
+	if (nextState != BossState::Dead)
+	{
+		animations_[GetGraphIndex(nextState)]->Reset();
+	}
 }
 
 void Boss::UpdateHurt()
@@ -209,9 +222,7 @@ void Boss::UpdateDead()
 {
 	stateTimer_++;
 
-	int animIdx = GetGraphIndex(BossState::Dead);
-
-	// 落下処理（必要なら）
+	// 死亡アニメの落下
 	if (pos_.y < kGround)
 	{
 		vel_.y += kGravity;
@@ -223,11 +234,54 @@ void Boss::UpdateDead()
 		vel_.y = 0.0f;
 	}
 
-	// 死亡アニメが終わったらフラグを立てる
-	if (animations_[animIdx]->IsAnimFinished())
+	// 死亡演出ステップ管理
+	if (isPlayingDeathEffect_)
 	{
-		isDead_ = true;                 // ボスは死亡状態
-		isDeadAnimFinished_ = true;     // アニメ終了
+		switch (deathEffectStep_)
+		{
+		case 0: // 小爆発 SE の再生待ち
+			if (CheckSoundMem(explosionSEHandle_) == 0) // 再生終了したら
+			{
+				// 大爆発エフェクト生成
+				if (pEffectManager_)
+				{
+					auto bigExplosion = std::make_shared<SpriteEffect>(
+						pos_,
+						"data/Effect/enemy_explosion.png",
+						176, 16,
+						16, 16,
+						3,
+						4,
+						3.0f);
+					pEffectManager_->AddEffect(bigExplosion);
+				}
+
+				// BossDeath SE 再生
+				bossDeathSEHandle_ = Application::GetInstance().GetSEManager().GetHandle(SE::BossDeath);
+				PlaySoundMem(bossDeathSEHandle_, DX_PLAYTYPE_BACK, FALSE);
+
+				// カメラ揺れ
+				if (pCamera_)
+					pCamera_->Shake(60, 20.0f);
+
+				deathEffectStep_++;
+			}
+			break;
+
+		case 1: // BossDeath SE 再生後にフラグ完了
+			if (CheckSoundMem(bossDeathSEHandle_) == 0)
+			{
+				isPlayingDeathEffect_ = false;
+			}
+			break;
+		}
+	}
+
+	// 死亡アニメが終わったらフラグを立てる
+	int animIdx = GetGraphIndex(BossState::Dead);
+	if (animations_[animIdx]->IsAnimFinished() && !isPlayingDeathEffect_)
+	{
+		isDeadAnimFinished_ = true;
 	}
 }
 
@@ -242,8 +296,14 @@ void Boss::OnHit(int damage)
 		isHitInvincible_ = false;
 		hitInvincibleTimer_ = 0;
 
-		pCamera_->Shake(60, 15.0f);
-		ChangeState(BossState::Dead);
+		// 死亡演出開始
+		isPlayingDeathEffect_ = true;
+		deathEffectStep_ = 0;
+
+		explosionSEHandle_ = Application::GetInstance().GetSEManager().GetHandle(SE::Explosion);
+		PlaySoundMem(explosionSEHandle_, DX_PLAYTYPE_BACK, FALSE);
+
+		currentState_ = BossState::Dead;
 		stateTimer_ = 0;
 		return;
 	}

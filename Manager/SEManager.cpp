@@ -10,6 +10,8 @@ void SEManager::Init()
 	seHandles_[SE::Shot] = LoadSoundMem("data/BGM・SE/Shot.wav");
 	seHandles_[SE::Hit] = LoadSoundMem("data/BGM・SE/ダメージ音02.mp3");
 	seHandles_[SE::Damage] = LoadSoundMem("data/BGM・SE/ダメージ音02.mp3");
+	seHandles_[SE::Explosion] = LoadSoundMem("data/BGM・SE/battery1.mp3");
+	seHandles_[SE::BossDeath] = LoadSoundMem("data/BGM・SE/爆発1.mp3");
 	seHandles_[SE::WeaponChange] = LoadSoundMem("data/BGM・SE/ショットガンのポンプアクション2.mp3");
 }
 
@@ -36,4 +38,9 @@ void SEManager::SetVolume(int volume)
 int SEManager::GetVolume() const
 {
 	return volume_;
+}
+
+int SEManager::GetHandle(SE se)
+{
+	return seHandles_[se];
 }
