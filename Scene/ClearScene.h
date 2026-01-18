@@ -9,6 +9,7 @@ class ClearScene :public Scene
 {
 private:
 	int frame_ = 0;
+	int bgHandle_;
 	int fontHandle_;
 
 	std::string clearText_;             //GAMECLEAR‚Ì•¶Žš—ñ

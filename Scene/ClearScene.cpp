@@ -25,6 +25,7 @@ namespace
 ClearScene::ClearScene(SceneController& controller) :
 	Scene(controller),
 	frame_(0),
+	bgHandle_(-1),
 	fontHandle_(-1),
 	currentTextIdx_(0),
 	isTextEffectPlaying_(false)
@@ -120,6 +121,8 @@ void ClearScene::FadeDraw()
 
 void ClearScene::NormalDraw()
 {
+	DrawExtendGraph(0, 0, 1280, 720, bgHandle_, false);
+
 	int startX =kScreenCenterX -(static_cast<int>(clearText_.size()) * kCharWidth) / 2;
 
 	for (size_t i = 0; i < clearText_.size(); ++i)
@@ -150,6 +153,7 @@ void ClearScene::Init()
 {
 	frame_ = kFadeDuration;
 
+	bgHandle_ = LoadGraph("data/UI/GameClear.png");
 	fontHandle_= CreateFontToHandle("g_コミックホラー悪党-教漢",96,-1,-1);
 	clearText_ = "GAME CLEAR";
 	charVisible_.assign(clearText_.size(), false);
