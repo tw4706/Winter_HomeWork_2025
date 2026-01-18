@@ -1,6 +1,8 @@
 #pragma once
 #include "Scene.h"
 #include "StageType.h"
+#include <string>
+#include <vector>
 #include<memory>
 
 class Animation;

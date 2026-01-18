@@ -1,10 +1,25 @@
 #pragma once
 #include "Scene.h"
+#include <string>
+#include <vector>
+#include <memory>
+
+class EffectManager;
 class ClearScene :public Scene
 {
 private:
 	int frame_ = 0;
+	int fontHandle_;
 
+	std::string clearText_;             //GAMECLEARの文字列
+	std::vector<bool> charVisible_;     //各文字の表示フラグ
+
+	int currentTextIdx_;
+	bool isTextEffectPlaying_;
+
+	std::shared_ptr<EffectManager> pEffectManager_;//エフェクトマネージャーのポインタ
+
+private:
 	void FadeInUpdate(Input&);
 	void NormalUpdate(Input& input);
 	void FadeOutUpdate(Input&);

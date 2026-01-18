@@ -63,7 +63,7 @@ void DemoPlayer::Update()
 
 void DemoPlayer::Draw()
 {
-	anim_->Draw(pos_.x, pos_.y - kDrawOffsetY, !isTurn_);
+	anim_->Draw(pos_.x, pos_.y - kDrawOffsetY, isTurn_);
 }
 
 void DemoPlayer::StartWalk()

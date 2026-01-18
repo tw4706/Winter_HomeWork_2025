@@ -98,13 +98,11 @@ void GameOverScene::NormalDraw()
 		DrawExtendGraph(0, 0, 1280, 720, frameHandle_, TRUE);
 	}
 
-	DrawString(400, 200, "GAME OVER", GetColor(255, 0, 0));
-
 	// ‘I‘ðŽˆ‚ð•`‰æ
 	for (int i = 0; i < kOptionCount; ++i)
 	{
 		int color = (i == selectIdx_) ? GetColor(255, 255, 0) : GetColor(255, 255, 255);
-		DrawStringToHandle(640, 360 + i * 40, kOptions[i], color, fontHandle_);
+		DrawStringToHandle(350, 300 + i * 80, kOptions[i], color, fontHandle_);
 	}
 
 }
