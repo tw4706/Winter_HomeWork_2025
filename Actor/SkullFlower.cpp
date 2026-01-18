@@ -25,7 +25,6 @@ namespace
 	const int frameCount[kGraphNum] = { 4, 5,10 };
 	const int frameIntervals[kGraphNum] = { 6, 6,4 };
 
-
 	constexpr int  kGraphSize = 64;
 	constexpr int  kGraphColSize = 64 / 2;
 	constexpr float kScale = 2.0f;

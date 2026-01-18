@@ -5,6 +5,7 @@
 #include"Player.h"
 #include"Zombie.h"
 #include"StageType.h"
+#include"DemoPlayer.h"
 #include"Application.h"
 #include "GameScene.h"
 #include "SelectScene.h"
@@ -51,6 +52,18 @@ void TitleScene::FadeInUpdate(Input&input)
 
 void TitleScene::NormalUpdate(Input&input)
 {
+
+	//フェードアウト中はデモプレイヤーを更新しない
+	if (update_ == &TitleScene::FadeOutUpdate)
+	{
+		return;
+	}
+
+	if (demoPlayer_)
+	{
+		demoPlayer_->Update();
+	}
+
 	//決定中の高速点滅更新
 	if (isDeciding_)
 	{
@@ -103,6 +116,10 @@ void TitleScene::FadeOutUpdate(Input&input)
 {
 	if (frame_++ >= kFadeInterval) 
 	{
+		//プレイヤーをリセットしておく
+		demoPlayer_.reset();
+
+		//シーン切り替え
 #ifdef _DEBUG
 		controller_.ChangeScene(std::make_shared<SelectScene>(controller_));
 #else
@@ -139,6 +156,12 @@ void TitleScene::ConfirmUpdate(Input&input)
 			nextStage_ = StageType::Stage1;
 		}
 
+		//デモプレイヤー歩行開始
+		if (demoPlayer_)
+		{
+			demoPlayer_->StartWalk();
+		}
+
 		//フェードアウトへ遷移
 		frame_ = 0;
 		update_ = &TitleScene::FadeOutUpdate;
@@ -148,10 +171,6 @@ void TitleScene::ConfirmUpdate(Input&input)
 
 void TitleScene::NormalDraw()
 {
-	DrawRectGraph(0,
-		Game::kScreenHeight / 2,
-		64,64,64,64,shieldHandle_,false);
-
 	float scale = 1.0f + sinf(frame_ * 0.05f) * 0.01f;
 	DrawRotaGraph(Game::kScreenWidth / 2, Game::kScreenHeight/2-100 , scale, 0.0f, titleH_, true);
 
@@ -187,23 +206,29 @@ void TitleScene::NormalDraw()
 			true);
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	}
+
+	//デモプレイヤー描画
+	if (demoPlayer_)
+	{
+		demoPlayer_->Draw();
+	}
 }
 
 void TitleScene::FadeDraw()
 {
-	// 値の範囲を一旦0.0~1.0にしておくといろいろと扱いやすくなります
+	//値の範囲を一旦0.0~1.0にしておくといろいろと扱いやすくなります
 	auto rate = 1.0f-static_cast<float>(frame_) / static_cast<float>(kFadeInterval);
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255 * rate);//αブレンド
 	DrawBox(0, 0, Game::kScreenWidth, Game::kScreenHeight, 0xffffff, true);
-	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);// ブレンドしない
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);//ブレンドしない
 }
 
 void TitleScene::ConfirmDraw()
 {
-	// 背景は通常のタイトルを描画
+	//通常のタイトルを描画
 	NormalDraw();
 
-	// 半透明背景
+	//半透明背景
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 180);
 	DrawBox(kBannerX, kBannerY, kBannerX + kBannerW, kBannerY + kBannerH, 0x000000, true);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
@@ -241,7 +266,6 @@ TitleScene::TitleScene(SceneController& controller) :
 	isDeciding_(false),
 	decideBlinkCount_(0),
 	isSkipedConfirm_(false),
-	shieldHandle_(-1),
 	nextStage_(StageType::Tutorial),
 	titleState_(TitleState::Normal),
 	confirmSelect_(0)
@@ -263,8 +287,11 @@ void TitleScene::Init()
 	pressStartH_ = LoadGraph("data/UI/PressButton.png");
 	selectH_ = LoadGraph("data/Bullet/Lance.png");
 	fontH_ = CreateFontToHandle("g_コミックホラー悪党-教漢", 24, -1, -1);
-	shieldHandle_ = LoadGraph("data/UI/64×64.png");
 	frame_ = kFadeInterval;
+
+	demoPlayer_ = std::make_shared<DemoPlayer>(
+		Vector2{ 200.0f, 420.0f });
+	demoPlayer_->Init();
 
 	//タイトルBGM再生
 	Application::GetInstance().GetBGMManager().PlayBGM(BGM::Title);

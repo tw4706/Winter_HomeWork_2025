@@ -12,6 +12,7 @@ enum class TitleState
 	Confirm//初回プレイか確認中
 };
 
+class DemoPlayer;
 class TitleScene :public Scene
 {
 private:
@@ -24,8 +25,8 @@ private:
 	bool isDeciding_;//決定中かどうか
 	int decideBlinkCount_;//決定時の点滅カウント
 	bool isSkipedConfirm_;//確認をスキップしたかどうか
-	int shieldHandle_;
 	StageType nextStage_;//次のステージ
+	std::shared_ptr<DemoPlayer> demoPlayer_;//デモプレイヤー
 
 	TitleState titleState_;//シーンの状態
 	int confirmSelect_;//確認選択肢 0 = はい 1 = いいえ

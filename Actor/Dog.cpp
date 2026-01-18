@@ -95,10 +95,12 @@ void Dog::Update()
 
 	UpdateAnim();
 
+#ifdef _DEBUG
 	//デバッグ表示
 	DrawFormatString(0, 150, 0xffffff, "Dog PosX:%f", pos_.x);
 	DrawFormatString(0, 170, 0xffffff, "Dog VelX:%f", vel_.x);
 	DrawFormatString(0, 190, 0xffffff, "Dog Dist:%f", std::abs(pPlayer_->GetPos().x - pos_.x));
+#endif
 }
 
 void Dog::Draw()
