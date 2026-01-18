@@ -40,6 +40,8 @@ private:
 	void NormalDraw();
 	void MenuDraw();
 	void VolumeDraw();
+	//•`‰æˆ—‚Å“¯‚¶‚à‚Ì‚ğ‘½”‚ÌêŠ‚Åg‚Á‚Ä‚¢‚é‚Ì‚Å‚Ü‚Æ‚ß“I‚ÈŠÖ”
+	void DrawItems(const std::vector<std::string>& items, int selectIdx, int yOffset, const char* guideText);
 	using DrawFunc_t = void(PauseScene::*)();
 	DrawFunc_t draw_;
 

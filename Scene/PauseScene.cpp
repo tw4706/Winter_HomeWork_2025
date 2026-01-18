@@ -124,18 +124,18 @@ void PauseScene::VolumeUpdate(Input& input)
 	}
 }
 
-void PauseScene::ExcecuteMenu() 
+void PauseScene::ExcecuteMenu()
 {
 	if (menuList_.empty()) return;
 	if (selectIndex_ < 0 || selectIndex_ >= static_cast<int>(menuList_.size())) return;
-	const std::string& menu = menuList_[selectIndex_]; 
+	const std::string& menu = menuList_[selectIndex_];
 	if (menu == "ゲームに戻る") {
 		update_ = &PauseScene::DisappearUpdate;
-		draw_ = &PauseScene::IntervalDraw; 
-		frame_ = appear_interval; 
-	} 
-	else if (menu == "タイトルに戻る") 
-	{ 
+		draw_ = &PauseScene::IntervalDraw;
+		frame_ = appear_interval;
+	}
+	else if (menu == "タイトルに戻る")
+	{
 		//タイトルに戻る処理
 		auto& progress = controller_.GetProgress();
 		progress.SetReturnFromGame(true);//ゲームシーンから戻ってきたことを記録する
@@ -195,9 +195,9 @@ void PauseScene::NormalDraw()
 	int x = (wsize.w - drawW) / 2;
 	int y = (wsize.h - drawH) / 2;
 
-	DrawExtendGraph(x,y,
-		x + drawW,y + drawH,
-		frameHandle_,true);
+	DrawExtendGraph(x, y,
+		x + drawW, y + drawH,
+		frameHandle_, true);
 
 	if (pauseMode_ == PauseMode::Menu)
 	{
@@ -211,35 +211,20 @@ void PauseScene::NormalDraw()
 
 void PauseScene::MenuDraw()
 {
-	const auto& wsize = Application::GetInstance().GetWindowSize();
-
-	int imgW, imgH;
-	GetGraphSize(frameHandle_, &imgW, &imgH);
-	int frameW = static_cast<int>(imgW * pause_frame_scale);
-	int frameH = static_cast<int>(imgH * pause_frame_scale);
-	int frameX = (wsize.w - frameW) / 2;
-	int frameY = (wsize.h - frameH) / 2;
-
-	// メニュー開始位置（中央より少し左・少し下）
-	int x = frameX + frameW / 2 + offsetX;
-	int y = frameY + frameH / 2 + offsetY - static_cast<int>(menuList_.size()) * menu_row_height / 2;
-
-	// 選択カーソル
-	DrawString(x - 30, y + selectIndex_ * menu_row_height, "⇒", 0xffaaaa);
-
-	// メニュー項目
-	for (int i = 0; i < menuList_.size(); ++i)
-	{
-		uint32_t col = (i == selectIndex_) ? GetColor(128, 255, 192) : 0xffffff;
-		DrawFormatString(x, y + i * menu_row_height, col, "%s", menuList_[i].c_str());
-	}
-
-	// 操作ガイド
-	DrawString(x, y + static_cast<int>(menuList_.size()) * menu_row_height + 5,
-		"↑↓で選択 / 決定で進む", 0xaaaaaa);
+	DrawItems(menuList_, selectIndex_, 0, "↑↓で選択 / 決定で進む");
 }
 
 void PauseScene::VolumeDraw()
+{
+	//BGM/SE表示用の文字列
+	std::vector<std::string> volItems = {
+		"BGM : " + std::to_string(Application::GetInstance().GetBGMManager().GetVolume()),
+		"SE  : " + std::to_string(Application::GetInstance().GetSEManager().GetVolume())};
+
+	DrawItems(volItems, volumeSelectIdx_, 20, "← →で調整 / 決定で戻る"); // 少し下にオフセット
+}
+
+void PauseScene::DrawItems(const std::vector<std::string>& items, int selectIdx, int yOffset, const char* guideText)
 {
 	const auto& wsize = Application::GetInstance().GetWindowSize();
 
@@ -250,25 +235,22 @@ void PauseScene::VolumeDraw()
 	int frameX = (wsize.w - frameW) / 2;
 	int frameY = (wsize.h - frameH) / 2;
 
-	// MenuDraw と同じ横位置
 	int x = frameX + frameW / 2 + offsetX;
+	int y = frameY + frameH / 2 + offsetY + yOffset - static_cast<int>(items.size()) * menu_row_height / 2;
 
-	// MenuDraw より少し下に配置（MenuDraw の offsetY を基準に +20 など）
-	int volumeOffsetY = offsetY + 20; // MenuDraw より 20px 下
-	int y = frameY + frameH / 2 + volumeOffsetY - 2 * menu_row_height; // BGM/SE 2行分
+	// 選択カーソルと項目描画
+	for (int i = 0; i < items.size(); ++i)
+	{
+		if (i == selectIdx)
+			DrawString(x - 30, y + i * menu_row_height, "⇒", 0xffaaaa);
 
-	// 選択カーソル
-	DrawString(x - 30, y + volumeSelectIdx_ * menu_row_height, "⇒", 0xffaaaa);
-
-	// 音量表示
-	int bgmVol = Application::GetInstance().GetBGMManager().GetVolume();
-	int seVol = Application::GetInstance().GetSEManager().GetVolume();
-
-	DrawFormatString(x, y, 0xffffff, "BGM : %d", bgmVol);
-	DrawFormatString(x, y + menu_row_height, 0xffffff, "SE  : %d", seVol);
+		uint32_t col = (i == selectIdx) ? GetColor(128, 255, 192) : 0xffffff;
+		DrawFormatString(x, y + i * menu_row_height, col, "%s", items[i].c_str());
+	}
 
 	// 操作ガイド
-	DrawString(x, y + menu_row_height * 2 + 5, "← →で調整 / 決定で戻る", 0xaaaaaa);
+	if (guideText)
+		DrawString(x, y + static_cast<int>(items.size()) * menu_row_height + 5, guideText, 0xaaaaaa);
 }
 
 PauseScene::PauseScene(SceneController& controller) :
@@ -280,7 +262,7 @@ PauseScene::PauseScene(SceneController& controller) :
 	menuList_ = {
 		"ゲームに戻る",
 		"音量設定",
-		"タイトルに戻る"};
+		"タイトルに戻る" };
 }
 
 void PauseScene::Init()
@@ -309,7 +291,7 @@ void PauseScene::Update(Input& input)
 	(this->*update_)(input);
 }
 
-void PauseScene::Draw() 
+void PauseScene::Draw()
 {
 	(this->*draw_)();
 }
