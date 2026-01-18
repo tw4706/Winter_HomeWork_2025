@@ -20,10 +20,12 @@ private:
 
 	int frame_ = 0;
 	int selectIndex_ = 0;//現在選択中のインデックス
+	int volumeSelectIdx_ = 0;
+	int frameHandle_;
 	std::vector<std::string>menuList_;//ポーズ画面中に表示するメニューリスト
 	PauseMode pauseMode_ = PauseMode::Menu;
-	int volumeSelectIdx_ = 0;
 
+private:
 	void AppearUpdate(Input& input);
 	void NormalUpdate(Input& input);
 	void DisappearUpdate(Input& input);
