@@ -19,7 +19,7 @@ namespace
 {
 	constexpr int kFadeInterval = 60;
 
-	constexpr int kTitleScale = 1.0f;
+	constexpr float kTitleScale = 1.0f;
 
 	constexpr float kPressStartScale = 0.25f;
 	constexpr int kDecideBlinkFrame = 20;
@@ -238,7 +238,7 @@ void TitleScene::FadeDraw()
 {
 	//値の範囲を一旦0.0~1.0にしておくといろいろと扱いやすくなります
 	auto rate = 1.0f-static_cast<float>(frame_) / static_cast<float>(kFadeInterval);
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255 * rate);//αブレンド
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, static_cast<int>(255 * rate));//αブレンド
 	DrawBox(0, 0, Game::kScreenWidth, Game::kScreenHeight, 0xffffff, true);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);//ブレンドしない
 }

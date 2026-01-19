@@ -75,10 +75,9 @@ void Bullet::Init()
 	{
 		animations_ = std::make_unique<Animation>(
 			bulletH_,
-			config.width* KEnemyBulletScale,
-			config.height* KEnemyBulletScale,
-			5,
-			5,
+			static_cast<int>(config.width * KEnemyBulletScale),
+			static_cast<int>(config.height * KEnemyBulletScale),
+			5,5,
 			1.0f,
 			true,0);
 	}
@@ -263,8 +262,8 @@ void Bullet::SpawnWave()
 
 		h.animations_ = std::make_unique<Animation>(
 			hadouH_,
-			kWaveW,        //32
-			kWaveH,        //32
+			static_cast<int>(kWaveW),
+			static_cast<int>(kWaveH),
 			4,              //アニメーションの総フレーム
 			5,              //フレーム間隔
 			1.0f,

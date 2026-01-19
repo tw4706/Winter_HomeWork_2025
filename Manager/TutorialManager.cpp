@@ -135,7 +135,7 @@ void TutorialManager::Draw(const Camera& camera)
 	}
 
 	// テキストをフレーム中央に配置
-	int textWidth = GetDrawStringWidth(waitingMessage_, strlen(waitingMessage_));
+	int textWidth = GetDrawStringWidth(waitingMessage_, static_cast<int>(strlen(waitingMessage_)));
 	int textHeight = 15; //文字の高さの目安
 	int textX = frameX + kButtonAreaWidth;
 	int textY = frameY + (frameHeight - textHeight) / 2-10;
@@ -145,7 +145,7 @@ void TutorialManager::Draw(const Camera& camera)
 		int buttonX = textX + textWidth + 400;
 		int buttonY = (frameY + frameHeight / 2)-10;
 
-		buttonAnim_->Draw(buttonX, buttonY);
+		buttonAnim_->Draw(static_cast<float>(buttonX), static_cast<float>(buttonY));
 	}
 
 	DrawStringToHandle(textX, textY, waitingMessage_, GetColor(255, 255, 255), fontHandle_);

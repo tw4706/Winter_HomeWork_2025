@@ -63,11 +63,13 @@ void PauseScene::DisappearUpdate(Input& input)
 }
 void PauseScene::MenuUpdate(Input& input)
 {
+	int menuSize = static_cast<int>(menuList_.size());
+
 	if (input.IsTriggered("up"))
-		selectIndex_ = (selectIndex_ + menuList_.size() - 1) % menuList_.size();
+		selectIndex_ = (selectIndex_ + menuSize - 1) % menuSize;
 
 	if (input.IsTriggered("down"))
-		selectIndex_ = (selectIndex_ + 1) % menuList_.size();
+		selectIndex_ = (selectIndex_ + 1) % menuSize;
 
 	if (input.IsTriggered("next"))
 	{

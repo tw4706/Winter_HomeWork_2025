@@ -40,8 +40,8 @@ namespace
 	//プレイヤーの画像サイズ
 	constexpr int kGraphWidth = 128;
 	constexpr int kGraphHeight = 128;
-	constexpr int kGraphHalfWidth = 48.0f;
-	constexpr int kGraphHalfHeight = 128 / 2;
+	constexpr int kGraphHalfWidth = 48;
+	constexpr int kGraphHalfHeight =64;
 	constexpr float kGraphColSize = 64.0f;
 	constexpr int kMaxHp = 2;
 
@@ -490,7 +490,7 @@ void Player::Shot(Input& input, BulletManager& bm)
 		// 攻撃開始
 		isAttacking_ = true;
 		animations_[static_cast<int>(PlayerState::Attack)]->Reset();
-		shotTimer_ = config.shotInterval;
+		shotTimer_ = static_cast<int>(config.shotInterval);
 	}
 }
 
