@@ -17,6 +17,9 @@ public:
 
 	void Draw(std::shared_ptr<Camera> pCamera);
 
+	//タイトル用マップチップの描画
+	void DrawTitle();
+
 	/// <summary>
 	/// 指定した矩形と当たっているかを判定する
 	/// </summary>
@@ -42,6 +45,8 @@ private:
 	/// マップチップ表示
 	/// </summary>
 	void DrawMapChip(std::shared_ptr<Camera>pCamera);
+
+	void DrawMapChipNoCamera();
 
 	int bgHandle_;//背景の画像ハンドル
 	int mapHandle_;//マップチップのハンドル

@@ -65,6 +65,11 @@ void Bg::Draw(std::shared_ptr<Camera> pCamera)
 	DrawMapChip(pCamera);
 }
 
+void Bg::DrawTitle()
+{
+	DrawMapChipNoCamera();
+}
+
 bool Bg::IsCollision(Rect& rect, Rect& chipRect)
 {
 	for (int y = 0; y < kChipNumY; y++)
@@ -222,6 +227,47 @@ void Bg::DrawMapChip(std::shared_ptr<Camera>pCamera)
 
 				DrawBox(left, top, right, bottom, GetColor(255, 0, 0), false);
 			}
+#endif
+		}
+	}
+}
+
+void Bg::DrawMapChipNoCamera()
+{
+	int tileW = static_cast<int>(kChipSize * kScale);
+	int tileH = tileW;
+
+	// 画面下に描画するオフセット
+	int offsetY = Game::kScreenHeight - (kChipNumY * tileH); // 全チップの高さ分下に寄せる
+
+	for (int y = 0; y < kChipNumY; y++)
+	{
+		for (int x = 0; x < kChipNumX; x++)
+		{
+			int chipNum = mapChipData_[y][x];
+			if (chipNum == 0) continue;
+
+			int posX = x * tileW;
+			int posY = y * tileH + offsetY; // Y座標にオフセットを足す
+
+			// 画面内だけ描画
+			if (posX + tileW < 0 || posX > Game::kScreenWidth) continue;
+			if (posY + tileH < 0 || posY > Game::kScreenHeight) continue;
+
+			int srcX = kChipSize * (chipNum % graphChipNumX_);
+			int srcY = kChipSize * (chipNum / graphChipNumX_);
+
+			DrawRectRotaGraph(
+				posX + tileW / 2,
+				posY + tileH / 2,
+				srcX, srcY,
+				kChipSize, kChipSize,
+				kScale, 0.0f,
+				mapHandle_, true
+			);
+
+#ifdef _DEBUG
+			DrawBox(posX, posY, posX + tileW, posY + tileH, GetColor(255, 0, 0), false);
 #endif
 		}
 	}

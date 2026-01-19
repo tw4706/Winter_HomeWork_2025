@@ -46,7 +46,7 @@ namespace
 	constexpr float kSpeed = 0.5f;
 
 	//拡大率
-	constexpr float kScale = 2.0f;
+	constexpr float kScale = 3.0f;
 
 	//Y座標のオフセット
 	constexpr int kPosYOffset = 20;
@@ -93,7 +93,7 @@ void DemoZombie::Init()
 	}
 
 	colRect_.SetCenter(pos_.x, pos_.y, kGraphWidth, kGraphHeight);
-	zombieState_ = DemoZombieState::Idle;
+	zombieState_ = DemoZombieState::Walk;
 	animations_[static_cast<int>(zombieState_)]->SetFrame(0);
 }
 
@@ -101,7 +101,8 @@ void DemoZombie::Update()
 {
 	UpdateAnim();
 	Move();
-	Enemy::Update();
+
+	pos_.x += vel_.x;
 }
 
 void DemoZombie::Draw()
@@ -111,7 +112,7 @@ void DemoZombie::Draw()
 
 void DemoZombie::Move()
 {
-	vel_.x -= kSpeed;
+	vel_.x = -kSpeed;
 }
 
 void DemoZombie::UpdateAnim()

@@ -6,7 +6,7 @@ namespace
 	constexpr int kGraphWidth = 128;
 	constexpr int kGraphHeight = 128;
 	constexpr int ColSize = 64;
-	constexpr float kScale = 1.5f;
+	constexpr float kScale = 2.0f;
 
 	constexpr int kFrameCount = 8;
 	constexpr int kFrameInterval = 6;

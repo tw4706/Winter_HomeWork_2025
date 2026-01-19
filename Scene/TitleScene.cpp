@@ -1,16 +1,18 @@
 
 #include "TitleScene.h"
 #include<Dxlib.h>
+#include"Bg.h"
 #include"Input.h"
 #include"Player.h"
 #include"Zombie.h"
+#include"GameScene.h"
 #include"StageType.h"
 #include"DemoPlayer.h"
+#include"DemoZombie.h"
 #include"Application.h"
-#include "GameScene.h"
-#include "SelectScene.h"
+#include"SelectScene.h"
 #include"BulletManager.h"
-#include "SceneController.h"
+#include"SceneController.h"
 #include"GlobalConstants.h"
 
 namespace
@@ -62,6 +64,11 @@ void TitleScene::NormalUpdate(Input&input)
 	if (demoPlayer_)
 	{
 		demoPlayer_->Update();
+	}
+
+	for (auto& z : demoZombies_)
+	{
+		z->Update();
 	}
 
 	//決定中の高速点滅更新
@@ -173,8 +180,26 @@ void TitleScene::NormalDraw()
 {
 	DrawExtendGraph(0, 0, Game::kScreenWidth, Game::kScreenHeight, bgH_, false);
 
+	if (pBg_)
+	{
+		pBg_->DrawTitle();
+	}
 
-	DrawRotaGraph(Game::kScreenWidth / 2, Game::kScreenHeight / 2 - 150, 1.5f, 0.0f, titleH_, true);
+	for (auto& z : demoZombies_)
+	{
+		z->Draw();
+	}
+
+	//デモプレイヤー描画
+	if (demoPlayer_)
+	{
+		demoPlayer_->Draw();
+	}
+
+	float scale = 1.5f + 0.05f * sinf(titleRogoPulseFrame_ * 0.05f);  // 1.5 を中心に ±0.05 で拡大縮小
+	titleRogoPulseFrame_++;
+
+	DrawRotaGraph(Game::kScreenWidth / 2, Game::kScreenHeight / 2 - 150, scale, 0.0f, titleH_, true);
 
 	//PressStartUIの点滅表示
 	if (isDeciding_)
@@ -206,12 +231,6 @@ void TitleScene::NormalDraw()
 			pressStartH_,
 			true);
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-	}
-
-	//デモプレイヤー描画
-	if (demoPlayer_)
-	{
-		demoPlayer_->Draw();
 	}
 }
 
@@ -265,6 +284,7 @@ TitleScene::TitleScene(SceneController& controller) :
 	fontH_(-1),
 	frame_(0),
 	pressBlinkFrame_(0),
+	titleRogoPulseFrame_(0),
 	isDeciding_(false),
 	decideBlinkCount_(0),
 	isSkipedConfirm_(false),
@@ -292,10 +312,20 @@ void TitleScene::Init()
 	fontH_ = CreateFontToHandle("g_コミックホラー悪党-教漢", 24, -1, -1);
 	frame_ = kFadeInterval;
 
+	demoZombies_.clear();
+
+	demoZombies_.push_back(std::make_shared<DemoZombie>(Vector2{ Game::kScreenWidth + 50.0f, 500.0f }));
 	demoPlayer_ = std::make_shared<DemoPlayer>(
-		Vector2{ 200.0f, 420.0f });
+		Vector2{ 200.0f, 510.0f });
+	pBg_ = std::make_shared<Bg>(StageType::Stage1);
 
 	demoPlayer_->Init();
+	pBg_->Init();
+
+	for (auto& z : demoZombies_)
+	{
+		z->Init();
+	}
 
 	//タイトルBGM再生
 	Application::GetInstance().GetBGMManager().PlayBGM(BGM::Title);
