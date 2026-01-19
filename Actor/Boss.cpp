@@ -258,6 +258,7 @@ void Boss::UpdateDead()
 
 void Boss::OnHit(int damage)
 {
+	Application::GetInstance().GetSEManager().PlaySE(SE::Hit);
 	if (currentState_ == BossState::Dead) return;
 
 	hp_ -= damage;

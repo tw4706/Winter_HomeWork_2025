@@ -10,6 +10,7 @@ public:
 
     void Update();
     void Draw(float x, float y, bool flip);
+    void DrawFrame(float x, float y, int frame, bool flip);
 
     void Reset();
 

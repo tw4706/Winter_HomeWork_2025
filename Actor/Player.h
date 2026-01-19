@@ -82,6 +82,8 @@ public:
 	//現在の弾の種類を取得
 	BulletType GetCurrentBulletType() const { return currentBulletType_; }
 
+	void SetCamera(std::shared_ptr<Camera> camera);
+
 	//ゲームの進行状況を設定する関数
 	void SetGameProgress(GameProgress* progress) { gameProgress_ = progress; }
 
@@ -109,12 +111,16 @@ private:
 	bool isUnlockedTorch_;//たいまつが使えるかどうか
 	int autoWalkDir_;//自動移動の方向
 	float autoWalkSpeed_;//自動移動の速度
+	int hitStopTimer_ = 0;//ヒットストップ用タイマー
+	float hitStopFactor_ = 0.0f;
+	int landingTimer_ = 0;//地面着地用タイマー
 
 	StageType currentStage_;//現在のステージの種類
 	PlayerControl controlMode_;//プレイヤーの操作している状態
 	PlayerState state_;	//プレイヤーの状態
 	PlayerState prevState_;//前のフレームのプレイヤーの状態
 	BulletType currentBulletType_;//現在の弾の種類
+	std::shared_ptr<Camera> pCamera_;
 	std::vector<std::shared_ptr<Animation>>animations_;//アニメーションの配列
 	GameProgress* gameProgress_;//ゲームの進行状況を管理するクラスへのポインタ
 };

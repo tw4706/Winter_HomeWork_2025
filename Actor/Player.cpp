@@ -2,6 +2,7 @@
 #include "Input.h"
 #include"Bullet.h"
 #include"Bg.h"
+#include"Camera.h"
 #include"StageType.h"
 #include"GameProgress.h"
 #include "BulletManager.h"
@@ -106,8 +107,11 @@ namespace
 	//攻撃・ジャンプのアニメーションはさらに部分だけ切り取る
 	constexpr int kAttackStartFrame = 3;
 	constexpr int kAttackEndFrame = 8;
-	constexpr int kJumpStartFrame = 3;
-	constexpr int kJumpEndFrame = 8;
+	constexpr int kJumpStartFrame = 4;
+	constexpr int kJumpTakeoffFrame = 4; // 離陸
+	constexpr int kJumpAirFrame = 5; // 空中
+	constexpr int kJumpLandingFrame = 6; // 着地
+	constexpr int kLandingFrameTime = 6; // 着地表示フレーム数
 
 	//各状態遷移のフレーム間隔
 	constexpr int kIdleFrameInterval = 6;
@@ -175,19 +179,37 @@ void Player::Init()
 			kScale,
 			false, 0);
 	}
+
+	hitStopFactor_ = 1.0f;
 }
 
 void Player::Update(Input& input, BulletManager& bm,StageType stage)
 {
 	currentStage_ = stage;
 
-	//武器を選択する時に停止させる
-	if (controlMode_ == PlayerControl::Stop)
+	float factor = 1.0f;
+
+	if (hitStopTimer_ > 0)
 	{
-		vel_ = { 0.0f,0.0f };
-		state_ = PlayerState::Idle;
-		animations_[static_cast<int>(state_)]->Update();
+		hitStopTimer_--;
+
+		//移動・重力をスロー化
+		vel_ *= hitStopFactor_;
+		pos_ += vel_;
+
+		//アニメは間引きで更新
+		static int slowFrameCounter = 0;
+		slowFrameCounter++;
+		if (slowFrameCounter % 3 == 0)
+		{
+			animations_[static_cast<int>(state_)]->Update();
+		}
 		return;
+	}
+
+	if (isGround_)
+	{
+		landingTimer_ = kLandingFrameTime;
 	}
 
 	GameObject::Update();
@@ -345,7 +367,29 @@ void Player::Draw()
 	int animIndex = static_cast<int>(state_);
 	int frame = animations_[animIndex]->GetFrameCount();
 
-	animations_[animIndex]->Draw(drawX, drawY - kPosYOffset, !isTurn_);
+	if (state_ == PlayerState::Jump)
+	{
+		int frame = kJumpAirFrame;
+
+		if (landingTimer_ > 0)
+		{
+			frame = kJumpLandingFrame;
+		}
+		else if (vel_.y < 0)
+		{
+			frame = kJumpTakeoffFrame;
+		}
+
+		animations_[animIndex]->DrawFrame(
+			drawX,
+			drawY - kPosYOffset,
+			frame,
+			!isTurn_);
+	}
+	else
+	{
+		animations_[animIndex]->Draw(drawX, drawY - kPosYOffset, !isTurn_);
+	}
 
 #ifdef _DEBUG
 	//当たり判定の矩形の色を変える
@@ -421,6 +465,10 @@ void Player::Jump(Input& input)
 			vel_.y = -kJumpPower;
 			isGround_ = false;
 			isDoubleJumping_ = true;
+			landingTimer_ = 0;
+
+			// 離陸フレームを即表示
+			animations_[static_cast<int>(PlayerState::Jump)]->SetFrame(kJumpTakeoffFrame);
 			OnTutorialAction(TutorialAction::Jump);
 			return;
 		}
@@ -540,6 +588,11 @@ void Player::Dead()
 	isAlive_ = false;
 	state_ = PlayerState::Death;
 	animations_[static_cast<int>(state_)]->Reset();
+
+	hitStopTimer_ = 15;
+	hitStopFactor_ = 0.3f;
+
+	if (pCamera_) pCamera_->Shake(15, 15.0f);
 }
 
 //各アニメーションの処理
@@ -604,6 +657,11 @@ void Player::StartAutoWalk(int dir)
 
 	state_ = PlayerState::Walk;
 	animations_[static_cast<int>(state_)]->Reset();
+}
+
+void Player::SetCamera(std::shared_ptr<Camera>camera)
+{
+	pCamera_ = camera;
 }
 
 void Player::OnTutorialAction(TutorialAction action)

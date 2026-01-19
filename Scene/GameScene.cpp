@@ -332,6 +332,7 @@ void GameScene::Init()
 	//ƒvƒŒƒCƒ„[‚Ì‰Šú‰»
 	pPlayer_ = std::make_shared<Player>(Vector2{ kPlayerSpawnPosX, kPlayerSpawnPosY }, Vector2{ 0,0 });
 	pPlayer_->Init();
+	pPlayer_->SetCamera(pCamera_);
 	pPlayer_->SetBg(bg_);
 	pPlayer_->SetGameProgress(gameProgress_);
 

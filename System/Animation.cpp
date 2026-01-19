@@ -55,6 +55,25 @@ void Animation::Draw(float x, float y, bool flip)
         TRUE,flip);
 }
 
+void Animation::DrawFrame(float x, float y,int frame, bool flip)
+{
+    if (frame < 0) frame = 0;
+    if (frame >= frameCount_) frame = frameCount_ - 1;
+
+    int sx = frame * frameW_;
+    int sy = startY_;
+
+    DrawRectRotaGraph3(
+        (int)x, (int)y,             // 描画位置
+        sx, sy,                     // 切り取り開始座標
+        frameW_, frameH_,           // 切り取りサイズ
+        frameW_ / 2, frameH_ / 2,   // 回転中心
+        scale_, scale_,             // 拡大縮小
+        0.0,                        // 角度
+        handle_,                    // 画像ハンドル
+        TRUE, flip);
+}
+
 void Animation::Reset()
 {
     currentFrame_ = 0;
