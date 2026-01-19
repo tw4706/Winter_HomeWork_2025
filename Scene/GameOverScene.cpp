@@ -7,6 +7,7 @@
 #include "Application.h"
 #include"Animation.h"
 #include "Input.h"
+#include"GlobalConstants.h"
 #include <DxLib.h>
 
 namespace
@@ -81,13 +82,13 @@ void GameOverScene::FadeDraw()
 	//フェード
 	int alpha = (frame_ * 255) / kFadeDuration;
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
-	DrawBox(0, 0, 1280, 720, GetColor(0, 0, 0), true);
+	DrawBox(0, 0, Game::kScreenWidth, Game::kScreenHeight, GetColor(0, 0, 0), true);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 }
 
 void GameOverScene::NormalDraw()
 {
-	DrawExtendGraph(0, 0, 1280, 720, bgHandle_, false);
+	DrawExtendGraph(0, 0, Game::kScreenWidth, Game::kScreenHeight, bgHandle_, false);
 	DrawGraph(300, 560, deadCircleHandle_, true);
 
 	pAnimation_->Draw(360, 500, false);
@@ -95,7 +96,7 @@ void GameOverScene::NormalDraw()
 	if (frameHandle_ != -1)
 	{
 		// 画像を指定サイズに拡大/縮小して描画
-		DrawExtendGraph(0, 0, 1280, 720, frameHandle_, TRUE);
+		DrawExtendGraph(0, 0, Game::kScreenWidth, Game::kScreenHeight, frameHandle_, TRUE);
 	}
 
 	// 選択肢を描画
@@ -105,6 +106,7 @@ void GameOverScene::NormalDraw()
 		DrawStringToHandle(350, 300 + i * 80, kOptions[i], color, fontHandle_);
 	}
 
+	DrawRotaGraph(300,320 + selectIdx_ * 80,2.0f,DX_PI / 2.0f,selectHandle_,true);
 }
 
 GameOverScene::GameOverScene(SceneController& controller, StageType stage) :
@@ -114,6 +116,7 @@ GameOverScene::GameOverScene(SceneController& controller, StageType stage) :
 	bgHandle_(-1),
 	frameHandle_(-1),
 	fontHandle_(-1),
+	selectHandle_(-1),
 	deadCircleHandle_(-1),
 	playerDeadGraphHandle_(-1),
 	selectIdx_(0),
@@ -131,6 +134,7 @@ void GameOverScene::Init()
 
 	bgHandle_ = LoadGraph("data/map/bg.png");
 	frameHandle_ = LoadGraph("data/UI/Tutorialframe.png");
+	selectHandle_=LoadGraph("data/Bullet/Knife.png");
 	deadCircleHandle_ = LoadGraph("data/UI/playerDeadCircle.png");
 	playerDeadGraphHandle_ = LoadGraph("data/Player/Dead.png");
 	pAnimation_ = std::make_shared<Animation>(

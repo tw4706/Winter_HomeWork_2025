@@ -174,7 +174,7 @@ void TitleScene::NormalDraw()
 	DrawExtendGraph(0, 0, Game::kScreenWidth, Game::kScreenHeight, bgH_, false);
 
 
-	DrawRotaGraph(Game::kScreenWidth / 2, Game::kScreenHeight/2-100 , 1.5f, 0.0f, titleH_, true);
+	DrawRotaGraph(Game::kScreenWidth / 2, Game::kScreenHeight / 2 - 150, 1.5f, 0.0f, titleH_, true);
 
 	//PressStartUIの点滅表示
 	if (isDeciding_)
@@ -294,6 +294,7 @@ void TitleScene::Init()
 
 	demoPlayer_ = std::make_shared<DemoPlayer>(
 		Vector2{ 200.0f, 420.0f });
+
 	demoPlayer_->Init();
 
 	//タイトルBGM再生

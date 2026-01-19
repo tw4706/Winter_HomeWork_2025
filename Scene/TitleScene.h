@@ -53,6 +53,5 @@ public:
 	void Init()override;
 	void Update(Input&)override;
 	void Draw()override;
-
 };
 

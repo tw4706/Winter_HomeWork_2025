@@ -67,7 +67,10 @@ Zombie::Zombie(Vector2 pos, Vector2 vel) :
 	Enemy(pos, vel),
 	zombieState_(ZombieState::Idle),
 	isInvincibled_(false),
-	isIdleAnimPlayed_(false)
+	isIdleAnimPlayed_(false),
+	idleReverseFrame_(0), 
+	idleReverseTimer_(0),
+	isReverseIdle_(false)
 {
 
 }
