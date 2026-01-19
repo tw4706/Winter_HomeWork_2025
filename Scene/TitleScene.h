@@ -20,6 +20,7 @@ private:
 	int pressStartH_;//PressStart画像ハンドル
 	int selectH_;//選択画像ハンドル
 	int fontH_;//フォントハンドル
+	int bgH_;//背景のハンドル
 	int frame_;//経過フレーム
 	int pressBlinkFrame_;//PressStart点滅用フレーム
 	bool isDeciding_;//決定中かどうか

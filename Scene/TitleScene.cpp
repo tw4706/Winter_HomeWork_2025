@@ -28,11 +28,11 @@ namespace
 	//確認バナー表示位置
 	constexpr int kBannerX = Game::kScreenWidth / 2 - kBannerW / 2;
 	constexpr int kBannerY = Game::kScreenHeight / 2 - kBannerH / 2;
-	constexpr int kConfirmMessageX = kBannerX + 25;
+	constexpr int kConfirmMessageX = kBannerX + 15;
 	constexpr int kConfirmMessageY = kBannerY + 20;
 	constexpr int kOptionOffsetY = kBannerY + 70;
-	constexpr int kOptionYesOffsetX = kBannerX + 90;
-	constexpr int kOptionNoOffsetX = kBannerX + 290;
+	constexpr int kOptionYesOffsetX = kBannerX + 70;
+	constexpr int kOptionNoOffsetX = kBannerX + 270;
 
 	//選択矢印の位置オフセット
 	constexpr int kArrowOffsetX = -20;
@@ -171,8 +171,10 @@ void TitleScene::ConfirmUpdate(Input&input)
 
 void TitleScene::NormalDraw()
 {
-	float scale = 1.0f + sinf(frame_ * 0.05f) * 0.01f;
-	DrawRotaGraph(Game::kScreenWidth / 2, Game::kScreenHeight/2-100 , scale, 0.0f, titleH_, true);
+	DrawExtendGraph(0, 0, Game::kScreenWidth, Game::kScreenHeight, bgH_, false);
+
+
+	DrawRotaGraph(Game::kScreenWidth / 2, Game::kScreenHeight/2-100 , 1.5f, 0.0f, titleH_, true);
 
 	//PressStartUIの点滅表示
 	if (isDeciding_)
@@ -182,8 +184,7 @@ void TitleScene::NormalDraw()
 
 		if (visible)
 		{
-			DrawRotaGraph(
-				Game::kScreenWidth / 2,
+			DrawRotaGraph(Game::kScreenWidth / 2,
 				Game::kScreenHeight / 2 + 100,
 				kPressStartScale,
 				0.0f,
@@ -260,6 +261,7 @@ TitleScene::TitleScene(SceneController& controller) :
 	titleH_(-1),
 	pressStartH_(-1),
 	selectH_(-1),
+	bgH_(-1),
 	fontH_(-1),
 	frame_(0),
 	pressBlinkFrame_(0),
@@ -286,6 +288,7 @@ void TitleScene::Init()
 	titleH_ = LoadGraph("data/UI/title.png");
 	pressStartH_ = LoadGraph("data/UI/PressButton.png");
 	selectH_ = LoadGraph("data/Bullet/Lance.png");
+	bgH_ = LoadGraph("data/map/bg.png");
 	fontH_ = CreateFontToHandle("g_コミックホラー悪党-教漢", 24, -1, -1);
 	frame_ = kFadeInterval;
 

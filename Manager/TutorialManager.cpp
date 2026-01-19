@@ -19,7 +19,7 @@ namespace
 		300.0f,   //Move
 		1300.0f,   //Attack
 		2000.0f,  //Jump
-		2400.0f,  //DoubleJump
+		2000.0f,  //DoubleJump
 		3800.0f   //WeaponChange
 	};
 
@@ -45,7 +45,7 @@ void TutorialManager::Init()
 	textFrameHandle_ = LoadGraph("data/UI/TutorialFrame.png");
 	textButtonHandle_ = LoadGraph("data/UI/gdb-switch-2.png");
 
-	goalRect_.SetLT(4900.0f, 1724.0f, 64.0f, 64.0f);
+	goalRect_.SetLT(4800.0f, 1684.0f, 64.0f, 64.0f);
 
 	int goalHandle = LoadGraph("data/Effect/bullet_effect.png");
 
@@ -105,18 +105,20 @@ void TutorialManager::Draw(const Camera& camera)
 {
 	if (goalAnim_)
 	{
-		float drawX = (goalRect_.GetLeft() + camera.GetOffset().x)-50;
+		float drawX = goalRect_.GetLeft() + camera.GetOffset().x;
 		float drawY = goalRect_.GetTop() + camera.GetOffset().y;
 
 		goalAnim_->Draw(drawX, drawY);
 	}
 
+#ifdef _DEBUG
 	int left = static_cast<int>(goalRect_.GetLeft() + camera.GetOffset().x);
 	int top = static_cast<int>(goalRect_.GetTop() + camera.GetOffset().y);
 	int right = static_cast<int>(goalRect_.GetRight() + camera.GetOffset().x);
 	int bottom = static_cast<int>(goalRect_.GetBottom() + camera.GetOffset().y);
 
 	DrawBox(left, top, right, bottom, GetColor(255, 0, 0), FALSE); // Ô˜g‚Å•\Ž¦
+#endif
 
 	if (!waitingMessage_) return;
 
@@ -140,7 +142,7 @@ void TutorialManager::Draw(const Camera& camera)
 
 	if (buttonAnim_)
 	{
-		int buttonX = textX + textWidth + kButtonTextSpacing;
+		int buttonX = textX + textWidth + 400;
 		int buttonY = (frameY + frameHeight / 2)-10;
 
 		buttonAnim_->Draw(buttonX, buttonY);

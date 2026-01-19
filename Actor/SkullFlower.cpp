@@ -1,5 +1,9 @@
 #include "SkullFlower.h"
+#include"SpriteEffect.h"
+#include "SEManager.h"
+#include"Application.h"
 #include "BulletManager.h"
+#include "EffectManager.h"
 #include "Bullet.h"
 #include<Dxlib.h>
 #include <cassert>
@@ -117,10 +121,25 @@ void SkullFlower::Draw()
 
 void SkullFlower::OnHit(int damage)
 {
+	Application::GetInstance().GetSEManager().PlaySE(SE::Hit);
+
 	//‚·‚Å‚ÉŽ€–S‚µ‚Ä‚¢‚éê‡‚Íˆ—‚µ‚È‚¢
 	if (flowerState_ == SkullFlowerState::Death)return;
 
 	hp_ -= damage;
+
+	if (pEffectManager_)
+	{
+		pEffectManager_->AddEffect(
+			std::make_shared<SpriteEffect>(
+				Vector2{ pos_.x,pos_.y - 20 },
+				"data/Effect/enemy_explosion.png",
+				128, 80,
+				16, 16,
+				2,
+				6,
+				3.0f));
+	}
 
 	if (hp_ <= 0)
 	{
