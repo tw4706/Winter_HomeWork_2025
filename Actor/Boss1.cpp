@@ -102,9 +102,25 @@ void Boss1::Init()
 
 void Boss1::Update()
 {
+	//BossŠî–{ˆ—
 	Boss::Update();
 
+	if (currentState_ == BossState::Dead)
+	{
+		UpdateDead();
+		return;
+	}
+
+	//“–‚½‚è”»’èXV
 	colRect_.SetCenter(pos_.x, pos_.y, kColWidth, kColHeight);
+
+	switch (currentState_)
+	{
+	case BossState::Idle: UpdateIdle(); break;
+	case BossState::Attack: UpdateAttack(); break;
+	case BossState::Move: UpdateMove(); break;
+	case BossState::Hurt: UpdateHurt(); break;
+	}
 }
 
 void Boss1::LoadResources()

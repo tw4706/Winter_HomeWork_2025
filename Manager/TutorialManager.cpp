@@ -53,8 +53,8 @@ void TutorialManager::Init()
 		goalHandle,
 		16, 16,     // フレームサイズ
 		6,          // 使用フレーム数
-		6,
-		5.0f,
+		7,
+		7.0f,
 		496,
 		0,
 		true);
@@ -106,7 +106,7 @@ void TutorialManager::Draw(const Camera& camera)
 	if (goalAnim_)
 	{
 		float drawX = goalRect_.GetLeft() + camera.GetOffset().x;
-		float drawY = goalRect_.GetTop() + camera.GetOffset().y;
+		float drawY = goalRect_.GetTop() + camera.GetOffset().y + 50;
 
 		goalAnim_->Draw(drawX, drawY);
 	}
