@@ -1,7 +1,9 @@
 #include "Bullet.h"
 #include "Rect.h"
 #include "Enemy.h"
+#include "SeManager.h"
 #include "Animation.h"
+#include "Application.h"
 #include "GlobalConstants.h"
 #include "BulletManager.h"
 #include "EffectManager.h"
@@ -238,7 +240,6 @@ void Bullet::OnHit()
 {
 	if (!isAlive_) return;
 
-	//const auto& config = kBulletConfigs[static_cast<int>(bulletType_)];
 	isAlive_ = false;//íeÇè¡Ç∑
 }
 
@@ -269,6 +270,8 @@ void Bullet::SpawnWave()
 			1.0f,
 			true,
 			kHadouSrcY);
+
+		Application::GetInstance().GetSEManager().PlaySE(SE::Wave);
 
 		waveRects_.push_back(std::move(h));
 	}

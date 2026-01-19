@@ -7,6 +7,7 @@ enum class SE
 	Cancel,
 	Select,
 	Shot,
+	Wave,
 	Hit,
 	Damage,
 	BossDeath,

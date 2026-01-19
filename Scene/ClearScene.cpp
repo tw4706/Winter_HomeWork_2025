@@ -15,7 +15,7 @@ namespace
 	//ゲームクリアの文字表示位置など
 	constexpr int kFontSize = 96;
 	constexpr int kCharWidth = 96;
-	constexpr int kTextY = 300;
+	constexpr int kTextY = 200;
 	constexpr int kScreenCenterX = 640;
 
 	//エフェクト表示位置のオフセット
@@ -27,6 +27,7 @@ ClearScene::ClearScene(SceneController& controller) :
 	frame_(0),
 	bgHandle_(-1),
 	fontHandle_(-1),
+	fontTitleHandle_(-1),
 	currentTextIdx_(0),
 	isTextEffectPlaying_(false)
 {
@@ -53,7 +54,7 @@ void ClearScene::NormalUpdate(Input& input)
 	{
 		if (!isTextEffectPlaying_)
 		{
-			// 空白は即表示
+			//空白はすぐに表示するようにする
 			if (clearText_[currentTextIdx_] == ' ')
 			{
 				charVisible_[currentTextIdx_] = true;
@@ -73,7 +74,7 @@ void ClearScene::NormalUpdate(Input& input)
 					496, 16,
 					16, 16,
 					6, 4,
-					4.0f));
+					6.0f));
 
 			isTextEffectPlaying_ = true;
 		}
@@ -86,13 +87,12 @@ void ClearScene::NormalUpdate(Input& input)
 				isTextEffectPlaying_ = false;
 			}
 		}
-		return; // 入力受付しない
+		return; //入力受付しない
 	}
 
-	if (input.IsTriggered("shot") ||
-		input.IsTriggered("jump") ||
-		input.IsTriggered("left") ||
-		input.IsTriggered("right"))
+	if(input.IsTriggered("next") ||
+		input.IsTriggered("shot")||
+		input.IsTriggered("jump"))
 	{
 		update_ = &ClearScene::FadeOutUpdate;
 		draw_ = &ClearScene::FadeDraw;
@@ -135,7 +135,7 @@ void ClearScene::NormalDraw()
 			startX + static_cast<int>(i) * kCharWidth,
 			kTextY,
 			s,
-			GetColor(255, 0, 0),
+			GetColor(255, 255, 0),
 			fontHandle_);
 	}
 
@@ -143,9 +143,9 @@ void ClearScene::NormalDraw()
 
 	if (currentTextIdx_ >= static_cast<int>(clearText_.size()))
 	{
-		DrawString(360, 420,
+		DrawStringToHandle(360, 450,
 			"Press any key to TitleScene",
-			GetColor(255, 255, 255));
+			GetColor(255, 255, 255), fontTitleHandle_);
 	}
 }
 
@@ -153,8 +153,9 @@ void ClearScene::Init()
 {
 	frame_ = kFadeDuration;
 
-	bgHandle_ = LoadGraph("data/UI/GameClear.png");
+	bgHandle_ = LoadGraph("data/map/bg.png");
 	fontHandle_= CreateFontToHandle("g_コミックホラー悪党-教漢",96,-1,-1);
+	fontTitleHandle_= CreateFontToHandle("g_コミックホラー悪党-教漢",48,-1,-1);
 	clearText_ = "GAME CLEAR";
 	charVisible_.assign(clearText_.size(), false);
 
@@ -163,7 +164,7 @@ void ClearScene::Init()
 
 	pEffectManager_ = std::make_shared<EffectManager>();
 
-	Application::GetInstance().GetBGMManager().PlayBGM(BGM::GameClear);
+	//Application::GetInstance().GetBGMManager().PlayBGM(BGM::GameClear);
 }
 
 void ClearScene::Update(Input&input)

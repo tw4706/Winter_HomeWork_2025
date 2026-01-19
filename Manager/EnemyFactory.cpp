@@ -76,7 +76,6 @@ void EnemyFactory::LoadFromCSV(StageType stageType, BulletManager* bulletManager
 	}
 }
 
-
 void EnemyFactory::Init(std::shared_ptr<Player> player, std::shared_ptr<Bg> bg)
 {
 	//“G‚Ì‰Šú‰»
@@ -103,8 +102,11 @@ void EnemyFactory::Draw(const Vector2& cameraOffset)
 	//“G‚Ì•`‰æ
 	for (auto& enemy : enemies_)
 	{
-		enemy->SetCameraOffset(cameraOffset);
-		enemy->Draw();
+		if (!enemy->IsDead())
+		{
+			enemy->SetCameraOffset(cameraOffset);
+			enemy->Draw();
+		}
 	}
 }
 

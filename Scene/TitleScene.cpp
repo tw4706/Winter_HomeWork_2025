@@ -36,7 +36,7 @@ namespace
 
 	//選択矢印の位置オフセット
 	constexpr int kArrowOffsetX = -20;
-	constexpr int kArrowOffsetY = 3;
+	constexpr int kArrowOffsetY = 5;
 	constexpr float kArrowScale = 1.0f;
 }
 
@@ -248,7 +248,7 @@ void TitleScene::ConfirmDraw()
 
 	DrawRotaGraph(
 		arrowX + kArrowOffsetX,
-		arrowY + kArrowOffsetY,
+		arrowY + kArrowOffsetY+5,
 		kArrowScale,
 		DX_PI_F / 2.0f,
 		selectH_,
