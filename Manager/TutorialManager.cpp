@@ -7,11 +7,30 @@
 
 namespace
 {
-	constexpr int kButtonAreaWidth = 84;
-	constexpr int kTextPadding = 16;
+	// =============================
+	// UIレイアウト系
+	// =============================
+	constexpr int kFrameX = 300;
+	constexpr int kFrameY = 200;
+	constexpr int kFrameWidth = 680;
+	constexpr int kFrameHeight = 120;
 
-	//テキストとボタンの間隔
-	constexpr int kButtonTextSpacing = 200;
+	constexpr int kTextLeftPadding = 24;
+	constexpr int kTextOffsetX = 45;
+	constexpr int kTextOffsetY = -5;
+	constexpr int kTextHeight = 15;
+
+	constexpr int kButtonPaddingRight = 24;
+	constexpr int kButtonSize = 48;
+	constexpr int kButtonYOffset = 15;
+	constexpr int kButtonOffsetX = 15;
+
+	// =============================
+	// アニメーション
+	// =============================
+	constexpr int kAppearInterval = 12;
+	constexpr int kSlideDistance = 30;
+	constexpr int kMaxAlpha = 255;
 
 	// チュートリアル発生地点（X だけで管理する簡易版）
 	const float kTutorialX[] =
@@ -41,6 +60,8 @@ void TutorialManager::Init()
 	currentStep_ = 0;
 	isWaitingAction_ = false;
 	waitingMessage_ = nullptr;
+	appearFrame_ = 0;
+	isDisappearing_ = false;
 
 	textFrameHandle_ = LoadGraph("data/UI/TutorialFrame.png");
 	textButtonHandle_ = LoadGraph("data/UI/gdb-switch-2.png");
@@ -89,15 +110,41 @@ void TutorialManager::Update(Player& player, Input& input)
 	{
 		isWaitingAction_ = true;
 		waitingMessage_ = kTutorialText[currentStep_];
+
+		appearFrame_ = 0;
 		return;
 	}
 
-	//テキスト表示中なら決定ボタンで消す
-	if (isWaitingAction_ && input.IsTriggered("next"))
+	//テキストとフレームの表示
+	if (isWaitingAction_ && !isDisappearing_)
 	{
-		isWaitingAction_ = false;
-		waitingMessage_ = nullptr;
-		currentStep_++;  //次のステップへ
+		if (appearFrame_ < kAppearInterval)
+		{
+			appearFrame_++;
+		}
+
+		//決定ボタンでフェードアウト開始
+		if (input.IsTriggered("next"))
+		{
+			isDisappearing_ = true;
+		}
+	}
+
+	//テキストとフレームのフェードアウト
+	if (isWaitingAction_ && isDisappearing_)
+	{
+		if (appearFrame_ > 0)
+		{
+			appearFrame_--;
+		}
+		else
+		{
+			//完全に消えたら次へ
+			isWaitingAction_ = false;
+			isDisappearing_ = false;
+			waitingMessage_ = nullptr;
+			currentStep_++;
+		}
 	}
 }
 
@@ -111,44 +158,49 @@ void TutorialManager::Draw(const Camera& camera)
 		goalAnim_->Draw(drawX, drawY);
 	}
 
-#ifdef _DEBUG
-	int left = static_cast<int>(goalRect_.GetLeft() + camera.GetOffset().x);
-	int top = static_cast<int>(goalRect_.GetTop() + camera.GetOffset().y);
-	int right = static_cast<int>(goalRect_.GetRight() + camera.GetOffset().x);
-	int bottom = static_cast<int>(goalRect_.GetBottom() + camera.GetOffset().y);
-
-	DrawBox(left, top, right, bottom, GetColor(255, 0, 0), FALSE); // 赤枠で表示
-#endif
-
 	if (!waitingMessage_) return;
 
-	// フレーム表示座標とサイズ
-	const int frameX = 300;
-	const int frameY = 200;
-	const int frameWidth = 680;  // 好きな横幅に変更
-	const int frameHeight = 120; // 好きな縦幅に変更
+	float rate =static_cast<float>(appearFrame_) / kAppearInterval;
+	if (rate > 1.0f) rate = 1.0f;
 
-	if (textFrameHandle_ != -1)
-	{
-		// 画像を指定サイズに拡大/縮小して描画
-		DrawExtendGraph(frameX, frameY, frameX + frameWidth, frameY + frameHeight, textFrameHandle_, TRUE);
-	}
+	rate *= rate;
 
-	// テキストをフレーム中央に配置
-	int textWidth = GetDrawStringWidth(waitingMessage_, static_cast<int>(strlen(waitingMessage_)));
-	int textHeight = 15; //文字の高さの目安
-	int textX = frameX + kButtonAreaWidth;
-	int textY = frameY + (frameHeight - textHeight) / 2-10;
+	int alpha = static_cast<int>(kMaxAlpha * rate);
+	int slideY =static_cast<int>((1.0f - rate) * kSlideDistance);
 
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
+
+	// ===== フレーム =====
+	DrawExtendGraph(
+		kFrameX,
+		kFrameY + slideY,
+		kFrameX + kFrameWidth,
+		kFrameY + kFrameHeight + slideY,
+		textFrameHandle_,
+		TRUE);
+
+	// ===== テキスト =====
+	int textX =kFrameX + kTextLeftPadding + kTextOffsetX;
+	int textY =kFrameY +(kFrameHeight - kTextHeight) / 2 +kTextOffsetY + slideY;
+
+	DrawStringToHandle(
+		textX,
+		textY,
+		waitingMessage_,
+		GetColor(255, 255, 255),
+		fontHandle_);
+
+	// ===== ボタン =====
 	if (buttonAnim_)
 	{
-		int buttonX = textX + textWidth + 400;
-		int buttonY = (frameY + frameHeight / 2)-10;
+		int buttonX =kFrameX + kFrameWidth -kButtonPaddingRight -kButtonSize -kButtonOffsetX;
 
-		buttonAnim_->Draw(static_cast<float>(buttonX), static_cast<float>(buttonY));
+		int buttonY =kFrameY +(kFrameHeight - kButtonSize) / 2 +kButtonYOffset + slideY;
+
+		buttonAnim_->Draw(static_cast<float>(buttonX),static_cast<float>(buttonY));
 	}
 
-	DrawStringToHandle(textX, textY, waitingMessage_, GetColor(255, 255, 255), fontHandle_);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 }
 
 bool TutorialManager::IsTutorialFinished() const

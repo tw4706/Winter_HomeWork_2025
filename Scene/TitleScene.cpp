@@ -141,13 +141,29 @@ void TitleScene::ConfirmUpdate(Input&input)
 {
 	if (input.IsTriggered("left") || input.IsTriggered("up"))
 	{
-		confirmSelect_ = 0;
-		Application::GetInstance().GetSEManager().PlaySE(SE::Select);
+		if (confirmSelect_ == 0)
+		{
+			//これ以上左に行けない場合はキャンセル音
+			Application::GetInstance().GetSEManager().PlaySE(SE::Cancel);
+		}
+		else
+		{
+			confirmSelect_ = 0;
+			Application::GetInstance().GetSEManager().PlaySE(SE::Select);
+		}
 	}
 	if (input.IsTriggered("right") || input.IsTriggered("down"))
 	{
-		confirmSelect_ = 1;
-		Application::GetInstance().GetSEManager().PlaySE(SE::Select);
+		if (confirmSelect_ == 1)
+		{
+			//これ以上右に行けない場合はキャンセル音
+			Application::GetInstance().GetSEManager().PlaySE(SE::Cancel);
+		}
+		else
+		{
+			confirmSelect_ = 1;
+			Application::GetInstance().GetSEManager().PlaySE(SE::Select);
+		}
 	}
 
 	if (input.IsTriggered("next"))

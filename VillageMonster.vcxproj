@@ -190,7 +190,7 @@
     <ClInclude Include="DemoZombie.h" />
     <ClInclude Include="SpriteAnimation.h" />
     <ClInclude Include="Manager\BGMManager.h" />
-    <ClInclude Include="SEManager.h" />
+    <ClInclude Include="Manager\SEManager.h" />
     <ClInclude Include="UI・Effect\Effect.h" />
     <ClInclude Include="Manager\EffectManager.h" />
     <ClInclude Include="UI・Effect\PlayerWeaponUI.h" />

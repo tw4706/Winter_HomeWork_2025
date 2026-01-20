@@ -31,6 +31,8 @@ public:
 private:
 	int fontHandle_;
 	int textButtonHandle_;
+	int appearFrame_;
+	bool isDisappearing_;
 	//現在のチュートリアルステップ
 	int currentStep_ = 0;
 	int textFrameHandle_ = -1;

@@ -406,10 +406,11 @@ void Player::Draw()
 //移動処理
 void Player::Move(Input& input)
 {
-	//ダメージ中は移動できない
-	if (isDamaged_)
+	//ダメージ中と攻撃中は移動できない
+	if (isDamaged_ || isAttacking_)
 	{
-		return; //横速度を上書きしない
+		vel_.x = 0.0f;
+		return;
 	}
 
 	bool CanJumpMove = isGround_ || isDoubleJumping_;
