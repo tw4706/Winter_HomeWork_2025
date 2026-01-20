@@ -230,23 +230,10 @@ void Boss::UpdateDead()
 			pEffectManager_->AddEffect(
 				std::make_shared<SpriteEffect>(
 					pos_, "data/Effect/enemy_explosion.png",
-					176, 16, 16, 16, 3, 4, 3.0f)
-			);
+					176, 16, 16, 16, 3, 4, 3.0f));
 
 		isPlayingDeathEffect_ = true;
 	}
-
-	//// 落下処理
-	//if (pos_.y < kGround)
-	//{
-	//	vel_.y = -kGravity;
-	//	pos_.y += vel_.y;
-	//}
-	//else
-	//{
-	//	pos_.y = kGround;
-	//	vel_.y = 0.0f;
-	//}
 
 	// 死亡アニメのみ更新
 	int deadIdx = GetGraphIndex(BossState::Dead);
@@ -267,7 +254,7 @@ void Boss::OnHit(int damage)
 		currentState_ = BossState::Dead;
 		stateTimer_ = 0;
 		vel_ = { 0.0f,0.0f };
-		isPlayingDeathEffect_ = false; // 死亡演出開始用フラグ
+		isPlayingDeathEffect_ = false; //死亡演出開始用フラグ
 		return;
 	}
 

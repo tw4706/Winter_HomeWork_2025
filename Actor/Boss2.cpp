@@ -1,5 +1,7 @@
 #include "Boss2.h"
 #include"Camera.h"
+#include"SEManager.h"
+#include"Application.h"
 #include"BulletManager.h"
 #include<Dxlib.h>
 
@@ -25,7 +27,8 @@ namespace
 	constexpr float kShieldMaxAlpha = 120;  //半透明
 	constexpr float kShieldFadeSpeed = 10.0f;
 
-	constexpr int kFrameInterval = 6;
+	constexpr int kFrameInterval = 10;
+	constexpr int kFrameIntervalDead = 25;
 
 	enum Anim
 	{
@@ -70,12 +73,14 @@ void Boss2::Init()
 	{
 		graphHandles_[i] = graph;
 
+		int frameInterval= (i == Anim::Dead) ? kFrameIntervalDead : kFrameInterval;
+
 		animations_[i] = std::make_shared<Animation>(
 			graph,
 			kGraphW,
 			kGraphH,
 			kFrameCount[i],
-			kFrameInterval,
+			frameInterval,
 			kScale,
 			(i != Anim::Hurt && i != Anim::Dead),
 			kStartY[i]);
@@ -166,8 +171,6 @@ void Boss2::Draw()
 #ifdef _DEBUG
 	//当たり判定表示
 	colRect_.DrawAndCamera(cameraOffset_, GetColor(255, 0, 0), false);
-
-
 	char buf2[64];
 	sprintf_s(buf2, "Shield HP: %d / %d", shieldHP_, shieldMaxHP_);
 	DrawString(10, 30, buf2, GetColor(0, 255, 255));
@@ -188,7 +191,7 @@ int Boss2::GetGraphIndex(BossState state) const
 	case BossState::Move:
 		return Anim::Move;
 	case BossState::JumpAttack:
-		return Anim::Attack;
+		return Anim::Move;
 	case BossState::Hurt:
 		return Anim::Hurt;
 	case BossState::Dead:
@@ -258,7 +261,7 @@ void Boss2::UpdateJumpAttack()
 		return;
 	}
 
-	if (stateTimer_ == 30)
+	if (stateTimer_ == 30&&isGround_)
 	{
 		vel_.y = -20.0f;
 		vel_.x = isTurn_ ? -4.0f : 4.0f;
@@ -273,7 +276,7 @@ void Boss2::UpdateJumpAttack()
 		isBarrierActive_ = true;
 		if (pCamera_)
 		{
-			pCamera_->Shake(10, 8.0f); // 着地演出
+			pCamera_->Shake(10, 8.0f); //着地演出
 		}
 		ChangeState(BossState::Idle);
 	}
@@ -293,6 +296,7 @@ void Boss2::OnHit(int damage, const BulletType& type)
 	// シールドが有効な場合
 	if (isBarrierActive_ && !isShieldBroken_)
 	{
+		Application::GetInstance().GetSEManager().PlaySE(SE::BossGuard);
 		shieldHitTimer_ = kShieldReactTime;
 		shieldAlpha_ = kShieldMaxAlpha;
 
@@ -322,6 +326,8 @@ void Boss2::OnHit(int damage, const BulletType& type)
 			isBarrierActive_ = false;
 			shieldBreakTimer_ = kShieldBreakTime;
 			shieldAlpha_ = 0.0f;
+
+			Application::GetInstance().GetSEManager().PlaySE(SE::BossGuardBreak);
 
 			// 破壊ボーナスダメージ
 			Boss::OnHit(damage * 2);

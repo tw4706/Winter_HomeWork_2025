@@ -10,6 +10,8 @@ enum class SE
 	Wave,
 	Hit,
 	Damage,
+	BossGuard,
+	BossGuardBreak,
 	BossDeath,
 	Explosion,
 	WeaponChange,

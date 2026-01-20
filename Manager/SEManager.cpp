@@ -12,6 +12,8 @@ void SEManager::Init()
 	seHandles_[SE::Hit] = LoadSoundMem("data/BGM・SE/ダメージ音02.mp3");
 	seHandles_[SE::Damage] = LoadSoundMem("data/BGM・SE/ダメージ音02.mp3");
 	seHandles_[SE::Explosion] = LoadSoundMem("data/BGM・SE/battery1.mp3");
+	seHandles_[SE::BossGuard] = LoadSoundMem("data/BGM・SE/重力魔法1.mp3");
+	seHandles_[SE::BossGuardBreak] = LoadSoundMem("data/BGM・SE/ガラスが割れる2.mp3");
 	seHandles_[SE::BossDeath] = LoadSoundMem("data/BGM・SE/爆発1.mp3");
 	seHandles_[SE::WeaponChange] = LoadSoundMem("data/BGM・SE/ショットガンのポンプアクション2.mp3");
 }
