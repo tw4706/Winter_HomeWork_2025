@@ -4,6 +4,7 @@
 #include"Bg.h"
 #include"Camera.h"
 #include"StageType.h"
+#include"Application.h"
 #include"GameProgress.h"
 #include "BulletManager.h"
 #include "CollisionManager.h"
@@ -333,6 +334,8 @@ void Player::Update(Input& input, BulletManager& bm, StageType stage)
 	//•Ší‚ÌØ‚è‘Ö‚¦
 	if (input.IsTriggered("changeWeapon"))
 	{
+		Application::GetInstance().GetSEManager().PlaySE(SE::WeaponChange);
+
 		int next = static_cast<int>(currentBulletType_);
 
 		//Ÿ‚Ì•Ší‚Ö‚ÌØ‚è‘Ö‚¦
@@ -599,7 +602,6 @@ void Player::Dead()
 
 	hitStopTimer_ = 15;
 	hitStopFactor_ = 0.3f;
-
 	if (pCamera_) pCamera_->Shake(15, 15.0f);
 }
 
