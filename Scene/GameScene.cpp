@@ -46,6 +46,12 @@ namespace
 	//プレイヤーが自動で歩行する向きと距離
 	constexpr int kPlayerDir = 1;//右向き
 	constexpr float kPlayerAutoWalkX = 500.0f;
+
+	//ステージ名を表示する時間
+	constexpr int kStageTextDuration = 120;
+
+	//ライフの描画の拡大率
+	constexpr float kHpScale = 2.5f;
 }
 
 GameScene::GameScene(SceneController& controller, StageType stage) :
@@ -56,6 +62,9 @@ GameScene::GameScene(SceneController& controller, StageType stage) :
 	clearState_(ClearState::None),
 	gameProgress_(nullptr),
 	frame_(fade_interval),
+	stageTextTimer_(0),
+	hpHandle_(-1),
+	fontHandle_(-1),
 	isBoss1Defeated_(false),
 	autoWalkStartX_(0.0f)
 {
@@ -249,6 +258,12 @@ void GameScene::NormalUpdate(Input&input)
 		}
 	}
 
+	//ステージテキストを表示するタイマーのカウントダウン
+	if (stageTextTimer_ > 0)
+	{
+		stageTextTimer_--;
+	}
+
 #ifdef _DEBUG
 	//デバッグ用：ステージクリア
 	if (input.IsTriggered("debug_warp"))
@@ -315,6 +330,9 @@ void GameScene::NormalDraw()
 	{
 		tutorialManager_->Draw(*pCamera_);
 	}
+
+	//ステージ名の描画
+	DrawStageText();
 }
 
 void GameScene::DrawHpUI()
@@ -325,34 +343,68 @@ void GameScene::DrawHpUI()
 	int hp = pPlayer_->GetHp();
 	int maxHp = pPlayer_->GetMaxHp();
 
+	constexpr int x = 16;
+	constexpr int y = 16;
+
 	int srcX = (maxHp - hp) * kHpWidth;
-	int srcY = 0;
 
-	Vector2 playerPos = pPlayer_->GetPos();
-	Vector2 cameraOffset = pCamera_->GetOffset();
-
-	//プレイヤーの頭上に表示
-	float worldX = playerPos.x - 16.0f;
-	float worldY = playerPos.y - 108.0f;
-
-	float drawX = worldX + cameraOffset.x;
-	float drawY = worldY + cameraOffset.y;
-
-	DrawRectGraph(
-		static_cast<int>(drawX),
-		static_cast<int>(drawY),
+	DrawRectRotaGraph(
+		x + kHpWidth * kHpScale * 0.5f,
+		y + kHpHeight * kHpScale * 0.5f,
 		srcX,
-		srcY,
+		0,
 		kHpWidth,
 		kHpHeight,
+		kHpScale,
+		0.0f,
 		hpHandle_,
-		TRUE);
+		TRUE
+	);
+}
+
+void GameScene::DrawStageText()
+{
+	if (stageTextTimer_ <= 0) return;
+
+	const char* stageText = "";
+
+	switch (stageType_)
+	{
+	case StageType::Tutorial:
+		stageText = "TUTORIAL";
+		break;
+	case StageType::Stage1:
+		stageText = "STAGE 1";
+		break;
+	case StageType::Stage2:
+		stageText = "STAGE 2";
+		break;
+	default:
+		stageText = "";
+		break;
+	}
+
+	//フェードアウト
+	float rate = static_cast<float>(stageTextTimer_) / kStageTextDuration;
+	int alpha = static_cast<int>(255 * rate);
+
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
+
+	DrawStringToHandle(
+		Game::kScreenWidth / 2-100,
+		Game::kScreenHeight / 2,
+		stageText,
+		0xff0000,
+		fontHandle_);
+
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 }
 
 void GameScene::Init()
 {
 
 	hpHandle_ = LoadGraph("data/UI/Life.png");
+	fontHandle_ = CreateFontToHandle("g_コミックホラー悪党-教漢", 72, -1, -1);
 
 	//ゲーム進行状況の取得
 	gameProgress_ = &controller_.GetProgress();
@@ -424,6 +476,7 @@ void GameScene::Init()
 	{
 		tutorialManager_.reset();
 	}
+	stageTextTimer_ = kStageTextDuration;
 }
 
 void GameScene::Update(Input& input)

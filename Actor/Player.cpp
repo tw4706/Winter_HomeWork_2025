@@ -81,9 +81,9 @@ namespace
 	constexpr int kDamageDuration = 60;
 
 	//被弾した時のノックバックの強さ
-	constexpr float kKnockBackX = 10.0f;
-	constexpr float kKnockBackY = 5.0f;
-	constexpr float kKnockBackSpeed = 0.92f;
+	constexpr float kKnockBackX = 8.0f;
+	constexpr float kKnockBackY = 6.5f;
+	constexpr float kKnockBackSpeed = 0.94f;
 
 	//重力
 	constexpr float kGravity = 1.0f;
@@ -212,6 +212,12 @@ void Player::Update(Input& input, BulletManager& bm, StageType stage)
 		landingTimer_ = kLandingFrameTime;
 	}
 
+	//ノックバック
+	if (isDamaged_)
+	{
+		vel_.x *= kKnockBackSpeed;
+	}
+
 	GameObject::Update();
 
 	float colOffsetX = 0.0f;
@@ -304,17 +310,14 @@ void Player::Update(Input& input, BulletManager& bm, StageType stage)
 		return;
 	}
 
-	//ノックバック
-	if (isDamaged_)
-	{
-		vel_.x *= kKnockBackSpeed;
-	}
-
 	//無敵時間
 	if (damageTimer_ > 0)
 	{
 		damageTimer_--;
-		if (damageTimer_ == 0)
+	}
+	else
+	{
+		if (fabsf(vel_.x) < 0.3f && isGround_)
 		{
 			isDamaged_ = false;
 			vel_.x = 0.0f;
@@ -406,8 +409,12 @@ void Player::Draw()
 //移動処理
 void Player::Move(Input& input)
 {
-	//ダメージ中と攻撃中は移動できない
-	if (isDamaged_ || isAttacking_)
+	//ダメージ中は移動できない
+	if (isDamaged_)
+	{
+		return;
+	}
+	if (isAttacking_)
 	{
 		vel_.x = 0.0f;
 		return;
@@ -580,7 +587,6 @@ void Player::OnDamage(float enemyX)
 
 	//ダメージアニメーションへ
 	animations_[static_cast<int>(PlayerState::Hurt)]->Reset();
-
 }
 
 void Player::Dead()

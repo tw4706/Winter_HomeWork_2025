@@ -33,6 +33,7 @@ private:
 	void FadeDraw();
 	void NormalDraw();
 	void DrawHpUI();
+	void DrawStageText();
 	using DrawFunc_t = void (GameScene::*)();
 	DrawFunc_t draw_;//Draw系を受け取るメンバ関数ポインタ
 
@@ -46,7 +47,9 @@ public:
 
 private:
 	int frame_ = 0;// フェードインアウト用
+	int stageTextTimer_;
 	int hpHandle_;
+	int fontHandle_;
 	std::shared_ptr<Player>pPlayer_;
 	BulletManager bulletManager_;
 	EffectManager effectManager_;
