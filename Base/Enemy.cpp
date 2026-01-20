@@ -6,6 +6,7 @@
 #include"EffectManager.h"
 #include"GlobalConstants.h"
 #include<Dxlib.h>
+#include "EffekseerForDXLib.h"
 
 namespace
 {
@@ -14,21 +15,27 @@ namespace
 
 Enemy::Enemy(Vector2 pos, Vector2 vel) :
 	GameObject(pos, vel),
+	effect3DHandle_(-1),
+	playing3DHandle_(-1),
 	isTurn_(false),
 	isDead_(false),
 	hp_(kMaxHp),
 	currentState_(0),
 	pEffectManager_(nullptr)
 {
-
+	effect3DHandle_ = LoadEffekseerEffect("data/Effect/EnemyHit.efk");
 }
 
 Enemy::~Enemy()
 {
+	DeleteEffekseerEffect(effect3DHandle_);
 }
 
 void Enemy::Update()
 {
+
+	UpdateEffekseer2D();
+
 	if (isDead_)return;
 
 	GameObject::Update();
@@ -39,6 +46,8 @@ void Enemy::Update()
 void Enemy::Draw()
 {
 	if (isDead_)return;
+
+	DrawEffekseer2D();
 }
 
 void Enemy::OnHit(int damage)
@@ -46,18 +55,9 @@ void Enemy::OnHit(int damage)
 	Application::GetInstance().GetSEManager().PlaySE(SE::Hit);
 
 	//敵のヒットエフェクト
-	if (pEffectManager_)
-	{
-		pEffectManager_->AddEffect(
-			std::make_shared<SpriteEffect>(
-				Vector2{ pos_.x,pos_.y - 20 },
-				"data/Effect/enemy_explosion.png",
-				128,80,
-				16, 16,
-				2,
-				6,
-				3.0f));
-	}
+	SetPosPlayingEffekseer2DEffect(playing3DHandle_, pos_.x, pos_.y, 0.0f);
+	playing3DHandle_ = PlayEffekseer2DEffect(effect3DHandle_);
+	SetScalePlayingEffekseer2DEffect(playing3DHandle_, 1.0f, 1.0f, 1.0f);
 
 	hp_ -= damage;
 

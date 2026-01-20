@@ -14,6 +14,7 @@
 #include"BulletManager.h"
 #include"SceneController.h"
 #include"GlobalConstants.h"
+#include "EffekseerForDXLib.h"
 
 namespace
 {
@@ -309,6 +310,7 @@ void TitleScene::Init()
 	pressStartH_ = LoadGraph("data/UI/PressButton.png");
 	selectH_ = LoadGraph("data/Bullet/Lance.png");
 	bgH_ = LoadGraph("data/map/bg.png");
+
 	fontH_ = CreateFontToHandle("g_コミックホラー悪党-教漢", 24, -1, -1);
 	frame_ = kFadeInterval;
 

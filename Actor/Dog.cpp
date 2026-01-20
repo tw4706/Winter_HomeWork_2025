@@ -7,7 +7,6 @@
 
 namespace
 {
-
 	enum Graph
 	{
 		kIdleGraph,
@@ -105,6 +104,8 @@ void Dog::Update()
 
 void Dog::Draw()
 {
+	Enemy::Draw();
+
 	float drawX = pos_.x + cameraOffset_.x;
 	float drawY = (pos_.y + cameraOffset_.y)-30;
 

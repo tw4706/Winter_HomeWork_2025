@@ -6,6 +6,7 @@
 #include "GlobalConstants.h"
 #include"SceneController.h"
 #include"TitleScene.h"
+#include "EffekseerForDXLib.h"
 
 Application::Application():
 	windowSize_(Game::kScreenWidth, Game::kScreenHeight)
@@ -37,6 +38,46 @@ bool Application::Init()
 		return false;			// エラーが起きたら直ちに終了
 	}
 
+	// グラフィックの描画先を裏画面にセット
+	SetDrawScreen(DX_SCREEN_BACK);
+
+	//------------------------------//
+	// エフェクトの初期化
+	//------------------------------//
+	{
+		// DirectX9を使用するようにする。(DirectX11も可)
+		// Effekseerを使用するには必ず設定する。
+		SetUseDirect3DVersion(DX_DIRECT3D_11);
+
+		// Effekseerを初期化する。
+		// 引数には画面に表示する最大パーティクル数を設定する。
+		if (Effkseer_Init(8000) == -1)
+		{
+			DxLib_End();
+			return -1;
+		}
+
+		// フルスクリーンウインドウの切り替えでリソースが消えるのを防ぐ。
+		// Effekseerを使用する場合は必ず設定する。
+		SetChangeScreenModeGraphicsSystemResetFlag(FALSE);
+
+		// DXライブラリのデバイスロストした時のコールバックを設定する。
+		// ウインドウとフルスクリーンの切り替えが発生する場合は必ず実行する。
+		// ただし、DirectX11を使用する場合は実行する必要はない。
+		Effekseer_SetGraphicsDeviceLostCallbackFunctions();
+
+		// Effekseerに2D描画の設定をする。
+		Effekseer_Set2DSetting(Game::kScreenWidth, Game::kScreenHeight);
+
+		// Zバッファを有効にする。
+		// Effekseerを使用する場合、2DゲームでもZバッファを使用する。
+		SetUseZBuffer3D(TRUE);
+
+		// Zバッファへの書き込みを有効にする。
+		// Effekseerを使用する場合、2DゲームでもZバッファを使用する。
+		SetWriteZBuffer3D(TRUE);
+	}
+
 	AddFontResourceEx("data/UI/g_comichorrorB_freeR.ttf", FR_PRIVATE, NULL);
 
 	//ここでBGMManagerの初期化を行う
@@ -50,6 +91,7 @@ void Application::Run()
 {
 	// 描画対象をバックバッファに変更
 	SetDrawScreen(DX_SCREEN_BACK);
+
 	Input input;
 	SceneController controller;
 	controller.ChangeScene(std::make_shared<TitleScene>(controller));
@@ -88,6 +130,7 @@ void Application::Run()
 void Application::Terminate()
 {
 	RemoveFontResourceEx("data/UI/g_comichorrorB_freeR.ttf", FR_PRIVATE, NULL);
+	Effkseer_End();
 	DxLib_End();				//ＤＸライブラリ使用の終了処理
 }
 

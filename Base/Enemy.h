@@ -14,6 +14,8 @@ public:
 	//地面の位置
 	static constexpr float kGround = 500.0f;
 protected:
+	int effect3DHandle_;
+	int playing3DHandle_;
 	bool isTurn_;					//右を向いているかどうか
 	std::shared_ptr<Player>pPlayer_;//プレイヤーのスマートポインタ
 	Rect colRect_;					//当たり判定の矩形

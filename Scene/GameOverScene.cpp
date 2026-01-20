@@ -9,6 +9,7 @@
 #include "Input.h"
 #include"GlobalConstants.h"
 #include <DxLib.h>
+#include<EffekseerForDXLib.h>
 
 namespace
 {
@@ -106,7 +107,7 @@ void GameOverScene::NormalDraw()
 		DrawStringToHandle(350, 300 + i * 80, kOptions[i], color, fontHandle_);
 	}
 
-	DrawRotaGraph(300,320 + selectIdx_ * 80,2.0f,DX_PI / 2.0f,selectHandle_,true);
+	DrawRotaGraph(300, 320 + selectIdx_ * 80, 2.0f, DX_PI / 2.0f, selectHandle_, true);
 }
 
 GameOverScene::GameOverScene(SceneController& controller, StageType stage) :

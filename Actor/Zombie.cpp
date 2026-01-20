@@ -152,6 +152,8 @@ void Zombie::Update()
 
 void Zombie::Draw()
 {
+	Enemy::Draw();
+
 	float drawX = pos_.x + cameraOffset_.x;
 	float drawY = pos_.y + cameraOffset_.y;
 

@@ -57,7 +57,6 @@ SkullFlower::~SkullFlower()
 
 void SkullFlower::Init()
 {
-
 	graphHandles_.resize(kGraphNum);
 	animations_.resize(static_cast<int>(SkullFlowerState::Death) + 1);
 
@@ -103,7 +102,8 @@ void SkullFlower::Update()
 
 void SkullFlower::Draw()
 {
-	if (isDead_) return;
+	Enemy::Draw();
+
 	float drawX = pos_.x + cameraOffset_.x;
 	float drawY = pos_.y + cameraOffset_.y-15;
 
