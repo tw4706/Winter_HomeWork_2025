@@ -42,7 +42,7 @@ namespace
 	constexpr int kGraphWidth = 128;
 	constexpr int kGraphHeight = 128;
 	constexpr int kGraphHalfWidth = 48;
-	constexpr int kGraphHalfHeight =64;
+	constexpr int kGraphHalfHeight = 64;
 	constexpr float kGraphColSize = 64.0f;
 	constexpr int kMaxHp = 2;
 
@@ -115,7 +115,7 @@ namespace
 
 	//各状態遷移のフレーム間隔
 	constexpr int kIdleFrameInterval = 6;
-	constexpr int kAttackFrameInterval = 5;
+	constexpr int kAttackFrameInterval = 4;
 	constexpr int kWalkFrameInterval = 5;
 	constexpr int kJumpFrameInterval = 8;
 	constexpr int kHurtFrameInterval = 6;
@@ -183,7 +183,7 @@ void Player::Init()
 	hitStopFactor_ = 1.0f;
 }
 
-void Player::Update(Input& input, BulletManager& bm,StageType stage)
+void Player::Update(Input& input, BulletManager& bm, StageType stage)
 {
 	currentStage_ = stage;
 
@@ -230,7 +230,7 @@ void Player::Update(Input& input, BulletManager& bm,StageType stage)
 		vel_.y += kGravity;
 
 		colRect_.SetCenter(
-			colX,pos_.y - kColPosYOffset,
+			colX, pos_.y - kColPosYOffset,
 			kGraphHalfWidth,
 			kGraphHeight - kColYOffset);
 
@@ -409,7 +409,7 @@ void Player::Move(Input& input)
 	//ダメージ中は移動できない
 	if (isDamaged_)
 	{
-		return; // 横速度を上書きしない
+		return; //横速度を上書きしない
 	}
 
 	bool CanJumpMove = isGround_ || isDoubleJumping_;
@@ -495,6 +495,7 @@ void Player::Shot(Input& input, BulletManager& bm)
 	{
 		isAttacking_ = true;
 		attackTimer_ = kAttackDuration;
+		vel_ = { 0.0f,0.0f };
 
 		auto anim = animations_[static_cast<int>(PlayerState::Attack)];
 		anim->Reset();
@@ -551,7 +552,7 @@ void Player::OnDamage(float enemyX)
 
 	hp_--;
 
-	if(hp_ <= 0)
+	if (hp_ <= 0)
 	{
 		Dead();
 		return;

@@ -23,9 +23,6 @@ class GameProgress;
 class GameScene :public Scene
 {
 private:
-
-	int frame_ = 0;// フェードインアウト用
-
 	void FadeInUpdate(Input&);
 	void NormalUpdate(Input& input);
 	void FadeOutUpdate(Input&);
@@ -35,6 +32,7 @@ private:
 
 	void FadeDraw();
 	void NormalDraw();
+	void DrawHpUI();
 	using DrawFunc_t = void (GameScene::*)();
 	DrawFunc_t draw_;//Draw系を受け取るメンバ関数ポインタ
 
@@ -47,6 +45,8 @@ public:
 	StageType GetNextStageType(StageType nextStage);
 
 private:
+	int frame_ = 0;// フェードインアウト用
+	int hpHandle_;
 	std::shared_ptr<Player>pPlayer_;
 	BulletManager bulletManager_;
 	EffectManager effectManager_;

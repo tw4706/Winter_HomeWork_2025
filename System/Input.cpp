@@ -6,7 +6,7 @@ Input::Input() :inputData_{}, lastInputData_{}, inputTable_{}
 	inputTable_["next"] = {{ PeripheralType::keyboard, KEY_INPUT_RETURN },
 							{ PeripheralType::pad1, PAD_INPUT_A } };
 	inputTable_["shot"] = {{ PeripheralType::keyboard, KEY_INPUT_Z },
-							{ PeripheralType::pad1, PAD_INPUT_B } };
+							{ PeripheralType::pad1, PAD_INPUT_C } };
 	inputTable_["up"] = {{ PeripheralType::keyboard, KEY_INPUT_UP },
 							{ PeripheralType::pad1, PAD_INPUT_UP } };
 	inputTable_["down"] = {{ PeripheralType::keyboard, KEY_INPUT_DOWN },
@@ -18,7 +18,7 @@ Input::Input() :inputData_{}, lastInputData_{}, inputTable_{}
 	inputTable_["jump"] = { {PeripheralType::keyboard,KEY_INPUT_SPACE},
 							{PeripheralType::pad1,PAD_INPUT_A} };
 	inputTable_["changeWeapon"] = { { PeripheralType::keyboard, KEY_INPUT_C },
-							{ PeripheralType::pad1, PAD_INPUT_X } };
+							{ PeripheralType::pad1, PAD_INPUT_Y } };
 	inputTable_["pause"] = { { PeripheralType::keyboard, KEY_INPUT_P },
 						{ PeripheralType::pad1, PAD_INPUT_L } };
 	inputTable_["debug_warp"] ={{ PeripheralType::keyboard, KEY_INPUT_F1 }};

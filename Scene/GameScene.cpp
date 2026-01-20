@@ -290,11 +290,6 @@ void GameScene::FadeDraw()
 
 void GameScene::NormalDraw() 
 {
-	if (stageType_ == StageType::Stage2)
-	{
-		DrawBox(0, 0, Game::kScreenWidth, Game::kScreenHeight,0x00ff00, true);
-	}
-
 	Vector2 cameraOffset = pCamera_->GetOffset();
 
 	//各クラスの描画処理
@@ -313,6 +308,8 @@ void GameScene::NormalDraw()
 	//UIの描画
 	weaponUI_.Draw();
 
+	DrawHpUI();
+
 	//チュートリアルステージの描画
 	if (tutorialManager_)
 	{
@@ -320,8 +317,43 @@ void GameScene::NormalDraw()
 	}
 }
 
+void GameScene::DrawHpUI()
+{
+	constexpr int kHpWidth = 32;
+	constexpr int kHpHeight = 32;
+
+	int hp = pPlayer_->GetHp();
+	int maxHp = pPlayer_->GetMaxHp();
+
+	int srcX = (maxHp - hp) * kHpWidth;
+	int srcY = 0;
+
+	Vector2 playerPos = pPlayer_->GetPos();
+	Vector2 cameraOffset = pCamera_->GetOffset();
+
+	//プレイヤーの頭上に表示
+	float worldX = playerPos.x - 16.0f;
+	float worldY = playerPos.y - 108.0f;
+
+	float drawX = worldX + cameraOffset.x;
+	float drawY = worldY + cameraOffset.y;
+
+	DrawRectGraph(
+		static_cast<int>(drawX),
+		static_cast<int>(drawY),
+		srcX,
+		srcY,
+		kHpWidth,
+		kHpHeight,
+		hpHandle_,
+		TRUE);
+}
+
 void GameScene::Init()
 {
+
+	hpHandle_ = LoadGraph("data/UI/Life.png");
+
 	//ゲーム進行状況の取得
 	gameProgress_ = &controller_.GetProgress();
 

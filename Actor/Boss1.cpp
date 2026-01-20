@@ -177,48 +177,28 @@ void Boss1::UpdateIdle()
 	}
 
 	//‚ä‚Á‚­‚èã‰ºˆÚ“®
-	pos_.y += sin(stateTimer_ * 0.1f) * 0.5f;
+	pos_.y += sin(stateTimer_ * 0.1f) * 0.8f;
 }
 
 void Boss1::UpdateAttack()
 {
 	stateTimer_++;
 
-	if (isCharging_)
-	{
-		pos_.x += chargeVel_.x;
-		pos_.y += chargeVel_.y;
-
-		// “ËiŠÔI—¹‚ÅFly‚Ö
-		if (stateTimer_ > kRushTime)
-		{
-			isCharging_ = false;
-			ChangeState(BossState::Move);
-		}
-		return;
-	}
-
-	vel_.x = 0.0f;
-
 	float targetY = pPlayer_->GetPos().y - 120.0f;
 	pos_.y += (targetY - pos_.y) * 0.02f;
 
-	// ˆê’èŠÔŠu‚Å’e
+	//ˆê’èŠÔŠu‚Å’e
 	shotTimer_ += 1.0f / 60.0f;
 	if (shotTimer_ >= 1.5f)
 	{
 		shotTimer_ = 0.0f;
 
-		Vector2 bulletVel =
-		{
-			isTurn_ ? -kBulletSpeed : kBulletSpeed,
-			0.0f
-		};
+		Vector2 bulletVel = { isTurn_ ? -kBulletSpeed : kBulletSpeed,0.0f };
 
 		pBm_->AddEnemyBullet(pos_, bulletVel);
 	}
 
-	// ’ZŠÔ‚ÅFly‚É–ß‚é
+	//’ZŠÔ‚ÅFly‚É–ß‚é
 	if (stateTimer_ > 120)
 	{
 		ChangeState(BossState::Move);
@@ -233,38 +213,12 @@ void Boss1::UpdateMove()
 	float distance = fabsf(dx);
 	float speed = kFlySpeed;
 
-	//“¦‚°ˆÛ
-	if (escapeTimer_ > 0)
-	{
-		escapeTimer_--;
-		speed = kEscapeSpeed;
-	}
-	else
-	{
-		//‹ß‚·‚¬‚½‚ç“¦‚°ŠJn
-		if (distance < 300.0f)
-		{
-			isTurn_ = (dx > 0); //ƒvƒŒƒCƒ„[‚Æ‹t•ûŒü
-			escapeTimer_ = 40;
-			speed = kEscapeSpeed;
-		}
-		//‰“‚·‚¬‚½‚çÚ‹ß‚·‚é
-		else if (distance > 500.0f)
-		{
-			isTurn_ = (dx < 0);
-			speed = kFlySpeed;
-		}
-	}
-
-	vel_.x = (isTurn_ ? -speed : speed);
-	pos_.x += vel_.x;
-
 	//ã‰º‚Ì’Ç]‚Íã‚ß
 	float targetY = pPlayer_->GetPos().y - 150.0f;
 	pos_.y += (targetY - pos_.y) * 0.02f;
 
 	//‰H‚Î‚½‚«
-	pos_.y += sin(stateTimer_ * 0.08f) * 1.2f;
+	pos_.y += sin(stateTimer_ * 0.08f) * 1.0f;
 
 	//d‚È‚è–h~
 	if (fabsf(dx) < 30.0f)

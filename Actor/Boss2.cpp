@@ -140,10 +140,10 @@ void Boss2::Draw()
 
 	if (shieldHitTimer_ > 0 && isBarrierActive_)
 	{
-		// 点滅（2フレームごと）
-		if ((shieldHitTimer_ / 2) % 2 == 0)
+		//点滅(2フレームごと)
+		if ((shieldHitTimer_ / 2) % 4 == 0)
 		{
-			float rate = (float)shieldHP_ / shieldMaxHP_;
+			float rate = 128 + (float)shieldHP_ / shieldMaxHP_;
 			int alpha = (int)(kShieldMaxAlpha * rate);
 
 			SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
@@ -167,7 +167,6 @@ void Boss2::Draw()
 			SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 		}
 	}
-
 #ifdef _DEBUG
 	//当たり判定表示
 	colRect_.DrawAndCamera(cameraOffset_, GetColor(255, 0, 0), false);
@@ -305,21 +304,21 @@ void Boss2::OnHit(int damage, const BulletType& type)
 		switch (type)
 		{
 		case BulletType::Knife:
-			shieldDamage = 1;
+			shieldDamage = 2;
 			break;
 
 		case BulletType::Lance:
-			shieldDamage = 10;
+			shieldDamage = 5;
 			break;
 
 		case BulletType::Torch:
-			shieldDamage = 6;
+			shieldDamage = 3;
 			break;
 		}
 
 		shieldHP_ -= shieldDamage;
 
-		// シールド破壊
+		//シールド破壊
 		if (shieldHP_ <= 0)
 		{
 			isShieldBroken_ = true;
@@ -329,15 +328,15 @@ void Boss2::OnHit(int damage, const BulletType& type)
 
 			Application::GetInstance().GetSEManager().PlaySE(SE::BossGuardBreak);
 
-			// 破壊ボーナスダメージ
-			Boss::OnHit(damage * 2);
+			//破壊ボーナスダメージ
+			Boss::OnHit(10);
 			return;
 		}
 
-		// まだシールドがあるなら本体は無傷
+		//まだシールドがあるなら本体は無傷
 		return;
 	}
 
-	// シールドが無いときは普通にダメージ
+	//シールドが無いときは普通にダメージ
 	Boss::OnHit(damage);
 }

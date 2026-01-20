@@ -26,7 +26,9 @@ namespace
 
 	//グラフィックのサイズ
 	constexpr int kGraphWidth = 32;
+	constexpr int kGraphColWidth = 24;
 	constexpr int kGraphHeight = 48;
+	constexpr int kGraphColHeight = 64;
 	constexpr int kGraphHalfWidth = 32 / 2;
 	constexpr int kGraphHalfHeight = 48 / 2;
 
@@ -111,7 +113,7 @@ void Zombie::Init()
 	}
 
 	//当たり判定の更新
-	colRect_.SetCenter(pos_.x, pos_.y, kGraphWidth, kGraphHeight);
+	colRect_.SetCenter(pos_.x, pos_.y, kGraphColWidth, kGraphColHeight);
 	zombieState_ = ZombieState::Idle;
 	animations_[static_cast<int>(zombieState_)]->SetFrame(0);
 	isIdleAnimPlayed_ = false;
@@ -145,7 +147,7 @@ void Zombie::Update()
 	}
 	else
 	{
-		colRect_.SetCenter(pos_.x, pos_.y - kPosYOffset, kDrawW, kDrawH);
+		colRect_.SetCenter(pos_.x, pos_.y - kPosYOffset, kGraphColWidth, kGraphColHeight);
 		isInvincibled_ = false;
 	}
 }

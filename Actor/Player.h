@@ -94,6 +94,9 @@ public:
 	void SetControllable(bool canControl);
 	bool IsControllable() const;
 
+	int GetHp()const { return hp_; }
+	int GetMaxHp()const { return maxHp_; }
+
 private:
 	std::vector<int>graphHandles_;//画像ハンドルの配列
 	Vector2 initializePos_;//リスポーンしたときの初期位置保存用
@@ -114,6 +117,7 @@ private:
 	int hitStopTimer_ = 0;//ヒットストップ用タイマー
 	float hitStopFactor_ = 0.0f;
 	int landingTimer_ = 0;//地面着地用タイマー
+	int maxHp_ = 2;
 
 	StageType currentStage_;//現在のステージの種類
 	PlayerControl controlMode_;//プレイヤーの操作している状態
