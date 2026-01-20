@@ -121,32 +121,18 @@ void SkullFlower::Draw()
 
 void SkullFlower::OnHit(int damage)
 {
-	Application::GetInstance().GetSEManager().PlaySE(SE::Hit);
+	//死亡中は無視
+	if (flowerState_ == SkullFlowerState::Death) return;
 
-	//すでに死亡している場合は処理しない
-	if (flowerState_ == SkullFlowerState::Death)return;
+	//ヒット処理
+	Enemy::OnHit(damage);
 
-	hp_ -= damage;
-
-	if (pEffectManager_)
-	{
-		pEffectManager_->AddEffect(
-			std::make_shared<SpriteEffect>(
-				Vector2{ pos_.x,pos_.y - 20 },
-				"data/Effect/enemy_explosion.png",
-				128, 80,
-				16, 16,
-				2,
-				6,
-				3.0f));
-	}
-
+	//死亡判定後のアニメーションの処理
 	if (hp_ <= 0)
 	{
 		colRect_.SetCenter(-9999, -9999, 0, 0);
-		//当たり判定を先に消すことで
-		//死亡アニメーション中の当たり判定を無効にする
 		isColActive_ = false;
+
 		flowerState_ = SkullFlowerState::Death;
 		animations_[static_cast<int>(flowerState_)]->Reset();
 	}

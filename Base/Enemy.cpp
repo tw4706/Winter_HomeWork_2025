@@ -52,30 +52,21 @@ void Enemy::Draw()
 
 void Enemy::OnHit(int damage)
 {
+	if (isDead_)return;
+
 	Application::GetInstance().GetSEManager().PlaySE(SE::Hit);
 
 	//敵のヒットエフェクト
-	SetPosPlayingEffekseer2DEffect(playing3DHandle_, pos_.x, pos_.y, 0.0f);
+	float drawX = pos_.x + cameraOffset_.x;
+	float drawY = pos_.y + cameraOffset_.y;
 	playing3DHandle_ = PlayEffekseer2DEffect(effect3DHandle_);
-	SetScalePlayingEffekseer2DEffect(playing3DHandle_, 1.0f, 1.0f, 1.0f);
+	SetPosPlayingEffekseer2DEffect(playing3DHandle_, drawX, drawY, 0.0f);
+	SetScalePlayingEffekseer2DEffect(playing3DHandle_, 0.1f, 0.1f, 1.0f);
 
 	hp_ -= damage;
 
 	if(hp_ <= 0)
 	{
-		//死ぬときのエフェクト
-		if (pEffectManager_)
-		{
-			pEffectManager_->AddEffect(
-				std::make_shared<SpriteEffect>(
-					Vector2{pos_.x,pos_.y-10},
-					"data/Effect/enemy_explosion.png",
-					240, 32,
-					16, 16,
-					4,
-					5,
-					4.0f));
-		}
 		Dead();
 	}
 }
@@ -83,6 +74,19 @@ void Enemy::OnHit(int damage)
 void Enemy::Dead()
 {
 	isDead_ = true;
+	//死ぬときのエフェクト
+	if (pEffectManager_)
+	{
+		pEffectManager_->AddEffect(
+			std::make_shared<SpriteEffect>(
+				Vector2{ pos_.x,pos_.y - 10 },
+				"data/Effect/enemy_explosion.png",
+				240, 32,
+				16, 16,
+				4,
+				5,
+				4.0f));
+	}
 }
 
 void Enemy::SetEffectManager(EffectManager* effect)
