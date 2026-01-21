@@ -18,5 +18,5 @@ public:
 
 private:
 	std::vector<std::shared_ptr<Effect>> effects_;
-	Vector2 cameraOffset_;
+	Vector2 cameraOffset_ = { 0.0f,0.0f };
 };

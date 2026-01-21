@@ -39,7 +39,7 @@ namespace
 	constexpr int kAttackFrameInterval = 6;
 	constexpr int kFlyFrameInterval = 6;
 	constexpr int kHurtFrameInterval = 6;
-	constexpr int kDeathFrameInterval = 6;
+	constexpr int kDeathFrameInterval = 20;
 
 	//状態ごとのフレーム数とフレームの間隔
 	const int frameCounts[kGraphNum] = { kIdleFrameCount,kAttackFrameCount,

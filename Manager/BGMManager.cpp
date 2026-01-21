@@ -29,11 +29,13 @@ void BGMManager::PlayBGM(BGM bgm)
 	//再生中のBGMを更新する
 	currentHandle_ = handle;
 
-	int finalVol =volume_ * bgmBaseVolume_[bgm] / 100 * 255 / 100;
+	//ユーザー音量 × 曲の基準音量=0～100の音量になる用にする
+	int logicalVol = volume_ * bgmBaseVolume_[bgm] / 100;
 
-	ChangeVolumeSoundMem(finalVol, currentHandle_);
+	// DxLib用に変換
+	int vol = logicalVol * 255 / 100;
+	ChangeVolumeSoundMem(vol, currentHandle_);
 
-	//ループ再生でBGMを再生する
 	PlaySoundMem(currentHandle_, DX_PLAYTYPE_LOOP);
 }
 

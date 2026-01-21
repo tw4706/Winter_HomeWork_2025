@@ -91,7 +91,7 @@ void GameOverScene::NormalUpdate(Input& input)
 
 	if (isSelecting_)
 	{
-		// 上下で選択
+		//上下で選択
 		if (input.IsTriggered("up"))
 		{
 			selectIdx_--;
@@ -104,10 +104,10 @@ void GameOverScene::NormalUpdate(Input& input)
 		}
 
 		// 決定
-		if (input.IsTriggered("next"))
+		if (input.IsTriggered("any_button"))
 		{
 			Application::GetInstance().GetSEManager().PlaySE(SE::Decide);
-			isSelecting_ = false; // 選択終了
+			isSelecting_ = false; //選択終了
 			update_ = &GameOverScene::FadeOutUpdate;
 			draw_ = &GameOverScene::FadeDraw;
 			frame_ = 0;
@@ -152,9 +152,6 @@ void GameOverScene::NormalDraw()
 	DrawGraph(300, 560, deadCircleHandle_, true);
 
 	pAnimation_->Draw(360, 500, false);
-
-	// 画像を指定サイズに拡大/縮小して描画
-	//DrawExtendGraph(0, 0, Game::kScreenWidth, Game::kScreenHeight, frameHandle_, TRUE);
 
 
 	// 選択肢を描画

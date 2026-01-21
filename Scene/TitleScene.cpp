@@ -169,7 +169,7 @@ void TitleScene::ConfirmUpdate(Input&input)
 		}
 	}
 
-	if (input.IsTriggered("next"))
+	if (input.IsTriggered("any_button"))
 	{
 		Application::GetInstance().GetSEManager().PlaySE(SE::Decide);
 		if (confirmSelect_ == 0)

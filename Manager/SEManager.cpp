@@ -24,7 +24,8 @@ void SEManager::PlaySE(SE se)
 {
 	int handle = seHandles_[se];
 
-	ChangeVolumeSoundMem(volume_, handle);
+	int vol = volume_ * 255 / 100;
+	ChangeVolumeSoundMem(vol, handle);
 
 	PlaySoundMem(handle, DX_PLAYTYPE_BACK);
 }

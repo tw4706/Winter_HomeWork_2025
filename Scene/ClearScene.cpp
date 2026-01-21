@@ -23,7 +23,7 @@ namespace
 	//エフェクト表示位置のオフセット
 	constexpr int kEffectOffsetY = 48;
 
-	constexpr int kClearTextOffset = 4;
+	constexpr int kTextOffset = 4;
 }
 
 ClearScene::ClearScene(SceneController& controller) :
@@ -32,6 +32,10 @@ ClearScene::ClearScene(SceneController& controller) :
 	bgHandle_(-1),
 	fontHandle_(-1),
 	fontTitleHandle_(-1),
+	shinigachiTarget_(0),
+	shinigachiFrame_(0),
+	shinigachiCurrent_(0),
+	isShinigachiRolling_(false),
 	currentTextIdx_(0),
 	isTextEffectPlaying_(false)
 {
@@ -55,9 +59,23 @@ void ClearScene::NormalUpdate(Input& input)
 
 	frame_++;
 
-	if (input.IsTriggered("next") ||
-		input.IsTriggered("shot") ||
-		input.IsTriggered("jump"))
+	if (isShinigachiRolling_)
+	{
+		shinigachiFrame_++;
+
+		// 徐々に加速 → 減速
+		int diff = shinigachiTarget_ - shinigachiCurrent_;
+		int speed = (diff / 10 > 1) ? (diff / 10) : 1;
+		shinigachiCurrent_ += speed;
+
+		if (shinigachiCurrent_ >= shinigachiTarget_)
+		{
+			shinigachiCurrent_ = shinigachiTarget_;
+			isShinigachiRolling_ = false;
+		}
+	}
+
+	if (input.IsTriggered("any_button"))
 	{
 		controller_.GetProgress().Reset();//死亡回数をリセットする
 		update_ = &ClearScene::FadeOutUpdate;
@@ -91,11 +109,12 @@ void ClearScene::NormalDraw()
 
 	DrawExtendGraph(0, 0, 1280, 720, bgHandle_, false);
 
+	//=====ゲームクリア表示=====
 	const char* clearText = "GAME CLEAR!";
 	int clearTextW = GetDrawStringWidthToHandle(clearText, static_cast<int>(strlen(clearText)), fontHandle_);
 	DrawStringToHandle(
-		Game::kScreenWidth / 2 - clearTextW / 2 + kClearTextOffset,
-		100 + kClearTextOffset,
+		Game::kScreenWidth / 2 - clearTextW / 2 + kTextOffset,
+		100 + kTextOffset,
 		clearText,
 		0x0000,
 		fontHandle_);
@@ -106,14 +125,46 @@ void ClearScene::NormalDraw()
 		GetColor(255, 240, 180),
 		fontHandle_);
 
+	//=====しにがち度=====
+	char shiniBuf[64];
+	sprintf_s(shiniBuf, "しにがち度 : %d%%", shinigachiCurrent_);
 
+	int shiniTextW = GetDrawStringWidthToHandle(
+		shiniBuf,
+		static_cast<int>(strlen(shiniBuf)),
+		fontHandle_);
+
+	DrawStringToHandle(
+		Game::kScreenWidth / 2 - shiniTextW / 2 + kTextOffset,
+		340 + kTextOffset,
+		shiniBuf,
+		0x000000,
+		fontHandle_);
+
+	DrawStringToHandle(
+		Game::kScreenWidth / 2 - shiniTextW / 2,
+		340,
+		shiniBuf,
+		GetColor(255, 180, 180),
+		fontHandle_);
+
+	//=====タイトルに戻る=====
 	bool visible = (frame_ / 30) % 2 == 0;//30フレームごとに点滅
+
 
 	if (visible)
 	{
+		const char* titleText = "Press any button to TitleScene";
+
+		int titleTextW = GetDrawStringWidthToHandle(
+			titleText,
+			static_cast<int>(strlen(titleText)),
+			fontTitleHandle_);
+
 		DrawStringToHandle(
-			360, 500,
-			"Press any button to TitleScene",
+			Game::kScreenWidth / 2 - titleTextW / 2,
+			500,
+			titleText,
 			GetColor(255, 255, 255),
 			fontTitleHandle_);
 	}
@@ -132,9 +183,8 @@ void ClearScene::Init()
 	deathCount_ = controller_.GetProgress().deathCount_;
 	playCount_ = controller_.GetProgress().playCount_;
 
-	shinigachiTarget_ = (playCount > 0)
-		? static_cast<int>(deathCount_ * 100.0f / playCount)
-		: 0;
+	shinigachiTarget_ = (playCount_ > 0)
+		? static_cast<int>(deathCount_ * 100.0f / playCount_): 0;
 
 	shinigachiCurrent_ = 0;
 	shinigachiFrame_ = 0;

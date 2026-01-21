@@ -28,7 +28,7 @@ namespace
 	constexpr int kGraphWidth = 32;
 	constexpr int kGraphColWidth = 24;
 	constexpr int kGraphHeight = 48;
-	constexpr int kGraphColHeight = 64;
+	constexpr int kGraphColHeight = 72;
 	constexpr int kGraphHalfWidth = 32 / 2;
 	constexpr int kGraphHalfHeight = 48 / 2;
 

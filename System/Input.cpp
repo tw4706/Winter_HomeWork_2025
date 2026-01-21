@@ -22,6 +22,11 @@ Input::Input() :inputData_{}, lastInputData_{}, inputTable_{}
 	inputTable_["pause"] = { { PeripheralType::keyboard, KEY_INPUT_P },
 						{ PeripheralType::pad1, PAD_INPUT_L } };
 	inputTable_["debug_warp"] ={{ PeripheralType::keyboard, KEY_INPUT_F1 }};
+	inputTable_["any_button"] = { { PeripheralType::keyboard, KEY_INPUT_RETURN },
+								{PeripheralType::pad1,PAD_INPUT_A} ,
+								{PeripheralType::pad1,PAD_INPUT_B} ,
+								{PeripheralType::pad1,PAD_INPUT_C} ,
+								{PeripheralType::pad1,PAD_INPUT_X} };
 
 	//•Ï‚È’l‚ª“ü‚ç‚È‚¢‚æ‚¤‚É˜g‚ðŠJ‚¯‚Ä‚¨‚­
 	for (const auto& input : inputTable_) 
