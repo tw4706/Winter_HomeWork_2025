@@ -124,6 +124,9 @@ void TitleScene::FadeOutUpdate(Input&input)
 {
 	if (frame_++ >= kFadeInterval) 
 	{
+		//プレイ回数カウント
+		controller_.GetProgress().playCount_++;
+
 		//プレイヤーをリセットしておく
 		demoPlayer_.reset();
 

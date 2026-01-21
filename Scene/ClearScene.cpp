@@ -8,6 +8,7 @@
 #include "GlobalConstants.h"
 #include"input.h"
 #include<Dxlib.h>
+#include <cmath>
 
 namespace
 {
@@ -52,8 +53,10 @@ void ClearScene::NormalUpdate(Input& input)
 {
 	pEffectManager_->Update();
 
-	if(input.IsTriggered("next") ||
-		input.IsTriggered("shot")||
+	frame_++;
+
+	if (input.IsTriggered("next") ||
+		input.IsTriggered("shot") ||
 		input.IsTriggered("jump"))
 	{
 		controller_.GetProgress().Reset();//死亡回数をリセットする
@@ -84,74 +87,35 @@ void ClearScene::FadeDraw()
 
 void ClearScene::NormalDraw()
 {
+	pEffectManager_->Draw();
+
 	DrawExtendGraph(0, 0, 1280, 720, bgHandle_, false);
 
 	const char* clearText = "GAME CLEAR!";
 	int clearTextW = GetDrawStringWidthToHandle(clearText, static_cast<int>(strlen(clearText)), fontHandle_);
 	DrawStringToHandle(
-	Game::kScreenWidth/2- clearTextW/2+ kClearTextOffset,
-		200+ kClearTextOffset,
+		Game::kScreenWidth / 2 - clearTextW / 2 + kClearTextOffset,
+		100 + kClearTextOffset,
 		clearText,
 		0x0000,
 		fontHandle_);
 	DrawStringToHandle(
-	Game::kScreenWidth/2- clearTextW/2,
-		200,
+		Game::kScreenWidth / 2 - clearTextW / 2,
+		100,
 		clearText,
-		0xffffff,
+		GetColor(255, 240, 180),
 		fontHandle_);
 
-	char buf[64];
-	sprintf_s(buf, "DEATH:%d", deathCount_);
 
-	int deathTextW = GetDrawStringWidthToHandle(
-		buf,
-		static_cast<int>(strlen(buf)),
-		fontHandle_);
+	bool visible = (frame_ / 30) % 2 == 0;//30フレームごとに点滅
 
-	DrawStringToHandle(
-		Game::kScreenWidth / 2 - deathTextW / 2,
-		340,
-		buf,
-		GetColor(255, 255, 255),
-		fontHandle_);
-
-	const char* noDeathText = "NO DEATH CLEAR!";
-	int noDeathW = GetDrawStringWidthToHandle(
-		noDeathText,
-		static_cast<int>(strlen(noDeathText)),
-		fontHandle_);
-
-	DrawStringToHandle(
-		Game::kScreenWidth / 2 - noDeathW / 2,
-		370,
-		noDeathText,
-		GetColor(255, 215, 0),
-		fontHandle_);
-
-	int startX =kScreenCenterX -(static_cast<int>(clearText_.size()) * kCharWidth) / 2;
-
-	for (size_t i = 0; i < clearText_.size(); ++i)
+	if (visible)
 	{
-		if (!charVisible_[i]) continue;
-
-		char s[2] = { clearText_[i], '\0' };
-
 		DrawStringToHandle(
-			startX + static_cast<int>(i) * kCharWidth,
-			kTextY,
-			s,
-			GetColor(255, 255, 0),
-			fontHandle_);
-	}
-
-	pEffectManager_->Draw();
-
-	if (currentTextIdx_ >= static_cast<int>(clearText_.size()))
-	{
-		DrawStringToHandle(360, 450,
-			"Press any key to TitleScene",
-			GetColor(255, 255, 255), fontTitleHandle_);
+			360, 500,
+			"Press any button to TitleScene",
+			GetColor(255, 255, 255),
+			fontTitleHandle_);
 	}
 }
 
@@ -160,12 +124,22 @@ void ClearScene::Init()
 	frame_ = kFadeDuration;
 
 	bgHandle_ = LoadGraph("data/map/bg.png");
-	fontHandle_= CreateFontToHandle("g_コミックホラー悪党-教漢",64,-1,-1);
-	fontTitleHandle_= CreateFontToHandle("g_コミックホラー悪党-教漢",48,-1,-1);
+	fontHandle_ = CreateFontToHandle("g_コミックホラー悪党-教漢", 64, -1, -1);
+	fontTitleHandle_ = CreateFontToHandle("g_コミックホラー悪党-教漢", 24, -1, -1);
 	clearText_ = "GAME CLEAR";
 	charVisible_.assign(clearText_.size(), false);
 
 	deathCount_ = controller_.GetProgress().deathCount_;
+	playCount_ = controller_.GetProgress().playCount_;
+
+	shinigachiTarget_ = (playCount > 0)
+		? static_cast<int>(deathCount_ * 100.0f / playCount)
+		: 0;
+
+	shinigachiCurrent_ = 0;
+	shinigachiFrame_ = 0;
+	isShinigachiRolling_ = true;
+
 	currentTextIdx_ = 0;
 	isTextEffectPlaying_ = false;
 
@@ -174,7 +148,7 @@ void ClearScene::Init()
 	Application::GetInstance().GetBGMManager().PlayBGM(BGM::GameClear);
 }
 
-void ClearScene::Update(Input&input)
+void ClearScene::Update(Input& input)
 {
 	(this->*update_)(input);
 }

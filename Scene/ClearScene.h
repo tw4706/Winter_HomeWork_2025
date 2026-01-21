@@ -13,6 +13,11 @@ private:
 	int fontHandle_;
 	int fontTitleHandle_;
 	int deathCount_ = 0;
+	int playCount_ = 0;
+	int shinigachiTarget_;   //最終的なしにがち度
+	int shinigachiCurrent_;  //表示中のしにがち度
+	int shinigachiFrame_;    //演出用フレーム
+	bool isShinigachiRolling_;
 
 	std::string clearText_;             //GAMECLEARの文字列
 	std::vector<bool> charVisible_;     //各文字の表示フラグ

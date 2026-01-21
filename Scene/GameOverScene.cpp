@@ -43,6 +43,8 @@ void GameOverScene::FadeInUpdate(Input&)
 
 void GameOverScene::NormalUpdate(Input& input)
 {
+	frame_++;
+
 	pAnimation_->Update();
 	pEffectManager_->Update();
 
@@ -120,6 +122,7 @@ void GameOverScene::FadeOutUpdate(Input& input)
 	{
 		if (selectIdx_ == 0) //リスタート
 		{
+			controller_.GetProgress().playCount_++;
 			controller_.ChangeScene(std::make_shared<GameScene>(controller_, stageType_));
 		}
 		else //タイトルへ戻る
@@ -162,8 +165,10 @@ void GameOverScene::NormalDraw()
 		DrawStringToHandle(550+ text_offset, 350 + i * 80+ text_offset, kOptions[i], GetColor(0,0,0), fontOptionHandle_);
 		DrawStringToHandle(550, 350 + i * 80, kOptions[i], color, fontOptionHandle_);
 	}
+	//選択するカーソルを上下に揺らす
+	float cursorOffset = sinf(frame_ * 0.15f) * 5.0f;
 
-	DrawRotaGraph(500, 370 + selectIdx_ * 80, 2.0f, DX_PI / 2.0f, selectHandle_, true);
+	DrawRotaGraph(500, 370 + selectIdx_ * 80 + static_cast<int>(cursorOffset), 2.0f, DX_PI / 2.0f, selectHandle_, true);
 
 	int startX = kScreenCenterX - (static_cast<int>(gameOverText_.size()) * kCharWidth) / 2;
 
@@ -171,18 +176,20 @@ void GameOverScene::NormalDraw()
 	{
 		if (!charVisible_[i]) continue;
 
+		float shake = sinf(frame_ * 0.1f + i * 0.8f) * 6.0f;
+
 		char s[2] = { gameOverText_[i], '\0' };
 
 		DrawStringToHandle(
-			startX + static_cast<int>(i) * kCharWidth+ text_offset,
-			kTextY+ text_offset,
+			startX + static_cast<int>(i) * kCharWidth + text_offset,
+			kTextY + text_offset + static_cast<int>(shake),
 			s,
 			GetColor(0, 0, 0),
 			fontHandle_);
 
 		DrawStringToHandle(
 			startX + static_cast<int>(i) * kCharWidth,
-			kTextY,
+			kTextY + static_cast<int>(shake),
 			s,
 			GetColor(255, 255, 0),
 			fontHandle_);
