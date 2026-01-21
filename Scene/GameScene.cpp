@@ -41,7 +41,7 @@ namespace
 	constexpr float kColSize = 32.0f;
 
 	//落下判定となる座標
-	constexpr float kFallLimit = 1900.0f;
+	constexpr float kFallLimit = 2050.0f;
 
 	//プレイヤーが自動で歩行する向きと距離
 	constexpr int kPlayerDir = 1;//右向き
@@ -108,8 +108,14 @@ void GameScene::NormalUpdate(Input&input)
 	// ゲーム更新を停止
 	if (isTutorialPaused) return;
 
+	//落下判定
 	if (pPlayer_->GetPos().y > kFallLimit)
 	{
+		if (stageType_ == StageType::Tutorial)
+		{
+			controller_.ChangeScene(
+				std::make_shared<GameScene>(controller_, StageType::Tutorial));
+		}
 		update_ = &GameScene::FadeOutUpdate;
 		draw_ = &GameScene::FadeDraw;
 		frame_ = 0;
@@ -158,9 +164,17 @@ void GameScene::NormalUpdate(Input&input)
 	//プレイヤーが死亡していて死亡アニメーションが終了している場合はゲームオーバーシーンへ遷移
 	if (pPlayer_->IsDead() && pPlayer_->IsDeadAnimFinished())
 	{
-		update_ = &GameScene::FadeOutUpdate;
-		draw_ = &GameScene::FadeDraw;
-		frame_ = 0;
+		if (stageType_ == StageType::Tutorial)
+		{
+			controller_.ChangeScene(
+				std::make_shared<GameScene>(controller_, StageType::Tutorial));
+		}
+		else
+		{
+			update_ = &GameScene::FadeOutUpdate;
+			draw_ = &GameScene::FadeDraw;
+			frame_ = 0;
+		}
 		return;
 	}
 
@@ -204,26 +218,10 @@ void GameScene::NormalUpdate(Input&input)
 		}
 	}
 
-	//チュートリアルステージのゴール判定処理
-	if (tutorialManager_)
-	{
-		const auto& goalRect = tutorialManager_->GetGoalRect();
-		const auto& playerRect = pPlayer_->GetColRect();
-
-		if (goalRect.IsCollision(playerRect))
-		{
-			//ゴール到達したらフェードアウトして次のシーンへ遷移
-			update_ = &GameScene::GoalFadeOutUpdate;
-			draw_ = &GameScene::FadeDraw;
-			frame_ = 0;
-			return;
-		}
-	}
-
 	//ボスを倒すとクリアシーンに遷移する
 	if (boss2)
 	{
-		// ボスが死亡アニメ終了していたらクリア処理開始
+		//ボスが死亡アニメ終了していたらクリア処理開始
 		if (boss2->IsDeadAnimFinished() && clearState_ == ClearState::None)
 		{
 			controller_.ChangeScene(std::make_shared<ClearScene>(controller_));
@@ -258,6 +256,23 @@ void GameScene::NormalUpdate(Input&input)
 		}
 	}
 
+	//チュートリアルステージのゴール判定処理
+	if (tutorialManager_)
+	{
+		const auto& goalRect = tutorialManager_->GetGoalRect();
+		const auto& playerRect = pPlayer_->GetColRect();
+
+		if (goalRect.IsCollision(playerRect))
+		{
+			//ゴール到達したらフェードアウトして次のシーンへ遷移
+			update_ = &GameScene::GoalFadeOutUpdate;
+			draw_ = &GameScene::FadeDraw;
+			frame_ = 0;
+			return;
+		}
+	}
+
+
 	//ステージテキストを表示するタイマーのカウントダウン
 	if (stageTextTimer_ > 0)
 	{
@@ -277,7 +292,14 @@ void GameScene::FadeOutUpdate(Input&)
 {
 	if (frame_++ >= fade_interval)
 	{
-		controller_.ChangeScene(std::make_shared<GameOverScene>(controller_,stageType_));
+		if (stageType_==StageType::Tutorial)
+		{
+			controller_.ChangeScene(std::make_shared<GameOverScene>(controller_, StageType::Tutorial));
+		}
+		else
+		{
+			controller_.ChangeScene(std::make_shared<GameOverScene>(controller_, stageType_));
+		}
 		return;
 	}
 }
@@ -388,10 +410,12 @@ void GameScene::DrawStageText()
 	float rate = static_cast<float>(stageTextTimer_) / kStageTextDuration;
 	int alpha = static_cast<int>(255 * rate);
 
+	int stageTextW = GetDrawStringWidthToHandle(stageText, static_cast<int>(size_t(stageText)), fontHandle_);
+
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
 
 	DrawStringToHandle(
-		Game::kScreenWidth / 2-100,
+		(Game::kScreenWidth / 2-stageTextW/2),
 		Game::kScreenHeight / 2,
 		stageText,
 		0xff0000,

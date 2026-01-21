@@ -49,47 +49,6 @@ void ClearScene::NormalUpdate(Input& input)
 {
 	pEffectManager_->Update();
 
-	// ---- GAME CLEAR ââèo ----
-	if (currentTextIdx_ < static_cast<int>(clearText_.size()))
-	{
-		if (!isTextEffectPlaying_)
-		{
-			//ãÛîíÇÕÇ∑ÇÆÇ…ï\é¶Ç∑ÇÈÇÊÇ§Ç…Ç∑ÇÈ
-			if (clearText_[currentTextIdx_] == ' ')
-			{
-				charVisible_[currentTextIdx_] = true;
-				currentTextIdx_++;
-				return;
-			}
-
-			int startX =kScreenCenterX -
-				(static_cast<int>(clearText_.size()) * kCharWidth) / 2;
-
-			Vector2 pos{static_cast<float>(startX + currentTextIdx_ * kCharWidth + kCharWidth / 2),
-					static_cast<float>(kTextY + kEffectOffsetY)};
-
-			pEffectManager_->AddEffect(
-				std::make_shared<SpriteEffect>(pos,
-					"data/Effect/enemy_explosion.png",
-					496, 16,
-					16, 16,
-					6, 4,
-					6.0f));
-
-			isTextEffectPlaying_ = true;
-		}
-		else
-		{
-			if (pEffectManager_->IsEmpty())
-			{
-				charVisible_[currentTextIdx_] = true;
-				currentTextIdx_++;
-				isTextEffectPlaying_ = false;
-			}
-		}
-		return; //ì¸óÕéÛïtÇµÇ»Ç¢
-	}
-
 	if(input.IsTriggered("next") ||
 		input.IsTriggered("shot")||
 		input.IsTriggered("jump"))
@@ -164,7 +123,7 @@ void ClearScene::Init()
 
 	pEffectManager_ = std::make_shared<EffectManager>();
 
-	//Application::GetInstance().GetBGMManager().PlayBGM(BGM::GameClear);
+	Application::GetInstance().GetBGMManager().PlayBGM(BGM::GameClear);
 }
 
 void ClearScene::Update(Input&input)

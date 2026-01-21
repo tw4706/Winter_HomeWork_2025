@@ -681,19 +681,19 @@ void Player::OnTutorialAction(TutorialAction action)
 	switch (action)
 	{
 	case TutorialAction::Move:
-		gameProgress_->tutorialMoved_ = true;
+		gameProgress_->IsMoved();
 		break;
 	case TutorialAction::Jump:
-		gameProgress_->tutorialJumped_ = true;
+		gameProgress_->IsJumped();
 		break;
 	case TutorialAction::DoubleJump:
-		gameProgress_->tutorialDoubleJumped_ = true;
+		gameProgress_->IsDoubleJumped();
 		break;
 	case TutorialAction::Attack:
-		gameProgress_->tutorialAttacked_ = true;
+		gameProgress_->IsAttacked();
 		break;
 	case TutorialAction::WeaponChange:
-		gameProgress_->tutorialWeaponChanged_ = true;
+		gameProgress_->IsWeaponChanged();
 		break;
 	}
 }

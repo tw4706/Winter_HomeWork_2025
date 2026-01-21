@@ -59,9 +59,10 @@ void Enemy::OnHit(int damage)
 	//敵のヒットエフェクト
 	float drawX = pos_.x + cameraOffset_.x;
 	float drawY = pos_.y + cameraOffset_.y;
+
 	playing3DHandle_ = PlayEffekseer2DEffect(effect3DHandle_);
 	SetPosPlayingEffekseer2DEffect(playing3DHandle_, drawX, drawY, 0.0f);
-	SetScalePlayingEffekseer2DEffect(playing3DHandle_, 0.1f, 0.1f, 1.0f);
+	SetScalePlayingEffekseer2DEffect(playing3DHandle_, 0.5f, 0.5f, 0.0f);
 
 	hp_ -= damage;
 

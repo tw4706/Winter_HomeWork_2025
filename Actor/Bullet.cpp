@@ -300,7 +300,9 @@ void Bullet::UpdateWave(std::vector<std::shared_ptr<Enemy>>& enemies)
 
 			if (h.rect_.IsCollision(enemy->GetColRect()))
 			{
+				if (hitEnemies_.count(enemy.get()) > 0)continue;
 				enemy->OnHit(kMinDamage);
+				hitEnemies_.insert(enemy.get());
 			}
 		}
 

@@ -1,8 +1,7 @@
 #pragma once
 class GameProgress
 {
-public:
-	bool isDefeatedBoss1_=false;//ステージ1のボスを倒したかどうか
+private:
 
 	//チュートリアル進捗
 	bool tutorialMoved_ = false;
@@ -15,7 +14,7 @@ public:
 	bool isReturnFromGame_ = false;
 
 public:
-
+	bool isDefeatedBoss1_ = false;//ステージ1のボスを倒したかどうか
 	//チュートリアル進捗状況取得関数
 	bool IsMoved() const { return tutorialMoved_; }
 	bool IsJumped() const { return tutorialJumped_; }
