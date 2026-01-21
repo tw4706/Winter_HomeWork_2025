@@ -12,6 +12,7 @@ private:
 	int bgHandle_;
 	int fontHandle_;
 	int fontTitleHandle_;
+	int deathCount_ = 0;
 
 	std::string clearText_;             //GAMECLEARの文字列
 	std::vector<bool> charVisible_;     //各文字の表示フラグ

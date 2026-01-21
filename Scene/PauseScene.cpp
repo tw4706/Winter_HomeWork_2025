@@ -141,6 +141,7 @@ void PauseScene::ExcecuteMenu()
 		//タイトルに戻る処理
 		auto& progress = controller_.GetProgress();
 		progress.SetReturnFromGame(true);//ゲームシーンから戻ってきたことを記録する
+		controller_.GetProgress().Reset();//死亡回数をリセットする
 
 		controller_.ResetScene(std::make_shared<TitleScene>(controller_));
 		return;

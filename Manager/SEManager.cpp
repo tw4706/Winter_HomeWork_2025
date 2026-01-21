@@ -8,6 +8,8 @@ void SEManager::Init()
 	seHandles_[SE::Cancel] = LoadSoundMem("data/BGM・SE/キャンセル5.mp3");
 	seHandles_[SE::Select] = LoadSoundMem("data/BGM・SE/カーソル移動5.mp3");
 	seHandles_[SE::Shot] = LoadSoundMem("data/BGM・SE/Shot.wav");
+	seHandles_[SE::KnockBack] = LoadSoundMem("data/BGM・SE/重いパンチ2.mp3");
+	seHandles_[SE::Death] = LoadSoundMem("data/BGM・SE/バタンと倒れる.mp3");
 	seHandles_[SE::Wave] = LoadSoundMem("data/BGM・SE/火炎魔法1.mp3");
 	seHandles_[SE::Hit] = LoadSoundMem("data/BGM・SE/ダメージ音02.mp3");
 	seHandles_[SE::Damage] = LoadSoundMem("data/BGM・SE/ダメージ音02.mp3");

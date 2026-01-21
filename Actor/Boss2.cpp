@@ -143,7 +143,7 @@ void Boss2::Draw()
 		//ì_ñ≈(2ÉtÉåÅ[ÉÄÇ≤Ç∆)
 		if ((shieldHitTimer_ / 2) % 4 == 0)
 		{
-			float rate = 128 + (float)shieldHP_ / shieldMaxHP_;
+			float rate = 180 + (float)shieldHP_ / shieldMaxHP_;
 			int alpha = (int)(kShieldMaxAlpha * rate);
 
 			SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);

@@ -37,7 +37,7 @@ private:
 	int deadCircleHandle_;
 	int playerDeadGraphHandle_;
 	int selectIdx_;
-	bool isSelecting_;
+	bool isSelecting_;//選択中かどうか
 	int currentTextIdx_;//現在の表示している文字
 	bool isTextEffectPlaying_;//エフェクトを再生してるかどうか
 
@@ -47,4 +47,3 @@ private:
 	std::shared_ptr<Animation>pAnimation_;
 	std::shared_ptr<EffectManager> pEffectManager_;
 };
-

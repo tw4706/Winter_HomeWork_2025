@@ -15,6 +15,7 @@ private:
 
 public:
 	bool isDefeatedBoss1_ = false;//ステージ1のボスを倒したかどうか
+	int deathCount_;//プレイヤーが死んだ回数
 	//チュートリアル進捗状況取得関数
 	bool IsMoved() const { return tutorialMoved_; }
 	bool IsJumped() const { return tutorialJumped_; }
@@ -34,5 +35,6 @@ public:
 	//ゲームからのタイトルに戻って来たかどうかの取得・設定関数
 	bool IsReturnFromGame() const { return isReturnFromGame_; }
 	void SetReturnFromGame(bool flag) { isReturnFromGame_ = flag; }
+	void Reset() { isDefeatedBoss1_ = false; deathCount_ = 0; }
 };
 

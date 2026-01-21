@@ -595,6 +595,7 @@ void Player::OnDamage(float enemyX)
 void Player::Dead()
 {
 	if (!isAlive_)return;
+	Application::GetInstance().GetSEManager().PlaySE(SE::Death);
 
 	isAlive_ = false;
 	state_ = PlayerState::Death;

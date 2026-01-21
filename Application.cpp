@@ -27,7 +27,7 @@ Application& Application::GetInstance()
 
 bool Application::Init()
 {
-	DxLib::ChangeWindowMode(true);
+	DxLib::ChangeWindowMode(false);
 	// ウインドウのタイトル変更
 	DxLib::SetWindowText("VillageMonster");
 	// 画面のサイズ変更

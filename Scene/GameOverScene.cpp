@@ -124,6 +124,7 @@ void GameOverScene::FadeOutUpdate(Input& input)
 		}
 		else //タイトルへ戻る
 		{
+			controller_.GetProgress().Reset();
 			controller_.ChangeScene(std::make_shared<TitleScene>(controller_));
 		}
 	}
@@ -151,6 +152,7 @@ void GameOverScene::NormalDraw()
 
 	// 画像を指定サイズに拡大/縮小して描画
 	//DrawExtendGraph(0, 0, Game::kScreenWidth, Game::kScreenHeight, frameHandle_, TRUE);
+
 
 	// 選択肢を描画
 	for (int i = 0; i < kOptionCount; ++i)

@@ -5,6 +5,7 @@
 #include"EffectManager.h"
 #include"SpriteEffect.h"
 #include "SceneController.h"
+#include "GlobalConstants.h"
 #include"input.h"
 #include<Dxlib.h>
 
@@ -20,6 +21,8 @@ namespace
 
 	//エフェクト表示位置のオフセット
 	constexpr int kEffectOffsetY = 48;
+
+	constexpr int kClearTextOffset = 4;
 }
 
 ClearScene::ClearScene(SceneController& controller) :
@@ -53,6 +56,7 @@ void ClearScene::NormalUpdate(Input& input)
 		input.IsTriggered("shot")||
 		input.IsTriggered("jump"))
 	{
+		controller_.GetProgress().Reset();//死亡回数をリセットする
 		update_ = &ClearScene::FadeOutUpdate;
 		draw_ = &ClearScene::FadeDraw;
 		frame_ = 0;
@@ -81,6 +85,49 @@ void ClearScene::FadeDraw()
 void ClearScene::NormalDraw()
 {
 	DrawExtendGraph(0, 0, 1280, 720, bgHandle_, false);
+
+	const char* clearText = "GAME CLEAR!";
+	int clearTextW = GetDrawStringWidthToHandle(clearText, static_cast<int>(strlen(clearText)), fontHandle_);
+	DrawStringToHandle(
+	Game::kScreenWidth/2- clearTextW/2+ kClearTextOffset,
+		200+ kClearTextOffset,
+		clearText,
+		0x0000,
+		fontHandle_);
+	DrawStringToHandle(
+	Game::kScreenWidth/2- clearTextW/2,
+		200,
+		clearText,
+		0xffffff,
+		fontHandle_);
+
+	char buf[64];
+	sprintf_s(buf, "DEATH:%d", deathCount_);
+
+	int deathTextW = GetDrawStringWidthToHandle(
+		buf,
+		static_cast<int>(strlen(buf)),
+		fontHandle_);
+
+	DrawStringToHandle(
+		Game::kScreenWidth / 2 - deathTextW / 2,
+		340,
+		buf,
+		GetColor(255, 255, 255),
+		fontHandle_);
+
+	const char* noDeathText = "NO DEATH CLEAR!";
+	int noDeathW = GetDrawStringWidthToHandle(
+		noDeathText,
+		static_cast<int>(strlen(noDeathText)),
+		fontHandle_);
+
+	DrawStringToHandle(
+		Game::kScreenWidth / 2 - noDeathW / 2,
+		370,
+		noDeathText,
+		GetColor(255, 215, 0),
+		fontHandle_);
 
 	int startX =kScreenCenterX -(static_cast<int>(clearText_.size()) * kCharWidth) / 2;
 
@@ -113,11 +160,12 @@ void ClearScene::Init()
 	frame_ = kFadeDuration;
 
 	bgHandle_ = LoadGraph("data/map/bg.png");
-	fontHandle_= CreateFontToHandle("g_コミックホラー悪党-教漢",96,-1,-1);
+	fontHandle_= CreateFontToHandle("g_コミックホラー悪党-教漢",64,-1,-1);
 	fontTitleHandle_= CreateFontToHandle("g_コミックホラー悪党-教漢",48,-1,-1);
 	clearText_ = "GAME CLEAR";
 	charVisible_.assign(clearText_.size(), false);
 
+	deathCount_ = controller_.GetProgress().deathCount_;
 	currentTextIdx_ = 0;
 	isTextEffectPlaying_ = false;
 

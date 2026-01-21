@@ -45,7 +45,7 @@ namespace
 
 	//プレイヤーが自動で歩行する向きと距離
 	constexpr int kPlayerDir = 1;//右向き
-	constexpr float kPlayerAutoWalkX = 500.0f;
+	constexpr float kPlayerAutoWalkX = 480.0f;
 
 	//ステージ名を表示する時間
 	constexpr int kStageTextDuration = 120;
@@ -111,6 +111,7 @@ void GameScene::NormalUpdate(Input&input)
 	//落下判定
 	if (pPlayer_->GetPos().y > kFallLimit)
 	{
+		controller_.GetProgress().deathCount_++;
 		if (stageType_ == StageType::Tutorial)
 		{
 			controller_.ChangeScene(
@@ -164,6 +165,7 @@ void GameScene::NormalUpdate(Input&input)
 	//プレイヤーが死亡していて死亡アニメーションが終了している場合はゲームオーバーシーンへ遷移
 	if (pPlayer_->IsDead() && pPlayer_->IsDeadAnimFinished())
 	{
+		controller_.GetProgress().deathCount_++;
 		if (stageType_ == StageType::Tutorial)
 		{
 			controller_.ChangeScene(
@@ -187,6 +189,7 @@ void GameScene::NormalUpdate(Input&input)
 	//ただしボス2の場合は当たり判定が別途あるため除外する
 	if (hitEnemy && !pPlayer_->IsDead())
 	{
+		Application::GetInstance().GetSEManager().PlaySE(SE::KnockBack);
 		if (dynamic_cast<Boss2*>(hitEnemy) == nullptr)
 		{
 			pPlayer_->OnDamage(hitEnemy->GetPos().x);
@@ -225,6 +228,7 @@ void GameScene::NormalUpdate(Input&input)
 		if (boss2->IsDeadAnimFinished() && clearState_ == ClearState::None)
 		{
 			controller_.ChangeScene(std::make_shared<ClearScene>(controller_));
+			return;
 		}
 	}
 
@@ -415,7 +419,7 @@ void GameScene::DrawStageText()
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
 
 	DrawStringToHandle(
-		(Game::kScreenWidth / 2-stageTextW/2),
+		(Game::kScreenWidth / 2 - stageTextW / 2),
 		Game::kScreenHeight / 2,
 		stageText,
 		0xff0000,
