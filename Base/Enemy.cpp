@@ -33,7 +33,6 @@ Enemy::~Enemy()
 
 void Enemy::Update()
 {
-
 	UpdateEffekseer2D();
 
 	if (isDead_)return;

@@ -148,15 +148,13 @@ void GameScene::NormalUpdate(Input&input)
 	effectManager_.Update();
 
 	//プレイヤーの弾 × 敵の当たり判定(ボスのOnHitは専用なので個別で当たり判定をする)
-	CollisionManager::PlayerBulletsVsEnemies(
-		bulletManager_.GetBullets(),enemyFactory_.GetEnemies());
+	CollisionManager::PlayerBulletsVsEnemies(bulletManager_.GetBullets(),enemyFactory_.GetEnemies());
 
 	auto boss2 = enemyFactory_.GetBoss2();
 	if (boss2)
 	{
 		CollisionManager::PlayerBulletsVsBoss2(
-			bulletManager_.GetBullets(),
-			*boss2);
+			bulletManager_.GetBullets(),*boss2);
 	}
 
 	//敵の弾 × プレイヤーの当たり判定
@@ -181,9 +179,7 @@ void GameScene::NormalUpdate(Input&input)
 	}
 
 	//プレイヤーと敵の当たり判定
-	Enemy* hitEnemy = CollisionManager::PlayerVsEnemies(
-		pPlayer_->GetColRect(),
-		enemyFactory_.GetEnemies());
+	Enemy* hitEnemy = CollisionManager::PlayerVsEnemies(pPlayer_->GetColRect(),enemyFactory_.GetEnemies());
 
 	//敵に当たっていてプレイヤーが死んでいない場合ダメージ処理を行う
 	//ただしボス2の場合は当たり判定が別途あるため除外する

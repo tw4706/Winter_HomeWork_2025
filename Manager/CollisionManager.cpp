@@ -6,8 +6,7 @@
 #include "BulletManager.h"
 
 //ƒvƒŒƒCƒ„[‚Æ“G‚Ì“–‚½‚è”»’è
-Enemy* CollisionManager::PlayerVsEnemies(const Rect& playerRect,
-    const std::vector<std::shared_ptr<Enemy>>& enemies)
+Enemy* CollisionManager::PlayerVsEnemies(const Rect& playerRect,const std::vector<std::shared_ptr<Enemy>>& enemies)
 {
     for (const auto& enemy : enemies)
     {
@@ -45,8 +44,7 @@ void CollisionManager::PlayerBulletsVsBoss2(std::vector<std::shared_ptr<Bullet>>
 
         if (bullet->GetColRect().IsCollision(boss.GetColRect()))
         {
-            if (bullet->HasHitEnemy(&boss))
-                continue;
+            if (bullet->HasHitEnemy(&boss))continue;
 
             boss.OnHit(bullet->GetDamage(), bullet->GetType());
 

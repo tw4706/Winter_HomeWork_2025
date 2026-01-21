@@ -50,17 +50,17 @@ private:
 	int stageTextTimer_;
 	int hpHandle_;
 	int fontHandle_;
-	std::shared_ptr<Player>pPlayer_;
-	BulletManager bulletManager_;
-	EffectManager effectManager_;
-	EnemyFactory enemyFactory_;
-	std::shared_ptr<Bg>bg_;
-	std::shared_ptr<Camera>pCamera_;
 	StageType stageType_;
+	std::shared_ptr<Bg>bg_;
 	ClearState clearState_;
 	PlayerWeaponUI weaponUI_;
-	std::unique_ptr<TutorialManager> tutorialManager_;
+	EnemyFactory enemyFactory_;
 	GameProgress*gameProgress_;
+	BulletManager bulletManager_;
+	EffectManager effectManager_;
+	std::shared_ptr<Player>pPlayer_;
+	std::shared_ptr<Camera>pCamera_;
+	std::unique_ptr<TutorialManager> tutorialManager_;
 
 	bool isBoss1Defeated_;//ボス1撃破フラグ
 	float autoWalkStartX_;//自動で移動する開始位置
