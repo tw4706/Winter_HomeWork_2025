@@ -115,7 +115,6 @@ void Bullet::UpdateShot()
 		//貫通するだけで何もしない
 		break;
 	case BulletType::Torch:
-		vel_.x = 6.0f;
 		vel_.y += kGravity;
 
 		//松明の下端がマップチップの上面に触れたら波動発生

@@ -22,7 +22,7 @@ namespace
 
 	constexpr float kTitleScale = 1.0f;
 
-	constexpr float kPressStartScale = 0.25f;
+	constexpr float kPressStartScale = 0.35f;
 	constexpr int kDecideBlinkFrame = 20;
 
 	//確認バナー幅と高さ
@@ -326,7 +326,7 @@ TitleScene::~TitleScene()
 void TitleScene::Init()
 {
 	titleH_ = LoadGraph("data/UI/title.png");
-	pressStartH_ = LoadGraph("data/UI/PressButton.png");
+	pressStartH_ = LoadGraph("data/UI/PressButton_1.png");
 	selectH_ = LoadGraph("data/Bullet/Lance.png");
 	bgH_ = LoadGraph("data/map/bg.png");
 
