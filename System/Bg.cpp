@@ -119,11 +119,17 @@ void Bg::LoadMapData(StageType stageType)
 	switch (stageType)
 	{
 	case StageType::Tutorial:
-		fileName = "data/Map/Tutorial.csv"; break;
+		fileName = "data/Map/Tutorial.csv";
+		break;
 	case StageType::Stage1:
-		fileName = "data/Map/Stage1.csv"; break;
+		fileName = "data/Map/Stage1.csv";
+		break;
 	case StageType::Stage2: 
-		fileName = "data/Map/Stage2.csv"; break;
+		fileName = "data/Map/Stage2.csv";
+		break;
+	case StageType::Stage3:
+		fileName = "data/Map/Stage2.csv";
+		break;
 	default: 
 		fileName = "data/Map/Stage1.csv"; break;
 	}

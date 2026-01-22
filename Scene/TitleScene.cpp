@@ -96,7 +96,7 @@ void TitleScene::NormalUpdate(Input&input)
 	//’Êí‚Ì“_–ÅXV
 	pressBlinkFrame_++;
 
-	if (input.IsTriggered("next"))
+	if (input.IsTriggered("any_button"))
 	{
 #ifdef _DEBUG
 		update_ = &TitleScene::FadeOutUpdate;

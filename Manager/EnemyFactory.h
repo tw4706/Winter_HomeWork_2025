@@ -24,7 +24,7 @@ public:
 
     void AddBoss2(Vector2 pos, Vector2 vel,
 		std::shared_ptr<Player>player,
-        BulletManager* bm, std::shared_ptr<Camera>camera, BulletType playerWeapon);
+        BulletManager* bm, std::shared_ptr<Camera>camera);
 
     std::shared_ptr<Boss1> GetBoss1() const { return boss1_; }
     std::shared_ptr<Boss2> GetBoss2() const { return boss2_; }

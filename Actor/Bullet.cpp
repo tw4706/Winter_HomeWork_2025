@@ -421,7 +421,7 @@ bool Bullet::IsPlayerBullet() const
 
 void Bullet::SetDirection(bool isRight)
 {
-	prevWaveDir_ = isRight ? 1.0f : -1.0f;
+	prevWaveDir_ = isRight ? 2.0f : -2.0f;
 }
 
 int Bullet::GetDamage() const

@@ -86,7 +86,6 @@ void GameOverScene::NormalUpdate(Input& input)
 				isTextEffectPlaying_ = false;
 			}
 		}
-		return; //“ü—ÍŽó•t‚µ‚È‚¢
 	}
 
 	if (isSelecting_)
@@ -152,7 +151,6 @@ void GameOverScene::NormalDraw()
 	DrawGraph(300, 560, deadCircleHandle_, true);
 
 	pAnimation_->Draw(360, 500, false);
-
 
 	// ‘I‘ðŽˆ‚ð•`‰æ
 	for (int i = 0; i < kOptionCount; ++i)

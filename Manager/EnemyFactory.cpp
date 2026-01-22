@@ -16,7 +16,6 @@ namespace
 {
 	//セルのサイズ
 	const int cellSize = 48;
-
 	//敵の描画オフセット
 	constexpr float kEnemyOffsetY = 32.0f;
 }
@@ -34,6 +33,9 @@ void EnemyFactory::LoadFromCSV(StageType stageType, BulletManager* bulletManager
 		break;
 	case StageType::Stage2:
 		path = "data/Enemy/enemyData2.csv";
+		break;
+	case StageType::Stage3:
+		path = "data/Enemy/enemyData3.csv";
 		break;
 	default:
 		path = "data/Enemy/enemyData.csv";
@@ -122,7 +124,7 @@ void EnemyFactory::AddBoss1(Vector2 pos, Vector2 vel,
 
 void EnemyFactory::AddBoss2(Vector2 pos, Vector2 vel,
 	std::shared_ptr<Player> player,
-	BulletManager* bm, std::shared_ptr<Camera> camera, BulletType playerWeapon)
+	BulletManager* bm, std::shared_ptr<Camera> camera)
 {
 	boss2_ = std::make_shared<Boss2>(pos, vel, player, bm, camera, pEffectManager_);
 	boss2_->SetPlayer(player);

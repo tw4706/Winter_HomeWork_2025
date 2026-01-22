@@ -238,6 +238,11 @@ void GameScene::NormalUpdate(Input&input)
 
 			autoWalkStartX_ = pPlayer_->GetPos().x;
 			pPlayer_->StartAutoWalk(kPlayerDir);
+			if (stageType_ == StageType::Stage2)
+			{
+				controller_.ChangeScene(std::make_shared<GameScene>(controller_, StageType::Stage3));
+				return;
+			}
 		}
 	}
 
@@ -401,6 +406,9 @@ void GameScene::DrawStageText()
 	case StageType::Stage2:
 		stageText = "STAGE 2";
 		break;
+	case StageType::Stage3:
+		stageText = "STAGE 3";
+		break;
 	default:
 		stageText = "";
 		break;
@@ -459,17 +467,18 @@ void GameScene::Init()
 	}
 	else if (stageType_ == StageType::Stage2)
 	{
-		BulletType weapon = pPlayer_->GetCurrentBulletType();
-
-		enemyFactory_.AddBoss2(Vector2{ kBoss2SpawnPosX,kBoss2SpawnPosY },Vector2{ 0,0 },
-			pPlayer_,&bulletManager_,pCamera_,weapon);
+		enemyFactory_.AddBoss1(Vector2{ kBoss1SpawnPosX,kBoss1SpawnPosY }, Vector2{ 0,0 },
+			pPlayer_, &bulletManager_, pCamera_);
+	}
+	else if (stageType_ == StageType::Stage3)
+	{
+		enemyFactory_.AddBoss2(Vector2{ kBoss2SpawnPosX,kBoss2SpawnPosY }, Vector2{ 0,0 },
+			pPlayer_, &bulletManager_, pCamera_);
 	}
 	else if (stageType_ == StageType::BossDebugStage)
 	{
-		BulletType weapon = pPlayer_->GetCurrentBulletType();
-
 		enemyFactory_.AddBoss2(Vector2{ kBoss2SpawnPosX, kBoss2SpawnPosY }, Vector2{ 0,0 },
-			pPlayer_, &bulletManager_, pCamera_, weapon);
+			pPlayer_, &bulletManager_, pCamera_);
 	}
 	enemyFactory_.Init(pPlayer_, bg_);
 
