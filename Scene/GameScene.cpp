@@ -463,12 +463,12 @@ void GameScene::Init()
 	if (stageType_ == StageType::Stage1)
 	{
 		enemyFactory_.AddBoss1(Vector2{ kBoss1SpawnPosX,kBoss1SpawnPosY }, Vector2{ 0,0 },
-			pPlayer_, &bulletManager_, pCamera_);
+			pPlayer_, &bulletManager_, pCamera_, Boss1Type::Normal);
 	}
 	else if (stageType_ == StageType::Stage2)
 	{
 		enemyFactory_.AddBoss1(Vector2{ kBoss1SpawnPosX,kBoss1SpawnPosY }, Vector2{ 0,0 },
-			pPlayer_, &bulletManager_, pCamera_);
+			pPlayer_, &bulletManager_, pCamera_, Boss1Type::Variant);
 	}
 	else if (stageType_ == StageType::Stage3)
 	{
@@ -490,8 +490,7 @@ void GameScene::Init()
 
 	//‚½‚¢‚Ü‚Â‚ÌƒAƒ“ƒƒbƒN‚·‚é‚½‚ß‚Ìˆ—
 	auto& progress = controller_.GetProgress();
-
-	if (stageType_ == StageType::Stage2 && progress.isDefeatedBoss1_)
+	if (progress.isDefeatedBoss1_)
 	{
 		pPlayer_->UnlockTorch();
 	}

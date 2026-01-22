@@ -1,5 +1,12 @@
 #pragma once
 #include "Boss.h"
+
+enum class Boss1Type
+{
+    Normal,
+    Variant
+};
+
 class Player;
 class BulletManager;
 class Boss1 :public Boss
@@ -8,7 +15,7 @@ public:
     Boss1(Vector2 pos, Vector2 vel,
         std::shared_ptr<Player> player,
         BulletManager* bm,
-        std::shared_ptr<Camera> camera, EffectManager* effectMgr);
+        std::shared_ptr<Camera> camera, EffectManager* effectMgr,Boss1Type type);
 
 	~Boss1() override;
 
@@ -30,5 +37,6 @@ private:
     int escapeTimer_;//逃走用タイマー
     int knockbackDir_;//ノックバックの方向
     Vector2 chargeVel_;   //突進速度
+    Boss1Type type_;
 };
 

@@ -74,6 +74,9 @@ namespace
 
 	//たいまつの投げる位置のオフセット
 	constexpr float kTorchFireOffsetY = 50.0f;
+	constexpr float kTorchUpVelocity = 4.0f;
+	//松明の横速度調整用
+	constexpr float kTorchSpeedRate = 0.6f;
 
 	//攻撃をしている間の時間
 	constexpr int kAttackDuration = 30;
@@ -536,8 +539,21 @@ void Player::Shot(Input& input, BulletManager& bm)
 		Vector2 spawnPos = { spawnX, spawnY };
 
 		//弾の速度
-		Vector2 bulletVel = isTurn_ ?
-			Vector2{ config.speed, 0.0f } : Vector2{ -config.speed, 0.0f };
+		Vector2 bulletVel;
+
+		if (currentBulletType_ == BulletType::Torch)
+		{
+			float torchSpeedX = config.speed * kTorchSpeedRate;
+
+			bulletVel = isTurn_
+				? Vector2{ torchSpeedX, -kTorchUpVelocity }
+			: Vector2{ -torchSpeedX, -kTorchUpVelocity };
+		}
+		else
+		{
+			bulletVel = isTurn_? Vector2{ config.speed, 0.0f }
+			: Vector2{ -config.speed, 0.0f };
+		}
 
 		//弾の生成
 		auto bullet = std::make_shared<Bullet>(spawnPos, bulletVel, currentBulletType_, pBg_);

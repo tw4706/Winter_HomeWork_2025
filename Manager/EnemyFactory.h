@@ -20,7 +20,7 @@ public:
     std::vector<std::shared_ptr<Enemy>>& GetEnemies() { return enemies_; }
 
     void AddBoss1(Vector2 pos, Vector2 vel,
-        std::shared_ptr<Player>player, BulletManager* bm, std::shared_ptr<Camera>camera);
+        std::shared_ptr<Player>player, BulletManager* bm, std::shared_ptr<Camera>camera, Boss1Type type);
 
     void AddBoss2(Vector2 pos, Vector2 vel,
 		std::shared_ptr<Player>player,

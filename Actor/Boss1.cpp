@@ -16,7 +16,7 @@ namespace
 		kGraphNum
 	};
 
-	const std::string kDogGraphName[kGraphNum] =
+	const std::string kNormalGraphName[kGraphNum] =
 	{
 		"data/Enemy/IDLE.png",
 		"data/Enemy/ATTACK.png",
@@ -24,7 +24,18 @@ namespace
 		"data/Enemy/HURT.png",
 		"data/Enemy/DEATH.png"
 	};
-	static_assert(static_cast<int>(kGraphNum) == _countof(kDogGraphName));
+	static_assert(static_cast<int>(kGraphNum) == _countof(kNormalGraphName));
+
+	//ステージ2のボス1の亜種
+	const std::string kVariantGraphName[kGraphNum] =
+	{
+		"data/Enemy/IDLE_Stage2.png",
+		"data/Enemy/ATTACK_Stage2.png",
+		"data/Enemy/FLYING_Stage2.png",
+		"data/Enemy/HURT_Stage2.png",
+		"data/Enemy/DEATH_Stage2.png"
+	};
+	static_assert(static_cast<int>(kGraphNum) == _countof(kVariantGraphName));
 
 
 	//状態ごとの総フレーム数
@@ -76,8 +87,9 @@ namespace
 Boss1::Boss1(Vector2 pos, Vector2 vel,
 	std::shared_ptr<Player> player,
 	BulletManager* bm,
-	std::shared_ptr<Camera> camera, EffectManager* effectMgr)
+	std::shared_ptr<Camera> camera, EffectManager* effectMgr, Boss1Type type)
 	:Boss(pos, vel, player, bm, camera,effectMgr),
+	type_(type),
 	escapeTimer_(0),
 	knockbackDir_(0),
 	chargeVel_(0.0f)
@@ -128,9 +140,14 @@ void Boss1::LoadResources()
 	graphHandles_.resize(kGraphNum);
 	animations_.resize(kGraphNum);
 
+	const std::string* graphNames =
+		(type_ == Boss1Type::Variant)
+		? kVariantGraphName
+		: kNormalGraphName;
+
 	for (int i = 0; i < kGraphNum; i++)
 	{
-		graphHandles_[i] = LoadGraph(kDogGraphName[i].c_str());
+		graphHandles_[i] = LoadGraph(graphNames[i].c_str());
 		animations_[i] = std::make_shared<Animation>(
 			graphHandles_[i],
 			kGraphWidth,

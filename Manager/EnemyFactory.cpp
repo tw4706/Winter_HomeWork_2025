@@ -51,7 +51,8 @@ void EnemyFactory::LoadFromCSV(StageType stageType, BulletManager* bulletManager
 	{
 		{1, [](Vector2 pos) { return std::make_shared<Zombie>(pos, Vector2{0,0}); }},
 		{2, [bulletManager](Vector2 pos) { return std::make_shared<SkullFlower>(pos, Vector2{0,0}, bulletManager); }},
-		{3, [](Vector2 pos) { return std::make_shared<Dog>(pos, Vector2{0,0},DogType::Normal); }}
+		{3, [](Vector2 pos) { return std::make_shared<Dog>(pos, Vector2{0,0},DogType::Normal); }},
+		{4, [](Vector2 pos){ return std::make_shared<Dog>(pos, Vector2{0,0}, DogType::Weak); }}
 	};
 
 	//Šù‘¶‚Ì“Gƒf[ƒ^‚ğíœ
@@ -113,9 +114,9 @@ void EnemyFactory::Draw(const Vector2& cameraOffset)
 }
 
 void EnemyFactory::AddBoss1(Vector2 pos, Vector2 vel,
-	std::shared_ptr<Player>player, BulletManager* bm, std::shared_ptr<Camera>camera)
+	std::shared_ptr<Player>player, BulletManager* bm, std::shared_ptr<Camera>camera, Boss1Type type)
 {
-	boss1_ = std::make_shared<Boss1>(pos, vel, player, bm, camera, pEffectManager_);
+	boss1_ = std::make_shared<Boss1>(pos, vel, player, bm, camera, pEffectManager_,type);
 	boss1_->SetPlayer(player);
 	boss1_->SetCamera(camera);
 	boss1_->Init();

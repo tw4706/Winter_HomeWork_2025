@@ -29,7 +29,6 @@ public:
 	void UpdateAnim();
 private:
 	std::vector<int>dogGraphHandles_;
-	std::vector<int>weakDogGraphHandles_;
 	DogState dogState_;
 	DogType dogType_;
 	float timer_;//タイマー

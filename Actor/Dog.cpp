@@ -73,9 +73,13 @@ void Dog::Init()
 	dogGraphHandles_.resize(kGraphNum);
 	animations_.resize(static_cast<int>(DogState::Jump) + 1);
 
+	const std::string* graphNames =
+		(dogType_ == DogType::Weak) ? kWeakDogGraphName : kDogGraphName;
+
 	for (int i = 0; i < kGraphNum; i++)
 	{
-		dogGraphHandles_[i] = LoadGraph(kDogGraphName[i].c_str());
+		dogGraphHandles_[i] = LoadGraph(graphNames[i].c_str());
+
 		animations_[i] = std::make_shared<Animation>(
 			dogGraphHandles_[i],
 			kGraphW,

@@ -23,7 +23,7 @@ namespace
 	constexpr int kMaxHitCount = 2;
 
 	//d—Í
-	constexpr float kGravity = 0.15f;
+	constexpr float kGravity = 0.2f;
 
 	//”g“®ŠÖ˜A‚Ì’è”
 	constexpr int kHadouSrcX = 192;
