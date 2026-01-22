@@ -23,7 +23,7 @@ namespace
 	constexpr int kMaxHitCount = 2;
 
 	//重力
-	constexpr float kGravity = 0.2f;
+	constexpr float kGravity = 0.15f;
 
 	//波動関連の定数
 	constexpr int kHadouSrcX = 192;
@@ -115,6 +115,7 @@ void Bullet::UpdateShot()
 		//貫通するだけで何もしない
 		break;
 	case BulletType::Torch:
+		vel_.x = 6.0f;
 		vel_.y += kGravity;
 
 		//松明の下端がマップチップの上面に触れたら波動発生
@@ -421,7 +422,7 @@ bool Bullet::IsPlayerBullet() const
 
 void Bullet::SetDirection(bool isRight)
 {
-	prevWaveDir_ = isRight ? 2.0f : -2.0f;
+	prevWaveDir_ = isRight ? 1.0f : -1.0f;
 }
 
 int Bullet::GetDamage() const

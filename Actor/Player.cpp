@@ -28,7 +28,7 @@ namespace
 		kGraphNum
 	};
 
-	const std::string kGraphName[kGraphNum] =
+	const std::string kDogGraphName[kGraphNum] =
 	{
 		"data/Player/Idle.png",
 		"data/Player/Attack_correction.png",
@@ -37,7 +37,7 @@ namespace
 		"data/Player/Hurt.png",
 		"data/Player/Dead.png"
 	};
-	static_assert(static_cast<int>(kGraphNum) == _countof(kGraphName));
+	static_assert(static_cast<int>(kGraphNum) == _countof(kDogGraphName));
 
 	//プレイヤーの画像サイズ
 	constexpr int kGraphWidth = 128;
@@ -170,7 +170,7 @@ void Player::Init()
 
 	for (int i = 0; i < kGraphNum; i++)
 	{
-		graphHandles_[i] = LoadGraph(kGraphName[i].c_str());
+		graphHandles_[i] = LoadGraph(kDogGraphName[i].c_str());
 		animations_[i] = std::make_shared<Animation>(
 			graphHandles_[i],
 			kGraphWidth,
@@ -417,11 +417,12 @@ void Player::Move(Input& input)
 	{
 		return;
 	}
-	if (isAttacking_)
-	{
-		vel_.x = 0.0f;
-		return;
-	}
+
+	//if (isAttacking_)
+	//{
+	//	vel_.x = 0.0f;
+	//	return;
+	//}
 
 	bool CanJumpMove = isGround_ || isDoubleJumping_;
 	//地面にいるときかつダブルジャンプが可能な時

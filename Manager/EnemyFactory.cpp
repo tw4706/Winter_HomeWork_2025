@@ -51,7 +51,7 @@ void EnemyFactory::LoadFromCSV(StageType stageType, BulletManager* bulletManager
 	{
 		{1, [](Vector2 pos) { return std::make_shared<Zombie>(pos, Vector2{0,0}); }},
 		{2, [bulletManager](Vector2 pos) { return std::make_shared<SkullFlower>(pos, Vector2{0,0}, bulletManager); }},
-		{3, [](Vector2 pos) { return std::make_shared<Dog>(pos, Vector2{0,0}); }}
+		{3, [](Vector2 pos) { return std::make_shared<Dog>(pos, Vector2{0,0},DogType::Normal); }}
 	};
 
 	//Šù‘¶‚Ì“Gƒf[ƒ^‚ğíœ

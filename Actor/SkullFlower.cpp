@@ -19,7 +19,7 @@ namespace
 		kGraphNum
 	};
 
-	const std::string kGraphName[kGraphNum] =
+	const std::string kDogGraphName[kGraphNum] =
 	{
 		"data/Enemy/flower_idle.png",
 		"data/Enemy/flower_hurt.png",
@@ -62,7 +62,7 @@ void SkullFlower::Init()
 
 	for (int i = 0; i < kGraphNum; i++)
 	{
-		graphHandles_[i] = LoadGraph(kGraphName[i].c_str());
+		graphHandles_[i] = LoadGraph(kDogGraphName[i].c_str());
 		animations_[i] = std::make_shared<Animation>(
 			graphHandles_[i],
 			kGraphSize,

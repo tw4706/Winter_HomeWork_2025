@@ -15,10 +15,15 @@ namespace
 		kGraphNum
 	};
 
-	const std::string kGraphName[kGraphNum] =
+	const std::string kDogGraphName[kGraphNum] =
 	{
 		"data/Enemy/dog_correction.png",
 		"data/Enemy/dog_jump_correction.png"
+	};
+	const std::string kWeakDogGraphName[kGraphNum] =
+	{
+		"data/Enemy/dog.png",
+		"data/Enemy/dog_jump.png"
 	};
 
 	const int frameCounts[kGraphNum] = { 11, 6 };
@@ -43,16 +48,21 @@ namespace
 	const float kDistance = 300.0f;
 }
 
-Dog::Dog(Vector2 pos, Vector2 vel) :
+Dog::Dog(Vector2 pos, Vector2 vel,DogType type) :
 	Enemy(pos, vel),
+	dogType_(type),
 	dogState_(DogState::Idle),
 	timer_(0.0f)
 {
+	if (dogType_ == DogType::Weak)
+	{
+		hp_ = 1;
+	}
 }
 
 Dog::~Dog()
 {
-	for (auto& handle : graphHandles_)
+	for (auto& handle : dogGraphHandles_)
 	{
 		DeleteGraph(handle);
 	}
@@ -60,23 +70,21 @@ Dog::~Dog()
 
 void Dog::Init()
 {
-	graphHandles_.resize(kGraphNum);
+	dogGraphHandles_.resize(kGraphNum);
 	animations_.resize(static_cast<int>(DogState::Jump) + 1);
 
 	for (int i = 0; i < kGraphNum; i++)
 	{
-		graphHandles_[i] = LoadGraph(kGraphName[i].c_str());
+		dogGraphHandles_[i] = LoadGraph(kDogGraphName[i].c_str());
 		animations_[i] = std::make_shared<Animation>(
-			graphHandles_[i],
+			dogGraphHandles_[i],
 			kGraphW,
 			kGraphH,
 			frameCounts[i],
 			frameIntervals[i],
 			kScale,
-			i==kIdleGraph,0
-		);
+			i == kIdleGraph, 0);
 	}
-
 	dogState_ = DogState::Idle;
 }
 
@@ -108,6 +116,16 @@ void Dog::Draw()
 
 	float drawX = pos_.x + cameraOffset_.x;
 	float drawY = (pos_.y + cameraOffset_.y)-30;
+
+	switch (dogType_)
+	{
+	case DogType::Normal:
+		break;
+	case DogType::Weak:
+		break;
+	default:
+		break;
+	}
 
 	animations_[static_cast<int>(dogState_)]->Draw(drawX, drawY, isTurn_);
 
@@ -161,7 +179,6 @@ void Dog::Move()
 
 void Dog::UpdateAnim()
 {
-
 	if (isGround_)
 	{
 		dogState_ = DogState::Idle;

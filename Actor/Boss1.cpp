@@ -16,7 +16,7 @@ namespace
 		kGraphNum
 	};
 
-	const std::string kGraphName[kGraphNum] =
+	const std::string kDogGraphName[kGraphNum] =
 	{
 		"data/Enemy/IDLE.png",
 		"data/Enemy/ATTACK.png",
@@ -24,7 +24,7 @@ namespace
 		"data/Enemy/HURT.png",
 		"data/Enemy/DEATH.png"
 	};
-	static_assert(static_cast<int>(kGraphNum) == _countof(kGraphName));
+	static_assert(static_cast<int>(kGraphNum) == _countof(kDogGraphName));
 
 
 	//ó‘Ô‚²‚Æ‚Ì‘ƒtƒŒ[ƒ€”
@@ -130,7 +130,7 @@ void Boss1::LoadResources()
 
 	for (int i = 0; i < kGraphNum; i++)
 	{
-		graphHandles_[i] = LoadGraph(kGraphName[i].c_str());
+		graphHandles_[i] = LoadGraph(kDogGraphName[i].c_str());
 		animations_[i] = std::make_shared<Animation>(
 			graphHandles_[i],
 			kGraphWidth,

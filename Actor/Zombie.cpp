@@ -17,12 +17,12 @@ namespace
 		kGraphNum
 	};
 
-	const std::string kGraphName[kGraphNum] =
+	const std::string kDogGraphName[kGraphNum] =
 	{
 		"data/Enemy/Zombie.png",
 		"data/Enemy/zombie_walk.png"
 	};
-	static_assert(static_cast<int>(kGraphNum) == _countof(kGraphName));
+	static_assert(static_cast<int>(kGraphNum) == _countof(kDogGraphName));
 
 	//グラフィックのサイズ
 	constexpr int kGraphWidth = 32;
@@ -101,7 +101,7 @@ void Zombie::Init()
 			isLoop = true;//Walk状態はループさせる
 		}
 
-		graphHandles_[i] = LoadGraph(kGraphName[i].c_str());
+		graphHandles_[i] = LoadGraph(kDogGraphName[i].c_str());
 		animations_[i] = std::make_shared<Animation>(
 			graphHandles_[i],
 			kGraphWidth,

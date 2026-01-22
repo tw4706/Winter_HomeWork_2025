@@ -1,6 +1,12 @@
 #pragma once
 #include "Enemy.h"
 
+enum class DogType
+{
+	Weak,
+	Normal
+};
+
 enum class DogState
 {
 	Idle,
@@ -10,7 +16,7 @@ enum class DogState
 class Dog :public Enemy
 {
 public:
-	Dog(Vector2 pos,Vector2 vel);
+	Dog(Vector2 pos,Vector2 vel, DogType type);
 	~Dog();
 
 	void Init()override;
@@ -22,8 +28,10 @@ public:
 
 	void UpdateAnim();
 private:
-	std::vector<int>graphHandles_;
+	std::vector<int>dogGraphHandles_;
+	std::vector<int>weakDogGraphHandles_;
 	DogState dogState_;
+	DogType dogType_;
 	float timer_;//タイマー
 };
 
