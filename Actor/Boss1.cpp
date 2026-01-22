@@ -79,7 +79,8 @@ namespace
 	constexpr float kEscapeSpeed = 1.8f;
 	constexpr float kBulletSpeed = 3.0f;
 	constexpr float kShotInterval = 5.0f;
-	constexpr int KMaxHp = 5;
+	constexpr int KNormalBoss1MaxHp = 10;
+	constexpr int KVariantBoss1MaxHp = 20;
 	constexpr float kRushSpeed = 4.5f;   //突進する速度
 	constexpr int   kRushTime = 18;     //突進するフレーム数
 }
@@ -95,7 +96,16 @@ Boss1::Boss1(Vector2 pos, Vector2 vel,
 	chargeVel_(0.0f)
 {
 	SetUseGravity(false);
-	hp_ = KMaxHp;
+
+	if (type_ == Boss1Type::Variant)
+	{
+		hp_ = KVariantBoss1MaxHp;
+	}
+	else
+	{
+		hp_ = KNormalBoss1MaxHp;
+	}
+
 }
 
 Boss1::~Boss1()
@@ -109,6 +119,7 @@ Boss1::~Boss1()
 void Boss1::Init()
 {
 	SetUseGravity(false);
+
 	Boss::Init();
 }
 

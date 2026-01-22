@@ -66,7 +66,7 @@ GameScene::GameScene(SceneController& controller, StageType stage) :
 	hpHandle_(-1),
 	fontHandle_(-1),
 	isBoss1Defeated_(false),
-	autoWalkStartX_(0.0f)
+	autoWalkFinishX_(0.0f)
 {
 	//bgにステージに対応するマップデータをセット
 	bg_ = std::make_shared<Bg>(stageType_);
@@ -235,14 +235,8 @@ void GameScene::NormalUpdate(Input&input)
 		if (!pCamera_->IsShaking())
 		{
 			clearState_ = ClearState::AutoWalk;
-
-			autoWalkStartX_ = pPlayer_->GetPos().x;
+			autoWalkFinishX_ = 9050.0f;
 			pPlayer_->StartAutoWalk(kPlayerDir);
-			if (stageType_ == StageType::Stage2)
-			{
-				controller_.ChangeScene(std::make_shared<GameScene>(controller_, StageType::Stage3));
-				return;
-			}
 		}
 	}
 
@@ -250,9 +244,7 @@ void GameScene::NormalUpdate(Input&input)
 	//一定距離進んだらクリアシーンへ遷移する
 	if (clearState_ == ClearState::AutoWalk)
 	{
-		float nowX = pPlayer_->GetPos().x;
-
-		if (nowX >= autoWalkStartX_ + kPlayerAutoWalkX)
+		if (pPlayer_->GetPos().x >= autoWalkFinishX_)
 		{
 			update_ = &GameScene::GoalFadeOutUpdate;
 			draw_ = &GameScene::FadeDraw;
@@ -530,6 +522,8 @@ StageType GameScene::GetNextStageType(StageType nextStage)
 		return StageType::Stage1;
 	case StageType::Stage1:   
 		return StageType::Stage2;
+	case StageType::Stage2:   
+		return StageType::Stage3;
 	default:                 
 		return nextStage;
 	}

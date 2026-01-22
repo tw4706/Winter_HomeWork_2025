@@ -5,9 +5,9 @@
 #include "Player.h"
 #include"StageType.h"
 #include "Bg.h"
+#include "Boss1.h"
 
 class GameScene;
-class Boss1;
 class Boss2;
 class EffectManager;
 class EnemyFactory

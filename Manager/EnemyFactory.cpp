@@ -2,7 +2,6 @@
 #include "Zombie.h"
 #include "SkullFlower.h"
 #include "Dog.h"
-#include "Boss1.h"
 #include "Boss2.h"
 #include "GameScene.h"
 #include"EffectManager.h"

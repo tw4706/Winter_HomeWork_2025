@@ -63,5 +63,5 @@ private:
 	std::unique_ptr<TutorialManager> tutorialManager_;
 
 	bool isBoss1Defeated_;//ボス1撃破フラグ
-	float autoWalkStartX_;//自動で移動する開始位置
+	float autoWalkFinishX_;//自動で移動する開始位置
 };
