@@ -48,8 +48,11 @@ public:
 private:
 	int frame_ = 0;// フェードインアウト用
 	int stageTextTimer_;
+	bool isTorchUnlockMessageShow_; //メッセージ表示済みか
+	int torchMessageTimer_ = 0;             //メッセージ表示タイマー
 	int hpHandle_;
 	int fontHandle_;
+	int fontTorchTextHandle_;
 	StageType stageType_;
 	std::shared_ptr<Bg>bg_;
 	ClearState clearState_;

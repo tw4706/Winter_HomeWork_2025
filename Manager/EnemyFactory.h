@@ -35,7 +35,7 @@ private:
     std::vector<std::shared_ptr<Enemy>> enemies_;
     std::shared_ptr<Boss1> boss1_ = nullptr;
     std::shared_ptr<Boss2> boss2_ = nullptr;
-    StageType stageType_;
+    StageType stageType_ = StageType::Tutorial;
     EffectManager* pEffectManager_=nullptr;//エフェクトマネージャのポインタ
 };
 

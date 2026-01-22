@@ -50,6 +50,9 @@ namespace
 	//ステージ名を表示する時間
 	constexpr int kStageTextDuration = 120;
 
+	//松明解放テキストを表示する時間
+	constexpr int kTorchMessageDuration = 180;
+
 	//ライフの描画の拡大率
 	constexpr float kHpScale = 2.5f;
 }
@@ -63,6 +66,8 @@ GameScene::GameScene(SceneController& controller, StageType stage) :
 	gameProgress_(nullptr),
 	frame_(fade_interval),
 	stageTextTimer_(0),
+	isTorchUnlockMessageShow_(false),
+	torchMessageTimer_(0),
 	hpHandle_(-1),
 	fontHandle_(-1),
 	isBoss1Defeated_(false),
@@ -352,6 +357,33 @@ void GameScene::NormalDraw()
 
 	//ステージ名の描画
 	DrawStageText();
+
+	if (torchMessageTimer_ > 0)
+	{
+		torchMessageTimer_--;
+
+		const char* message = "松明を解放しました！";
+
+		//文字幅を取得して中央に表示
+		int msgWidth = GetDrawStringWidthToHandle(message, static_cast<int>(strlen(message)), fontHandle_);
+		int x = (Game::kScreenWidth - msgWidth) / 2;
+		int y = Game::kScreenHeight / 2 - 100;
+
+		//フェードイン・フェードアウト演出
+		int alpha = 255;
+		if (torchMessageTimer_ > kTorchMessageDuration / 2)
+		{
+			alpha = 255 * (kTorchMessageDuration - torchMessageTimer_) / (kTorchMessageDuration / 2);
+		}
+		else if (torchMessageTimer_ < kTorchMessageDuration / 2)
+		{
+			alpha = 255 * torchMessageTimer_ / (kTorchMessageDuration / 2);
+		}
+
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
+		DrawStringToHandle(x, y, message, 0xffff00, fontTorchTextHandle_);
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+	}
 }
 
 void GameScene::DrawHpUI()
@@ -368,8 +400,8 @@ void GameScene::DrawHpUI()
 	int srcX = (maxHp - hp) * kHpWidth;
 
 	DrawRectRotaGraph(
-		x + kHpWidth * kHpScale * 0.5f,
-		y + kHpHeight * kHpScale * 0.5f,
+		static_cast<int>(x + kHpWidth * kHpScale * 0.5f),
+		static_cast<int>(y + kHpHeight * kHpScale * 0.5f),
 		srcX,
 		0,
 		kHpWidth,
@@ -429,6 +461,7 @@ void GameScene::Init()
 
 	hpHandle_ = LoadGraph("data/UI/Life.png");
 	fontHandle_ = CreateFontToHandle("g_コミックホラー悪党-教漢", 72, -1, -1);
+	fontTorchTextHandle_= CreateFontToHandle("g_コミックホラー悪党-教漢", 24, -1, -1);
 
 	//ゲーム進行状況の取得
 	gameProgress_ = &controller_.GetProgress();
@@ -485,6 +518,8 @@ void GameScene::Init()
 	if (progress.isDefeatedBoss1_)
 	{
 		pPlayer_->UnlockTorch();
+		torchMessageTimer_ = kTorchMessageDuration;
+		isTorchUnlockMessageShow_ = true;
 	}
 
 	//チュートリアルステージ用の初期化

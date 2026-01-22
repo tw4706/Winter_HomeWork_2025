@@ -29,9 +29,9 @@ public:
 	bool IsGamePaused() const { return isWaitingAction_; }
 
 private:
-	int fontHandle_;
-	int textButtonHandle_;
-	int appearFrame_;
+	int fontHandle_ = -1;
+	int textButtonHandle_ = -1;
+	int appearFrame_ = 0;
 	bool isDisappearing_;
 	//現在のチュートリアルステップ
 	int currentStep_ = 0;

@@ -54,7 +54,7 @@ bool Application::Init()
 		if (Effkseer_Init(8000) == -1)
 		{
 			DxLib_End();
-			return -1;
+			return false;
 		}
 
 		// フルスクリーンウインドウの切り替えでリソースが消えるのを防ぐ。
