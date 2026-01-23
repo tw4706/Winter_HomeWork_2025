@@ -71,17 +71,13 @@ void Bullet::Init()
 	bulletH_ = LoadGraph(config.imagePath);
 	assert(bulletH_ >= 0);
 
-	if (bulletType_ == BulletType::EnemyBullet||
-		bulletType_==BulletType::Boss1Bullet)
-	{
-		animations_ = std::make_unique<Animation>(
-			bulletH_,
-			static_cast<int>(config.width * KEnemyBulletScale),
-			static_cast<int>(config.height * KEnemyBulletScale),
-			5,5,
-			3.0f,
-			true,0);
-	}
+	animations_ = std::make_unique<Animation>(
+		bulletH_,
+		config.width,
+		config.height,
+		5, 5,
+		1.0f,
+		true, 0);
 
 	hadouH_ = LoadGraph("data/Bullet/hadou.png");
 	assert(hadouH_ >= 0);
