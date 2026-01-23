@@ -27,6 +27,8 @@ public:
 	//“G‚Ì’e‚ğ’Ç‰Á
 	void AddEnemyBullet(Vector2& pos, Vector2& vel);
 
+	void AddBoss1Bullet(Vector2& pos, Vector2& vel);
+
 	//ƒvƒŒƒCƒ„[‚Ì’e‚ğ’Ç‰Á
 	std::vector<std::shared_ptr<Bullet>>& GetBullets();
 

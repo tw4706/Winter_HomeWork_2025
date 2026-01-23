@@ -45,6 +45,8 @@ namespace
 	constexpr int kGraphHalfWidth = 48;
 	constexpr int kGraphHalfHeight = 64;
 	constexpr float kGraphColSize = 64.0f;
+	constexpr float kGraphColSizeW = 32.0f;
+	constexpr float kGraphColSizeH = 80.0f;
 	constexpr int kMaxHp = 3;
 
 	//ägëÂó¶
@@ -96,7 +98,7 @@ namespace
 	constexpr int kColYOffset = 32;
 
 	//ï`âÊÇÃí≤êÆóp
-	constexpr int kColPosYOffset = 15;
+	constexpr int kColPosYOffset = 10;
 	constexpr int kPosYOffset = 60;
 	constexpr float kWalkColXOffset = 15.0f;
 
@@ -249,8 +251,8 @@ void Player::Update(Input& input, BulletManager& bm, StageType stage)
 		return;
 	}
 
-	colRect_.SetCenter(colX, pos_.y - kColPosYOffset,
-		kGraphHalfWidth, kGraphHeight - kColYOffset);
+	colRect_.SetCenter(colX, pos_.y-kColPosYOffset,
+		kGraphColSizeW, kGraphColSizeH);
 
 	//èÛë‘ëJà⁄ÇÃçXêV
 	UpdateState(input);

@@ -30,6 +30,6 @@ public:
 
 private:
 	std::map<SE, int>seHandles_;
-	int volume_ = 100;
+	int volume_ = 0;
 };
 

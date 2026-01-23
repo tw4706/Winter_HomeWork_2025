@@ -146,6 +146,13 @@ void BulletManager::AddEnemyBullet(Vector2& pos, Vector2& vel)
 	bullets_.push_back(bullet);
 }
 
+void BulletManager::AddBoss1Bullet(Vector2& pos, Vector2& vel)
+{
+	auto bullet = std::make_shared<Bullet>(pos, vel, BulletType::Boss1Bullet, pBg_);
+	bullet->Init();
+	bullets_.push_back(bullet);
+}
+
 std::vector<std::shared_ptr<Bullet>>& BulletManager::GetBullets()
 {
 	return bullets_;

@@ -15,7 +15,9 @@ namespace
 {
 	constexpr float kGround = 1764.0f;
 	constexpr float kScale = 1.5f;
+	constexpr float kHalfColSize = 32;
 	constexpr float KEnemyBulletScale = 2.0f;
+	constexpr float KBossBulletScale = 3.0f;
 
 	//’e‚Ìƒ_ƒ[ƒWİ’è
 	constexpr int kMaxDamage = 3;
@@ -71,18 +73,25 @@ void Bullet::Init()
 	bulletH_ = LoadGraph(config.imagePath);
 	assert(bulletH_ >= 0);
 
+	float scale = 1.0f;
+
+	if (bulletType_ == BulletType::Boss1Bullet)
+	{
+		scale = KBossBulletScale;
+	}
+
 	animations_ = std::make_unique<Animation>(
 		bulletH_,
 		config.width,
 		config.height,
 		5, 5,
-		1.0f,
+		scale,
 		true, 0);
 
 	hadouH_ = LoadGraph("data/Bullet/hadou.png");
 	assert(hadouH_ >= 0);
 
-	colSize_ = static_cast<float>(config.height);
+	colSize_ = kHalfColSize;
 
 	//“–‚½‚è”»’è‚Ì‰Šú‰»
 	colRect_.SetCenter(pos_.x, pos_.y, colSize_, colSize_);

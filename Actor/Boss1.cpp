@@ -222,7 +222,7 @@ void Boss1::UpdateAttack()
 
 		Vector2 bulletVel = { isTurn_ ? -kBulletSpeed : kBulletSpeed,0.0f };
 
-		pBm_->AddEnemyBullet(pos_, bulletVel);
+		pBm_->AddBoss1Bullet(pos_, bulletVel);
 	}
 
 	//’ZŽžŠÔ‚ÅFly‚É–ß‚é
