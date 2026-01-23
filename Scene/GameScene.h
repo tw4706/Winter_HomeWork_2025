@@ -9,12 +9,19 @@
 #include "TutorialManager.h"
 #include"EnemyFactory.h"
 #include<memory>
+#include <array>
 
 enum class ClearState
 {
 	None,
 	BossCameraShake,
 	AutoWalk
+};
+
+struct HpUI
+{
+	bool isBroken=false;
+	std::unique_ptr<SpriteAnimation> anim;
 };
 
 class Player;
@@ -43,13 +50,15 @@ public:
 	void Update(Input&)override;
 	void Draw()override;
 
+	void OnDamagedHpUI();
+
 	StageType GetNextStageType(StageType nextStage);
 
 private:
 	int frame_ = 0;// フェードインアウト用
 	int stageTextTimer_;
-	bool isTorchUnlockMessageShow_; //メッセージ表示済みか
-	int torchMessageTimer_ = 0;             //メッセージ表示タイマー
+	bool isTorchUnlockMessageShow_;			//メッセージ表示したか
+	int torchMessageTimer_ = 0;             //メッセージ表示をするタイマー
 	int hpHandle_;
 	int fontHandle_;
 	int fontTorchTextHandle_;
@@ -61,6 +70,7 @@ private:
 	GameProgress*gameProgress_;
 	BulletManager bulletManager_;
 	EffectManager effectManager_;
+	std::array<HpUI, 3> hpUIs_;
 	std::shared_ptr<Player>pPlayer_;
 	std::shared_ptr<Camera>pCamera_;
 	std::unique_ptr<TutorialManager> tutorialManager_;

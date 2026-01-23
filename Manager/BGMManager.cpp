@@ -9,10 +9,10 @@ void BGMManager::Init()
 	bgmHandles_[BGM::GameOver] = LoadSoundMem("data/BGM・SE/GameOverBGM.mp3");
 	bgmHandles_[BGM::GameClear] = LoadSoundMem("data/BGM・SE/夏の思い出.mp3");
 
-	bgmBaseVolume_[BGM::Title] = 0;
-	bgmBaseVolume_[BGM::Game] = 0;
-	bgmBaseVolume_[BGM::GameOver] = 0;
-	bgmBaseVolume_[BGM::GameClear] = 0;
+	bgmBaseVolume_[BGM::Title] = 80;
+	bgmBaseVolume_[BGM::Game] = 60;
+	bgmBaseVolume_[BGM::GameOver] = 80;
+	bgmBaseVolume_[BGM::GameClear] = 80;
 }
 
 void BGMManager::PlayBGM(BGM bgm)

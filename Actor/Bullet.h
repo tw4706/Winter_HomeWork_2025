@@ -12,7 +12,8 @@ enum class BulletType
 	Knife,
 	Lance,
 	Torch,
-	EnemyBullet
+	EnemyBullet,
+	Boss1Bullet
 };
 
 //’e‚Ìî•ñ
@@ -50,6 +51,7 @@ constexpr BulletConfig kBulletConfigs[] =
 	{"data/Bullet/Knife.png",32,32,10.0f,15.0f,true},		//ƒiƒCƒt
 	{"data/Bullet/Lance.png",32,32,10.0f,50.0f,false},		//‘„
 	{"data/Bullet/Torch.png",32,32,6.0f,60.0f,false},		//‚½‚¢‚Ü‚Â
+	{"data/Bullet/EnemyBullet.png",32,32,6.0f,0.0f,false},	//“G‚Ì’e
 	{"data/Bullet/EnemyBullet.png",32,32,6.0f,0.0f,false}	//“G‚Ì’e
 };
 

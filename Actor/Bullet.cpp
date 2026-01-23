@@ -71,14 +71,15 @@ void Bullet::Init()
 	bulletH_ = LoadGraph(config.imagePath);
 	assert(bulletH_ >= 0);
 
-	if (bulletType_ == BulletType::EnemyBullet)
+	if (bulletType_ == BulletType::EnemyBullet||
+		bulletType_==BulletType::Boss1Bullet)
 	{
 		animations_ = std::make_unique<Animation>(
 			bulletH_,
 			static_cast<int>(config.width * KEnemyBulletScale),
 			static_cast<int>(config.height * KEnemyBulletScale),
 			5,5,
-			1.0f,
+			3.0f,
 			true,0);
 	}
 
@@ -98,7 +99,7 @@ void Bullet::UpdateShot()
 
 	if (!isAlive_) return;
 
-	if (bulletType_ == BulletType::EnemyBullet)
+	if (bulletType_ == BulletType::EnemyBullet|| bulletType_ == BulletType::Boss1Bullet)
 	{
 		animations_->Update();
 	}
@@ -126,6 +127,8 @@ void Bullet::UpdateShot()
 		break;
 	case BulletType::EnemyBullet:
 		break;
+	case BulletType::Boss1Bullet:
+		break;
 	default:
 		break;
 	}
@@ -143,7 +146,7 @@ void Bullet::Update(Input& input, std::vector<std::shared_ptr<Enemy>>& enemies)
 	CheckBulletAndMapCollision();
 
 	// “G’e‚ÍˆÚ“®‚¾‚¯
-	if (bulletType_ == BulletType::EnemyBullet)
+	if (bulletType_ == BulletType::EnemyBullet||bulletType_ == BulletType::Boss1Bullet)
 	{
 		pos_ += vel_;
 		colRect_.SetCenter(pos_.x-kColOffsetX, pos_.y,colSize_, colSize_);
@@ -215,7 +218,8 @@ void Bullet::Draw()
 		{
 			angle = static_cast<float>((vel_.x >= 0) ? DX_PI / 2.0f : DX_PI + DX_PI / 2.0f);
 		}
-		if (bulletType_ == BulletType::EnemyBullet)
+		if (bulletType_ == BulletType::EnemyBullet ||
+			bulletType_ == BulletType::Boss1Bullet)
 		{
 			animations_->Draw(drawX, drawY, vel_.x < 0);
 		}

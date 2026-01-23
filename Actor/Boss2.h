@@ -14,21 +14,19 @@ public:
     void OnHit(int damage, const BulletType& type);
 
     void UpdateJumpAttack() override;
-    //攻撃パターンをランダムで決める関数
-    void DecideAttack();
 
 protected:
     void LoadResources() override {};
     int GetGraphIndex(BossState state) const override;
 
     void UpdateIdle() override;
-    void UpdateAttack() override;
+    void UpdateAttack() override {};
     void UpdateMove() override;
 	void UpdateHurt() override;
   
 private:
-    int hitCount_;//ボスが被弾した数
-    int guardTimer_=0;//ガード時間
+    int hitCount_;                  //ボスが被弾した数
+    int guardTimer_=0;              //ガード時間
     int jumpCoolTimer_ = 0;
     bool isJumping_=false;
     bool isBarrierActive_=true;

@@ -5,6 +5,7 @@
 
 namespace 
 {
+	//状態毎のグラフハンドル
 	enum Graph
 	{
 		kIdleGraph,
@@ -16,6 +17,7 @@ namespace
 		kGraphNum
 	};
 
+	//ボス1に対応する画像
 	const std::string kNormalGraphName[kGraphNum] =
 	{
 		"data/Enemy/IDLE.png",
@@ -26,7 +28,7 @@ namespace
 	};
 	static_assert(static_cast<int>(kGraphNum) == _countof(kNormalGraphName));
 
-	//ステージ2のボス1の亜種
+	//ステージ2のボス1の亜種に対応する画像
 	const std::string kVariantGraphName[kGraphNum] =
 	{
 		"data/Enemy/IDLE_Stage2.png",
@@ -67,22 +69,19 @@ namespace
 	constexpr float kColWidth = 120.0f;
 	constexpr float kColHeight = 120.0f;
 
-	//近づかれすぎた時の逃げる速度
+	//プレイヤーが近づいた時の逃げる速度
 	constexpr float kComeBackPos = 0.5f;
-	constexpr float kDistance = 400.0f;
+	constexpr float kDistance = 200.0f;
 
 	//ボスのノックバック距離
 	constexpr float kKnockBackPos = 2.0f;
 	constexpr float kSpeed = 0.5f;
 
 	constexpr float kFlySpeed = 0.4f;
-	constexpr float kEscapeSpeed = 1.8f;
 	constexpr float kBulletSpeed = 3.0f;
 	constexpr float kShotInterval = 5.0f;
 	constexpr int KNormalBoss1MaxHp = 10;
 	constexpr int KVariantBoss1MaxHp = 20;
-	constexpr float kRushSpeed = 4.5f;   //突進する速度
-	constexpr int   kRushTime = 18;     //突進するフレーム数
 }
 
 Boss1::Boss1(Vector2 pos, Vector2 vel,
@@ -212,11 +211,11 @@ void Boss1::UpdateAttack()
 {
 	stateTimer_++;
 
-	float targetY = pPlayer_->GetPos().y - 120.0f;
+	float targetY = pPlayer_->GetPos().y - 150.0f;
 	pos_.y += (targetY - pos_.y) * 0.02f;
 
 	//一定間隔で弾
-	shotTimer_ += 1.0f / 60.0f;
+	shotTimer_ += 1.0f / 30.0f;
 	if (shotTimer_ >= 1.5f)
 	{
 		shotTimer_ = 0.0f;
@@ -243,10 +242,10 @@ void Boss1::UpdateMove()
 
 	//上下の追従は弱め
 	float targetY = pPlayer_->GetPos().y - 150.0f;
-	pos_.y += (targetY - pos_.y) * 0.02f;
+	//pos_.y += (targetY - pos_.y) * 0.02f;
 
 	//羽ばたき
-	pos_.y += sin(stateTimer_ * 0.08f) * 1.0f;
+	pos_.y += sin(stateTimer_ * 0.06f) * 1.0f;
 
 	//重なり防止
 	if (fabsf(dx) < 30.0f)

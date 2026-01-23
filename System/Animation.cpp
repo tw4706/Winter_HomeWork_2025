@@ -96,3 +96,8 @@ void Animation::SetFrame(int frame)
     frameTimer_ = 0; //更新タイマーもリセットする
 }
 
+void Animation::SetScale(float scale)
+{
+    scale_ = scale;
+}
+

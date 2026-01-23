@@ -63,7 +63,7 @@ void ClearScene::NormalUpdate(Input& input)
 	{
 		shinigachiFrame_++;
 
-		// 徐々に加速 → 減速
+		//徐々に加速 → 減速
 		int diff = shinigachiTarget_ - shinigachiCurrent_;
 		int speed = (diff / 10 > 1) ? (diff / 10) : 1;
 		shinigachiCurrent_ += speed;
@@ -77,6 +77,7 @@ void ClearScene::NormalUpdate(Input& input)
 
 	if (input.IsTriggered("any_button"))
 	{
+		Application::GetInstance().GetSEManager().PlaySE(SE::Decide);
 		controller_.GetProgress().Reset();//死亡回数をリセットする
 		update_ = &ClearScene::FadeOutUpdate;
 		draw_ = &ClearScene::FadeDraw;
@@ -150,7 +151,6 @@ void ClearScene::NormalDraw()
 
 	//=====タイトルに戻る=====
 	bool visible = (frame_ / 30) % 2 == 0;//30フレームごとに点滅
-
 
 	if (visible)
 	{

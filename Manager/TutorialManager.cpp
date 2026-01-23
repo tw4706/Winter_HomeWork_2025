@@ -39,7 +39,7 @@ namespace
 		1300.0f,   //Attack
 		2000.0f,  //Jump
 		2000.0f,  //DoubleJump
-		3800.0f   //WeaponChange
+		3700.0f   //WeaponChange
 	};
 
 	const char* kTutorialText[] =

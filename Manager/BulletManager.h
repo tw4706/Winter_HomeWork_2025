@@ -25,7 +25,7 @@ public:
 	bool IsPlayerBullet(BulletType type)const;
 
 	//敵の弾を追加
-	void AddEnemyBullet(Vector2& pos,Vector2& vel);
+	void AddEnemyBullet(Vector2& pos, Vector2& vel);
 
 	//プレイヤーの弾を追加
 	std::vector<std::shared_ptr<Bullet>>& GetBullets();
@@ -40,7 +40,7 @@ private:
 	Rect screenRect_;
 	std::vector<std::shared_ptr<Bullet>>bullets_;
 	std::map<BulletType, int>bulletLimits_;
-	Camera* pCamera_;//カメラのポインタS
-	EffectManager* pEffectManager_;//エフェクトマネージャーのポインタ
+	Camera* pCamera_;				//カメラのポインタ
+	EffectManager* pEffectManager_;	//エフェクトマネージャーのポインタ
 };
 

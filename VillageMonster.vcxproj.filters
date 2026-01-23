@@ -156,13 +156,13 @@
     <ClCompile Include="Manager\SEManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="SpriteAnimation.cpp">
+    <ClCompile Include="System\SpriteAnimation.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="DemoPlayer.cpp">
+    <ClCompile Include="Actor\DemoPlayer.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="DemoZombie.cpp">
+    <ClCompile Include="Actor\DemoZombie.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -284,13 +284,13 @@
     <ClInclude Include="Manager\SEManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="SpriteAnimation.h">
+    <ClInclude Include="System\SpriteAnimation.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="DemoPlayer.h">
+    <ClInclude Include="Actor\DemoPlayer.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="DemoZombie.h">
+    <ClInclude Include="Actor\DemoZombie.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

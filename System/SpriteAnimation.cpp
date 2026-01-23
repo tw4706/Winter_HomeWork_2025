@@ -2,13 +2,10 @@
 
 SpriteAnimation::SpriteAnimation(
     int handle,
-    int frameW,
-    int frameH,
-    int frameCount,
-    int frameInterval,
+    int frameW,int frameH,
+    int frameCount,int frameInterval,
     float scale,
-    int startX,
-    int startY,
+    int startX,int startY,
     bool loop):
     handle_(handle),
     frameW_(frameW),
@@ -62,8 +59,7 @@ void SpriteAnimation::Draw(float x, float y, bool flip)
         0.0,
         handle_,
         TRUE,
-        flip
-    );
+        flip);
 }
 
 void SpriteAnimation::Reset()

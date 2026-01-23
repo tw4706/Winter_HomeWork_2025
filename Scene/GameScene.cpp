@@ -190,10 +190,10 @@ void GameScene::NormalUpdate(Input&input)
 	//ただしボス2の場合は当たり判定が別途あるため除外する
 	if (hitEnemy && !pPlayer_->IsDead())
 	{
-		Application::GetInstance().GetSEManager().PlaySE(SE::KnockBack);
 		if (dynamic_cast<Boss2*>(hitEnemy) == nullptr)
 		{
 			pPlayer_->OnDamage(hitEnemy->GetPos().x);
+			OnDamagedHpUI();
 		}
 	}
 
@@ -274,11 +274,19 @@ void GameScene::NormalUpdate(Input&input)
 		}
 	}
 
-
 	//ステージテキストを表示するタイマーのカウントダウン
 	if (stageTextTimer_ > 0)
 	{
 		stageTextTimer_--;
+	}
+
+	//HPUIの更新
+	for (auto& hp : hpUIs_)
+	{
+		if (hp.isBroken)
+		{
+			hp.anim->Update();
+		}
 	}
 
 #ifdef _DEBUG
@@ -388,29 +396,33 @@ void GameScene::NormalDraw()
 
 void GameScene::DrawHpUI()
 {
-	constexpr int kHpWidth = 32;
-	constexpr int kHpHeight = 32;
+	constexpr int baseX = 100;
+	constexpr int baseY = 100;
+	constexpr int spacing = 84;
 
-	int hp = pPlayer_->GetHp();
-	int maxHp = pPlayer_->GetMaxHp();
+	for (int i = 0; i < 3; i++)
+	{
+		float x = baseX + i * spacing;
+		float y = baseY;
 
-	constexpr int x = 16;
-	constexpr int y = 16;
-
-	int srcX = (maxHp - hp) * kHpWidth;
-
-	DrawRectRotaGraph(
-		static_cast<int>(x + kHpWidth * kHpScale * 0.5f),
-		static_cast<int>(y + kHpHeight * kHpScale * 0.5f),
-		srcX,
-		0,
-		kHpWidth,
-		kHpHeight,
-		kHpScale,
-		0.0f,
-		hpHandle_,
-		TRUE
-	);
+		if (hpUIs_[i].isBroken)
+		{
+			hpUIs_[i].anim->Draw(x, y, false);
+		}
+		else
+		{
+			DrawRectRotaGraph3(
+				(int)x, (int)y,
+				0, 0,
+				32, 32,
+				16, 16,
+				kHpScale, kHpScale,
+				0.0f,
+				hpHandle_,
+				TRUE,
+				FALSE);
+		}
+	}
 }
 
 void GameScene::DrawStageText()
@@ -458,7 +470,6 @@ void GameScene::DrawStageText()
 
 void GameScene::Init()
 {
-
 	hpHandle_ = LoadGraph("data/UI/Life.png");
 	fontHandle_ = CreateFontToHandle("g_コミックホラー悪党-教漢", 72, -1, -1);
 	fontTorchTextHandle_= CreateFontToHandle("g_コミックホラー悪党-教漢", 24, -1, -1);
@@ -485,6 +496,16 @@ void GameScene::Init()
 	//敵の初期化
 	enemyFactory_.SetEffectManager(&effectManager_);
 	enemyFactory_.LoadFromCSV(stageType_, &bulletManager_);
+	//チュートリアルステージ用の初期化
+	if (stageType_ == StageType::Tutorial)
+	{
+		tutorialManager_ = std::make_unique<TutorialManager>();
+		tutorialManager_->Init();
+	}
+	else
+	{
+		tutorialManager_.reset();
+	}
 	if (stageType_ == StageType::Stage1)
 	{
 		enemyFactory_.AddBoss1(Vector2{ kBoss1SpawnPosX,kBoss1SpawnPosY }, Vector2{ 0,0 },
@@ -521,21 +542,20 @@ void GameScene::Init()
 		torchMessageTimer_ = kTorchMessageDuration;
 		isTorchUnlockMessageShow_ = true;
 	}
-
-	//チュートリアルステージ用の初期化
-	if (stageType_ == StageType::Tutorial)
-	{
-		tutorialManager_ = std::make_unique<TutorialManager>();
-		tutorialManager_->Init();
-
-		enemyFactory_.LoadFromCSV(StageType::Tutorial, &bulletManager_);
-		enemyFactory_.Init(pPlayer_, bg_);
-	}
-	else
-	{
-		tutorialManager_.reset();
-	}
 	stageTextTimer_ = kStageTextDuration;
+
+	for (int i = 0; i < 3; i++)
+	{
+		hpUIs_[i].isBroken = false;
+		hpUIs_[i].anim = std::make_unique<SpriteAnimation>(
+			hpHandle_,
+			32, 32,
+			13,
+			6,
+			kHpScale,
+			0, 160,
+			false);
+	}
 }
 
 void GameScene::Update(Input& input)
@@ -546,6 +566,21 @@ void GameScene::Update(Input& input)
 void GameScene::Draw()
 {
 	(this->*draw_)();
+}
+
+void GameScene::OnDamagedHpUI()
+{
+	int hp = pPlayer_->GetHp();
+	int index = hp;
+
+	if (index >= 0 && index < 3)
+	{
+		if (!hpUIs_[index].isBroken)
+		{
+			hpUIs_[index].isBroken = true;
+			hpUIs_[index].anim->Reset();
+		}
+	}
 }
 
 //次のステージタイプを取得

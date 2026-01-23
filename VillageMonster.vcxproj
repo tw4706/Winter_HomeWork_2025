@@ -144,9 +144,9 @@
     <ClCompile Include="Actor\Boss.cpp" />
     <ClCompile Include="Actor\Boss1.cpp" />
     <ClCompile Include="Actor\Boss2.cpp" />
-    <ClCompile Include="DemoPlayer.cpp" />
-    <ClCompile Include="DemoZombie.cpp" />
-    <ClCompile Include="SpriteAnimation.cpp" />
+    <ClCompile Include="Actor\DemoPlayer.cpp" />
+    <ClCompile Include="Actor\DemoZombie.cpp" />
+    <ClCompile Include="System\SpriteAnimation.cpp" />
     <ClCompile Include="Manager\BGMManager.cpp" />
     <ClCompile Include="Manager\SEManager.cpp" />
     <ClCompile Include="UI・Effect\Effect.cpp" />
@@ -186,9 +186,9 @@
     <ClInclude Include="Actor\Boss.h" />
     <ClInclude Include="Actor\Boss1.h" />
     <ClInclude Include="Actor\Boss2.h" />
-    <ClInclude Include="DemoPlayer.h" />
-    <ClInclude Include="DemoZombie.h" />
-    <ClInclude Include="SpriteAnimation.h" />
+    <ClInclude Include="Actor\DemoPlayer.h" />
+    <ClInclude Include="Actor\DemoZombie.h" />
+    <ClInclude Include="System\SpriteAnimation.h" />
     <ClInclude Include="Manager\BGMManager.h" />
     <ClInclude Include="Manager\SEManager.h" />
     <ClInclude Include="UI・Effect\Effect.h" />

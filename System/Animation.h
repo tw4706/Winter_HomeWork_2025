@@ -16,6 +16,8 @@ public:
 
     void SetFrame(int frame);
 
+    void SetScale(float scale);
+
 	int GetFrameCount() const { return frameCount_; }
 	int GetCurrentFrame() const { return currentFrame_; }
 
@@ -23,7 +25,7 @@ public:
 	bool IsAnimFinished() const { return (!isLoop_ && currentFrame_ >= frameCount_ - 1); }
 
 	//ループ設定
-	void Setloop(bool loop) { isLoop_ = loop; }
+	void SetLoop(bool loop) { isLoop_ = loop; }
 
 private:
     int handle_;            //画像ハンドル

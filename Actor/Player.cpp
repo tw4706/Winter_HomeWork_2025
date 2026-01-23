@@ -45,7 +45,7 @@ namespace
 	constexpr int kGraphHalfWidth = 48;
 	constexpr int kGraphHalfHeight = 64;
 	constexpr float kGraphColSize = 64.0f;
-	constexpr int kMaxHp = 2;
+	constexpr int kMaxHp = 3;
 
 	//拡大率
 	constexpr float kScale = 1.5f;
@@ -285,17 +285,17 @@ void Player::Update(Input& input, BulletManager& bm, StageType stage)
 
 		if (state_ == PlayerState::Jump)
 		{
-			anim->Setloop(false);
+			anim->SetLoop(false);
 			anim->SetFrame(kJumpStartFrame);
 		}
 		else if (state_ == PlayerState::Attack)
 		{
-			anim->Setloop(false);
+			anim->SetLoop(false);
 			anim->SetFrame(kAttackStartFrame);
 		}
 		else
 		{
-			anim->Setloop(true);
+			anim->SetLoop(true);
 		}
 
 		prevState_ = state_;
@@ -514,7 +514,7 @@ void Player::Shot(Input& input, BulletManager& bm)
 
 		auto anim = animations_[static_cast<int>(PlayerState::Attack)];
 		anim->Reset();
-		anim->Setloop(true);
+		anim->SetLoop(true);
 		anim->SetFrame(kAttackStartFrame);
 
 		//たいまつが使えないステージなら発射出来ないようにする
@@ -577,6 +577,8 @@ void Player::OnDamage(float enemyX)
 	if (controlMode_ == PlayerControl::AutoWalking) return;
 	if (!isAlive_) return;
 	if (isDamaged_) return;
+
+	Application::GetInstance().GetSEManager().PlaySE(SE::KnockBack);
 
 	hp_--;
 

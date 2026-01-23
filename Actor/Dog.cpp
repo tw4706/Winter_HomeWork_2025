@@ -73,8 +73,7 @@ void Dog::Init()
 	dogGraphHandles_.resize(kGraphNum);
 	animations_.resize(static_cast<int>(DogState::Jump) + 1);
 
-	const std::string* graphNames =
-		(dogType_ == DogType::Weak) ? kWeakDogGraphName : kDogGraphName;
+	const std::string* graphNames =(dogType_ == DogType::Weak) ? kWeakDogGraphName : kDogGraphName;
 
 	for (int i = 0; i < kGraphNum; i++)
 	{

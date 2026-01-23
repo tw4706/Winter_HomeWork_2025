@@ -172,11 +172,11 @@ void Boss::Draw()
 #ifdef _DEBUG
 	colRect_.DrawAndCamera(cameraOffset_, 0xff0000, false);
 
-	DrawFormatString(50, 80, GetColor(255, 255, 0),
-		"State=%d Dead=%d DeadAnimFin=%d",
-		(int)currentState_,
-		isDead_,
-		isDeadAnimFinished_);
+	//DrawFormatString(50, 80, GetColor(255, 255, 0),
+	//	"State=%d Dead=%d DeadAnimFin=%d",
+	//	(int)currentState_,
+	//	isDead_,
+	//	isDeadAnimFinished_);
 #endif
 }
 
@@ -208,7 +208,7 @@ void Boss::UpdateHurt()
 
 	stateTimer_++;
 
-	// 演出だけ
+	//演出だけ
 	pos_.y += sin(stateTimer_ * 0.3f) * 0.3f;
 
 	int animIndex = GetGraphIndex(BossState::Hurt);

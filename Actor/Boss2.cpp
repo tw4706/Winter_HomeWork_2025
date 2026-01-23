@@ -24,7 +24,6 @@ namespace
 	constexpr int kShieldBreakTime = 180;
 
 	constexpr int   kShieldReactTime = 20;   //ヒット反応保持時間
-	constexpr float kShieldMaxAlpha = 120;  //半透明
 	constexpr float kShieldFadeSpeed = 10.0f;
 
 	constexpr int kFrameInterval = 10;
@@ -73,7 +72,7 @@ void Boss2::Init()
 	{
 		graphHandles_[i] = graph;
 
-		int frameInterval= (i == Anim::Dead) ? kFrameIntervalDead : kFrameInterval;
+		int frameInterval = (i == Anim::Dead) ? kFrameIntervalDead : kFrameInterval;
 
 		animations_[i] = std::make_shared<Animation>(
 			graph,
@@ -137,36 +136,21 @@ void Boss2::Update()
 void Boss2::Draw()
 {
 	Boss::Draw();
+	float drawX = pos_.x + cameraOffset_.x;
+	float drawY = pos_.y + cameraOffset_.y;
 
-	if (shieldHitTimer_ > 0 && isBarrierActive_)
-	{
-		//点滅(2フレームごと)
-		if ((shieldHitTimer_ / 4) % 4 == 0)
-		{
-			float rate = 128 + (float)shieldHP_ / shieldMaxHP_;
-			int alpha = (int)(kShieldMaxAlpha * rate);
+	float offsetX = isTurn_ ? -40.0f : 40.0f;
+	float offsetY = -100.0f;
 
-			SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
-
-			float drawX = pos_.x + cameraOffset_.x;
-			float drawY = pos_.y + cameraOffset_.y;
-
-			float offsetX = isTurn_ ? -40.0f : 40.0f;
-			float offsetY = -100.0f;
-
-			DrawRectRotaGraph3(
-				(int)(drawX + offsetX),
-				(int)(drawY + offsetY),
-				kShieldSrcX, kShieldSrcY,
-				kShieldSize, kShieldSize,
-				kShieldSize / 2, kShieldSize / 2,
-				kShieldScale, kShieldScale,
-				0.0f,
-				barrierGraphHandle_, true);
-
-			SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-		}
-	}
+	DrawRectRotaGraph3(
+		(int)(drawX + offsetX),
+		(int)(drawY + offsetY),
+		kShieldSrcX, kShieldSrcY,
+		kShieldSize, kShieldSize,
+		kShieldSize / 2, kShieldSize / 2,
+		kShieldScale, kShieldScale,
+		0.0f,
+		barrierGraphHandle_, true);
 #ifdef _DEBUG
 	//当たり判定表示
 	colRect_.DrawAndCamera(cameraOffset_, GetColor(255, 0, 0), false);
@@ -205,20 +189,9 @@ void Boss2::UpdateIdle()
 	stateTimer_++;
 
 	//一定時間で攻撃へ
-	if (stateTimer_ > 60)
+	if (stateTimer_ > 30)
 	{
-		DecideAttack();
-	}
-}
-
-void Boss2::UpdateAttack()
-{
-	stateTimer_++;
-
-	//攻撃終了判定
-	if (stateTimer_ > 90)
-	{
-		ChangeState(BossState::Idle);
+		UpdateJumpAttack();
 	}
 }
 
@@ -251,16 +224,15 @@ void Boss2::UpdateHurt()
 
 void Boss2::UpdateJumpAttack()
 {
-
 	stateTimer_++;
 
 	if (stateTimer_ < 30)
 	{
-		vel_.x = 0.0f; // 溜め
+		vel_.x = 0.0f; //溜め
 		return;
 	}
 
-	if (stateTimer_ == 30&&isGround_)
+	if (stateTimer_ == 30 && isGround_)
 	{
 		vel_.y = -20.0f;
 		vel_.x = isTurn_ ? -4.0f : 4.0f;
@@ -268,7 +240,7 @@ void Boss2::UpdateJumpAttack()
 		isGround_ = false;
 	}
 
-	// 着地したら Idle に戻す
+	//着地したら Idle に戻す
 	if (isJumping_ && isGround_)
 	{
 		isJumping_ = false;
@@ -281,23 +253,15 @@ void Boss2::UpdateJumpAttack()
 	}
 }
 
-void Boss2::DecideAttack()
-{
-	stateTimer_ = 0;
-
-	ChangeState(BossState::JumpAttack);
-}
-
 void Boss2::OnHit(int damage, const BulletType& type)
 {
 	if (currentState_ == BossState::Dead) return;
 
-	// シールドが有効な場合
+	//シールドが有効な場合
 	if (isBarrierActive_ && !isShieldBroken_)
 	{
 		Application::GetInstance().GetSEManager().PlaySE(SE::BossGuard);
 		shieldHitTimer_ = kShieldReactTime;
-		shieldAlpha_ = kShieldMaxAlpha;
 
 		int shieldDamage = 0;
 
@@ -324,7 +288,6 @@ void Boss2::OnHit(int damage, const BulletType& type)
 			isShieldBroken_ = true;
 			isBarrierActive_ = false;
 			shieldBreakTimer_ = kShieldBreakTime;
-			shieldAlpha_ = 0.0f;
 
 			Application::GetInstance().GetSEManager().PlaySE(SE::BossGuardBreak);
 
