@@ -82,6 +82,9 @@ public:
 	//現在の弾の種類を取得
 	BulletType GetCurrentBulletType() const { return currentBulletType_; }
 
+	//ステージ2で最初に松明を装備しておく関数
+	void TorhEquip();
+
 	void SetCamera(std::shared_ptr<Camera> camera);
 
 	//ゲームの進行状況を設定する関数
@@ -119,6 +122,7 @@ private:
 	int landingTimer_ = 0;//地面着地用タイマー
 	int maxHp_ = 2;
 
+	StageType prevStage_;
 	StageType currentStage_;//現在のステージの種類
 	PlayerControl controlMode_;//プレイヤーの操作している状態
 	PlayerState state_;	//プレイヤーの状態

@@ -149,9 +149,10 @@ Player::Player(Vector2 pos, Vector2 vel) :
 	isDeathAnimFinished_(false),
 	autoWalkDir_(1),
 	autoWalkSpeed_(kSpeed),
+	isUnlockedTorch_(false),
+	prevStage_(StageType::Stage1),
 	currentStage_(StageType::Stage1),
 	controlMode_(PlayerControl::Normal),
-	isUnlockedTorch_(false),
 	state_(PlayerState::Idle),
 	prevState_(PlayerState::Idle),
 	currentBulletType_(BulletType::Knife),
@@ -191,6 +192,17 @@ void Player::Init()
 
 void Player::Update(Input& input, BulletManager& bm, StageType stage)
 {
+	if (prevStage_ != stage)
+	{
+		//ステージ2に入った時に松明を装備しておく
+		if (stage == StageType::Stage2)
+		{
+			TorhEquip();
+		}
+
+		prevStage_ = stage;
+	}
+
 	currentStage_ = stage;
 
 	float factor = 1.0f;
@@ -689,6 +701,12 @@ void Player::StartAutoWalk(int dir)
 
 	state_ = PlayerState::Walk;
 	animations_[static_cast<int>(state_)]->Reset();
+}
+
+void Player::TorhEquip()
+{
+	isUnlockedTorch_ = true;
+	currentBulletType_ = BulletType::Torch;
 }
 
 void Player::SetCamera(std::shared_ptr<Camera>camera)

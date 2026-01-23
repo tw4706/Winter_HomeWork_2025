@@ -67,7 +67,7 @@ GameScene::GameScene(SceneController& controller, StageType stage) :
 	frame_(fade_interval),
 	stageTextTimer_(0),
 	isTorchUnlockMessageShow_(false),
-	torchMessageTimer_(0),
+	isTorchMessageActive_(false),
 	hpHandle_(-1),
 	fontHandle_(-1),
 	isBoss1Defeated_(false),
@@ -280,6 +280,16 @@ void GameScene::NormalUpdate(Input&input)
 		stageTextTimer_--;
 	}
 
+	//ステージ名の表示のあとに松明解放テキスト表示
+	if (isTorchMessageActive_ && stageTextTimer_ <= 0)
+
+	{
+		//何かボタンが押されたら解除
+		if (input.IsTriggered("any_button"))
+		{
+			isTorchMessageActive_ = false;
+		}
+	}
 	//HPUIの更新
 	for (auto& hp : hpUIs_)
 	{
@@ -366,29 +376,27 @@ void GameScene::NormalDraw()
 	//ステージ名の描画
 	DrawStageText();
 
-	if (torchMessageTimer_ > 0)
+	if (isTorchMessageActive_ && stageTextTimer_ <= 0)
 	{
-		torchMessageTimer_--;
 
 		const char* message = "松明を解放しました！";
 
 		//文字幅を取得して中央に表示
-		int msgWidth = GetDrawStringWidthToHandle(message, static_cast<int>(strlen(message)), fontHandle_);
+		int msgWidth = GetDrawStringWidthToHandle(message, static_cast<int>(strlen(message)), fontTorchTextHandle_);
+		int msgHeight = GetFontSizeToHandle(fontTorchTextHandle_);
 		int x = (Game::kScreenWidth - msgWidth) / 2;
 		int y = Game::kScreenHeight / 2 - 100;
 
-		//フェードイン・フェードアウト演出
-		int alpha = 255;
-		if (torchMessageTimer_ > kTorchMessageDuration / 2)
-		{
-			alpha = 255 * (kTorchMessageDuration - torchMessageTimer_) / (kTorchMessageDuration / 2);
-		}
-		else if (torchMessageTimer_ < kTorchMessageDuration / 2)
-		{
-			alpha = 255 * torchMessageTimer_ / (kTorchMessageDuration / 2);
-		}
+		int padding = 16;
+		int boxX1 = x - padding;
+		int boxY1 = y - padding;
+		int boxX2 = x + msgWidth + padding;
+		int boxY2 = y + msgHeight + padding;
 
-		SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
+		//フェードイン・フェードアウト演出
+
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 220);
+		DrawBox(boxX1, boxY1, boxX2, boxY2, 0x000000, TRUE);
 		DrawStringToHandle(x, y, message, 0xffff00, fontTorchTextHandle_);
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	}
@@ -536,10 +544,10 @@ void GameScene::Init()
 
 	//たいまつのアンロックするための処理
 	auto& progress = controller_.GetProgress();
-	if (progress.isDefeatedBoss1_)
+	if (stageType_ == StageType::Stage2 && progress.isDefeatedBoss1_)
 	{
 		pPlayer_->UnlockTorch();
-		torchMessageTimer_ = kTorchMessageDuration;
+		isTorchMessageActive_ = true;
 		isTorchUnlockMessageShow_ = true;
 	}
 	stageTextTimer_ = kStageTextDuration;

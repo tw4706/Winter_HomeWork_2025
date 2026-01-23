@@ -58,7 +58,7 @@ private:
 	int frame_ = 0;// フェードインアウト用
 	int stageTextTimer_;
 	bool isTorchUnlockMessageShow_;			//メッセージ表示したか
-	int torchMessageTimer_ = 0;             //メッセージ表示をするタイマー
+	bool isTorchMessageActive_;
 	int hpHandle_;
 	int fontHandle_;
 	int fontTorchTextHandle_;

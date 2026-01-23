@@ -79,6 +79,7 @@ namespace
 
 	constexpr float kFlySpeed = 0.4f;
 	constexpr float kBulletSpeed = 3.0f;
+	constexpr int kMaxShotCount = 1;
 	constexpr float kShotInterval = 5.0f;
 	constexpr int KNormalBoss1MaxHp = 10;
 	constexpr int KVariantBoss1MaxHp = 20;
@@ -91,6 +92,7 @@ Boss1::Boss1(Vector2 pos, Vector2 vel,
 	:Boss(pos, vel, player, bm, camera,effectMgr),
 	type_(type),
 	escapeTimer_(0),
+	shotCount_(0),
 	knockbackDir_(0),
 	chargeVel_(0.0f)
 {
@@ -117,6 +119,7 @@ Boss1::~Boss1()
 
 void Boss1::Init()
 {
+	shotCount_ = 0;
 	SetUseGravity(false);
 
 	Boss::Init();
@@ -209,24 +212,30 @@ void Boss1::UpdateIdle()
 
 void Boss1::UpdateAttack()
 {
+	if (stateTimer_ == 0)
+	{
+		shotCount_ = 0;
+		shotTimer_ = 0.0f;
+	}
+
 	stateTimer_++;
 
 	float targetY = pPlayer_->GetPos().y - 150.0f;
 	pos_.y += (targetY - pos_.y) * 0.02f;
 
 	//ˆê’èŠÔŠu‚Å’e
-	shotTimer_ += 1.0f / 30.0f;
-	if (shotTimer_ >= 1.5f)
+	shotTimer_ += 1.0f / 60.0f;
+	if (shotTimer_ >= 2.0f && shotCount_ < kMaxShotCount)
 	{
 		shotTimer_ = 0.0f;
+		shotCount_++;
 
 		Vector2 bulletVel = { isTurn_ ? -kBulletSpeed : kBulletSpeed,0.0f };
 
 		pBm_->AddBoss1Bullet(pos_, bulletVel);
 	}
 
-	//’ZŽžŠÔ‚ÅFly‚É–ß‚é
-	if (stateTimer_ > 120)
+	if (shotCount_ >= kMaxShotCount)
 	{
 		ChangeState(BossState::Move);
 	}
@@ -242,7 +251,7 @@ void Boss1::UpdateMove()
 
 	//ã‰º‚Ì’Ç]‚ÍŽã‚ß
 	float targetY = pPlayer_->GetPos().y - 150.0f;
-	//pos_.y += (targetY - pos_.y) * 0.02f;
+	pos_.y += (targetY - pos_.y) * 0.02f;
 
 	//‰H‚Î‚½‚«
 	pos_.y += sin(stateTimer_ * 0.06f) * 1.0f;
