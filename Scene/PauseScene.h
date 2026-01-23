@@ -22,6 +22,7 @@ private:
 	int selectIndex_ = 0;//現在選択中のインデックス
 	int volumeSelectIdx_ = 0;
 	int frameHandle_;
+	int fontHandle_;
 	std::vector<std::string>menuList_;//ポーズ画面中に表示するメニューリスト
 	PauseMode pauseMode_ = PauseMode::Menu;
 
@@ -47,6 +48,7 @@ private:
 
 public:
 	PauseScene(SceneController& controller);
+	~PauseScene();
 	void Init()override;
 	void Update(Input& input)override;
 	void Draw()override;

@@ -95,6 +95,7 @@ void GameScene::NormalUpdate(Input&input)
 	//ポーズボタンを押したらポーズシーンに遷移
 	if (input.IsTriggered("pause"))
 	{
+		Application::GetInstance().GetSEManager().PlaySE(SE::Cancel);
 		controller_.PushScene(std::make_shared<PauseScene>(controller_));
 		return;
 	}
