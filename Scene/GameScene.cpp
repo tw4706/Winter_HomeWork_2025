@@ -559,7 +559,7 @@ void GameScene::Init()
 		if (stageType_ == StageType::Stage2)
 		{
 			isTorchMessageActive_ = true;
-			isTorchUnlockMessageShow_ = true;
+			isTorchUnlockMessageShow_ = false;
 		}
 	}
 	stageTextTimer_ = kStageTextDuration;
