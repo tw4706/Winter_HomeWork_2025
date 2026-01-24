@@ -5,7 +5,6 @@
 
 namespace
 {
-
 	//武器アイコンの拡大率
     constexpr float kWeaponScale = 1.0f;
 	//アイコンフレームの拡大率
@@ -74,19 +73,10 @@ void PlayerWeaponUI::Draw()
 {
     int index = static_cast<int>(currentWeapon_);
 
-    // Torch が未解放なら表示しない（or ロック表示）
+    //Torchが未解放なら表示しないようにする
     if (currentWeapon_ == BulletType::Torch && !isTorchUnlocked_)
     {
-        // 表示しない場合
         return;
-
-        // ロック表示したいなら下のコメントアウトを使う
-        /*
-        SetDrawBlendMode(DX_BLENDMODE_ALPHA, kLockAlpha);
-        DrawGraph(kBasePosX, kBasePosY, weaponGraphs_[index], TRUE);
-        SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-        return;
-        */
     }
 
     int baseX = Game::kScreenWidth / 2 - kIconSize / 2;
@@ -96,7 +86,7 @@ void PlayerWeaponUI::Draw()
     int centerX = baseX + kIconSize / 2;
     int centerY = baseY + kIconSize / 2;
 
-    //フレーム
+    //フレームの描画
     {
         int frameSize = static_cast<int>(kIconSize * kFrameScale);
         int half = frameSize / 2;
@@ -110,7 +100,7 @@ void PlayerWeaponUI::Draw()
             TRUE);
     }
 
-    //武器
+    //武器の描画
     {
         int weaponSize = static_cast<int>(kIconSize * kWeaponScale);
         int half = weaponSize / 2;

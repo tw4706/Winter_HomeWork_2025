@@ -7,27 +7,76 @@
 
 namespace
 {
+	//========================
+	// ステータス関連
+	//========================
+	constexpr int kMaxHP = 50;
+
+	//========================
+	// 当たり判定・描画関連
+	//========================
+	constexpr float kColOffsetY = 100.0f;
+	constexpr float kShieldOffsetX = 40.0f;
+	constexpr float kShieldOffsetY = 100.0f;
+	constexpr float kDrawOffsetExtraY = 80.0f;
 	constexpr int kGraphW = 192;
 	constexpr int kGraphH = 128;
 	constexpr float kScale = 4.0f;
 	constexpr float kColSizeX = 128.0f;
 	constexpr float kColSizeY = 256.0f;
 
-	constexpr int kMaxHP = 50;
-
+	//========================
+	// シールド関連
+	//========================
 	constexpr int kShieldSrcX = 312;
 	constexpr int kShieldSrcY = 216;
 	constexpr int kShieldSize = 24;
 	constexpr float kShieldScale = 10.0f;
-
 	constexpr int kShieldMaxHP = 30;
 	constexpr int kShieldBreakTime = 180;
-
-	constexpr int   kShieldReactTime = 20;   //ヒット反応保持時間
+	constexpr int   kShieldReactTime = 20;   //ヒットした時の反応する時間
 	constexpr float kShieldFadeSpeed = 10.0f;
+	constexpr float kShieldCriticalRate = 0.3f;
+	constexpr float kShieldScaleMinRate = 0.6f;
+	constexpr float kShieldScaleMaxRate = 0.4f;
+	constexpr int   kShieldShakeRand = 5;
+	constexpr float kShieldShakePower = 2.0f;
+	constexpr int   kShieldHitAlphaNormal = 128;
+	constexpr int   kShieldHitAlphaCritical = 200;
 
-	constexpr int kFrameInterval = 10;
-	constexpr int kFrameIntervalDead = 25;
+	//========================
+	// 状態遷移関連
+	//========================
+	constexpr int kIdleToJumpTime = 30;
+	constexpr int kMoveDuration = 60;
+	constexpr int kJumpChargeTime = 30;
+
+	//========================
+	// 移動関連
+	//========================
+	constexpr float kMoveSpeed = 1.5f;
+	constexpr float kJumpSpeedY = 20.0f;
+	constexpr float kJumpSpeedX = 4.0f;
+
+	//========================
+	// 被弾演出関連
+	//========================
+	constexpr float kHurtShakeSpeed = 0.3f;
+	constexpr float kHurtShakePower = 0.3f;
+
+	//========================
+	// 着地演出関連
+	//========================
+	constexpr int   kCameraDuration = 10;
+	constexpr float kCameraMagnitude = 8.0f;
+
+	//========================
+	// シールドへのダメージ関連
+	//========================
+	constexpr int kKnifeShieldDamage = 2;
+	constexpr int kLanceShieldDamage = 5;
+	constexpr int kTorchShieldDamage = 3;
+	constexpr int kShieldBreakDamage = 10;
 
 	enum Anim
 	{
@@ -56,6 +105,8 @@ namespace
 		7,	//Hurt
 		16  //Dead
 	};
+	constexpr int kFrameInterval = 10;
+	constexpr int kFrameIntervalDead = 25;
 }
 
 void Boss2::Init()
@@ -111,7 +162,7 @@ void Boss2::Update()
 		UpdateDead();
 		return;
 	}
-	colRect_.SetCenter(pos_.x, pos_.y - 100, kColSizeX, kColSizeY);
+	colRect_.SetCenter(pos_.x, pos_.y - kColOffsetY, kColSizeX, kColSizeY);
 
 	//シールドの更新
 	if (shieldHitTimer_ > 0)
@@ -142,12 +193,12 @@ void Boss2::Draw()
 	float drawX = pos_.x + cameraOffset_.x;
 	float drawY = pos_.y + cameraOffset_.y;
 
-	float offsetX = isTurn_ ? -40.0f : 40.0f;
-	float offsetY = -100.0f;
+	float offsetX = isTurn_ ? -kShieldOffsetX : kShieldOffsetX;
+	float offsetY = -kShieldOffsetY;
 	float shieldRate = (float)shieldHP_ / shieldMaxHP_;
 
-	float shieldScale = kShieldScale * (0.6f + shieldRate * 0.4f);
-	bool isShieldCritical = (shieldRate <= 0.3f);
+	float shieldScale = kShieldScale * (kShieldScaleMinRate + shieldRate * kShieldScaleMaxRate);
+	bool isShieldCritical = (shieldRate <= kShieldCriticalRate);
 
 	//シールドの揺れを残量によって変化させる
 	float shakeX = 0.0f;
@@ -155,13 +206,13 @@ void Boss2::Draw()
 
 	if (isShieldCritical && !isShieldBroken_)
 	{
-		shakeX = (GetRand(5) - 2) * 2.0f;
-		shakeY = (GetRand(5) - 2) * 2.0f;
+		shakeX = (GetRand(kShieldShakeRand) - (kShieldShakeRand / 2)) * kShieldShakePower;
+		shakeY = (GetRand(kShieldShakeRand) - (kShieldShakeRand / 2)) * kShieldShakePower;
 	}
 
 	if (shieldHitTimer_ > 0)
 	{
-		int alpha = isShieldCritical ? 200 : 128;
+		int alpha = isShieldCritical ? kShieldHitAlphaCritical : kShieldHitAlphaNormal;
 		SetDrawBlendMode(DX_BLENDMODE_ADD, alpha);
 	}
 
@@ -214,9 +265,9 @@ void Boss2::UpdateIdle()
 	stateTimer_++;
 
 	//一定時間で攻撃へ
-	if (stateTimer_ > 30)
+	if (stateTimer_ > kIdleToJumpTime)
 	{
-		UpdateJumpAttack();
+		ChangeState(BossState::JumpAttack);
 	}
 }
 
@@ -225,7 +276,7 @@ void Boss2::UpdateMove()
 	stateTimer_++;
 
 	//歩行
-	vel_.x = isTurn_ ? -1.5f : 1.5f;
+	vel_.x = isTurn_ ? -kMoveSpeed : kMoveSpeed;
 
 	//一定時間でIdleへ
 	if (stateTimer_ > 60)
@@ -251,16 +302,16 @@ void Boss2::UpdateJumpAttack()
 {
 	stateTimer_++;
 
-	if (stateTimer_ < 30)
+	if (stateTimer_ < kJumpChargeTime)
 	{
 		vel_.x = 0.0f; //溜め
 		return;
 	}
 
-	if (stateTimer_ == 30 && isGround_)
+	if (stateTimer_ == kJumpChargeTime && isGround_)
 	{
-		vel_.y = -20.0f;
-		vel_.x = isTurn_ ? -4.0f : 4.0f;
+		vel_.y = -kJumpSpeedY;
+		vel_.x = isTurn_ ? -kJumpSpeedX : kJumpSpeedX;
 		isJumping_ = true;
 		isGround_ = false;
 	}
@@ -272,7 +323,7 @@ void Boss2::UpdateJumpAttack()
 		isBarrierActive_ = true;
 		if (pCamera_)
 		{
-			pCamera_->Shake(10, 8.0f); //着地演出
+			pCamera_->Shake(kCameraDuration, kCameraMagnitude); //着地演出
 		}
 		ChangeState(BossState::Idle);
 	}
@@ -293,15 +344,15 @@ void Boss2::OnHit(int damage, const BulletType& type)
 		switch (type)
 		{
 		case BulletType::Knife:
-			shieldDamage = 2;
+			shieldDamage = kKnifeShieldDamage;
 			break;
 
 		case BulletType::Lance:
-			shieldDamage = 5;
+			shieldDamage = kLanceShieldDamage;
 			break;
 
 		case BulletType::Torch:
-			shieldDamage = 3;
+			shieldDamage = kTorchShieldDamage;
 			break;
 		}
 
@@ -316,8 +367,8 @@ void Boss2::OnHit(int damage, const BulletType& type)
 
 			Application::GetInstance().GetSEManager().PlaySE(SE::BossGuardBreak);
 
-			//破壊ボーナスダメージ
-			Boss::OnHit(10);
+			//破壊で大ダメージ
+			Boss::OnHit(kShieldBreakDamage);
 			return;
 		}
 

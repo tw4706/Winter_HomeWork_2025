@@ -3,16 +3,26 @@
 
 namespace
 {
+	//=====================
+	// 当たり判定・描画関連
+	//=====================
 	constexpr int kGraphWidth = 128;
 	constexpr int kGraphHeight = 128;
 	constexpr int ColSize = 64;
 	constexpr float kScale = 2.0f;
+	constexpr float kDrawOffsetY = 60.0f;
 
+	//=====================
+	// アニメーション関連
+	//=====================
 	constexpr int kFrameCount = 8;
 	constexpr int kFrameInterval = 6;
 
+	//=====================
+	// ステータス関連
+	//=====================
 	constexpr float kSpeed = 8.0f;
-	constexpr float kDrawOffsetY = 60.0f;
+
 }
 
 DemoPlayer::DemoPlayer(const Vector2& pos) :

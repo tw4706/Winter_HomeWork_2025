@@ -11,25 +11,54 @@
 
 namespace
 {
+	//====================
+	// 当たり判定関連
+	//====================
 	constexpr float kColScale = 2.0f;
 	constexpr float kColSize = 64.0f;
 
+	//====================
+	// 戦闘関連
+	//====================
 	constexpr float kActiveDistance = 500.0f;
 	constexpr float kShotInterval = 5.0f;
 	constexpr int KMaxHp = 5;
 
-	//地形・距離関連
+	//====================
+	// 物理挙動関連
+	//====================
 	constexpr float kGravity = 0.5f;
 	constexpr float kDistance = 400.0f;
 	constexpr float kGround = 1764.0f;
 
-	//カメラの揺れ関連
+	//====================
+	// カメラ関連
+	//====================
 	constexpr int kCameraDuration = 10;
-	constexpr int kCameraMagnitude = 8;
+	constexpr int kCameraBigDuration = 60;
+	constexpr float kCameraMagnitude = 8.0f;
+	constexpr float kCameraBigMagnitude = 15.0f;
 
+	//====================
+	// Hurt状態関連
+	//====================
+	constexpr float kShakeSpeed = 0.3f;
+	constexpr float kShakePower = 0.3f;
 	//被弾無敵時間
 	constexpr int kHitInvincibleTime = 60;
 	constexpr int kBlinkInterval = 6;
+	constexpr int kBlinkCycle = 2;
+
+	//====================
+	//エフェクトの描画関連
+	//====================
+	constexpr int kEffectGraphX = 176;
+	constexpr int kEffectGraphY = 16;
+	constexpr int kEffectGraphWidth = 16;
+	constexpr int kEffectGraphHeight = 16;
+	constexpr int kEffectFrameCount = 3;
+	constexpr int kEffectFrameInterval = 6;
+	constexpr float kEffectScale = 3.0f;
 }
 
 Boss::Boss(Vector2 pos, Vector2 vel,
@@ -142,7 +171,7 @@ void Boss::Update()
 	if (CheckHitKey(KEY_INPUT_K))
 	{
 		hp_ = 0;
-		pCamera_->Shake(60, 15.0f);
+		pCamera_->Shake(kCameraBigDuration, kCameraBigMagnitude);
 		ChangeState(BossState::Dead);
 		return;
 	}
@@ -155,7 +184,7 @@ void Boss::Draw()
 	{
 		if (isHitInvincible_)
 		{
-			if ((hitInvincibleTimer_ / kBlinkInterval) % 2 == 0)
+			if ((hitInvincibleTimer_ / kBlinkInterval) % kBlinkCycle == 0)
 			{
 				return;
 			}
@@ -209,7 +238,7 @@ void Boss::UpdateHurt()
 	stateTimer_++;
 
 	//演出だけ
-	pos_.y += sin(stateTimer_ * 0.3f) * 0.3f;
+	pos_.y += sin(stateTimer_ * kShakeSpeed) * kShakePower;
 
 	int animIndex = GetGraphIndex(BossState::Hurt);
 	if (animations_[animIndex]->IsAnimFinished())
@@ -230,7 +259,9 @@ void Boss::UpdateDead()
 			pEffectManager_->AddEffect(
 				std::make_shared<SpriteEffect>(
 					pos_, "data/Effect/enemy_explosion.png",
-					176, 16, 16, 16, 3, 6, 3.0f));
+					kEffectGraphX, kEffectGraphY,
+					kEffectGraphWidth, kEffectGraphHeight,
+					kEffectFrameCount, kEffectFrameInterval, kEffectScale));
 
 		isPlayingDeathEffect_ = true;
 	}

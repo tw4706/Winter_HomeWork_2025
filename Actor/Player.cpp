@@ -39,7 +39,9 @@ namespace
 	};
 	static_assert(static_cast<int>(kGraphNum) == _countof(kDogGraphName));
 
-	//プレイヤーの画像サイズ
+	//=======================
+	// 当たり判定・描画関連
+	//=======================
 	constexpr int kGraphWidth = 128;
 	constexpr int kGraphHeight = 128;
 	constexpr int kGraphHalfWidth = 48;
@@ -47,61 +49,54 @@ namespace
 	constexpr float kGraphColSize = 64.0f;
 	constexpr float kGraphColSizeW = 32.0f;
 	constexpr float kGraphColSizeH = 80.0f;
-	constexpr int kMaxHp = 3;
-
-	//拡大率
-	constexpr float kScale = 1.5f;
-
-	//移動速度
-	constexpr float kSpeed = 5.0f;
-
-	//ジャンプ時の横移動速度
-	constexpr float kHalfSpeed = 2.5f;
-
-	//ジャンプの高さ
-	constexpr float kJumpPower = 12.0f;
-
-	//ダブルジャンプの高さ
-	constexpr float kDoubleJumpPower = 10.0f;
-
-	//落下判定となる座標
-	constexpr float kFallLimit = 2100.0f;
-
-	//弾の種類
-	constexpr int kBulletNum = 3;
-
-	//弾がプレイヤーから出る位置のオフセット
-	constexpr float kGunOffsetX = 40.0f;
-	constexpr float kGunOffsetY = 10.0f;
-
-	//たいまつの投げる位置のオフセット
-	constexpr float kTorchFireOffsetY = 50.0f;
-	constexpr float kTorchUpVelocity = 4.0f;
-	//松明の横速度調整用
-	constexpr float kTorchSpeedRate = 0.6f;
-
-	//攻撃をしている間の時間
-	constexpr int kAttackDuration = 30;
-
-	//ダメージを受けたときの無敵時間
-	constexpr int kDamageDuration = 60;
-
-	//被弾した時のノックバックの強さ
-	constexpr float kKnockBackX = 8.0f;
-	constexpr float kKnockBackY = 6.5f;
-	constexpr float kKnockBackSpeed = 0.94f;
-
-	//重力
-	constexpr float kGravity = 1.0f;
-
 	//当たり判定の調整用
 	constexpr int kColYOffset = 32;
-
 	//描画の調整用
 	constexpr int kColPosYOffset = 10;
 	constexpr int kPosYOffset = 60;
 	constexpr float kWalkColXOffset = 15.0f;
+	//落下判定となる座標
+	constexpr float kFallLimit = 2100.0f;
 
+	//=======================
+	// ステータス関連
+	//=======================
+	constexpr int kMaxHp = 3;
+	constexpr float kScale = 1.5f;	//拡大率
+	constexpr float kSpeed = 5.0f;	//移動速度
+	constexpr float kHalfSpeed = 2.5f;//ジャンプ時の横移動速度
+	constexpr float kJumpPower = 12.0f;	//ジャンプの高さ
+	constexpr float kDoubleJumpPower = 10.0f;	//ダブルジャンプの高さ
+
+	//=======================
+	// 弾関連
+	//=======================
+	constexpr int kBulletNum = 3;	//弾の種類
+	//弾がプレイヤーから出る位置のオフセット
+	constexpr float kGunOffsetX = 40.0f;
+	constexpr float kGunOffsetY = 10.0f;
+	//たいまつの投げる位置のオフセット
+	constexpr float kTorchFireOffsetY = 50.0f;
+	constexpr float kTorchUpVelocity = 4.0f;
+	constexpr float kTorchSpeedRate = 0.6f;	//松明の横速度調整用
+
+	//=======================
+	// 攻撃・ダメージ関連
+	//=======================
+	constexpr int kAttackDuration = 30;	//攻撃をしている間の時間
+	constexpr int kDamageDuration = 60;	//ダメージを受けたときの無敵時間
+	constexpr float kKnockBackX = 8.0f;	//被弾した時のノックバックの強さ
+	constexpr float kKnockBackY = 6.5f;
+	constexpr float kKnockBackSpeed = 0.94f;
+
+	//=======================
+	// 攻撃・ダメージ関連
+	//=======================
+	constexpr float kGravity = 1.0f;	//重力
+
+	//=======================
+	// アニメーション関連
+	//=======================
 	//各状態遷移の総フレーム数
 	constexpr int kIdleFrameCount = 8;
 	constexpr int kAttackFrameCount = 7;
@@ -109,16 +104,14 @@ namespace
 	constexpr int kJumpFrameCount = 8;
 	constexpr int kHurtFrameCount = 4;
 	constexpr int kDeathFrameCount = 4;
-
 	//攻撃・ジャンプのアニメーションはさらに部分だけ切り取る
 	constexpr int kAttackStartFrame = 3;
 	constexpr int kAttackEndFrame = 8;
 	constexpr int kJumpStartFrame = 4;
-	constexpr int kJumpTakeoffFrame = 4; // 離陸
-	constexpr int kJumpAirFrame = 5; // 空中
-	constexpr int kJumpLandingFrame = 6; // 着地
-	constexpr int kLandingFrameTime = 6; // 着地表示フレーム数
-
+	constexpr int kJumpTakeoffFrame = 4; //初速
+	constexpr int kJumpAirFrame = 5;	 //空中
+	constexpr int kJumpLandingFrame = 6; //着地
+	constexpr int kLandingFrameTime = 6; //着地表示フレーム数
 	//各状態遷移のフレーム間隔
 	constexpr int kIdleFrameInterval = 6;
 	constexpr int kAttackFrameInterval = 4;
@@ -434,12 +427,6 @@ void Player::Move(Input& input)
 	{
 		return;
 	}
-
-	//if (isAttacking_)
-	//{
-	//	vel_.x = 0.0f;
-	//	return;
-	//}
 
 	bool CanJumpMove = isGround_ || isDoubleJumping_;
 	//地面にいるときかつダブルジャンプが可能な時

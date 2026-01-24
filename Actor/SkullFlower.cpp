@@ -29,18 +29,38 @@ namespace
 	const int frameCount[kGraphNum] = { 4, 5,10 };
 	const int frameIntervals[kGraphNum] = { 6, 6,4 };
 
+	// ==============================
+	// 描画・当たり判定
+	// ==============================
 	constexpr int  kGraphSize = 64;
 	constexpr int  kGraphColSize = 64 / 2;
 	constexpr float kScale = 2.0f;
-	constexpr int kPosYOffset = 15;
 	constexpr float kSpeed = 5.0f;
 	constexpr float kDistance = 300.0f;
+	constexpr int kDrawOffsetY = 15;
+	constexpr int kColOffsetY = 15;
+
+	// ==============================
+	// 弾発射
+	// ==============================
+	constexpr float kShotInterval = 1.0f / 60.0f;
+	constexpr float kShotCoolTime = 2.0f;
+
+	// ==============================
+	// アニメーション
+	// ==============================
+	constexpr int kIdleSrcY = 192;
+
+	// ==============================
+	// 無効座標
+	// ==============================
+	constexpr float kDisablePos = -10000.0f;
 }
 
 SkullFlower::SkullFlower(Vector2 pos, Vector2 vel, BulletManager* bm)
 	: Enemy(pos, vel),
 	pBm_(bm),
-	shotInterval_(2.0f),
+	shotInterval_(kShotCoolTime),
 	shotTimer_(0.0f),
 	isColActive_(true),
 	flowerState_(SkullFlowerState::Idle)
@@ -70,7 +90,7 @@ void SkullFlower::Init()
 			frameCount[i],
 			frameIntervals[i],
 			kScale,
-			i == kIdleGraph,192);
+			i == kIdleGraph, kIdleSrcY);
 	}
 
 	flowerState_ = SkullFlowerState::Idle;
@@ -95,7 +115,7 @@ void SkullFlower::Update()
 	// 当たり判定の更新
 	if (isColActive_)
 	{
-		colRect_.SetCenter(pos_.x, pos_.y - kPosYOffset, kGraphSize, kGraphSize);
+		colRect_.SetCenter(pos_.x, pos_.y - kColOffsetY, kGraphSize, kGraphSize);
 	}
 
 }
@@ -105,7 +125,7 @@ void SkullFlower::Draw()
 	Enemy::Draw();
 
 	float drawX = pos_.x + cameraOffset_.x;
-	float drawY = pos_.y + cameraOffset_.y-15;
+	float drawY = pos_.y + cameraOffset_.y- kDrawOffsetY;
 
 	animations_[static_cast<int>(flowerState_)]->Draw(drawX, drawY, !isTurn_);
 
@@ -130,7 +150,7 @@ void SkullFlower::OnHit(int damage)
 	//死亡判定後のアニメーションの処理
 	if (hp_ <= 0)
 	{
-		colRect_.SetCenter(-9999, -9999, 0, 0);
+		colRect_.SetCenter(-kDisablePos, -kDisablePos, 0, 0);
 		isColActive_ = false;
 
 		flowerState_ = SkullFlowerState::Death;
@@ -185,7 +205,7 @@ void SkullFlower::UpdateAnim()
 void SkullFlower::Shot()
 {
 	//弾発射タイマー更新
-	shotTimer_ += 1.0f / 60.0f;
+	shotTimer_ += kShotInterval;
 	float distance = std::abs(pos_.x - pPlayer_->GetPos().x);
 	if (distance < kDistance)
 	{

@@ -13,21 +13,29 @@
 
 namespace
 {
+	//====================
+	// 当たり判定・描画関連
+	//====================
 	constexpr float kGround = 1764.0f;
 	constexpr float kScale = 1.5f;
 	constexpr float kHalfColSize = 32;
 	constexpr float KEnemyBulletScale = 2.0f;
 	constexpr float KBossBulletScale = 3.0f;
+	constexpr int kColOffsetX = 20;
+	constexpr int kColOffsetY = 20;
+	constexpr int kScreenOutOffset = 100;	//画面外判定用
 
-	//弾のダメージ設定
+	//====================
+	// ステータス関連
+	//====================
 	constexpr int kMaxDamage = 3;
 	constexpr int kMinDamage = 1;
 	constexpr int kMaxHitCount = 2;
-
-	//重力
 	constexpr float kGravity = 0.3f;
 
-	//波動関連の定数
+	//====================
+	//波動関連
+	//====================
 	constexpr int kHadouSrcX = 192;
 	constexpr int kHadouSrcY = 192;
 	constexpr int kWaveNum = 3;
@@ -37,11 +45,50 @@ namespace
 	constexpr float kWaveSpawnInterval = 10;
 	constexpr int kWaveLifetime = 30;
 
-	constexpr int kColOffsetX = 20;
-	constexpr int kColOffsetY = 20;
+	//========================
+	// アニメーション関連
+	//========================
+	constexpr int kBulletFrameCount = 5;
+	constexpr int kBulletInterval = 5;
+	constexpr int kWaveFrameCount = 4;
+	constexpr int kWaveInterval = 5;
+	constexpr float kWaveScale = 1.0f;
 
-	//画面外判定用定数
-	constexpr int kScreenOutOffset = 100;
+	//========================
+	// Torch関連
+	//========================
+	constexpr float kTorchGravity = 0.3f;
+	constexpr float kTorchWaveOffsetY = 20.0f;
+	constexpr int kTorchLandSrcW = 128;
+	constexpr int kTorchLandSrcH = 32;
+	constexpr int kTorchLandFrameW = 16;
+	constexpr int kTorchLandFrameH = 16;
+	constexpr int kTorchLandFrameCount = 4;
+	constexpr int kTorchLandFrameInterval = 4;
+	constexpr float kTorchLandScale = 1.0f;
+
+	//========================
+	// 衝突判定関連
+	//========================
+	constexpr float kLandingCheckMargin = 0.5f;
+
+	//========================
+	// 弾の回転角度関連
+	//========================
+	constexpr float kKnifeAngleRight = DX_PI / 2.0f;
+	constexpr float kKnifeAngleLeft = DX_PI * 1.5f;
+
+	//========================
+	// エフェクト関連
+	//========================
+	constexpr int kBulletEffectSrcX = 240;
+	constexpr int kBulletEffectSrcY = 48;
+	constexpr int kEffectFrameW = 16;
+	constexpr int kEffectFrameH = 16;
+	constexpr int kEffectFrameCount = 4;
+	constexpr int kEffectFrameInterval = 5;
+	constexpr float kBulletEffectScale = 1.5f;
+
 }
 
 Bullet::Bullet(Vector2 pos, Vector2 vel, BulletType bulletType, std::shared_ptr<Bg>bg) :
@@ -84,7 +131,7 @@ void Bullet::Init()
 		bulletH_,
 		config.width,
 		config.height,
-		5, 5,
+		kBulletFrameCount, kBulletInterval,
 		scale,
 		true, 0);
 
@@ -221,7 +268,7 @@ void Bullet::Draw()
 		//ナイフと槍の場合は画像を回転させて描画
 		if (bulletType_ == BulletType::Knife || bulletType_ == BulletType::Lance)
 		{
-			angle = static_cast<float>((vel_.x >= 0) ? DX_PI / 2.0f : DX_PI + DX_PI / 2.0f);
+			angle = (vel_.x >= 0) ? kKnifeAngleRight : kKnifeAngleLeft;
 		}
 		if (bulletType_ == BulletType::EnemyBullet ||
 			bulletType_ == BulletType::Boss1Bullet)
@@ -264,7 +311,8 @@ void Bullet::SpawnWave()
 	{
 		Rect rect;
 		rect.SetLT(pos_.x + waveDir_ * (i + 1) * kWaveSpacing,
-			pos_.y - kWaveH / 2-20,kWaveW*kScale,kWaveH*kScale);
+			pos_.y - kWaveH / 2 - kTorchWaveOffsetY,
+			kWaveW * kScale, kWaveH * kScale);
 
 		//コンストラクタを使う
 		Hadou h(rect, static_cast<int>(i * kWaveSpawnInterval), kWaveLifetime);
@@ -273,9 +321,9 @@ void Bullet::SpawnWave()
 			hadouH_,
 			static_cast<int>(kWaveW),
 			static_cast<int>(kWaveH),
-			4,              //アニメーションの総フレーム
-			5,              //フレーム間隔
-			1.0f,
+			kWaveFrameCount,
+			kWaveInterval,
+			kWaveScale,
 			true,
 			kHadouSrcY);
 
@@ -371,9 +419,7 @@ void Bullet::CheckBulletAndMapCollision()
 		//松明
 		if (bulletType_ == BulletType::Torch)
 		{
-			bool isLanding =
-				prevPos.y + colSize_ / 2 <= chipRect_.GetTop() &&
-				vel_.y > 0;
+			bool isLanding =prevPos.y + colSize_ * kLandingCheckMargin <= chipRect_.GetTop() &&vel_.y > 0;
 
 			if (isLanding)
 			{
@@ -409,11 +455,13 @@ void Bullet::CheckBulletAndMapCollision()
 				std::make_shared<SpriteEffect>(
 					pos_,
 					"data/Effect/bullet_effect.png",
-					240, 48,
-					16, 16,
-					4,
-					5,
-					1.5f));
+					kBulletEffectSrcX,
+					kBulletEffectSrcY,
+					kEffectFrameW,
+					kEffectFrameH,
+					kEffectFrameCount,
+					kEffectFrameInterval,
+					kBulletEffectScale));
 		}
 
 		isAlive_ = false;

@@ -27,26 +27,33 @@ namespace
 		"data/Enemy/dog_jump.png"
 	};
 
+	//====================
+	// アニメーション関連
+	//====================
 	const int frameCounts[kGraphNum] = { 11, 6 };
 	const int frameIntervals[kGraphNum] = { 8, 6 };
 
-	//画像の切り取りサイズ
+	//====================
+	// 当たり判定・描画関連
+	//====================
 	constexpr int kGraphW = 64;
 	constexpr int kGraphH = 48;
 	constexpr int kGraphColSize = 48;
 	constexpr float kScale = 2.0f;
-
 	constexpr float kDrawW = kGraphW * 2.0f;
 	constexpr float kDrawH = kGraphH * 2.0f;
+	constexpr float kColOffsetY = 5.0f;	// 当たり判定
+	constexpr float kDrawOffsetY = 30.0f;	// 描画位置
 
-	//ジャンプの高さ
-	constexpr float kJumpPower = 15.0f;
-	//移動速度
-	constexpr float kSpeed = 4.0f;
-	//ジャンプ間隔
-	constexpr int kJumpInterval = 60;
-	//プレイヤーとの距離
-	const float kDistance = 300.0f;
+	//====================
+	// ステータス関連
+	//====================
+	constexpr float kJumpPower = 15.0f;	//ジャンプの高さ
+	constexpr float kSpeed = 4.0f;	//移動速度
+	constexpr int kJumpInterval = 60;	//ジャンプ間隔
+	const float kDistance = 300.0f;	//プレイヤーとの距離
+
+
 }
 
 Dog::Dog(Vector2 pos, Vector2 vel,DogType type) :
@@ -102,7 +109,7 @@ void Dog::Update()
 	Enemy::Update();
 
 	//当たり判定の更新
-	colRect_.SetCenter(pos_.x, pos_.y-5, kGraphColSize, kGraphColSize);
+	colRect_.SetCenter(pos_.x, pos_.y- kColOffsetY, kGraphColSize, kGraphColSize);
 
 	UpdateAnim();
 
@@ -119,7 +126,7 @@ void Dog::Draw()
 	Enemy::Draw();
 
 	float drawX = pos_.x + cameraOffset_.x;
-	float drawY = (pos_.y + cameraOffset_.y)-30;
+	float drawY = (pos_.y + cameraOffset_.y)- kDrawOffsetY;
 
 	switch (dogType_)
 	{

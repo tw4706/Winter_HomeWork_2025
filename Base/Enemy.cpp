@@ -10,7 +10,34 @@
 
 namespace
 {
+	// ==============================
+	// ステータス関連
+	// ==============================
 	constexpr int kMaxHp = 3;
+
+	// ==============================
+	// Effekseer関連
+	// ==============================
+	constexpr char kHitEffectPath[] = "data/Effect/EnemyHit.efk";
+	constexpr float kHitEffectScale = 0.5f;
+
+	// ==============================
+	// 死亡演出関連
+	// ==============================
+	constexpr float kDeadEffectOffsetY = 10.0f;
+
+	// ==============================
+	// 爆発エフェクト関連
+	// ==============================
+	constexpr char kExplosionImagePath[] = "data/Effect/enemy_explosion.png";
+	constexpr int kExplosionImageW = 240;
+	constexpr int kExplosionImageH = 32;
+	constexpr int kExplosionFrameW = 16;
+	constexpr int kExplosionFrameH = 16;
+	constexpr int kExplosionFrameCount = 4;
+	constexpr int kExplosionframeInterval = 5;
+	constexpr float kExplosionScale = 4.0f;
+
 }
 
 Enemy::Enemy(Vector2 pos, Vector2 vel) :
@@ -23,7 +50,7 @@ Enemy::Enemy(Vector2 pos, Vector2 vel) :
 	currentState_(0),
 	pEffectManager_(nullptr)
 {
-	effect3DHandle_ = LoadEffekseerEffect("data/Effect/EnemyHit.efk");
+	effect3DHandle_ = LoadEffekseerEffect(kHitEffectPath);
 }
 
 Enemy::~Enemy()
@@ -61,7 +88,8 @@ void Enemy::OnHit(int damage)
 
 	playing3DHandle_ = PlayEffekseer2DEffect(effect3DHandle_);
 	SetPosPlayingEffekseer2DEffect(playing3DHandle_, drawX, drawY, 0.0f);
-	SetScalePlayingEffekseer2DEffect(playing3DHandle_, 0.5f, 0.5f, 0.0f);
+	SetScalePlayingEffekseer2DEffect(playing3DHandle_,
+		kHitEffectScale, kHitEffectScale, 0.0f);
 
 	hp_ -= damage;
 
@@ -79,13 +107,13 @@ void Enemy::Dead()
 	{
 		pEffectManager_->AddEffect(
 			std::make_shared<SpriteEffect>(
-				Vector2{ pos_.x,pos_.y - 10 },
-				"data/Effect/enemy_explosion.png",
-				240, 32,
-				16, 16,
-				4,
-				5,
-				4.0f));
+				Vector2{ pos_.x,pos_.y - kDeadEffectOffsetY },
+				kExplosionImagePath,
+				kExplosionImageW,kExplosionImageH,
+				kExplosionFrameW,kExplosionFrameH,
+				kExplosionFrameCount,
+				kExplosionframeInterval,
+				kExplosionScale));
 	}
 }
 

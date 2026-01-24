@@ -61,7 +61,10 @@ namespace
 	const int frameIntervals[kGraphNum] = { kIdleFrameInterval,
 		kAttackFrameInterval, kFlyFrameInterval, kHurtFrameInterval, kDeathFrameInterval };
 	
-	//ボスの描画・当たり判定関連
+
+	//========================
+	// 当たり判定・描画関連
+	//========================
 	constexpr int kGraphWidth = 81;
 	constexpr int kGraphHeight = 71;
 	constexpr int kGraphHalfW = kGraphWidth / 2;
@@ -70,20 +73,52 @@ namespace
 	constexpr float kColWidth = 120.0f;
 	constexpr float kColHeight = 120.0f;
 
-	//プレイヤーが近づいた時の逃げる速度
-	constexpr float kComeBackPos = 0.5f;
-	constexpr float kDistance = 200.0f;
 
-	//ボスのノックバック距離
-	constexpr float kKnockBackPos = 2.0f;
+	//========================
+	// ステータス関連
+	//========================
+	constexpr float kKnockBackPos = 2.0f;	//ボスのノックバック距離
 	constexpr float kSpeed = 0.5f;
 
-	constexpr float kFlySpeed = 0.4f;
+	constexpr int KNormalBoss1MaxHp = 10;
+	constexpr int KVariantBoss1MaxHp = 20;
+
+	//========================
+	// 行動遷移
+	//========================
+	constexpr int   kIdleToMoveMinTime = 60;
+	constexpr int   kMoveToAttackMinTime = 60;
+	constexpr int   kStateChangeRandBase = 100;
+	constexpr int   kStateChangeRandRate = 2;
+
+	//========================
+	// Idle挙動
+	//========================
+	constexpr float kIdleHoverSpeed = 0.1f;
+	constexpr float kIdleHoverPower = 0.8f;
+	constexpr float kComeBackRatio = 0.5f;
+
+	//========================
+	// Attack挙動
+	//========================
 	constexpr float kBulletSpeed = 3.0f;
 	constexpr int kMaxShotCount = 1;
 	constexpr float kShotInterval = 5.0f;
-	constexpr int KNormalBoss1MaxHp = 10;
-	constexpr int KVariantBoss1MaxHp = 20;
+	constexpr float kTargetYOffset = 150.0f;
+	constexpr float kFollowRate = 0.02f;
+	constexpr float kShotCoolTime = 2.0f;
+	constexpr float kFrameTime = 1.0f / 60.0f;
+
+	//========================
+	// Move挙動
+	//========================
+	constexpr float kFlySpeed = 0.4f;
+	constexpr float kComeBackPos = 0.5f;//プレイヤーが近づいた時の逃げる速度
+	constexpr float kDistance = 200.0f;
+	constexpr float kMoveHoverSpeed = 0.06f;
+	constexpr float kMoveHoverPower = 1.0f;
+	constexpr float kOverlapAvoidDistance = 30.0f;
+	constexpr int   kEscapeTime = 40;
 }
 
 Boss1::Boss1(Vector2 pos, Vector2 vel,
@@ -201,14 +236,14 @@ void Boss1::UpdateIdle()
 	}
 
 	//一定時間経過で飛行アニメーション
-	if (stateTimer_ > 60 && rand() % 100 < 2)
+	if (stateTimer_ > kIdleToMoveMinTime && rand() % kStateChangeRandBase < kStateChangeRandRate)
 	{
 		ChangeState(BossState::Move);
 		return;
 	}
 
 	//ゆっくり上下移動
-	pos_.y += sin(stateTimer_ * 0.1f) * 0.8f;
+	pos_.y += sin(stateTimer_ * kIdleHoverSpeed) * kIdleHoverPower;
 }
 
 void Boss1::UpdateAttack()
@@ -222,12 +257,12 @@ void Boss1::UpdateAttack()
 
 	stateTimer_++;
 
-	float targetY = pPlayer_->GetPos().y - 150.0f;
-	pos_.y += (targetY - pos_.y) * 0.02f;
+	float targetY = pPlayer_->GetPos().y - kTargetYOffset;
+	pos_.y += (targetY - pos_.y) * kFollowRate;
 
 	//一定間隔で弾
-	shotTimer_ += 1.0f / 60.0f;
-	if (shotTimer_ >= 2.0f && shotCount_ < kMaxShotCount)
+	shotTimer_ += kFrameTime;
+	if (shotTimer_ >= kShotCoolTime&& shotCount_ < kMaxShotCount)
 	{
 		shotTimer_ = 0.0f;
 		shotCount_++;
@@ -258,21 +293,21 @@ void Boss1::UpdateMove()
 	float speed = kFlySpeed;
 
 	//上下の追従は弱め
-	float targetY = pPlayer_->GetPos().y - 150.0f;
-	pos_.y += (targetY - pos_.y) * 0.02f;
+	float targetY = pPlayer_->GetPos().y - kTargetYOffset;
+	pos_.y += (targetY - pos_.y) * kFollowRate;
 
 	//羽ばたき
-	pos_.y += sin(stateTimer_ * 0.06f) * 1.0f;
+	pos_.y += sin(stateTimer_ * kMoveHoverSpeed) * kMoveHoverPower;
 
 	//重なり防止
-	if (fabsf(dx) < 30.0f)
+	if (fabsf(dx) < kOverlapAvoidDistance)
 	{
 		isTurn_ = !isTurn_;
-		escapeTimer_ = 40;
+		escapeTimer_ = kEscapeTime;
 	}
 
 	//攻撃へ
-	if (stateTimer_ > 60 && rand() % 100 < 2)
+	if (stateTimer_ > kMoveToAttackMinTime && rand() % kStateChangeRandBase < kStateChangeRandRate)
 	{
 		ChangeState(BossState::Attack);
 	}

@@ -2,8 +2,21 @@
 
 namespace
 {
-	constexpr float kGravity = 0.5f;  // 重力
-	constexpr float kCharaSize = 32.0f;//キャラクターサイズ
+	// ==============================
+	// 物理関連
+	// ==============================
+	constexpr float kGravity = 0.5f;
+
+	// ==============================
+	// キャラクターサイズ関連
+	// ==============================
+	constexpr float kCharaSize = 32.0f;
+
+	// ==============================
+	// 当たり判定関連
+	// ==============================
+	constexpr float kColShrink = 1.0f;			//めり込み防止用
+	constexpr float kGroundCheckOffset = 4.0f; //地面判定余裕
 }
 
 GameObject::GameObject() :
@@ -103,7 +116,7 @@ void GameObject::CheckMapCollision(Rect& chipRect)
 
 	//Y方向の移動
 	pos_.y += vel_.y;
-	colRect_.SetCenter(pos_.x, pos_.y, colSize_-1, colSize_-1);
+	colRect_.SetCenter(pos_.x, pos_.y, colSize_ - kColShrink, colSize_ - kColShrink);
 
 	if (pBg_->IsCollision(colRect_, chipRect)) 
 	{
@@ -125,8 +138,8 @@ bool GameObject::IsOnGround()
 	//足元に少し下の矩形を作る
 	Rect footRect = colRect_;
 	//下方向にオフセット
-	footRect.top_ += 4.0f;    
-	footRect.bottom_ += 4.0f;
+	footRect.top_ += kGroundCheckOffset;
+	footRect.bottom_ += kGroundCheckOffset;
 
 	return pBg_->IsCollision(footRect, chipRect_);
 }

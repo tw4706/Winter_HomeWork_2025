@@ -24,45 +24,43 @@ namespace
 	};
 	static_assert(static_cast<int>(kGraphNum) == _countof(kDogGraphName));
 
-	//グラフィックのサイズ
+	//========================
+	// アニメーション関連
+	//========================
+	//各状態遷移の総フレーム数
+	constexpr int kIdleFrameCount = 11;
+	constexpr int kWalkFrameCount = 6;
+	//各状態遷移のフレーム間隔
+	constexpr int kIdleFrameInterval = 6;
+	constexpr int kWalkFrameInterval = 8;
+	//状態ごとのフレーム数とフレーム間隔
+	const int frameCounts[kGraphNum] = { kIdleFrameCount,kWalkFrameCount };
+	const int frameIntervals[kGraphNum] = { kIdleFrameInterval, kWalkFrameInterval };
+
+	//========================
+	// 当たり判定・描画関連
+	//========================
 	constexpr int kGraphWidth = 32;
 	constexpr int kGraphColWidth = 24;
 	constexpr int kGraphHeight = 48;
 	constexpr int kGraphColHeight = 72;
 	constexpr int kGraphHalfWidth = 32 / 2;
 	constexpr int kGraphHalfHeight = 48 / 2;
-
-	//各状態遷移の総フレーム数
-	constexpr int kIdleFrameCount = 11;
-	constexpr int kWalkFrameCount = 6;
-
-	//各状態遷移のフレーム間隔
-	constexpr int kIdleFrameInterval = 6;
-	constexpr int kWalkFrameInterval = 8;
-
-	//状態ごとのフレーム数とフレーム間隔
-	const int frameCounts[kGraphNum] = { kIdleFrameCount,kWalkFrameCount };
-	const int frameIntervals[kGraphNum] = { kIdleFrameInterval, kWalkFrameInterval };
-
 	//敵の見た目のサイズ
 	constexpr float kDrawW = kGraphWidth * 1.5f;
 	constexpr float kDrawH = kGraphHeight * 1.5f;
-
-	//エネミーの移動速度
-	constexpr float kSpeed = 0.5f;
-
-	//拡大率
-	constexpr float kScale = 2.0f;
-
+	constexpr float kScale = 2.0f;					//拡大率
 	//Y座標のオフセット
 	constexpr int kPosYOffset = 20;
 	constexpr int kPosYDrawOffset = 30;
+	const float kDistance = 230.0f;					//プレイヤーとの距離
+	constexpr float kIdleTriggerDistance = 250.0f;	//Idleアニメーション再生トリガー
 
-	//プレイヤーとの距離
-	const float kDistance = 230.0f;
+	//========================
+	// ステータス関連
+	//========================
+	constexpr float kSpeed = 0.5f;					//エネミーの移動速度
 
-	//Idleアニメーション再生トリガー
-	constexpr float kIdleTriggerDistance = 250.0f;
 }
 
 Zombie::Zombie(Vector2 pos, Vector2 vel) :
@@ -159,8 +157,7 @@ void Zombie::Draw()
 	float drawX = pos_.x + cameraOffset_.x;
 	float drawY = pos_.y + cameraOffset_.y;
 
-	animations_[static_cast<int>(zombieState_)]->Draw(
-		drawX, drawY - kPosYDrawOffset, isTurn_);
+	animations_[static_cast<int>(zombieState_)]->Draw(drawX, drawY - kPosYDrawOffset, isTurn_);
 
 #ifdef _DEBUG
 	colRect_.DrawAndCamera(cameraOffset_, 0xff0000, false);
