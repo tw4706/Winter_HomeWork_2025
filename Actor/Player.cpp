@@ -488,6 +488,7 @@ void Player::Jump(Input& input)
 {
 	if (input.IsTriggered("jump"))
 	{
+		Application::GetInstance().GetSEManager().PlaySE(SE::PlayerJump);
 		// ’ÊíƒWƒƒƒ“ƒv
 		if (isGround_)
 		{
@@ -522,6 +523,8 @@ void Player::Shot(Input& input, BulletManager& bm)
 	//UŒ‚ˆ—
 	if (input.IsTriggered("shot") && shotTimer_ <= 0)
 	{
+		Application::GetInstance().GetSEManager().PlaySE(SE::Shot);
+
 		isAttacking_ = true;
 		attackTimer_ = kAttackDuration;
 		vel_ = { 0.0f,0.0f };

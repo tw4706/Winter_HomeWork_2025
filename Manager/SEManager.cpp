@@ -4,10 +4,13 @@
 
 void SEManager::Init()
 {
+	volume_ = 60;
+
 	seHandles_[SE::Decide] = LoadSoundMem("data/BGM・SE/decision-3.mp3");
 	seHandles_[SE::Cancel] = LoadSoundMem("data/BGM・SE/cancel.mp3");
 	seHandles_[SE::Select] = LoadSoundMem("data/BGM・SE/cursorMove.mp3");
-	seHandles_[SE::Shot] = LoadSoundMem("data/BGM・SE/Shot.wav");
+	seHandles_[SE::Shot] = LoadSoundMem("data/BGM・SE/shot.wav");
+	seHandles_[SE::PlayerJump] = LoadSoundMem("data/BGM・SE/playerJump.wav");
 	seHandles_[SE::Death] = LoadSoundMem("data/BGM・SE/death.mp3");
 	seHandles_[SE::Wave] = LoadSoundMem("data/BGM・SE/wave.mp3");
 	seHandles_[SE::Hit] = LoadSoundMem("data/BGM・SE/enemyhit.mp3");

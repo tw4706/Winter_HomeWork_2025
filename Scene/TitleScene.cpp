@@ -33,7 +33,7 @@ namespace
 	constexpr int kBannerY = Game::kScreenHeight / 2 - kBannerH / 2;
 	constexpr int kConfirmMessageX = kBannerX + 15;
 	constexpr int kConfirmMessageY = kBannerY + 20;
-	constexpr int kOptionOffsetY = kBannerY + 70;
+	constexpr int kOptionOffsetY = kBannerY + 90;
 	constexpr int kOptionYesOffsetX = kBannerX + 70;
 	constexpr int kOptionNoOffsetX = kBannerX + 270;
 
