@@ -125,7 +125,7 @@ void Boss2::Update()
 		shieldBreakTimer_--;
 		if (shieldBreakTimer_ <= 0)
 		{
-			// シールド復活
+			//シールド復活
 			isShieldBroken_ = false;
 			isBarrierActive_ = true;
 			shieldHP_ = shieldMaxHP_;

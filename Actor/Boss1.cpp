@@ -1,6 +1,7 @@
 #include "Boss1.h"
 #include "Player.h"
 #include "BulletManager.h"
+#include "Application.h"
 #include<Dxlib.h>
 
 namespace 
@@ -212,6 +213,7 @@ void Boss1::UpdateIdle()
 
 void Boss1::UpdateAttack()
 {
+
 	if (stateTimer_ == 0)
 	{
 		shotCount_ = 0;
@@ -233,6 +235,7 @@ void Boss1::UpdateAttack()
 		Vector2 bulletVel = { isTurn_ ? -kBulletSpeed : kBulletSpeed,0.0f };
 
 		pBm_->AddBoss1Bullet(pos_, bulletVel);
+		Application::GetInstance().GetSEManager().PlaySE(SE::BossBreath);
 	}
 
 	if (shotCount_ >= kMaxShotCount)
@@ -243,6 +246,11 @@ void Boss1::UpdateAttack()
 
 void Boss1::UpdateMove()
 {
+	if (stateTimer_ == 0)
+	{
+		Application::GetInstance().GetSEManager().PlaySE(SE::BossMove);
+	}
+
 	stateTimer_++;
 
 	float dx = pPlayer_->GetPos().x - pos_.x;

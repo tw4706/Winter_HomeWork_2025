@@ -5,19 +5,26 @@
 void SEManager::Init()
 {
 	seHandles_[SE::Decide] = LoadSoundMem("data/BGM・SE/decision-3.mp3");
-	seHandles_[SE::Cancel] = LoadSoundMem("data/BGM・SE/キャンセル5.mp3");
-	seHandles_[SE::Select] = LoadSoundMem("data/BGM・SE/カーソル移動5.mp3");
+	seHandles_[SE::Cancel] = LoadSoundMem("data/BGM・SE/cancel.mp3");
+	seHandles_[SE::Select] = LoadSoundMem("data/BGM・SE/cursorMove.mp3");
 	seHandles_[SE::Shot] = LoadSoundMem("data/BGM・SE/Shot.wav");
-	seHandles_[SE::KnockBack] = LoadSoundMem("data/BGM・SE/重いパンチ2.mp3");
-	seHandles_[SE::Death] = LoadSoundMem("data/BGM・SE/バタンと倒れる.mp3");
-	seHandles_[SE::Wave] = LoadSoundMem("data/BGM・SE/火炎魔法1.mp3");
-	seHandles_[SE::Hit] = LoadSoundMem("data/BGM・SE/ダメージ音02.mp3");
-	seHandles_[SE::Damage] = LoadSoundMem("data/BGM・SE/ダメージ音02.mp3");
+	seHandles_[SE::Death] = LoadSoundMem("data/BGM・SE/death.mp3");
+	seHandles_[SE::Wave] = LoadSoundMem("data/BGM・SE/wave.mp3");
+	seHandles_[SE::Hit] = LoadSoundMem("data/BGM・SE/enemyhit.mp3");
+	seHandles_[SE::Damage] = LoadSoundMem("data/BGM・SE/damage.mp3");
+	seHandles_[SE::Warp] = LoadSoundMem("data/BGM・SE/tutorialWarp.wav");
+	seHandles_[SE::Fall] = LoadSoundMem("data/BGM・SE/fall.wav");
+	seHandles_[SE::UnlockTorch] = LoadSoundMem("data/BGM・SE/unlockTorch.wav");
+	seHandles_[SE::FlowerAttack] = LoadSoundMem("data/BGM・SE/flowerAttack.wav");
+	seHandles_[SE::EnemyJump] = LoadSoundMem("data/BGM・SE/enemyJump.wav");
+	seHandles_[SE::BossGuard] = LoadSoundMem("data/BGM・SE/guard.mp3");
+	seHandles_[SE::BossGuardBreak] = LoadSoundMem("data/BGM・SE/guardBreak.mp3");
+	seHandles_[SE::BossMove] = LoadSoundMem("data/BGM・SE/boss1Move.mp3");
+	seHandles_[SE::BossCry] = LoadSoundMem("data/BGM・SE/bossNakigoe.wav");
+	seHandles_[SE::BossBreath] = LoadSoundMem("data/BGM・SE/bossBureath.wav");
+	seHandles_[SE::BossDeath] = LoadSoundMem("data/BGM・SE/bigExplosion.mp3");
 	seHandles_[SE::Explosion] = LoadSoundMem("data/BGM・SE/battery1.mp3");
-	seHandles_[SE::BossGuard] = LoadSoundMem("data/BGM・SE/重力魔法1.mp3");
-	seHandles_[SE::BossGuardBreak] = LoadSoundMem("data/BGM・SE/ガラスが割れる2.mp3");
-	seHandles_[SE::BossDeath] = LoadSoundMem("data/BGM・SE/爆発1.mp3");
-	seHandles_[SE::WeaponChange] = LoadSoundMem("data/BGM・SE/ショットガンのポンプアクション2.mp3");
+	seHandles_[SE::WeaponChange] = LoadSoundMem("data/BGM・SE/weaponChange.mp3");
 }
 
 void SEManager::PlaySE(SE se)

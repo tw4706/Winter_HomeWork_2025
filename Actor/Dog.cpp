@@ -1,6 +1,7 @@
 #include "Dog.h"
 #include "Player.h"
 #include "Enemy.h"
+#include"Application.h"
 #include<Dxlib.h>
 #include<cmath>
 #include<cassert>
@@ -159,6 +160,8 @@ void Dog::Move()
 				timer_ = 0;
 				dogState_ = DogState::Jump;
 				animations_[static_cast<int>(DogState::Jump)]->Reset();
+
+				Application::GetInstance().GetSEManager().PlaySE(SE::EnemyJump);
 			}
 			else
 			{

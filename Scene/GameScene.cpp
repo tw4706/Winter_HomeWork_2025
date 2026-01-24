@@ -70,6 +70,7 @@ GameScene::GameScene(SceneController& controller, StageType stage) :
 	isTorchMessageActive_(false),
 	hpHandle_(-1),
 	fontHandle_(-1),
+	fontTorchTextHandle_(-1),
 	isBoss1Defeated_(false),
 	autoWalkFinishX_(0.0f)
 {
@@ -117,6 +118,7 @@ void GameScene::NormalUpdate(Input&input)
 	//落下判定
 	if (pPlayer_->GetPos().y > kFallLimit)
 	{
+		Application::GetInstance().GetSEManager().PlaySE(SE::Fall);
 		controller_.GetProgress().deathCount_++;
 		if (stageType_ == StageType::Tutorial)
 		{
@@ -267,6 +269,7 @@ void GameScene::NormalUpdate(Input&input)
 
 		if (goalRect.IsCollision(playerRect))
 		{
+			Application::GetInstance().GetSEManager().PlaySE(SE::Warp);
 			//ゴール到達したらフェードアウトして次のシーンへ遷移
 			update_ = &GameScene::GoalFadeOutUpdate;
 			draw_ = &GameScene::FadeDraw;
@@ -283,8 +286,13 @@ void GameScene::NormalUpdate(Input&input)
 
 	//ステージ名の表示のあとに松明解放テキスト表示
 	if (isTorchMessageActive_ && stageTextTimer_ <= 0)
-
 	{
+		if (!isTorchUnlockMessageShow_)
+		{
+			Application::GetInstance().GetSEManager().PlaySE(SE::UnlockTorch);
+			isTorchUnlockMessageShow_ = true;
+		}
+
 		//何かボタンが押されたら解除
 		if (input.IsTriggered("any_button"))
 		{

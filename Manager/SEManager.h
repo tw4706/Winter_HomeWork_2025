@@ -7,16 +7,23 @@ enum class SE
 	Cancel,
 	Select,
 	Shot,
-	KnockBack,
 	Death,
 	Wave,
 	Hit,
 	Damage,
+	Warp,
+	Fall,
+	UnlockTorch,
+	FlowerAttack,
+	EnemyJump,
 	BossGuard,
 	BossGuardBreak,
+	BossMove,
+	BossCry,
+	BossBreath,
 	BossDeath,
 	Explosion,
-	WeaponChange,
+	WeaponChange
 };
 
 class SEManager
@@ -30,6 +37,6 @@ public:
 
 private:
 	std::map<SE, int>seHandles_;
-	int volume_ = 0;
+	int volume_ = 100;
 };
 

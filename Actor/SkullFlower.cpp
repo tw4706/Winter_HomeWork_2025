@@ -193,6 +193,7 @@ void SkullFlower::Shot()
 		{
 			shotTimer_ = 0.0f;
 
+			Application::GetInstance().GetSEManager().PlaySE(SE::FlowerAttack);
 			//’e‚ð”­ŽË
 			Vector2 bulletPos = pos_;
 			Vector2 bulletVel = { -kSpeed, 0.0f };

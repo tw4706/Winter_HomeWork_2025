@@ -592,7 +592,7 @@ void Player::OnDamage(float enemyX)
 	if (!isAlive_) return;
 	if (isDamaged_) return;
 
-	Application::GetInstance().GetSEManager().PlaySE(SE::KnockBack);
+	Application::GetInstance().GetSEManager().PlaySE(SE::Damage);
 
 	hp_--;
 
