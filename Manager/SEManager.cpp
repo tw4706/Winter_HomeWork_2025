@@ -28,6 +28,7 @@ void SEManager::Init()
 	seHandles_[SE::BossDeath] = LoadSoundMem("data/BGM・SE/bigExplosion.mp3");
 	seHandles_[SE::Explosion] = LoadSoundMem("data/BGM・SE/battery1.mp3");
 	seHandles_[SE::WeaponChange] = LoadSoundMem("data/BGM・SE/weaponChange.mp3");
+	seHandles_[SE::TutorialText] = LoadSoundMem("data/BGM・SE/tutorialText.mp3");
 }
 
 void SEManager::PlaySE(SE se)

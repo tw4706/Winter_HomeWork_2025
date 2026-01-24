@@ -553,11 +553,14 @@ void GameScene::Init()
 
 	//‚½‚¢‚Ü‚Â‚ÌƒAƒ“ƒƒbƒN‚·‚é‚½‚ß‚Ìˆ—
 	auto& progress = controller_.GetProgress();
-	if (stageType_ == StageType::Stage2 && progress.isDefeatedBoss1_)
+	if (progress.isDefeatedBoss1_)
 	{
 		pPlayer_->UnlockTorch();
-		isTorchMessageActive_ = true;
-		isTorchUnlockMessageShow_ = true;
+		if (stageType_ == StageType::Stage2)
+		{
+			isTorchMessageActive_ = true;
+			isTorchUnlockMessageShow_ = true;
+		}
 	}
 	stageTextTimer_ = kStageTextDuration;
 

@@ -33,6 +33,7 @@ private:
 	int textButtonHandle_ = -1;
 	int appearFrame_ = 0;
 	bool isDisappearing_;
+	int inputLockFrame_ = 0;
 	//現在のチュートリアルステップ
 	int currentStep_ = 0;
 	int textFrameHandle_ = -1;

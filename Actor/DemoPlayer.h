@@ -22,8 +22,10 @@ public:
 	void StartWalk();
 
 private:
-	std::shared_ptr<Animation> anim_;
-	int graphHandle_;
+	std::shared_ptr<Animation> idleAnim_;
+	std::shared_ptr<Animation> walkAnim_;
+	int idleGraphHandle_;
+	int walkGraphHandle_;
 	int stateTimer_ = 0;
 	DemoState state_;
 };

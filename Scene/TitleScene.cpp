@@ -55,7 +55,6 @@ void TitleScene::FadeInUpdate(Input&input)
 
 void TitleScene::NormalUpdate(Input&input)
 {
-
 	//フェードアウト中はデモプレイヤーを更新しない
 	if (update_ == &TitleScene::FadeOutUpdate)
 	{
@@ -191,8 +190,29 @@ void TitleScene::ConfirmUpdate(Input&input)
 
 		//フェードアウトへ遷移
 		frame_ = 0;
-		update_ = &TitleScene::FadeOutUpdate;
-		draw_ = &TitleScene::FadeDraw;
+		update_ = &TitleScene::PlayerRunUpdate;
+		draw_ = &TitleScene::NormalDraw;
+	}
+}
+
+void TitleScene::PlayerRunUpdate(Input&)
+{
+	if (demoPlayer_)
+	{
+		demoPlayer_->Update();
+
+		//画面外に出たらフェードアウト開始
+		if (demoPlayer_->GetPos().x > Game::kScreenWidth + 100.0f)
+		{
+			frame_ = 0;
+			update_ = &TitleScene::FadeOutUpdate;
+			draw_ = &TitleScene::FadeDraw;
+		}
+	}
+
+	for (auto& z : demoZombies_)
+	{
+		z->Update();
 	}
 }
 

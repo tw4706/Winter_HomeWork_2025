@@ -230,7 +230,7 @@ void Boss::UpdateDead()
 			pEffectManager_->AddEffect(
 				std::make_shared<SpriteEffect>(
 					pos_, "data/Effect/enemy_explosion.png",
-					176, 16, 16, 16, 3, 4, 3.0f));
+					176, 16, 16, 16, 3, 6, 3.0f));
 
 		isPlayingDeathEffect_ = true;
 	}

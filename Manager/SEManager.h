@@ -24,7 +24,8 @@ enum class SE
 	BossBreath,
 	BossDeath,
 	Explosion,
-	WeaponChange
+	WeaponChange,
+	TutorialText
 };
 
 class SEManager

@@ -2,6 +2,7 @@
 #include "Player.h"
 #include"Camera.h"
 #include"Input.h"
+#include"Application.h"
 #include"GameProgress.h"
 #include<DxLib.h>
 
@@ -108,6 +109,7 @@ void TutorialManager::Update(Player& player, Input& input)
 	//到達地点でテキスト表示
 	if (!isWaitingAction_ && player.GetPos().x >= kTutorialX[currentStep_])
 	{
+		Application::GetInstance().GetSEManager().PlaySE(SE::TutorialText);
 		isWaitingAction_ = true;
 		waitingMessage_ = kTutorialText[currentStep_];
 
@@ -118,15 +120,20 @@ void TutorialManager::Update(Player& player, Input& input)
 	//テキストとフレームの表示
 	if (isWaitingAction_ && !isDisappearing_)
 	{
+		inputLockFrame_++;
 		if (appearFrame_ < kAppearInterval)
 		{
 			appearFrame_++;
 		}
 
-		//決定ボタンでフェードアウト開始
-		if (input.IsTriggered("next"))
+		if (inputLockFrame_ > 60)
 		{
-			isDisappearing_ = true;
+			//決定ボタンでフェードアウト開始
+			if (input.IsTriggered("next"))
+			{
+				isDisappearing_ = true;
+				Application::GetInstance().GetSEManager().PlaySE(SE::Select);
+			}
 		}
 	}
 

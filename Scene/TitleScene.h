@@ -42,6 +42,7 @@ private:
 	void NormalUpdate(Input&);
 	void FadeOutUpdate(Input&);
 	void ConfirmUpdate(Input& input);
+	void PlayerRunUpdate(Input&);
 	using UpdateFunc_t = void (TitleScene::*)(Input&);
 	UpdateFunc_t update_;
 

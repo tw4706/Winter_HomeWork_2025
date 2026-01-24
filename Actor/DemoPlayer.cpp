@@ -11,13 +11,14 @@ namespace
 	constexpr int kFrameCount = 8;
 	constexpr int kFrameInterval = 6;
 
-	constexpr float kSpeed = 2.0f;
+	constexpr float kSpeed = 8.0f;
 	constexpr float kDrawOffsetY = 60.0f;
 }
 
 DemoPlayer::DemoPlayer(const Vector2& pos) :
 	GameObject(pos, {0.0f,0.0f}, kGraphWidth, kGraphHeight, ColSize),
-	graphHandle_(-1),
+	idleGraphHandle_(-1),
+	walkGraphHandle_(-1),
 	stateTimer_(0),
 	state_(DemoState::Idle)
 {
@@ -27,17 +28,28 @@ DemoPlayer::DemoPlayer(const Vector2& pos) :
 
 DemoPlayer::~DemoPlayer()
 {
-	DeleteGraph(graphHandle_);
+	DeleteGraph(idleGraphHandle_);
+	DeleteGraph(walkGraphHandle_);
 }
 
 void DemoPlayer::Init()
 {
-	graphHandle_ = LoadGraph("data/Player/Idle.png");
-	anim_ = std::make_shared<Animation>(
-		graphHandle_,
+	idleGraphHandle_ = LoadGraph("data/Player/Idle.png");
+	walkGraphHandle_ = LoadGraph("data/Player/Walk.png");
+
+	idleAnim_ = std::make_shared<Animation>(
+		idleGraphHandle_,
 		kGraphWidth, kGraphHeight,
-		kFrameCount,        // フレーム数
-		kFrameInterval,        // 間隔
+		kFrameCount,			//フレーム数
+		kFrameInterval,        //間隔
+		kScale,
+		true,
+		0);
+	walkAnim_ = std::make_shared<Animation>(
+		walkGraphHandle_,
+		kGraphWidth, kGraphHeight,
+		kFrameCount,			//フレーム数
+		kFrameInterval,        //間隔
 		kScale,
 		true,
 		0);
@@ -51,19 +63,29 @@ void DemoPlayer::Update()
 	{
 	case DemoState::Idle:
 		vel_.x = 0.0f;
+		idleAnim_->Update();
 		break;
 
 	case DemoState::Walk:
 		vel_.x = kSpeed;
+		walkAnim_->Update();
 		break;
 	}
 
-	anim_->Update();
+	pos_ += vel_;
 }
 
 void DemoPlayer::Draw()
 {
-	anim_->Draw(pos_.x, pos_.y - kDrawOffsetY, isTurn_);
+	switch (state_)
+	{
+	case DemoState::Idle:
+		idleAnim_->Draw(pos_.x, pos_.y- kDrawOffsetY, isTurn_);
+		break;
+	case DemoState::Walk:
+		walkAnim_->Draw(pos_.x, pos_.y- kDrawOffsetY, isTurn_);
+		break;
+	}
 }
 
 void DemoPlayer::StartWalk()
