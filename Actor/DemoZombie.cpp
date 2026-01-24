@@ -31,7 +31,6 @@ namespace
 	constexpr int kPosYOffset = 20;	//Y座標のオフセット
 	constexpr int kPosYDrawOffset = 30;
 	constexpr float kDrawW = kGraphWidth * 1.5f;	//敵の見た目のサイズ
-	constexpr float kDrawW = kGraphWidth * 1.5f;
 
 	//=======================
 	// ステータス関連

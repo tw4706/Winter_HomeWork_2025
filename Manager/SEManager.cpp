@@ -2,50 +2,92 @@
 #include<DxLib.h>
 #include <algorithm>
 
+namespace
+{// ==============================
+// 音量関連関連
+// ==============================
+	constexpr int kDefaultSEVolume = 60;
+	constexpr int kVolumeMin = 0;
+	constexpr int kVolumeMax = 100;
+	constexpr int kDxVolumeMax = 255;
+
+	// ==============================
+	// 再生設定関連
+	// ==============================
+	constexpr int kSEPlayType = DX_PLAYTYPE_BACK;
+
+	// ==============================
+	// SE パス関連
+	// ==============================
+	constexpr char kDecideSEPath[] = "data/BGM・SE/decision-3.mp3";
+	constexpr char kCancelSEPath[] = "data/BGM・SE/cancel.mp3";
+	constexpr char kSelectSEPath[] = "data/BGM・SE/cursorMove.mp3";
+	constexpr char kShotSEPath[] = "data/BGM・SE/shot.wav";
+	constexpr char kPlayerJumpSEPath[] = "data/BGM・SE/playerJump.wav";
+	constexpr char kDeathSEPath[] = "data/BGM・SE/death.mp3";
+	constexpr char kWaveSEPath[] = "data/BGM・SE/wave.mp3";
+	constexpr char kHitSEPath[] = "data/BGM・SE/enemyhit.mp3";
+	constexpr char kDamageSEPath[] = "data/BGM・SE/damage.mp3";
+	constexpr char kWarpSEPath[] = "data/BGM・SE/tutorialWarp.wav";
+	constexpr char kFallSEPath[] = "data/BGM・SE/fall.wav";
+	constexpr char kUnlockTorchSEPath[] = "data/BGM・SE/unlockTorch.wav";
+	constexpr char kFlowerAttackSEPath[] = "data/BGM・SE/flowerAttack.wav";
+	constexpr char kEnemyJumpSEPath[] = "data/BGM・SE/enemyJump.wav";
+	constexpr char kBossGuardSEPath[] = "data/BGM・SE/guard.mp3";
+	constexpr char kBossGuardBreakSEPath[] = "data/BGM・SE/guardBreak.mp3";
+	constexpr char kBossMoveSEPath[] = "data/BGM・SE/boss1Move.mp3";
+	constexpr char kBossCrySEPath[] = "data/BGM・SE/bossNakigoe.wav";
+	constexpr char kBossBreathSEPath[] = "data/BGM・SE/bossBureath.wav";
+	constexpr char kBossDeathSEPath[] = "data/BGM・SE/bigExplosion.mp3";
+	constexpr char kExplosionSEPath[] = "data/BGM・SE/battery1.mp3";
+	constexpr char kWeaponChangeSEPath[] = "data/BGM・SE/weaponChange.mp3";
+	constexpr char kTutorialTextSEPath[] = "data/BGM・SE/tutorialText.mp3";
+}
+
 void SEManager::Init()
 {
-	volume_ = 60;
+	volume_ = kDefaultSEVolume;
 
-	seHandles_[SE::Decide] = LoadSoundMem("data/BGM・SE/decision-3.mp3");
-	seHandles_[SE::Cancel] = LoadSoundMem("data/BGM・SE/cancel.mp3");
-	seHandles_[SE::Select] = LoadSoundMem("data/BGM・SE/cursorMove.mp3");
-	seHandles_[SE::Shot] = LoadSoundMem("data/BGM・SE/shot.wav");
-	seHandles_[SE::PlayerJump] = LoadSoundMem("data/BGM・SE/playerJump.wav");
-	seHandles_[SE::Death] = LoadSoundMem("data/BGM・SE/death.mp3");
-	seHandles_[SE::Wave] = LoadSoundMem("data/BGM・SE/wave.mp3");
-	seHandles_[SE::Hit] = LoadSoundMem("data/BGM・SE/enemyhit.mp3");
-	seHandles_[SE::Damage] = LoadSoundMem("data/BGM・SE/damage.mp3");
-	seHandles_[SE::Warp] = LoadSoundMem("data/BGM・SE/tutorialWarp.wav");
-	seHandles_[SE::Fall] = LoadSoundMem("data/BGM・SE/fall.wav");
-	seHandles_[SE::UnlockTorch] = LoadSoundMem("data/BGM・SE/unlockTorch.wav");
-	seHandles_[SE::FlowerAttack] = LoadSoundMem("data/BGM・SE/flowerAttack.wav");
-	seHandles_[SE::EnemyJump] = LoadSoundMem("data/BGM・SE/enemyJump.wav");
-	seHandles_[SE::BossGuard] = LoadSoundMem("data/BGM・SE/guard.mp3");
-	seHandles_[SE::BossGuardBreak] = LoadSoundMem("data/BGM・SE/guardBreak.mp3");
-	seHandles_[SE::BossMove] = LoadSoundMem("data/BGM・SE/boss1Move.mp3");
-	seHandles_[SE::BossCry] = LoadSoundMem("data/BGM・SE/bossNakigoe.wav");
-	seHandles_[SE::BossBreath] = LoadSoundMem("data/BGM・SE/bossBureath.wav");
-	seHandles_[SE::BossDeath] = LoadSoundMem("data/BGM・SE/bigExplosion.mp3");
-	seHandles_[SE::Explosion] = LoadSoundMem("data/BGM・SE/battery1.mp3");
-	seHandles_[SE::WeaponChange] = LoadSoundMem("data/BGM・SE/weaponChange.mp3");
-	seHandles_[SE::TutorialText] = LoadSoundMem("data/BGM・SE/tutorialText.mp3");
+	seHandles_[SE::Decide] = LoadSoundMem(kDecideSEPath);
+	seHandles_[SE::Cancel] = LoadSoundMem(kCancelSEPath);
+	seHandles_[SE::Select] = LoadSoundMem(kSelectSEPath);
+	seHandles_[SE::Shot] = LoadSoundMem(kShotSEPath);
+	seHandles_[SE::PlayerJump] = LoadSoundMem(kPlayerJumpSEPath);
+	seHandles_[SE::Death] = LoadSoundMem(kDeathSEPath);
+	seHandles_[SE::Wave] = LoadSoundMem(kWaveSEPath);
+	seHandles_[SE::Hit] = LoadSoundMem(kHitSEPath);
+	seHandles_[SE::Damage] = LoadSoundMem(kDamageSEPath);
+	seHandles_[SE::Warp] = LoadSoundMem(kWarpSEPath);
+	seHandles_[SE::Fall] = LoadSoundMem(kFallSEPath);
+	seHandles_[SE::UnlockTorch] = LoadSoundMem(kUnlockTorchSEPath);
+	seHandles_[SE::FlowerAttack] = LoadSoundMem(kFlowerAttackSEPath);
+	seHandles_[SE::EnemyJump] = LoadSoundMem(kEnemyJumpSEPath);
+	seHandles_[SE::BossGuard] = LoadSoundMem(kBossGuardSEPath);
+	seHandles_[SE::BossGuardBreak] = LoadSoundMem(kBossGuardBreakSEPath);
+	seHandles_[SE::BossMove] = LoadSoundMem(kBossMoveSEPath);
+	seHandles_[SE::BossCry] = LoadSoundMem(kBossCrySEPath);
+	seHandles_[SE::BossBreath] = LoadSoundMem(kBossBreathSEPath);
+	seHandles_[SE::BossDeath] = LoadSoundMem(kBossDeathSEPath);
+	seHandles_[SE::Explosion] = LoadSoundMem(kExplosionSEPath);
+	seHandles_[SE::WeaponChange] = LoadSoundMem(kWeaponChangeSEPath);
+	seHandles_[SE::TutorialText] = LoadSoundMem(kTutorialTextSEPath);
 }
 
 void SEManager::PlaySE(SE se)
 {
 	int handle = seHandles_[se];
 
-	int vol = volume_ * 255 / 100;
+	int vol = volume_ * kDxVolumeMax / kVolumeMax;
 	ChangeVolumeSoundMem(vol, handle);
 
-	PlaySoundMem(handle, DX_PLAYTYPE_BACK);
+	PlaySoundMem(handle, kSEPlayType);
 }
 
 void SEManager::SetVolume(int volume)
 {
-	volume_ = std::clamp(volume, 0, 100);
+	volume_ = std::clamp(volume, kVolumeMin, kVolumeMax);
 
-	int dxVol = volume_ * 255 / 100;
+	int dxVol = volume_ * kDxVolumeMax / kVolumeMax;
 	for (auto& [se, handle] : seHandles_)
 	{
 		ChangeVolumeSoundMem(dxVol, handle);

@@ -9,7 +9,7 @@
 namespace
 {
 	// =============================
-	// UIレイアウト系
+	// UIレイアウト関連
 	// =============================
 	constexpr int kFrameX = 300;
 	constexpr int kFrameY = 200;
@@ -27,13 +27,55 @@ namespace
 	constexpr int kButtonOffsetX = 15;
 
 	// =============================
-	// アニメーション
+	// ゴール演出関連
+	// =============================
+	constexpr float kGoalPosX = 4800.0f;
+	constexpr float kGoalPosY = 1684.0f;
+	constexpr float kGoalSize = 64.0f;
+	constexpr int   kGoalDrawOffsetY = 50;
+
+	// =============================
+	// ゴールアニメーション関連
+	// =============================
+	constexpr int   kGoalFrameW = 16;
+	constexpr int   kGoalFrameH = 16;
+	constexpr int   kGoalFrameCount = 6;
+	constexpr int   kGoalAnimInterval = 7;
+	constexpr float kGoalAnimScale = 7.0f;
+	constexpr int   kGoalSrcX = 496;
+	constexpr int   kGoalSrcY = 0;
+
+	// =============================
+	// ボタンアニメーション関連
+	// =============================
+	constexpr int   kButtonFrameW = 16;
+	constexpr int   kButtonFrameH = 16;
+	constexpr int   kButtonFrameCount = 4;
+	constexpr int   kButtonAnimInterval = 8;
+	constexpr float kButtonAnimScale = 3.0f;
+	constexpr int   kButtonSrcW = 64;
+	constexpr int   kButtonSrcH = 48;
+
+	// =============================
+	// 入力制御関連
+	// =============================
+	constexpr int kInputLockFrame = 60;
+
+	// =============================
+	// フォント関連
+	// =============================
+	constexpr int kFontSize = 24;
+	constexpr int kFontThickness = -1;
+	constexpr int kFontType = -1;
+
+	// =============================
+	// アニメーション関連
 	// =============================
 	constexpr int kAppearInterval = 12;
 	constexpr int kSlideDistance = 30;
 	constexpr int kMaxAlpha = 255;
 
-	// チュートリアル発生地点（X だけで管理する簡易版）
+	//チュートリアルテキストが発生する地点
 	const float kTutorialX[] =
 	{
 		300.0f,   //Move
@@ -67,29 +109,22 @@ void TutorialManager::Init()
 	textFrameHandle_ = LoadGraph("data/UI/TutorialFrame.png");
 	textButtonHandle_ = LoadGraph("data/UI/gdb-switch-2.png");
 
-	goalRect_.SetLT(4800.0f, 1684.0f, 64.0f, 64.0f);
+	goalRect_.SetLT(kGoalPosX,kGoalPosY,kGoalSize,kGoalSize);
 
 	int goalHandle = LoadGraph("data/Effect/bullet_effect.png");
 
 	goalAnim_ = std::make_unique<SpriteAnimation>(
 		goalHandle,
-		16, 16,     // フレームサイズ
-		6,          // 使用フレーム数
-		7,
-		7.0f,
-		496,
-		0,
-		true);
+		kGoalFrameW,kGoalFrameH,
+		kGoalFrameCount,kGoalAnimInterval,
+		kGoalAnimScale,kGoalSrcX,kGoalSrcY,true);
 
 	buttonAnim_ = std::make_unique<SpriteAnimation>(
 		textButtonHandle_,
-		16, 16,   // 1フレームサイズ
-		4,        // フレーム数
-		8,        // 切り替え間隔
-		3.0f,
-		64,48,
-		true);
-	fontHandle_ = CreateFontToHandle("g_コミックホラー悪党-教漢", 24, -1, -1);
+		kButtonFrameW,kButtonFrameH,
+		kButtonFrameCount,kButtonAnimInterval,
+		kButtonAnimScale,kButtonSrcW,kButtonSrcH,true);
+	fontHandle_ = CreateFontToHandle("g_コミックホラー悪党-教漢",kFontSize,kFontThickness,kFontType);
 }
 
 void TutorialManager::Update(Player& player, Input& input)
@@ -126,7 +161,7 @@ void TutorialManager::Update(Player& player, Input& input)
 			appearFrame_++;
 		}
 
-		if (inputLockFrame_ > 60)
+		if (inputLockFrame_ > kInputLockFrame)
 		{
 			//決定ボタンでフェードアウト開始
 			if (input.IsTriggered("next"))
@@ -160,7 +195,7 @@ void TutorialManager::Draw(const Camera& camera)
 	if (goalAnim_)
 	{
 		float drawX = goalRect_.GetLeft() + camera.GetOffset().x;
-		float drawY = goalRect_.GetTop() + camera.GetOffset().y + 50;
+		float drawY = goalRect_.GetTop() + camera.GetOffset().y + kGoalDrawOffsetY;
 
 		goalAnim_->Draw(drawX, drawY);
 	}
@@ -178,24 +213,16 @@ void TutorialManager::Draw(const Camera& camera)
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
 
 	// ===== フレーム =====
-	DrawExtendGraph(
-		kFrameX,
-		kFrameY + slideY,
-		kFrameX + kFrameWidth,
-		kFrameY + kFrameHeight + slideY,
-		textFrameHandle_,
-		TRUE);
+	DrawExtendGraph(kFrameX,kFrameY + slideY,
+		kFrameX + kFrameWidth,kFrameY + kFrameHeight + slideY,
+		textFrameHandle_,TRUE);
 
 	// ===== テキスト =====
 	int textX =kFrameX + kTextLeftPadding + kTextOffsetX;
 	int textY =kFrameY +(kFrameHeight - kTextHeight) / 2 +kTextOffsetY + slideY;
 
-	DrawStringToHandle(
-		textX,
-		textY,
-		waitingMessage_,
-		GetColor(255, 255, 255),
-		fontHandle_);
+	DrawStringToHandle(textX,textY,
+		waitingMessage_,GetColor(255, 255, 255),fontHandle_);
 
 	// ===== ボタン =====
 	if (buttonAnim_)

@@ -11,6 +11,7 @@ namespace
 
 	//弾を画面外で消す処理に足す余白
 	constexpr int kMargin = 10;
+	constexpr int kTopOffset = 10;
 }
 
 BulletManager::BulletManager():
@@ -107,7 +108,7 @@ bool BulletManager::IsOutOfScreen(const std::shared_ptr<Bullet>& bullet) const
 	// 画面矩形 + 余白
 	if (pos.x < screenRect_.GetLeft() - kMargin) return true;
 	if (pos.x > screenRect_.GetRight() + kMargin) return true;
-	if (pos.y < screenRect_.GetTop() - kMargin * 10) return true;
+	if (pos.y < screenRect_.GetTop() - kMargin * kTopOffset) return true;
 	if (pos.y > screenRect_.GetBottom() + kMargin) return true;
 
 	return false;
