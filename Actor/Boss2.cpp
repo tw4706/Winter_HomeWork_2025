@@ -136,21 +136,46 @@ void Boss2::Update()
 void Boss2::Draw()
 {
 	Boss::Draw();
+
+	if (isShieldBroken_)return;
+
 	float drawX = pos_.x + cameraOffset_.x;
 	float drawY = pos_.y + cameraOffset_.y;
 
 	float offsetX = isTurn_ ? -40.0f : 40.0f;
 	float offsetY = -100.0f;
+	float shieldRate = (float)shieldHP_ / shieldMaxHP_;
+
+	float shieldScale = kShieldScale * (0.6f + shieldRate * 0.4f);
+	bool isShieldCritical = (shieldRate <= 0.3f);
+
+	//シールドの揺れを残量によって変化させる
+	float shakeX = 0.0f;
+	float shakeY = 0.0f;
+
+	if (isShieldCritical && !isShieldBroken_)
+	{
+		shakeX = (GetRand(5) - 2) * 2.0f;
+		shakeY = (GetRand(5) - 2) * 2.0f;
+	}
+
+	if (shieldHitTimer_ > 0)
+	{
+		int alpha = isShieldCritical ? 200 : 128;
+		SetDrawBlendMode(DX_BLENDMODE_ADD, alpha);
+	}
 
 	DrawRectRotaGraph3(
-		(int)(drawX + offsetX),
-		(int)(drawY + offsetY),
+		(int)(drawX + offsetX + shakeX),
+		(int)(drawY + offsetY + shakeY),
 		kShieldSrcX, kShieldSrcY,
 		kShieldSize, kShieldSize,
 		kShieldSize / 2, kShieldSize / 2,
-		kShieldScale, kShieldScale,
+		shieldScale, shieldScale,
 		0.0f,
 		barrierGraphHandle_, true);
+
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 #ifdef _DEBUG
 	//当たり判定表示
 	colRect_.DrawAndCamera(cameraOffset_, GetColor(255, 0, 0), false);
