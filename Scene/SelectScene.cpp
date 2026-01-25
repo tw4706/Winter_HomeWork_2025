@@ -27,6 +27,7 @@ SelectScene::SelectScene(SceneController& controller) :
 	{
 		"STAGE 1",
 		"STAGE 2",
+		"STAGE 3",
 		"BOSS DEBUG",
 		"TITLE"
 	};
@@ -94,6 +95,10 @@ void SelectScene::FadeOutUpdate(Input&)
 		else if(item=="STAGE 2")
 		{
 			controller_.ChangeScene(std::make_shared<GameScene>(controller_, StageType::Stage2));
+		}
+		else if(item=="STAGE 3")
+		{
+			controller_.ChangeScene(std::make_shared<GameScene>(controller_, StageType::Stage3));
 		}
 	}
 }

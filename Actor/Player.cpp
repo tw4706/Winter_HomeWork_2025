@@ -77,8 +77,8 @@ namespace
 	constexpr float kGunOffsetY = 10.0f;
 	//たいまつの投げる位置のオフセット
 	constexpr float kTorchFireOffsetY = 50.0f;
-	constexpr float kTorchUpVelocity = 4.0f;
-	constexpr float kTorchSpeedRate = 0.6f;	//松明の横速度調整用
+	constexpr float kTorchUpVelocity = 6.0f;
+	constexpr float kTorchSpeedRate = 0.45f;	//松明の横速度調整用
 
 	//=======================
 	// 攻撃・ダメージ関連

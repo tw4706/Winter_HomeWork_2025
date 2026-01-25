@@ -25,6 +25,12 @@ bool CollisionManager::PlayerVsBoss2(const Rect& playerRect, Boss2& boss)
     //ƒ{ƒX‚ªŽ€‚ñ‚Å‚¢‚½‚ç”»’è‚µ‚È‚¢
     if (boss.IsDead()) return false;
 
+    if (boss.IsPunchActive() &&
+        playerRect.IsCollision(boss.GetPunchRect()))
+    {
+        return true;
+    }
+
     if (playerRect.IsCollision(boss.GetColRect()))
     {
         return true;

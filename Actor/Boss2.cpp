@@ -4,6 +4,7 @@
 #include"Application.h"
 #include"BulletManager.h"
 #include<Dxlib.h>
+#include<algorithm>
 
 namespace
 {
@@ -70,6 +71,20 @@ namespace
 	//========================
 	constexpr int   kCameraDuration = 10;
 	constexpr float kCameraMagnitude = 8.0f;
+
+	//========================
+	// 攻撃関連
+	//========================
+	constexpr int   kPunchStartupTime = 15;		//攻撃するまでの準備
+	constexpr int   kPunchActiveTime = 5;		//当たり判定が出る時間
+	constexpr int   kPunchEndTime = 20;			//硬直時間
+	constexpr float kPunchRangeX = 120.0f;
+	constexpr float kPunchRangeY = 120.0f;
+	constexpr float kPunchOffsetX = 160.0f;		// 前に出す距離
+	constexpr float kPunchSizeX = 120.0f;		// 判定サイズ
+	constexpr float kPunchSizeY = 180.0f;
+	constexpr int kPunchHitStartFrame = 6;
+	constexpr int kPunchHitEndFrame = 9;
 
 	//========================
 	// シールドへのダメージ関連
@@ -149,9 +164,11 @@ void Boss2::Init()
 	shieldMaxHP_ = kShieldMaxHP;
 	shieldHP_ = shieldMaxHP_;
 	shieldBreakTimer_ = 0;
-
 	shieldAlpha_ = 0.0f;
 	shieldHitTimer_ = 0;
+	isPunchActive_ = false;
+	attackWeight_ = 50;
+	jumpAttackWeight_ = 50;
 }
 
 void Boss2::Update()
@@ -246,12 +263,25 @@ void Boss2::Draw()
 	char buf2[64];
 	sprintf_s(buf2, "Shield HP: %d / %d", shieldHP_, shieldMaxHP_);
 	DrawString(10, 30, buf2, GetColor(0, 255, 255));
+	if (isPunchActive_)
+	{
+		punchRect_.DrawAndCamera(
+			cameraOffset_,
+			GetColor(255, 255, 0),
+			false
+		);
+	}
 #endif
 }
 
 void Boss2::OnHit(int damage)
 {
 	OnHit(damage, BulletType::Knife);
+}
+
+void Boss2::SetPunchHit()
+{
+	hasPunchHit_ = true;
 }
 
 int Boss2::GetGraphIndex(BossState state) const
@@ -262,6 +292,8 @@ int Boss2::GetGraphIndex(BossState state) const
 		return Anim::Idle;
 	case BossState::Move:
 		return Anim::Move;
+	case BossState::Attack:
+		return Anim::Attack;
 	case BossState::JumpAttack:
 		return Anim::Move;
 	case BossState::Hurt:
@@ -278,9 +310,30 @@ void Boss2::UpdateIdle()
 	stateTimer_++;
 
 	//一定時間で攻撃へ
+
 	if (stateTimer_ > kIdleToJumpTime)
 	{
-		ChangeState(BossState::JumpAttack);
+		int total = attackWeight_ + jumpAttackWeight_;
+		int r = GetRand(total - 1);
+
+		if (r < attackWeight_)
+		{
+			ChangeState(BossState::Attack);
+
+			//出た行動は確率を下げる
+			attackWeight_ -= 20;
+			jumpAttackWeight_ += 20;
+		}
+		else
+		{
+			ChangeState(BossState::JumpAttack);
+
+			jumpAttackWeight_ -= 20;
+			attackWeight_ += 20;
+		}
+
+		attackWeight_ = std::clamp(attackWeight_, 10, 90);
+		jumpAttackWeight_ = std::clamp(jumpAttackWeight_, 10, 90);
 	}
 }
 
@@ -307,6 +360,39 @@ void Boss2::UpdateHurt()
 
 	if (animations_[GetGraphIndex(BossState::Hurt)]->IsAnimFinished())
 	{
+		ChangeState(BossState::Idle);
+	}
+}
+
+void Boss2::UpdateAttack()
+{
+	stateTimer_++;
+
+	vel_.x = 0.0f;
+
+	auto anim = animations_[GetGraphIndex(BossState::Attack)];
+	int frame = anim->GetCurrentFrame();
+
+	if (frame >= kPunchHitStartFrame &&
+		frame <= kPunchHitEndFrame)
+	{
+		isPunchActive_ = true;
+
+		float dir = isTurn_ ? -1.0f : 1.0f;
+		float cx = pos_.x + dir * kPunchOffsetX;
+		float cy = pos_.y - kColOffsetY;
+
+		punchRect_.SetCenter(cx, cy, kPunchSizeX, kPunchSizeY);
+	}
+	else
+	{
+		isPunchActive_ = false;
+	}
+
+	// アニメが終わったら戻る
+	if (anim->IsAnimFinished())
+	{
+		isPunchActive_ = false;
 		ChangeState(BossState::Idle);
 	}
 }
