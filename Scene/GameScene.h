@@ -55,7 +55,7 @@ public:
 	StageType GetNextStageType(StageType nextStage);
 
 private:
-	int frame_ = 0;// フェードインアウト用
+	int frame_ = 0;							// フェードインアウト用
 	int stageTextTimer_;
 	bool isTorchUnlockMessageShow_;			//メッセージ表示したか
 	bool isTorchMessageActive_;

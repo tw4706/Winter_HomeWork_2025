@@ -102,11 +102,12 @@ void GameOverScene::NormalUpdate(Input& input)
 			if (selectIdx_ >= kOptionCount) selectIdx_ = 0;
 		}
 
+		//
 		// Œˆ’è
 		if (input.IsTriggered("any_button"))
 		{
 			Application::GetInstance().GetSEManager().PlaySE(SE::Decide);
-			isSelecting_ = false; //‘I‘ğI—¹
+			isSelecting_ = false;
 			update_ = &GameOverScene::FadeOutUpdate;
 			draw_ = &GameOverScene::FadeDraw;
 			frame_ = 0;

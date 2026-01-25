@@ -60,7 +60,6 @@ namespace
 		kFlyFrameCount, kHurtFrameCount, kDeathFrameCount };
 	const int frameIntervals[kGraphNum] = { kIdleFrameInterval,
 		kAttackFrameInterval, kFlyFrameInterval, kHurtFrameInterval, kDeathFrameInterval };
-	
 
 	//========================
 	// 当たり判定・描画関連
@@ -73,7 +72,6 @@ namespace
 	constexpr float kColWidth = 120.0f;
 	constexpr float kColHeight = 120.0f;
 
-
 	//========================
 	// ステータス関連
 	//========================
@@ -84,7 +82,7 @@ namespace
 	constexpr int KVariantBoss1MaxHp = 20;
 
 	//========================
-	// 行動遷移
+	// ボスの行動関連
 	//========================
 	constexpr int   kIdleToMoveMinTime = 60;
 	constexpr int   kMoveToAttackMinTime = 60;
@@ -92,14 +90,14 @@ namespace
 	constexpr int   kStateChangeRandRate = 2;
 
 	//========================
-	// Idle挙動
+	// Idle関連
 	//========================
 	constexpr float kIdleHoverSpeed = 0.1f;
 	constexpr float kIdleHoverPower = 0.8f;
 	constexpr float kComeBackRatio = 0.5f;
 
 	//========================
-	// Attack挙動
+	// Attack関連
 	//========================
 	constexpr float kBulletSpeed = 3.0f;
 	constexpr int kMaxShotCount = 1;
@@ -110,7 +108,7 @@ namespace
 	constexpr float kFrameTime = 1.0f / 60.0f;
 
 	//========================
-	// Move挙動
+	// Move関連
 	//========================
 	constexpr float kFlySpeed = 0.4f;
 	constexpr float kComeBackPos = 0.5f;//プレイヤーが近づいた時の逃げる速度

@@ -10,7 +10,7 @@ namespace
 	//========================
 	// ステータス関連
 	//========================
-	constexpr int kMaxHP = 50;
+	constexpr int kMaxHP = 40;
 
 	//========================
 	// 当たり判定・描画関連
@@ -43,6 +43,7 @@ namespace
 	constexpr float kShieldShakePower = 2.0f;
 	constexpr int   kShieldHitAlphaNormal = 128;
 	constexpr int   kShieldHitAlphaCritical = 200;
+	constexpr int kShieldBreakHitStopTime = 5;
 
 	//========================
 	// 状態遷移関連
@@ -188,45 +189,57 @@ void Boss2::Draw()
 {
 	Boss::Draw();
 
-	if (isShieldBroken_)return;
-
-	float drawX = pos_.x + cameraOffset_.x;
-	float drawY = pos_.y + cameraOffset_.y;
-
-	float offsetX = isTurn_ ? -kShieldOffsetX : kShieldOffsetX;
-	float offsetY = -kShieldOffsetY;
-	float shieldRate = (float)shieldHP_ / shieldMaxHP_;
-
-	float shieldScale = kShieldScale * (kShieldScaleMinRate + shieldRate * kShieldScaleMaxRate);
-	bool isShieldCritical = (shieldRate <= kShieldCriticalRate);
-
-	//シールドの揺れを残量によって変化させる
-	float shakeX = 0.0f;
-	float shakeY = 0.0f;
-
-	if (isShieldCritical && !isShieldBroken_)
+	if (!isShieldBroken_)
 	{
-		shakeX = (GetRand(kShieldShakeRand) - (kShieldShakeRand / 2)) * kShieldShakePower;
-		shakeY = (GetRand(kShieldShakeRand) - (kShieldShakeRand / 2)) * kShieldShakePower;
+		float drawX = pos_.x + cameraOffset_.x;
+		float drawY = pos_.y + cameraOffset_.y;
+
+		float offsetX = isTurn_ ? -kShieldOffsetX : kShieldOffsetX;
+		float offsetY = -kShieldOffsetY;
+		float shieldRate = (float)shieldHP_ / shieldMaxHP_;
+
+		float shieldScale = kShieldScale * (kShieldScaleMinRate + shieldRate * kShieldScaleMaxRate);
+		bool isShieldCritical = (shieldRate <= kShieldCriticalRate);
+
+		//シールドの揺れを残量によって変化させる
+		float shakeX = 0.0f;
+		float shakeY = 0.0f;
+
+		if (isShieldCritical && !isShieldBroken_)
+		{
+			shakeX = (GetRand(kShieldShakeRand) - (kShieldShakeRand / 2)) * kShieldShakePower;
+			shakeY = (GetRand(kShieldShakeRand) - (kShieldShakeRand / 2)) * kShieldShakePower;
+		}
+
+		if (shieldHitTimer_ > 0)
+		{
+			int alpha = isShieldCritical ? kShieldHitAlphaCritical : kShieldHitAlphaNormal;
+			SetDrawBlendMode(DX_BLENDMODE_ADD, alpha);
+		}
+
+		DrawRectRotaGraph3(
+			(int)(drawX + offsetX + shakeX),
+			(int)(drawY + offsetY + shakeY),
+			kShieldSrcX, kShieldSrcY,
+			kShieldSize, kShieldSize,
+			kShieldSize / 2, kShieldSize / 2,
+			shieldScale, shieldScale,
+			0.0f,
+			barrierGraphHandle_, true);
+
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	}
 
-	if (shieldHitTimer_ > 0)
+	//ヒットストップ時の画面を白くさせる
+	if (flashTimer_ > 0)
 	{
-		int alpha = isShieldCritical ? kShieldHitAlphaCritical : kShieldHitAlphaNormal;
+		int alpha = flashTimer_ * 50;
 		SetDrawBlendMode(DX_BLENDMODE_ADD, alpha);
+		DrawBox(0, 0, 1280, 720, GetColor(255, 255, 255), TRUE);
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+
+		flashTimer_--;
 	}
-
-	DrawRectRotaGraph3(
-		(int)(drawX + offsetX + shakeX),
-		(int)(drawY + offsetY + shakeY),
-		kShieldSrcX, kShieldSrcY,
-		kShieldSize, kShieldSize,
-		kShieldSize / 2, kShieldSize / 2,
-		shieldScale, shieldScale,
-		0.0f,
-		barrierGraphHandle_, true);
-
-	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 #ifdef _DEBUG
 	//当たり判定表示
 	colRect_.DrawAndCamera(cameraOffset_, GetColor(255, 0, 0), false);

@@ -120,6 +120,9 @@ namespace
 	constexpr int kHurtFrameInterval = 6;
 	constexpr int kDeathFrameInterval = 6;
 
+	//ヒットストップ用の定数
+	constexpr int kHitStopFrameCycle = 3;
+
 	//状態ごとのフレーム数とフレーム間隔
 	const int frameCounts[kGraphNum] = { kIdleFrameCount,kAttackFrameCount,kWalkFrameCount, kJumpFrameCount, kHurtFrameCount, kDeathFrameCount };
 	const int frameIntervals[kGraphNum] = { kIdleFrameInterval,
@@ -211,7 +214,7 @@ void Player::Update(Input& input, BulletManager& bm, StageType stage)
 		//アニメは間引きで更新
 		static int slowFrameCounter = 0;
 		slowFrameCounter++;
-		if (slowFrameCounter % 3 == 0)
+		if (slowFrameCounter % kHitStopFrameCycle == 0)
 		{
 			animations_[static_cast<int>(state_)]->Update();
 		}

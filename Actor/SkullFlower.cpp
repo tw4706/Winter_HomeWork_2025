@@ -51,6 +51,11 @@ namespace
 	// ==============================
 	constexpr int kIdleSrcY = 192;
 
+	//========================
+	// 被弾演出関連
+	//========================
+	constexpr int kDamageFlashInterval = 4;
+
 	// ==============================
 	// 無効座標
 	// ==============================
@@ -127,7 +132,29 @@ void SkullFlower::Draw()
 	float drawX = pos_.x + cameraOffset_.x;
 	float drawY = pos_.y + cameraOffset_.y- kDrawOffsetY;
 
+	bool isFlashRed = false;
+
+	if (isDamageFlash_)
+	{
+		int t = damageFlashTimer_ / kDamageFlashInterval;
+		isFlashRed = (t % 2 == 0);
+	}
+
+	if (isFlashRed)
+	{
+		//赤色で点滅
+		SetDrawBlendMode(DX_BLENDMODE_ADD, 128);
+		SetDrawBright(255, 64, 64);
+	}
+
 	animations_[static_cast<int>(flowerState_)]->Draw(drawX, drawY, !isTurn_);
+
+	//点滅後元に戻す
+	if (isFlashRed)
+	{
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+		SetDrawBright(255, 255, 255);
+	}
 
 #ifdef _DEBUG
 	// デバッグ用に座標表示

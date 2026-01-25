@@ -17,11 +17,13 @@ protected:
 	int effect3DHandle_;
 	int playing3DHandle_;
 	bool isTurn_;					//右を向いているかどうか
-	std::shared_ptr<Player>pPlayer_;//プレイヤーのスマートポインタ
-	Rect colRect_;					//当たり判定の矩形
 	bool isDead_;					//死亡フラグ
 	int hp_;						//体力
 	int currentState_;
+	bool isDamageFlash_;
+	int damageFlashTimer_;
+	std::shared_ptr<Player>pPlayer_;//プレイヤーのスマートポインタ
+	Rect colRect_;					//当たり判定の矩形
 	std::vector<std::shared_ptr<Animation>> animations_;//アニメーション配列
 	EffectManager* pEffectManager_;
 

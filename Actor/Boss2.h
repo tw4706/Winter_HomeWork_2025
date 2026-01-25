@@ -28,6 +28,7 @@ private:
     int hitCount_;                  //ボスが被弾した数
     int guardTimer_=0;              //ガード時間
     int jumpCoolTimer_ = 0;
+    int flashTimer_ = 0;
     bool isJumping_=false;
     bool isBarrierActive_=true;
     int barrierGraphHandle_ = -1;

@@ -61,6 +61,10 @@ namespace
 	//========================
 	constexpr float kSpeed = 0.5f;					//エネミーの移動速度
 
+	//========================
+	// 被弾演出関連
+	//========================
+	constexpr int kDamageFlashInterval = 4;
 }
 
 Zombie::Zombie(Vector2 pos, Vector2 vel) :
@@ -125,6 +129,15 @@ void Zombie::Update()
 {
 	if (isDead_ || !pPlayer_) return;
 
+	if (isDamageFlash_)
+	{
+		damageFlashTimer_--;
+		if (damageFlashTimer_ <= 0)
+		{
+			isDamageFlash_ = false;
+		}
+	}
+
 	UpdateAnim();
 
 	//移動処理
@@ -157,8 +170,29 @@ void Zombie::Draw()
 	float drawX = pos_.x + cameraOffset_.x;
 	float drawY = pos_.y + cameraOffset_.y;
 
+	bool isFlashRed = false;
+
+	if (isDamageFlash_)
+	{
+		int t = damageFlashTimer_ / kDamageFlashInterval;
+		isFlashRed = (t % 2 == 0);
+	}
+
+	if (isFlashRed)
+	{
+		//赤色で点滅
+		SetDrawBlendMode(DX_BLENDMODE_ADD, 128);
+		SetDrawBright(255, 64, 64);
+	}
+
 	animations_[static_cast<int>(zombieState_)]->Draw(drawX, drawY - kPosYDrawOffset, isTurn_);
 
+	//点滅後元に戻す
+	if (isFlashRed)
+	{
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+		SetDrawBright(255, 255, 255);
+	}
 #ifdef _DEBUG
 	colRect_.DrawAndCamera(cameraOffset_, 0xff0000, false);
 #endif

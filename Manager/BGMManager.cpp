@@ -10,7 +10,7 @@ namespace
 	constexpr int kVolumeMin = 0;
 	constexpr int kVolumeMax = 100;
 	constexpr int kDxVolumeMax = 255;
-	constexpr int kBgmBaseVolume = 100;
+	constexpr int kBgmBaseVolume = 60;
 
 	// ==============================
 	// ƒnƒ“ƒhƒ‹ŠÖ˜A

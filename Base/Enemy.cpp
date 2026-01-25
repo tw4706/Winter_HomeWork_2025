@@ -21,6 +21,11 @@ namespace
 	constexpr char kHitEffectPath[] = "data/Effect/EnemyHit.efk";
 	constexpr float kHitEffectScale = 0.5f;
 
+	//========================
+	// 被弾演出関連
+	//========================
+	constexpr int kDamageFlashTime = 20;
+
 	// ==============================
 	// 死亡演出関連
 	// ==============================
@@ -48,6 +53,8 @@ Enemy::Enemy(Vector2 pos, Vector2 vel) :
 	isDead_(false),
 	hp_(kMaxHp),
 	currentState_(0),
+	isDamageFlash_(false),
+	damageFlashTimer_(0),
 	pEffectManager_(nullptr)
 {
 	effect3DHandle_ = LoadEffekseerEffect(kHitEffectPath);
@@ -79,6 +86,9 @@ void Enemy::Draw()
 void Enemy::OnHit(int damage)
 {
 	if (isDead_)return;
+
+	isDamageFlash_ = true;
+	damageFlashTimer_ = kDamageFlashTime;
 
 	Application::GetInstance().GetSEManager().PlaySE(SE::Hit);
 

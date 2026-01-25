@@ -10,6 +10,10 @@ namespace
 	constexpr int kFadeDuration = 60;
 	constexpr int kSelectIdxX = 20;
 	constexpr int kDrawOffsetX = 40;
+
+	constexpr int kDrawX = 100;
+	constexpr int kDrawY = 100;
+	constexpr int kPitch = 30;
 }
 
 SelectScene::SelectScene(SceneController& controller) :
@@ -104,15 +108,12 @@ void SelectScene::FadeDraw()
 
 void SelectScene::NormalDraw()
 {
-	int drawX = 100;
-	int drawY = 100;
-	int pitch = 30;
 
 	for (int i = 0; i < stageMenu_.size(); i++)
 	{
 		bool isSelected = (i == selectIndex_);
 
-		int y = drawY + pitch * i;
+		int y = kDrawY + kPitch * i;
 
 		int offsetX = isSelected ? kSelectIdxX : 0;
 
@@ -120,9 +121,9 @@ void SelectScene::NormalDraw()
 
 		if (isSelected)
 		{
-			DrawString(drawX - kDrawOffsetX, y, "¨", 0x00ffff);
+			DrawString(kDrawX - kDrawOffsetX, y, "¨", 0x00ffff);
 		}
-		DrawString(drawX + offsetX, y,stageMenu_[i].c_str(), color);
+		DrawString(kDrawX + offsetX, y,stageMenu_[i].c_str(), color);
 	}
 }
 

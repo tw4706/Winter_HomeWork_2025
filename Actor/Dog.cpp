@@ -42,18 +42,21 @@ namespace
 	constexpr float kScale = 2.0f;
 	constexpr float kDrawW = kGraphW * 2.0f;
 	constexpr float kDrawH = kGraphH * 2.0f;
-	constexpr float kColOffsetY = 5.0f;	// 当たり判定
-	constexpr float kDrawOffsetY = 30.0f;	// 描画位置
+	constexpr float kColOffsetY = 5.0f;				//当たり判定
+	constexpr float kDrawOffsetY = 30.0f;			//描画位置
 
 	//====================
 	// ステータス関連
 	//====================
-	constexpr float kJumpPower = 15.0f;	//ジャンプの高さ
-	constexpr float kSpeed = 4.0f;	//移動速度
-	constexpr int kJumpInterval = 60;	//ジャンプ間隔
-	const float kDistance = 300.0f;	//プレイヤーとの距離
+	constexpr float kJumpPower = 15.0f;				//ジャンプの高さ
+	constexpr float kSpeed = 4.0f;					//移動速度
+	constexpr int kJumpInterval = 60;				//ジャンプ間隔
+	const float kDistance = 300.0f;					//プレイヤーとの距離
 
-
+	//========================
+	// 被弾演出関連
+	//========================
+	constexpr int kDamageFlashInterval = 4;
 }
 
 Dog::Dog(Vector2 pos, Vector2 vel,DogType type) :
@@ -138,7 +141,28 @@ void Dog::Draw()
 		break;
 	}
 
+	bool isFlashRed = false;
+	if (isDamageFlash_)
+	{
+		int t = damageFlashTimer_ / kDamageFlashInterval;
+		isFlashRed = (t % 2 == 0);
+	}
+
+	if (isFlashRed)
+	{
+		//赤色で点滅
+		SetDrawBlendMode(DX_BLENDMODE_ADD, 128);
+		SetDrawBright(255, 64, 64);
+	}
+
 	animations_[static_cast<int>(dogState_)]->Draw(drawX, drawY, isTurn_);
+
+	//点滅後元に戻す
+	if (isFlashRed)
+	{
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+		SetDrawBright(255, 255, 255);
+	}
 
 #ifdef _DEBUG
 	//当たり判定の描画
