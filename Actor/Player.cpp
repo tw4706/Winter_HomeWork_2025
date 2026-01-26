@@ -473,6 +473,7 @@ void Player::Move(Input& input)
 			vel_.x = 0.0f;
 		}
 	}
+	Application::GetInstance().GetSEManager().StopSE(SE::PlayerWalk);
 }
 
 //ƒWƒƒƒ“ƒvˆ—
