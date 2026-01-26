@@ -81,8 +81,8 @@ namespace
 	constexpr float kPunchRangeX = 120.0f;
 	constexpr float kPunchRangeY = 120.0f;
 	constexpr float kPunchOffsetX = 160.0f;		// 前に出す距離
-	constexpr float kPunchSizeX = 120.0f;		// 判定サイズ
-	constexpr float kPunchSizeY = 240.0f;
+	constexpr float kPunchSizeX = 300.0f;		// 判定サイズ
+	constexpr float kPunchSizeY = 60.0f;
 	constexpr int kPunchHitStartFrame = 6;
 	constexpr int kPunchHitEndFrame = 9;
 
@@ -167,8 +167,6 @@ void Boss2::Init()
 	shieldAlpha_ = 0.0f;
 	shieldHitTimer_ = 0;
 	isPunchActive_ = false;
-	attackWeight_ = 50;
-	jumpAttackWeight_ = 50;
 }
 
 void Boss2::Update()
@@ -310,30 +308,19 @@ void Boss2::UpdateIdle()
 	stateTimer_++;
 
 	//一定時間で攻撃へ
-
 	if (stateTimer_ > kIdleToJumpTime)
 	{
-		int total = attackWeight_ + jumpAttackWeight_;
-		int r = GetRand(total - 1);
+		int r = GetRand(1);
 
-		if (r < attackWeight_)
+		if (r==0)
 		{
 			ChangeState(BossState::Attack);
-
-			//出た行動は確率を下げる
-			attackWeight_ -= 20;
-			jumpAttackWeight_ += 20;
 		}
 		else
 		{
 			ChangeState(BossState::JumpAttack);
-
-			jumpAttackWeight_ -= 20;
-			attackWeight_ += 20;
 		}
 
-		attackWeight_ = std::clamp(attackWeight_, 10, 90);
-		jumpAttackWeight_ = std::clamp(jumpAttackWeight_, 10, 90);
 	}
 }
 

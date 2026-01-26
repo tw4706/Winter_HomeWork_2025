@@ -45,7 +45,5 @@ private:
     int  shieldBreakTimer_;
     bool isPunchActive_;
     bool hasPunchHit_;
-    int attackWeight_;              //殴り攻撃の確率
-    int jumpAttackWeight_;          //ジャンプ攻撃の確率
     Rect punchRect_;
 };
