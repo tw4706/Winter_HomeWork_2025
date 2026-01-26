@@ -8,6 +8,7 @@ enum class SE
 	Select,
 	Shot,
 	PlayerJump,
+	PlayerWalk,
 	Death,
 	Wave,
 	Hit,
@@ -33,6 +34,8 @@ class SEManager
 public:
 	void Init();
 	void PlaySE(SE se);
+	void StopSE(SE se);
+
 	void SetVolume(int volume);
 	int GetVolume() const;
 	int GetHandle(SE se);

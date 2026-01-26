@@ -82,7 +82,7 @@ namespace
 	constexpr float kPunchRangeY = 120.0f;
 	constexpr float kPunchOffsetX = 160.0f;		// 前に出す距離
 	constexpr float kPunchSizeX = 120.0f;		// 判定サイズ
-	constexpr float kPunchSizeY = 180.0f;
+	constexpr float kPunchSizeY = 240.0f;
 	constexpr int kPunchHitStartFrame = 6;
 	constexpr int kPunchHitEndFrame = 9;
 

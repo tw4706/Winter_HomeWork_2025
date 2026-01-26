@@ -24,6 +24,7 @@ namespace
 	constexpr char kSelectSEPath[] = "data/BGM・SE/cursorMove.mp3";
 	constexpr char kShotSEPath[] = "data/BGM・SE/shot.wav";
 	constexpr char kPlayerJumpSEPath[] = "data/BGM・SE/playerJump.wav";
+	constexpr char kPlayerWalkSEPath[] = "data/BGM・SE/playeWalk.mp3";
 	constexpr char kDeathSEPath[] = "data/BGM・SE/death.mp3";
 	constexpr char kWaveSEPath[] = "data/BGM・SE/wave.mp3";
 	constexpr char kHitSEPath[] = "data/BGM・SE/enemyhit.mp3";
@@ -53,6 +54,7 @@ void SEManager::Init()
 	seHandles_[SE::Select] = LoadSoundMem(kSelectSEPath);
 	seHandles_[SE::Shot] = LoadSoundMem(kShotSEPath);
 	seHandles_[SE::PlayerJump] = LoadSoundMem(kPlayerJumpSEPath);
+	seHandles_[SE::PlayerWalk] = LoadSoundMem(kPlayerWalkSEPath);
 	seHandles_[SE::Death] = LoadSoundMem(kDeathSEPath);
 	seHandles_[SE::Wave] = LoadSoundMem(kWaveSEPath);
 	seHandles_[SE::Hit] = LoadSoundMem(kHitSEPath);
@@ -81,6 +83,17 @@ void SEManager::PlaySE(SE se)
 	ChangeVolumeSoundMem(vol, handle);
 
 	PlaySoundMem(handle, kSEPlayType);
+}
+
+void SEManager::StopSE(SE se)
+{
+	int handle = seHandles_[se];
+
+	//ハンドルに何か入っていたら音を止める
+	if (CheckSoundMem(handle) == 1)
+	{
+		StopSoundMem(handle);
+	}
 }
 
 void SEManager::SetVolume(int volume)

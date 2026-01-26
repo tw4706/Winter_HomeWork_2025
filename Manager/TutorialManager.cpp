@@ -59,7 +59,7 @@ namespace
 	// =============================
 	// 入力制御関連
 	// =============================
-	constexpr int kInputLockFrame = 60;
+	constexpr int kInputLockFrame = 80;
 
 	// =============================
 	// フォント関連
@@ -78,11 +78,12 @@ namespace
 	//チュートリアルテキストが発生する地点
 	const float kTutorialX[] =
 	{
-		300.0f,   //Move
-		1300.0f,   //Attack
-		2000.0f,  //Jump
-		2000.0f,  //DoubleJump
-		3700.0f   //WeaponChange
+		300.0f,		//Move
+		1300.0f,	//Attack
+		2000.0f,	//Jump
+		2000.0f,	//DoubleJump
+		3600.0f,	//WeaponChange
+		4500.0f
 	};
 
 	const char* kTutorialText[] =
@@ -91,7 +92,8 @@ namespace
 	"Xボタンでアタックだ",
 	"Aボタンでジャンプ",
 	"さらにAボタンでダブルジャンプが可能",
-	"Yボタンで武器チェンジが可能"
+	"Yボタンで武器チェンジが可能",
+	"ここからしにがち村に行けそうだ"
 	};
 
 	//チュートリアル内容の総数
@@ -167,6 +169,7 @@ void TutorialManager::Update(Player& player, Input& input)
 			if (input.IsTriggered("next"))
 			{
 				isDisappearing_ = true;
+				inputLockFrame_ = 0;
 				Application::GetInstance().GetSEManager().PlaySE(SE::Select);
 			}
 		}

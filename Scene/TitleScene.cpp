@@ -207,6 +207,7 @@ void TitleScene::PlayerRunUpdate(Input&)
 			frame_ = 0;
 			update_ = &TitleScene::FadeOutUpdate;
 			draw_ = &TitleScene::FadeDraw;
+			Application::GetInstance().GetSEManager().StopSE(SE::PlayerWalk);
 		}
 	}
 

@@ -1,4 +1,5 @@
 #include "DemoPlayer.h"
+#include"Application.h"
 #include<Dxlib.h>
 
 namespace
@@ -103,4 +104,5 @@ void DemoPlayer::StartWalk()
 	state_ = DemoState::Walk;
 	vel_.x = kSpeed;
 	stateTimer_ = 0;
+	Application::GetInstance().GetSEManager().PlaySE(SE::PlayerWalk);
 }

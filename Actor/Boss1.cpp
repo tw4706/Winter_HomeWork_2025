@@ -308,6 +308,7 @@ void Boss1::UpdateMove()
 	if (stateTimer_ > kMoveToAttackMinTime && rand() % kStateChangeRandBase < kStateChangeRandRate)
 	{
 		ChangeState(BossState::Attack);
+		Application::GetInstance().GetSEManager().StopSE(SE::BossMove);
 	}
 }
 
