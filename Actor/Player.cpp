@@ -443,11 +443,13 @@ void Player::Move(Input& input)
 		{
 			vel_.x = -kSpeed;
 			isTurn_ = false;
+			Application::GetInstance().GetSEManager().PlaySE(SE::PlayerWalk);
 		}
 		else if (input.IsPressed("right"))
 		{
 			vel_.x = kSpeed;
 			isTurn_ = true;
+			Application::GetInstance().GetSEManager().PlaySE(SE::PlayerWalk);
 		}
 		else
 		{
