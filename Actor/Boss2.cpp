@@ -266,8 +266,7 @@ void Boss2::Draw()
 		punchRect_.DrawAndCamera(
 			cameraOffset_,
 			GetColor(255, 255, 0),
-			false
-		);
+			false);
 	}
 #endif
 }
@@ -320,7 +319,6 @@ void Boss2::UpdateIdle()
 		{
 			ChangeState(BossState::JumpAttack);
 		}
-
 	}
 }
 
@@ -450,6 +448,7 @@ void Boss2::OnHit(int damage, const BulletType& type)
 			isShieldBroken_ = true;
 			isBarrierActive_ = false;
 			shieldBreakTimer_ = kShieldBreakTime;
+			punchRect_.SetCenter(0, 0, 0, 0);
 
 			Application::GetInstance().GetSEManager().PlaySE(SE::BossGuardBreak);
 
