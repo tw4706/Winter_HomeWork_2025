@@ -78,7 +78,7 @@ namespace
 	//チュートリアルテキストが発生する地点
 	const float kTutorialX[] =
 	{
-		300.0f,		//Move
+		200.0f,		//Move
 		1300.0f,	//Attack
 		2000.0f,	//Jump
 		2000.0f,	//DoubleJump

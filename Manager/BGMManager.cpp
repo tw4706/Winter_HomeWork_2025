@@ -31,6 +31,14 @@ namespace
 	constexpr char kGameClearBgmPath[] = "data/BGMESE/‰Ä‚Ìv‚¢o.mp3";
 }
 
+BGMManager::~BGMManager()
+{
+	for (auto bgm : bgmHandles_)
+	{
+		DeleteSoundMem(bgm.second);
+	}
+}
+
 void BGMManager::Init()
 {
 	bgmHandles_[BGM::Title] = LoadSoundMem(kTitleBgmPath);

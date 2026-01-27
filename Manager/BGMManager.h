@@ -12,6 +12,8 @@ enum class BGM
 class BGMManager
 {
 public:
+	~BGMManager();
+
 	void Init();
 	void PlayBGM(BGM bgm);
 	void StopBGM();

@@ -356,13 +356,14 @@ void Player::Update(Input& input, BulletManager& bm, StageType stage)
 
 		if (next < 0)
 		{
-			next = kBulletNum - 1;
+			next = kBulletNum - 2;
+
 		}
 
 		//たいまつが未解放ならスキップ
 		if (static_cast<BulletType>(next) == BulletType::Torch && !isUnlockedTorch_)
 		{
-			next = static_cast<int>(isUnlockedTorch_ ? BulletType::Torch : BulletType::Knife);
+			next = 1;
 		}
 
 		currentBulletType_ = static_cast<BulletType>(next);

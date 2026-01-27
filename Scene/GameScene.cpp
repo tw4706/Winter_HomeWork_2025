@@ -68,6 +68,7 @@ GameScene::GameScene(SceneController& controller, StageType stage) :
 	stageTextTimer_(0),
 	isTorchUnlockMessageShow_(false),
 	isTorchMessageActive_(false),
+	torchTextTimer_(0),
 	hpHandle_(-1),
 	fontHandle_(-1),
 	fontTorchTextHandle_(-1),
@@ -299,9 +300,8 @@ void GameScene::NormalUpdate(Input& input)
 			Application::GetInstance().GetSEManager().PlaySE(SE::UnlockTorch);
 			isTorchUnlockMessageShow_ = true;
 		}
-
-		//何かボタンが押されたら解除
-		if (input.IsTriggered("any_button"))
+		torchTextTimer_++;
+		if (torchTextTimer_ >= 180)
 		{
 			isTorchMessageActive_ = false;
 		}
@@ -416,7 +416,7 @@ void GameScene::NormalDraw()
 
 	if (isTorchMessageActive_ && stageTextTimer_ <= 0)
 	{
-		const char* message = "松明を解放しました！";
+		const char* message = "たいまつを解放しました！";
 
 		//文字幅を取得して中央に表示
 		int msgWidth = GetDrawStringWidthToHandle(message, static_cast<int>(strlen(message)), fontTorchTextHandle_);

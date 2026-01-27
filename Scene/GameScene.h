@@ -59,6 +59,7 @@ private:
 	int stageTextTimer_;
 	bool isTorchUnlockMessageShow_;			//メッセージ表示したか
 	bool isTorchMessageActive_;
+	int torchTextTimer_;
 	int hpHandle_;
 	int fontHandle_;
 	int fontTorchTextHandle_;

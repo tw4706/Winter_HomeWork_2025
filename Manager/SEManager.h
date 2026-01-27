@@ -32,6 +32,8 @@ enum class SE
 class SEManager
 {
 public:
+	~SEManager();
+
 	void Init();
 	void PlaySE(SE se);
 	void StopSE(SE se);

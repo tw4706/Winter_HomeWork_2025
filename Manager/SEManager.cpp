@@ -3,9 +3,10 @@
 #include <algorithm>
 
 namespace
-{// ==============================
-// 音量関連関連
-// ==============================
+{
+	// ==============================
+	// 音量関連関連
+	// ==============================
 	constexpr int kDefaultSEVolume = 100;
 	constexpr int kVolumeMin = 0;
 	constexpr int kVolumeMax = 100;
@@ -43,6 +44,14 @@ namespace
 	constexpr char kExplosionSEPath[] = "data/BGM・SE/battery1.mp3";
 	constexpr char kWeaponChangeSEPath[] = "data/BGM・SE/weaponChange.mp3";
 	constexpr char kTutorialTextSEPath[] = "data/BGM・SE/tutorialText.mp3";
+}
+
+SEManager::~SEManager()
+{
+	for (auto se : seHandles_)
+	{
+		DeleteSoundMem(se.second);
+	}
 }
 
 void SEManager::Init()
