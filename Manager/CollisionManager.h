@@ -23,6 +23,6 @@ public:
     static void PlayerBulletsVsEnemies(std::vector<std::shared_ptr<Bullet>>& bullets,std::vector<std::shared_ptr<Enemy>>& enemies);
 
     //“G’e ~ ƒvƒŒƒCƒ„[
-    static bool EnemyBulletsVsPlayer(std::vector<std::shared_ptr<Bullet>>& bullets,Player& player);
+    static Bullet* EnemyBulletsVsPlayer(std::vector<std::shared_ptr<Bullet>>& bullets,Player& player);
 };
 

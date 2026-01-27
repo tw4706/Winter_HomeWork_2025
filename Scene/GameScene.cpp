@@ -187,17 +187,19 @@ void GameScene::NormalUpdate(Input& input)
 	bool tookDamage = false;
 
 	//“G’e‚Æ‚Ì”»’è
-	bool isHitEnemyBullet = CollisionManager::EnemyBulletsVsPlayer(bulletManager_.GetBullets(), *pPlayer_);
-	if (isHitEnemyBullet)
+	Bullet* hitBullet =CollisionManager::EnemyBulletsVsPlayer(bulletManager_.GetBullets(), *pPlayer_);
+	if (hitBullet)
 	{
+		pPlayer_->OnDamage(hitBullet->GetPos().x);
+		hitBullet->OnHit();
 		tookDamage = true;
 	}
 
 	//“G‚Æ‚Ì“–‚½‚è”»’è
 	Enemy* hitEnemy = CollisionManager::PlayerVsEnemies(pPlayer_->GetColRect(), enemyFactory_.GetEnemies());
-	if (hitEnemy)
+	if (hitEnemy && !pPlayer_->IsDead())
 	{
-		pPlayer_->OnDamage();
+		pPlayer_->OnDamage(hitEnemy->GetPos().x);
 		tookDamage = true;
 	}
 
@@ -221,7 +223,7 @@ void GameScene::NormalUpdate(Input& input)
 			if (CollisionManager::PlayerVsBoss2(
 				pPlayer_->GetColRect(), *boss2))
 			{
-				pPlayer_->OnDamage();
+				pPlayer_->OnDamage(boss2->GetPos().x);
 				tookDamage = true;
 			}
 		}
@@ -231,7 +233,7 @@ void GameScene::NormalUpdate(Input& input)
 		{
 			if (boss2->GetPunchRect().IsCollision(pPlayer_->GetColRect()))
 			{
-				pPlayer_->OnDamage();
+				pPlayer_->OnDamage(boss2->GetPos().x);
 				tookDamage = true;
 
 				// ‚±‚Ìƒpƒ“ƒ`‚Å‚Í‚à‚¤“–‚½‚ç‚È‚¢

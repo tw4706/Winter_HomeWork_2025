@@ -113,20 +113,19 @@ void CollisionManager::PlayerBulletsVsEnemies(
 }
 
 //“G’e‚ÆƒvƒŒƒCƒ„[
-bool CollisionManager::EnemyBulletsVsPlayer(
+Bullet* CollisionManager::EnemyBulletsVsPlayer(
     std::vector<std::shared_ptr<Bullet>>& bullets,
     Player& player)
 {
     for (auto& bullet : bullets)
     {
-        if (!bullet->IsAlive()|| bullet->IsPlayerBullet()) continue;
+        if (!bullet->IsAlive()) continue;
+        if (bullet->IsPlayerBullet()) continue;
 
         if (bullet->GetColRect().IsCollision(player.GetColRect()))
         {
-            bullet->OnHit();
-            player.OnDamage();
-            return true;
+            return bullet.get();
         }
     }
-    return false;
+    return nullptr;
 }

@@ -607,7 +607,7 @@ void Player::Shot(Input& input, BulletManager& bm)
 }
 
 //ダメージを受けたときの処理
-void Player::OnDamage()
+void Player::OnDamage(float attackX)
 {
 	if (controlMode_ == PlayerControl::AutoWalking) return;
 	if (!isAlive_) return;
@@ -627,7 +627,7 @@ void Player::OnDamage()
 	damageTimer_ = kDamageDuration;
 
 	//向きに応じて横方向のノックバック
-	if (isTurn_)
+	if (pos_.x < attackX)
 	{
 		vel_.x = -kKnockBackX;
 	}
