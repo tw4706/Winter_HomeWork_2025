@@ -27,6 +27,11 @@ namespace
 
 	//エフェクト表示位置のオフセット
 	constexpr int kEffectOffsetY = 48;
+	constexpr int kGraphWidth = 128;
+	constexpr int kGraphHeight = 128;
+	constexpr int kFrameCount = 4;
+	constexpr int kFrameInterval = 10;
+	constexpr float kScale = 2.0f;
 }
 
 void GameOverScene::FadeInUpdate(Input&)
@@ -140,7 +145,7 @@ void GameOverScene::FadeDraw()
 	//フェード
 	int alpha = (frame_ * 255) / kFadeDuration;
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
-	DrawBox(0, 0, Game::kScreenWidth, Game::kScreenHeight, GetColor(0, 0, 0), true);
+	DrawBox(0, 0, Game::kScreenWidth, Game::kScreenHeight, 0x000000, true);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 }
 
@@ -156,15 +161,15 @@ void GameOverScene::NormalDraw()
 	// 選択肢を描画
 	for (int i = 0; i < kOptionCount; ++i)
 	{
-		int color = (i == selectIdx_) ? GetColor(255, 255, 0) : GetColor(255, 255, 255);
+		int color = (i == selectIdx_) ? 0xffff00 :0xffffff;
 
-		DrawStringToHandle(550+ text_offset, 350 + i * 80+ text_offset, kOptions[i], GetColor(0,0,0), fontOptionHandle_);
+		DrawStringToHandle(550+ text_offset, 350 + i * 80+ text_offset, kOptions[i], 0x000000, fontOptionHandle_);
 		DrawStringToHandle(550, 350 + i * 80, kOptions[i], color, fontOptionHandle_);
 	}
 	//選択するカーソルを上下に揺らす
 	float cursorOffset = sinf(frame_ * 0.15f) * 5.0f;
 
-	DrawRotaGraph(500, 370 + selectIdx_ * 80 + static_cast<int>(cursorOffset), 2.0f, DX_PI / 2.0f, selectHandle_, true);
+	DrawRotaGraph(500, 370 + selectIdx_ * 80 + static_cast<int>(cursorOffset), 2.0f, DX_PI_F / 2.0f, selectHandle_, true);
 
 	int startX = kScreenCenterX - (static_cast<int>(gameOverText_.size()) * kCharWidth) / 2;
 
@@ -180,14 +185,14 @@ void GameOverScene::NormalDraw()
 			startX + static_cast<int>(i) * kCharWidth + text_offset,
 			kTextY + text_offset + static_cast<int>(shake),
 			s,
-			GetColor(0, 0, 0),
+			0x000000,
 			fontHandle_);
 
 		DrawStringToHandle(
 			startX + static_cast<int>(i) * kCharWidth,
 			kTextY + static_cast<int>(shake),
 			s,
-			GetColor(255, 255, 0),
+			0xffff00,
 			fontHandle_);
 	}
 
@@ -228,7 +233,7 @@ void GameOverScene::Init()
 	playerDeadGraphHandle_ = LoadGraph("data/Player/Dead.png");
 	pAnimation_ = std::make_shared<Animation>(
 		playerDeadGraphHandle_,
-		128, 128, 4, 10, 2.0f, false, 0);
+		kGraphWidth, kGraphHeight, kFrameCount, kFrameInterval, kScale, false, 0);
 
 	gameOverText_ = "GAME OVER";
 	charVisible_.assign(gameOverText_.size(), false);

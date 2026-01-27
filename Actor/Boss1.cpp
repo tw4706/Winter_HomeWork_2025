@@ -113,7 +113,7 @@ namespace
 	constexpr float kFlySpeed = 0.4f;
 	constexpr float kComeBackPos = 0.5f;//プレイヤーが近づいた時の逃げる速度
 	constexpr float kDistance = 200.0f;
-	constexpr float kMoveHoverSpeed = 0.06f;
+	constexpr float kMoveHoverSpeed = 0.08f;
 	constexpr float kMoveHoverPower = 1.0f;
 	constexpr float kOverlapAvoidDistance = 30.0f;
 	constexpr int   kEscapeTime = 40;
