@@ -67,3 +67,13 @@ void SpriteAnimation::Reset()
     currentFrame_ = 0;
     frameTimer_ = 0;
 }
+
+bool SpriteAnimation::IsFinished()
+{
+    if (isLoop_)
+    {
+        return false;
+    }
+
+    return currentFrame_ >= frameCount_ - 1;
+}

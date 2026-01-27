@@ -18,9 +18,9 @@ Input::Input() :inputData_{}, lastInputData_{}, inputTable_{}
 	inputTable_["jump"] = { {PeripheralType::keyboard,KEY_INPUT_SPACE},
 							{PeripheralType::pad1,PAD_INPUT_A} };
 	inputTable_["changeWeaponLeft"] = { { PeripheralType::keyboard, KEY_INPUT_C },
-							{ PeripheralType::pad1, PAD_INPUT_R } };
+							{ PeripheralType::pad1, PAD_INPUT_Y } };
 	inputTable_["changeWeaponRight"] = { { PeripheralType::keyboard, KEY_INPUT_V },
-							{ PeripheralType::pad1, PAD_INPUT_L } };
+							{ PeripheralType::pad1, PAD_INPUT_Z } };
 	inputTable_["pause"] = { { PeripheralType::keyboard, KEY_INPUT_P },
 						{ PeripheralType::pad1, PAD_INPUT_L } };
 	inputTable_["debug_warp"] ={{ PeripheralType::keyboard, KEY_INPUT_F1 }};

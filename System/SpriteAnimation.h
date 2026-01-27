@@ -19,6 +19,8 @@ public:
     void Draw(float x, float y, bool flip = false);
     void Reset();
 
+    bool IsFinished();
+
 private:
     int handle_;
     int frameW_;

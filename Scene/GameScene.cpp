@@ -326,6 +326,28 @@ void GameScene::NormalUpdate(Input& input)
 
 void GameScene::FadeOutUpdate(Input&)
 {
+	for (auto& hp : hpUIs_)
+	{
+		if (hp.isBroken)
+			hp.anim->Update();
+	}
+
+	//HPUI‚ªI‚í‚Á‚½‚©‚Ç‚¤‚©‚ð•Ô‚·ƒtƒ‰ƒO
+	bool isHpAnimFinished = true;
+	for (auto& hp : hpUIs_)
+	{
+		if (hp.isBroken && !hp.anim->IsFinished())
+		{
+			isHpAnimFinished = false;
+			break;
+		}
+	}
+
+	if (!isHpAnimFinished)
+	{
+		return;
+	}
+
 	if (frame_++ >= fade_interval)
 	{
 		if (stageType_ == StageType::Tutorial)

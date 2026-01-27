@@ -350,17 +350,24 @@ void Player::Update(Input& input, BulletManager& bm, StageType stage)
 		Application::GetInstance().GetSEManager().PlaySE(SE::WeaponChange);
 
 		int next = static_cast<int>(currentBulletType_);
-		next = static_cast<int>(currentBulletType_) + 1;
+
+		//左に切り替えるときは減らす
+		next--;
+
+		if (next < 0)
+		{
+			next = kBulletNum - 1;
+		}
 
 		//たいまつが未解放ならスキップ
-		if (static_cast<BulletType>(next) == BulletType::Torch &&
-			!isUnlockedTorch_)
+		if (static_cast<BulletType>(next) == BulletType::Torch && !isUnlockedTorch_)
 		{
-			return;
+			next = static_cast<int>(isUnlockedTorch_ ? BulletType::Torch : BulletType::Knife);
 		}
 
 		currentBulletType_ = static_cast<BulletType>(next);
-		//チュートリアル用のフラグを立てる
+
+		//チュートリアル用フラグ
 		OnTutorialAction(TutorialAction::WeaponChange);
 	}
 	else if (input.IsTriggered("changeWeaponRight"))
@@ -368,17 +375,23 @@ void Player::Update(Input& input, BulletManager& bm, StageType stage)
 		Application::GetInstance().GetSEManager().PlaySE(SE::WeaponChange);
 
 		int next = static_cast<int>(currentBulletType_);
-		next = static_cast<int>(currentBulletType_) - 1;
+
+		//右に切り替えるときは増やす
+		next++;
+
+		if (next >= kBulletNum)
+		{
+			next = 1;
+		}
 
 		//たいまつが未解放ならスキップ
-		if (static_cast<BulletType>(next) == BulletType::Torch &&
-			!isUnlockedTorch_)
+		if (static_cast<BulletType>(next) == BulletType::Torch && !isUnlockedTorch_)
 		{
-			return;
+			next = 0; //Knifeに戻す
 		}
 
 		currentBulletType_ = static_cast<BulletType>(next);
-		//チュートリアル用のフラグを立てる
+
 		OnTutorialAction(TutorialAction::WeaponChange);
 	}
 

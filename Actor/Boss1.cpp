@@ -105,7 +105,7 @@ namespace
 	constexpr float kTargetYOffset = 150.0f;
 	constexpr float kFollowRate = 0.02f;
 	constexpr float kShotCoolTime = 2.0f;
-	constexpr float kFrameTime = 1.0f / 55.0f;
+	constexpr float kFrameTime = 1.0f / 60.0f;
 
 	//========================
 	// MoveŠÖ˜A
