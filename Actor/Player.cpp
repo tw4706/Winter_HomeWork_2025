@@ -47,7 +47,7 @@ namespace
 	constexpr int kGraphHalfWidth = 48;
 	constexpr int kGraphHalfHeight = 64;
 	constexpr float kGraphColSize = 64.0f;
-	constexpr float kGraphColSizeW = 32.0f;
+	constexpr float kGraphColSizeW = 24.0f;
 	constexpr float kGraphColSizeH = 80.0f;
 	//当たり判定の調整用
 	constexpr int kColYOffset = 32;
@@ -481,7 +481,6 @@ void Player::Jump(Input& input)
 {
 	if (input.IsTriggered("jump"))
 	{
-		Application::GetInstance().GetSEManager().PlaySE(SE::PlayerJump);
 		// 通常ジャンプ
 		if (isGround_)
 		{
@@ -489,6 +488,7 @@ void Player::Jump(Input& input)
 			isGround_ = false;
 			isDoubleJumping_ = true;
 			landingTimer_ = 0;
+			Application::GetInstance().GetSEManager().PlaySE(SE::PlayerJump);
 
 			// 離陸フレームを即表示
 			animations_[static_cast<int>(PlayerState::Jump)]->SetFrame(kJumpTakeoffFrame);
@@ -501,6 +501,7 @@ void Player::Jump(Input& input)
 		{
 			vel_.y = -kDoubleJumpPower;
 			isDoubleJumping_ = false;
+			Application::GetInstance().GetSEManager().PlaySE(SE::PlayerJump);
 			OnTutorialAction(TutorialAction::DoubleJump);
 		}
 	}

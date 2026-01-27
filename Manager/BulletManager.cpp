@@ -108,7 +108,7 @@ bool BulletManager::IsOutOfScreen(const std::shared_ptr<Bullet>& bullet) const
 	// ‰æ–Ê‹éŒ` + —]”’
 	if (pos.x < screenRect_.GetLeft() - kMargin) return true;
 	if (pos.x > screenRect_.GetRight() + kMargin) return true;
-	if (pos.y < screenRect_.GetTop() - kMargin) return true;
+	if (pos.y < screenRect_.GetTop() - kMargin * 30) return true;
 	if (pos.y > screenRect_.GetBottom() + kMargin) return true;
 
 	return false;

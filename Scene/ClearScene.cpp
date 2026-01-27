@@ -14,6 +14,9 @@ namespace
 {
 	constexpr int kFadeDuration = 60;
 
+	//========================
+	// 描画関連
+	//========================
 	//ゲームクリアの文字表示位置など
 	constexpr int kFontSize = 96;
 	constexpr int kCharWidth = 96;
@@ -22,7 +25,6 @@ namespace
 
 	//エフェクト表示位置のオフセット
 	constexpr int kEffectOffsetY = 48;
-
 	constexpr int kTextOffset = 4;
 }
 

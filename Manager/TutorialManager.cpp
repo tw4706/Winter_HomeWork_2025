@@ -39,8 +39,8 @@ namespace
 	// =============================
 	constexpr int   kGoalFrameW = 16;
 	constexpr int   kGoalFrameH = 16;
-	constexpr int   kGoalFrameCount = 6;
-	constexpr int   kGoalAnimInterval = 7;
+	constexpr int   kGoalFrameCount = 5;
+	constexpr int   kGoalAnimInterval = 6;
 	constexpr float kGoalAnimScale = 7.0f;
 	constexpr int   kGoalSrcX = 496;
 	constexpr int   kGoalSrcY = 0;
@@ -111,35 +111,28 @@ void TutorialManager::Init()
 	textFrameHandle_ = LoadGraph("data/UI/TutorialFrame.png");
 	textButtonHandle_ = LoadGraph("data/UI/gdb-switch-2.png");
 
-	goalRect_.SetLT(kGoalPosX,kGoalPosY,kGoalSize,kGoalSize);
+	goalRect_.SetLT(kGoalPosX, kGoalPosY, kGoalSize, kGoalSize);
 
 	int goalHandle = LoadGraph("data/Effect/bullet_effect.png");
 
 	goalAnim_ = std::make_unique<SpriteAnimation>(
 		goalHandle,
-		kGoalFrameW,kGoalFrameH,
-		kGoalFrameCount,kGoalAnimInterval,
-		kGoalAnimScale,kGoalSrcX,kGoalSrcY,true);
+		kGoalFrameW, kGoalFrameH,
+		kGoalFrameCount, kGoalAnimInterval,
+		kGoalAnimScale, kGoalSrcX, kGoalSrcY, true);
 
 	buttonAnim_ = std::make_unique<SpriteAnimation>(
 		textButtonHandle_,
-		kButtonFrameW,kButtonFrameH,
-		kButtonFrameCount,kButtonAnimInterval,
-		kButtonAnimScale,kButtonSrcW,kButtonSrcH,true);
-	fontHandle_ = CreateFontToHandle("g_コミックホラー悪党-教漢",kFontSize,kFontThickness,kFontType);
+		kButtonFrameW, kButtonFrameH,
+		kButtonFrameCount, kButtonAnimInterval,
+		kButtonAnimScale, kButtonSrcW, kButtonSrcH, true);
+	fontHandle_ = CreateFontToHandle("g_コミックホラー悪党-教漢", kFontSize, kFontThickness, kFontType);
 }
 
 void TutorialManager::Update(Player& player, Input& input)
 {
-	if (goalAnim_)
-	{
-		goalAnim_->Update();
-	}
-
-	if (buttonAnim_)
-	{
-		buttonAnim_->Update();
-	}
+	goalAnim_->Update();
+	buttonAnim_->Update();
 
 	if (currentStep_ >= kTutorialCount) return;
 
@@ -205,36 +198,36 @@ void TutorialManager::Draw(const Camera& camera)
 
 	if (!waitingMessage_) return;
 
-	float rate =static_cast<float>(appearFrame_) / kAppearInterval;
+	float rate = static_cast<float>(appearFrame_) / kAppearInterval;
 	if (rate > 1.0f) rate = 1.0f;
 
 	rate *= rate;
 
 	int alpha = static_cast<int>(kMaxAlpha * rate);
-	int slideY =static_cast<int>((1.0f - rate) * kSlideDistance);
+	int slideY = static_cast<int>((1.0f - rate) * kSlideDistance);
 
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
 
 	// ===== フレーム =====
-	DrawExtendGraph(kFrameX,kFrameY + slideY,
-		kFrameX + kFrameWidth,kFrameY + kFrameHeight + slideY,
-		textFrameHandle_,TRUE);
+	DrawExtendGraph(kFrameX, kFrameY + slideY,
+		kFrameX + kFrameWidth, kFrameY + kFrameHeight + slideY,
+		textFrameHandle_, TRUE);
 
 	// ===== テキスト =====
-	int textX =kFrameX + kTextLeftPadding + kTextOffsetX;
-	int textY =kFrameY +(kFrameHeight - kTextHeight) / 2 +kTextOffsetY + slideY;
+	int textX = kFrameX + kTextLeftPadding + kTextOffsetX;
+	int textY = kFrameY + (kFrameHeight - kTextHeight) / 2 + kTextOffsetY + slideY;
 
-	DrawStringToHandle(textX,textY,
-		waitingMessage_,GetColor(255, 255, 255),fontHandle_);
+	DrawStringToHandle(textX, textY,
+		waitingMessage_, GetColor(255, 255, 255), fontHandle_);
 
 	// ===== ボタン =====
 	if (buttonAnim_)
 	{
-		int buttonX =kFrameX + kFrameWidth -kButtonPaddingRight -kButtonSize -kButtonOffsetX;
+		int buttonX = kFrameX + kFrameWidth - kButtonPaddingRight - kButtonSize - kButtonOffsetX;
 
-		int buttonY =kFrameY +(kFrameHeight - kButtonSize) / 2 +kButtonYOffset + slideY;
+		int buttonY = kFrameY + (kFrameHeight - kButtonSize) / 2 + kButtonYOffset + slideY;
 
-		buttonAnim_->Draw(static_cast<float>(buttonX),static_cast<float>(buttonY));
+		buttonAnim_->Draw(static_cast<float>(buttonX), static_cast<float>(buttonY));
 	}
 
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);

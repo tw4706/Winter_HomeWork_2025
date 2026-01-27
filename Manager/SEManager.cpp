@@ -6,7 +6,7 @@ namespace
 {// ==============================
 // ‰¹—ÊŠÖ˜AŠÖ˜A
 // ==============================
-	constexpr int kDefaultSEVolume = 60;
+	constexpr int kDefaultSEVolume = 100;
 	constexpr int kVolumeMin = 0;
 	constexpr int kVolumeMax = 100;
 	constexpr int kDxVolumeMax = 255;
