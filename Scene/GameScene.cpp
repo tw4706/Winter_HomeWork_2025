@@ -201,12 +201,6 @@ void GameScene::NormalUpdate(Input& input)
 		tookDamage = true;
 	}
 
-	//HPUI更新
-	if (tookDamage)
-	{
-		OnDamagedHpUI();
-	}
-
 	auto boss1 = enemyFactory_.GetBoss1();
 	if (boss1 && boss1->IsDeadAnimFinished() && clearState_ == ClearState::None)
 	{
@@ -231,6 +225,25 @@ void GameScene::NormalUpdate(Input& input)
 				tookDamage = true;
 			}
 		}
+
+		//ボスのパンチとプレイヤーの当たり判定
+		if (boss2->IsPunchActive() && !boss2->HasPunchHit())
+		{
+			if (boss2->GetPunchRect().IsCollision(pPlayer_->GetColRect()))
+			{
+				pPlayer_->OnDamage();
+				tookDamage = true;
+
+				// このパンチではもう当たらない
+				boss2->SetPunchHit();
+			}
+		}
+	}
+
+	//HPUI更新
+	if (tookDamage)
+	{
+		OnDamagedHpUI();
 	}
 
 	//ボスを倒すとクリアシーンに遷移する

@@ -71,6 +71,7 @@ namespace
 	constexpr float kScale = 4.0f;
 	constexpr float kColWidth = 120.0f;
 	constexpr float kColHeight = 120.0f;
+	constexpr float kColPosOffsetX = 20.0f;
 
 	//========================
 	// ステータス関連
@@ -102,10 +103,10 @@ namespace
 	constexpr float kBulletSpeed = 3.0f;
 	constexpr int kMaxShotCount = 1;
 	constexpr float kShotInterval = 5.0f;
-	constexpr float kTargetYOffset = 150.0f;
+	constexpr float kTargetYOffset = 80.0f;
 	constexpr float kFollowRate = 0.02f;
 	constexpr float kShotCoolTime = 2.0f;
-	constexpr float kFrameTime = 1.0f / 60.0f;
+	constexpr float kFrameTime = 1.0f / 70.0f;
 
 	//========================
 	// Move関連
@@ -170,7 +171,7 @@ void Boss1::Update()
 	}
 
 	//当たり判定更新
-	colRect_.SetCenter(pos_.x, pos_.y, kColWidth, kColHeight);
+	colRect_.SetCenter(pos_.x - kColPosOffsetX, pos_.y, kColWidth, kColHeight);
 
 	switch (currentState_)
 	{

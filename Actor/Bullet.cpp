@@ -21,7 +21,7 @@ namespace
 	constexpr float kHalfColSize = 32;
 	constexpr float KEnemyBulletScale = 2.0f;
 	constexpr float KBossBulletScale = 3.0f;
-	constexpr int kColOffsetX = 20;
+	constexpr int kColOffsetX = 50;
 	constexpr int kColOffsetY = 20;
 	constexpr int kScreenOutOffset = 100;	//âÊñ äOîªíËóp
 
@@ -58,7 +58,7 @@ namespace
 	// Torchä÷òA
 	//========================
 	constexpr float kTorchGravity = 0.3f;
-	constexpr float kTorchWaveOffsetY = 20.0f;
+	constexpr float kTorchWaveOffsetY = 15.0f;
 	constexpr int kTorchLandSrcW = 128;
 	constexpr int kTorchLandSrcH = 32;
 	constexpr int kTorchLandFrameW = 16;
@@ -199,8 +199,20 @@ void Bullet::Update(Input& input, std::vector<std::shared_ptr<Enemy>>& enemies)
 	// ìGíeÇÕà⁄ìÆÇæÇØ
 	if (bulletType_ == BulletType::EnemyBullet||bulletType_ == BulletType::Boss1Bullet)
 	{
+		float offsetX = (vel_.x >= 0) ? kColOffsetX : -kColOffsetX;
+
 		pos_ += vel_;
-		colRect_.SetCenter(pos_.x-kColOffsetX, pos_.y,colSize_, colSize_);
+		if (bulletType_ == BulletType::Boss1Bullet)
+		{
+			//É{ÉXÇÃíeÇæÇØìñÇΩÇËîªíËÇè≠ÇµëOÇ…Ç∑ÇÈ
+			float offsetX = (vel_.x >= 0) ? kColOffsetX : -kColOffsetX;
+			colRect_.SetCenter(pos_.x + offsetX, pos_.y, colSize_, colSize_);
+		}
+		else
+		{
+			//í èÌÇÃìGÇÃíeÇÕÇªÇÃÇ‹Ç‹ï`âÊ
+			colRect_.SetCenter(pos_.x, pos_.y, colSize_, colSize_);
+		}
 		UpdateShot();
 		return;
 	}
