@@ -64,7 +64,7 @@ public:
 	void SetPos(const Vector2& pos) { pos_ = pos; }
 
 	//ƒ_ƒ[ƒW‚ğó‚¯‚½‚Ìˆ—
-	void OnDamage(float enemyX);
+	void OnDamage();
 
 	void Dead();
 	bool IsDead()const { return !isAlive_; }

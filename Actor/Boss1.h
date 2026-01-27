@@ -24,8 +24,6 @@ public:
 
     void LoadResources() override;
 
-	void OnHit(int damage) override;
-
 protected:
     void UpdateIdle() override;
     void UpdateAttack() override;
@@ -34,10 +32,10 @@ protected:
     int GetGraphIndex(BossState state) const override;
 
 private:
-    int escapeTimer_;//逃走用タイマー
-    int knockbackDir_;//ノックバックの方向
+    int escapeTimer_;       //プレイヤーに近づいた際によける用タイマー
+    int knockbackDir_;      //ノックバックの方向
     int shotCount_;
-    Vector2 chargeVel_;   //突進速度
+    Vector2 chargeVel_;     //突進速度
     Boss1Type type_;
 };
 

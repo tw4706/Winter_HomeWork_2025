@@ -23,7 +23,7 @@ namespace
 	constexpr char kCancelSEPath[] = "data/BGM・SE/cancel.mp3";
 	constexpr char kSelectSEPath[] = "data/BGM・SE/cursorMove.mp3";
 	constexpr char kShotSEPath[] = "data/BGM・SE/shot.wav";
-	constexpr char kPlayerJumpSEPath[] = "data/BGM・SE/playerJump.wav";
+	constexpr char kPlayerJumpSEPath[] = "data/BGM・SE/playerJump.mp3";
 	constexpr char kPlayerWalkSEPath[] = "data/BGM・SE/playeWalk.mp3";
 	constexpr char kDeathSEPath[] = "data/BGM・SE/death.mp3";
 	constexpr char kWaveSEPath[] = "data/BGM・SE/wave.mp3";

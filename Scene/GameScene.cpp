@@ -22,7 +22,7 @@
 #include<cassert>
 #include<Dxlib.h>
 
-namespace 
+namespace
 {
 	//プレイヤーのスポーン位置
 	constexpr float kPlayerSpawnPosX = 200.0f;
@@ -83,7 +83,7 @@ void GameScene::FadeInUpdate(Input&)
 {
 	pCamera_->Update(pPlayer_);
 
-	if (frame_-- <= 0) 
+	if (frame_-- <= 0)
 	{
 		update_ = &GameScene::NormalUpdate;
 		draw_ = &GameScene::NormalDraw;
@@ -91,7 +91,7 @@ void GameScene::FadeInUpdate(Input&)
 	}
 }
 
-void GameScene::NormalUpdate(Input&input)
+void GameScene::NormalUpdate(Input& input)
 {
 	//ポーズボタンを押したらポーズシーンに遷移
 	if (input.IsTriggered("pause"))
@@ -134,7 +134,7 @@ void GameScene::NormalUpdate(Input&input)
 	//各クラスの更新
 	pCamera_->Update(pPlayer_);
 
-	pPlayer_->Update(input, bulletManager_,stageType_);
+	pPlayer_->Update(input, bulletManager_, stageType_);
 
 	if (tutorialManager_)
 	{
@@ -156,17 +156,14 @@ void GameScene::NormalUpdate(Input&input)
 	effectManager_.Update();
 
 	//プレイヤーの弾 × 敵の当たり判定(ボスのOnHitは専用なので個別で当たり判定をする)
-	CollisionManager::PlayerBulletsVsEnemies(bulletManager_.GetBullets(),enemyFactory_.GetEnemies());
+	CollisionManager::PlayerBulletsVsEnemies(bulletManager_.GetBullets(), enemyFactory_.GetEnemies());
 
 	auto boss2 = enemyFactory_.GetBoss2();
 	if (boss2)
 	{
 		CollisionManager::PlayerBulletsVsBoss2(
-			bulletManager_.GetBullets(),*boss2);
+			bulletManager_.GetBullets(), *boss2);
 	}
-
-	//敵の弾 × プレイヤーの当たり判定
-	CollisionManager::EnemyBulletsVsPlayer(bulletManager_.GetBullets(),*pPlayer_);
 
 	//プレイヤーが死亡していて死亡アニメーションが終了している場合はゲームオーバーシーンへ遷移
 	if (pPlayer_->IsDead() && pPlayer_->IsDeadAnimFinished())
@@ -182,22 +179,31 @@ void GameScene::NormalUpdate(Input&input)
 			update_ = &GameScene::FadeOutUpdate;
 			draw_ = &GameScene::FadeDraw;
 			frame_ = 0;
+			return;
 		}
-		return;
+	}
+	
+	bool tookDamage = false;
+
+	//敵弾との判定
+	bool isHitEnemyBullet = CollisionManager::EnemyBulletsVsPlayer(bulletManager_.GetBullets(), *pPlayer_);
+	if (isHitEnemyBullet)
+	{
+		tookDamage = true;
 	}
 
-	//プレイヤーと敵の当たり判定
-	Enemy* hitEnemy = CollisionManager::PlayerVsEnemies(pPlayer_->GetColRect(),enemyFactory_.GetEnemies());
-
-	//敵に当たっていてプレイヤーが死んでいない場合ダメージ処理を行う
-	//ただしボス2の場合は当たり判定が別途あるため除外する
-	if (hitEnemy && !pPlayer_->IsDead())
+	//敵との当たり判定
+	Enemy* hitEnemy = CollisionManager::PlayerVsEnemies(pPlayer_->GetColRect(), enemyFactory_.GetEnemies());
+	if (hitEnemy)
 	{
-		if (dynamic_cast<Boss2*>(hitEnemy) == nullptr)
-		{
-			pPlayer_->OnDamage(hitEnemy->GetPos().x);
-			OnDamagedHpUI();
-		}
+		pPlayer_->OnDamage();
+		tookDamage = true;
+	}
+
+	//HPUI更新
+	if (tookDamage)
+	{
+		OnDamagedHpUI();
 	}
 
 	auto boss1 = enemyFactory_.GetBoss1();
@@ -220,7 +226,8 @@ void GameScene::NormalUpdate(Input&input)
 			if (CollisionManager::PlayerVsBoss2(
 				pPlayer_->GetColRect(), *boss2))
 			{
-				pPlayer_->OnDamage(boss2->GetPos().x);
+				pPlayer_->OnDamage();
+				tookDamage = true;
 			}
 		}
 	}
@@ -317,11 +324,11 @@ void GameScene::NormalUpdate(Input&input)
 #endif
 }
 
-void GameScene::FadeOutUpdate(Input&) 
+void GameScene::FadeOutUpdate(Input&)
 {
 	if (frame_++ >= fade_interval)
 	{
-		if (stageType_==StageType::Tutorial)
+		if (stageType_ == StageType::Tutorial)
 		{
 			controller_.ChangeScene(std::make_shared<GameOverScene>(controller_, StageType::Tutorial));
 		}
@@ -339,11 +346,11 @@ void GameScene::GoalFadeOutUpdate(Input&)
 	{
 		//次のステージを取得
 		StageType next = GetNextStageType(stageType_);
-		controller_.ChangeScene(std::make_shared<GameScene>(controller_,next));
+		controller_.ChangeScene(std::make_shared<GameScene>(controller_, next));
 	}
 }
 
-void GameScene::FadeDraw() 
+void GameScene::FadeDraw()
 {
 	NormalDraw();
 
@@ -354,7 +361,7 @@ void GameScene::FadeDraw()
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);//ブレンドしない
 }
 
-void GameScene::NormalDraw() 
+void GameScene::NormalDraw()
 {
 	Vector2 cameraOffset = pCamera_->GetOffset();
 
@@ -387,7 +394,6 @@ void GameScene::NormalDraw()
 
 	if (isTorchMessageActive_ && stageTextTimer_ <= 0)
 	{
-
 		const char* message = "松明を解放しました！";
 
 		//文字幅を取得して中央に表示
@@ -489,7 +495,7 @@ void GameScene::Init()
 {
 	hpHandle_ = LoadGraph("data/UI/Life.png");
 	fontHandle_ = CreateFontToHandle("g_コミックホラー悪党-教漢", 72, -1, -1);
-	fontTorchTextHandle_= CreateFontToHandle("g_コミックホラー悪党-教漢", 24, -1, -1);
+	fontTorchTextHandle_ = CreateFontToHandle("g_コミックホラー悪党-教漢", 24, -1, -1);
 
 	//ゲーム進行状況の取得
 	gameProgress_ = &controller_.GetProgress();
@@ -591,14 +597,16 @@ void GameScene::Draw()
 void GameScene::OnDamagedHpUI()
 {
 	int hp = pPlayer_->GetHp();
-	int index = hp;
 
-	if (index >= 0 && index < 3)
+	for (int i = 2; i >= 0; i--)
 	{
-		if (!hpUIs_[index].isBroken)
+		if (i >= hp)
 		{
-			hpUIs_[index].isBroken = true;
-			hpUIs_[index].anim->Reset();
+			if (!hpUIs_[i].isBroken)
+			{
+				hpUIs_[i].isBroken = true;
+				hpUIs_[i].anim->Reset();
+			}
 		}
 	}
 }
@@ -608,13 +616,13 @@ StageType GameScene::GetNextStageType(StageType nextStage)
 {
 	switch (nextStage)
 	{
-	case StageType::Tutorial: 
+	case StageType::Tutorial:
 		return StageType::Stage1;
-	case StageType::Stage1:   
+	case StageType::Stage1:
 		return StageType::Stage2;
-	case StageType::Stage2:   
+	case StageType::Stage2:
 		return StageType::Stage3;
-	default:                 
+	default:
 		return nextStage;
 	}
 }

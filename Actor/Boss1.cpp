@@ -105,7 +105,7 @@ namespace
 	constexpr float kTargetYOffset = 150.0f;
 	constexpr float kFollowRate = 0.02f;
 	constexpr float kShotCoolTime = 2.0f;
-	constexpr float kFrameTime = 1.0f / 60.0f;
+	constexpr float kFrameTime = 1.0f / 55.0f;
 
 	//========================
 	// MoveŠÖ˜A
@@ -140,7 +140,6 @@ Boss1::Boss1(Vector2 pos, Vector2 vel,
 	{
 		hp_ = KNormalBoss1MaxHp;
 	}
-
 }
 
 Boss1::~Boss1()
@@ -207,15 +206,6 @@ void Boss1::LoadResources()
 	}
 }
 
-void Boss1::OnHit(int damage)
-{
-	Boss::OnHit(damage);
-
-	if (currentState_ == BossState::Dead) return;
-
-	knockbackDir_ = (pPlayer_->GetPos().x < pos_.x) ? 1 : -1;
-}
-
 void Boss1::UpdateIdle()
 {
 	stateTimer_++;
@@ -246,7 +236,6 @@ void Boss1::UpdateIdle()
 
 void Boss1::UpdateAttack()
 {
-
 	if (stateTimer_ == 0)
 	{
 		shotCount_ = 0;
@@ -321,7 +310,7 @@ void Boss1::UpdateHurt()
 
 	if (animations_[animIndex]->IsAnimFinished())
 	{
-		ChangeState(BossState::Idle);
+		ChangeState(BossState::Attack);
 	}
 }
 

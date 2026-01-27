@@ -20,7 +20,7 @@ enum class ClearState
 
 struct HpUI
 {
-	bool isBroken=false;
+	bool isBroken = false;
 	std::unique_ptr<SpriteAnimation> anim;
 };
 

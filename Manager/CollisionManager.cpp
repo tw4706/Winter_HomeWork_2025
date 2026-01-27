@@ -14,7 +14,7 @@ Enemy* CollisionManager::PlayerVsEnemies(const Rect& playerRect,const std::vecto
 
         if (playerRect.IsCollision(enemy->GetColRect()))
         {
-            return enemy.get(); //“–‚½‚Á‚½“G‚ð•Ô‚·
+            return enemy.get();//“–‚½‚Á‚½“G‚ð•Ô‚·
         }
     }
     return nullptr;
@@ -64,12 +64,6 @@ void CollisionManager::PlayerBulletsVsBoss2(std::vector<std::shared_ptr<Bullet>>
             }
         }
     }
-}
-
-//ƒvƒŒƒCƒ„[‚ÆŒ®‚Ì“–‚½‚è”»’è
-bool CollisionManager::PlayerVsKey(const Rect& playerRect,const Rect& keyRect)
-{
-    return playerRect.IsCollision(keyRect);
 }
 
 //ƒvƒŒƒCƒ„[’e‚Æ“G
@@ -125,13 +119,12 @@ bool CollisionManager::EnemyBulletsVsPlayer(
 {
     for (auto& bullet : bullets)
     {
-        if (!bullet->IsAlive()) continue;
-        if (bullet->IsPlayerBullet()) continue;
+        if (!bullet->IsAlive()|| bullet->IsPlayerBullet()) continue;
 
         if (bullet->GetColRect().IsCollision(player.GetColRect()))
         {
             bullet->OnHit();
-            player.OnDamage(bullet->GetPos().x);
+            player.OnDamage();
             return true;
         }
     }

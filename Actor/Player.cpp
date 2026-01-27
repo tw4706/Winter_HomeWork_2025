@@ -259,7 +259,7 @@ void Player::Update(Input& input, BulletManager& bm, StageType stage)
 		return;
 	}
 
-	colRect_.SetCenter(colX, pos_.y-kColPosYOffset,
+	colRect_.SetCenter(colX, pos_.y - kColPosYOffset,
 		kGraphColSizeW, kGraphColSizeH);
 
 	//状態遷移の更新
@@ -345,27 +345,39 @@ void Player::Update(Input& input, BulletManager& bm, StageType stage)
 		return;
 	}
 	//武器の切り替え
-	if (input.IsTriggered("changeWeapon"))
+	if (input.IsTriggered("changeWeaponLeft"))
 	{
 		Application::GetInstance().GetSEManager().PlaySE(SE::WeaponChange);
 
 		int next = static_cast<int>(currentBulletType_);
+		next = static_cast<int>(currentBulletType_) + 1;
 
-		//次の武器への切り替え
-		for (int i = 0; i < kBulletNum; i++)
+		//たいまつが未解放ならスキップ
+		if (static_cast<BulletType>(next) == BulletType::Torch &&
+			!isUnlockedTorch_)
 		{
-			next = (next + 1) % kBulletNum;
-
-			//たいまつが未解放ならスキップ
-			if (static_cast<BulletType>(next) == BulletType::Torch &&
-				!isUnlockedTorch_)
-			{
-				continue;
-			}
-
-			currentBulletType_ = static_cast<BulletType>(next);
-			break;
+			return;
 		}
+
+		currentBulletType_ = static_cast<BulletType>(next);
+		//チュートリアル用のフラグを立てる
+		OnTutorialAction(TutorialAction::WeaponChange);
+	}
+	else if (input.IsTriggered("changeWeaponRight"))
+	{
+		Application::GetInstance().GetSEManager().PlaySE(SE::WeaponChange);
+
+		int next = static_cast<int>(currentBulletType_);
+		next = static_cast<int>(currentBulletType_) - 1;
+
+		//たいまつが未解放ならスキップ
+		if (static_cast<BulletType>(next) == BulletType::Torch &&
+			!isUnlockedTorch_)
+		{
+			return;
+		}
+
+		currentBulletType_ = static_cast<BulletType>(next);
 		//チュートリアル用のフラグを立てる
 		OnTutorialAction(TutorialAction::WeaponChange);
 	}
@@ -441,15 +453,15 @@ void Player::Move(Input& input)
 		}
 		if (input.IsPressed("left"))
 		{
+			Application::GetInstance().GetSEManager().StopSE(SE::PlayerWalk);
 			vel_.x = -kSpeed;
 			isTurn_ = false;
-			Application::GetInstance().GetSEManager().PlaySE(SE::PlayerWalk);
 		}
 		else if (input.IsPressed("right"))
 		{
+			Application::GetInstance().GetSEManager().StopSE(SE::PlayerWalk);
 			vel_.x = kSpeed;
 			isTurn_ = true;
-			Application::GetInstance().GetSEManager().PlaySE(SE::PlayerWalk);
 		}
 		else
 		{
@@ -473,7 +485,6 @@ void Player::Move(Input& input)
 			vel_.x = 0.0f;
 		}
 	}
-	Application::GetInstance().GetSEManager().StopSE(SE::PlayerWalk);
 }
 
 //ジャンプ処理
@@ -517,8 +528,6 @@ void Player::Shot(Input& input, BulletManager& bm)
 	//攻撃処理
 	if (input.IsTriggered("shot") && shotTimer_ <= 0)
 	{
-		Application::GetInstance().GetSEManager().PlaySE(SE::Shot);
-
 		isAttacking_ = true;
 		attackTimer_ = kAttackDuration;
 		vel_ = { 0.0f,0.0f };
@@ -562,7 +571,7 @@ void Player::Shot(Input& input, BulletManager& bm)
 		}
 		else
 		{
-			bulletVel = isTurn_? Vector2{ config.speed, 0.0f }
+			bulletVel = isTurn_ ? Vector2{ config.speed, 0.0f }
 			: Vector2{ -config.speed, 0.0f };
 		}
 
@@ -572,6 +581,7 @@ void Player::Shot(Input& input, BulletManager& bm)
 		bullet->SetBg(pBg_);
 		bullet->SetDirection(isTurn_);
 		bm.Init(bullet);
+		Application::GetInstance().GetSEManager().PlaySE(SE::Shot);
 
 		OnTutorialAction(TutorialAction::Attack);
 
@@ -583,7 +593,7 @@ void Player::Shot(Input& input, BulletManager& bm)
 }
 
 //ダメージを受けたときの処理
-void Player::OnDamage(float enemyX)
+void Player::OnDamage()
 {
 	if (controlMode_ == PlayerControl::AutoWalking) return;
 	if (!isAlive_) return;
@@ -603,7 +613,7 @@ void Player::OnDamage(float enemyX)
 	damageTimer_ = kDamageDuration;
 
 	//向きに応じて横方向のノックバック
-	if (pos_.x < enemyX)
+	if (isTurn_)
 	{
 		vel_.x = -kKnockBackX;
 	}

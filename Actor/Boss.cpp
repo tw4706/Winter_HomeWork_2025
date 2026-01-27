@@ -243,7 +243,7 @@ void Boss::UpdateHurt()
 	int animIndex = GetGraphIndex(BossState::Hurt);
 	if (animations_[animIndex]->IsAnimFinished())
 	{
-		ChangeState(BossState::Idle);
+		ChangeState(BossState::Attack);
 	}
 }
 
@@ -278,6 +278,7 @@ void Boss::OnHit(int damage)
 {
 	Application::GetInstance().GetSEManager().PlaySE(SE::Hit);
 	if (currentState_ == BossState::Dead) return;
+	if (isHitInvincible_) return;
 
 	hp_ -= damage;
 	if (hp_ <= 0)

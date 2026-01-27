@@ -19,9 +19,6 @@ public:
 
     static void PlayerBulletsVsBoss2(std::vector<std::shared_ptr<Bullet>>& bullets, Boss2& boss);
 
-    //プレイヤー × 鍵
-    static bool PlayerVsKey(const Rect& playerRect,const Rect& keyRect);
-
     //プレイヤー弾 × 敵
     static void PlayerBulletsVsEnemies(std::vector<std::shared_ptr<Bullet>>& bullets,std::vector<std::shared_ptr<Enemy>>& enemies);
 

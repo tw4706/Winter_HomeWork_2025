@@ -164,8 +164,8 @@ void Bullet::UpdateShot()
 	case BulletType::Knife:
 		break;
 		//‘„
-	case BulletType::Lance:
 		//ŠÑ’Ê‚·‚é‚¾‚¯‚Å‰½‚à‚µ‚È‚¢
+	case BulletType::Lance:
 		break;
 	case BulletType::Torch:
 		vel_.y += kGravity;
