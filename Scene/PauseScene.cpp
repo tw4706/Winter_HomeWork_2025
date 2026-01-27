@@ -222,7 +222,7 @@ void PauseScene::NormalDraw()
 
 void PauseScene::MenuDraw()
 {
-	DrawItems(menuList_, selectIndex_, 0, "↑↓で選択 / 決定で進む");
+	DrawItems(menuList_, selectIndex_, 0, "↑↓で選ぶ / Aボタンですすむ");
 }
 
 void PauseScene::VolumeDraw()
@@ -232,7 +232,7 @@ void PauseScene::VolumeDraw()
 		"BGM : " + std::to_string(Application::GetInstance().GetBGMManager().GetVolume()),
 		"SE  : " + std::to_string(Application::GetInstance().GetSEManager().GetVolume()) };
 
-	DrawItems(volItems, volumeSelectIdx_, 20, "← →で調整 / 決定で戻る"); // 少し下にオフセット
+	DrawItems(volItems, volumeSelectIdx_, 20, "← →で調整 / Aボタンでもどる"); // 少し下にオフセット
 }
 
 void PauseScene::DrawItems(const std::vector<std::string>& items, int selectIdx, int yOffset, const char* guideText)

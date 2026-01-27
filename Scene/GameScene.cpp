@@ -447,8 +447,8 @@ void GameScene::DrawHpUI()
 
 	for (int i = 0; i < 3; i++)
 	{
-		float x = baseX + i * spacing;
-		float y = baseY;
+		float x = static_cast<float>(baseX + i * spacing);
+		float y = static_cast<float>(baseY);
 
 		if (hpUIs_[i].isBroken)
 		{

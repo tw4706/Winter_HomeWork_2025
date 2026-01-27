@@ -10,7 +10,7 @@ namespace
 	constexpr int kVolumeMin = 0;
 	constexpr int kVolumeMax = 100;
 	constexpr int kDxVolumeMax = 255;
-	constexpr int kBgmBaseVolume = 50;
+	constexpr int kBgmBaseVolume = 60;
 
 	// ==============================
 	// ハンドル関連
@@ -23,7 +23,7 @@ namespace
 	constexpr int kBgmPlayType = DX_PLAYTYPE_LOOP;
 
 	// ==============================
-	// BGM パス関連
+	// BGM画像関連
 	// ==============================
 	constexpr char kTitleBgmPath[] = "data/BGM・SE/TitleBGM.mp3";
 	constexpr char kGameBgmPath[] = "data/BGM・SE/GameBGM.mp3";

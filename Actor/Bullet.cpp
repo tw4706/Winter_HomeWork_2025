@@ -75,8 +75,8 @@ namespace
 	//========================
 	// 弾の回転角度関連
 	//========================
-	constexpr float kKnifeAngleRight = DX_PI / 2.0f;
-	constexpr float kKnifeAngleLeft = DX_PI * 1.5f;
+	constexpr float kKnifeAngleRight = DX_PI_F / 2.0f;
+	constexpr float kKnifeAngleLeft = DX_PI_F * 1.5f;
 
 	//========================
 	// エフェクト関連
@@ -88,7 +88,6 @@ namespace
 	constexpr int kEffectFrameCount = 4;
 	constexpr int kEffectFrameInterval = 5;
 	constexpr float kBulletEffectScale = 1.5f;
-
 }
 
 Bullet::Bullet(Vector2 pos, Vector2 vel, BulletType bulletType, std::shared_ptr<Bg>bg) :

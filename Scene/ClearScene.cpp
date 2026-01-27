@@ -18,14 +18,24 @@ namespace
 	// 描画関連
 	//========================
 	//ゲームクリアの文字表示位置など
-	constexpr int kFontSize = 96;
 	constexpr int kCharWidth = 96;
 	constexpr int kTextY = 200;
 	constexpr int kScreenCenterX = 640;
+	constexpr int kTextH = 100;
+	constexpr int kShinigachiTextH = 340;
+	constexpr int kBacktoTitleFrame = 30;
+	constexpr int kBacktoTitleTextY = 500;
+	constexpr int kFontSize = 64;
+	constexpr int kFontTitleSize = 24;
+	constexpr int kFadeAlpha = 255;
+	constexpr int kShinigachiLogoFrame = 10;
+	constexpr int kShigachiCharBuf = 64;
 
 	//エフェクト表示位置のオフセット
 	constexpr int kEffectOffsetY = 48;
 	constexpr int kTextOffset = 4;
+	const unsigned int kGameClearTextColor = GetColor(255, 240, 180);
+	const unsigned int kShigachidoTextColor = GetColor(255, 180, 180);
 }
 
 ClearScene::ClearScene(SceneController& controller) :
@@ -67,7 +77,7 @@ void ClearScene::NormalUpdate(Input& input)
 
 		//徐々に加速 → 減速
 		int diff = shinigachiTarget_ - shinigachiCurrent_;
-		int speed = (diff / 10 > 1) ? (diff / 10) : 1;
+		int speed = (diff / kShinigachiLogoFrame > 1) ? (diff / kShinigachiLogoFrame) : 1;
 		shinigachiCurrent_ += speed;
 
 		if (shinigachiCurrent_ >= shinigachiTarget_)
@@ -100,9 +110,9 @@ void ClearScene::FadeDraw()
 	NormalDraw();
 
 	//フェード
-	int alpha = (frame_ * 255) / kFadeDuration;
+	int alpha = (frame_ * kFadeAlpha) / kFadeDuration;
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
-	DrawBox(0, 0, 1280, 720, GetColor(255, 255, 255), true);
+	DrawBox(0, 0, Game::kScreenWidth, Game::kScreenHeight,0xffffff, true);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 }
 
@@ -110,7 +120,7 @@ void ClearScene::NormalDraw()
 {
 	pEffectManager_->Draw();
 
-	DrawExtendGraph(0, 0, 1280, 720, bgHandle_, false);
+	DrawExtendGraph(0, 0, Game::kScreenWidth, Game::kScreenHeight, bgHandle_, false);
 
 	//=====ゲームクリア表示=====
 	const char* clearText = "GAME CLEAR!";
@@ -125,11 +135,11 @@ void ClearScene::NormalDraw()
 		Game::kScreenWidth / 2 - clearTextW / 2,
 		100,
 		clearText,
-		GetColor(255, 240, 180),
+		kGameClearTextColor,
 		fontHandle_);
 
 	//=====しにがち度=====
-	char shiniBuf[64];
+	char shiniBuf[kShigachiCharBuf];
 	sprintf_s(shiniBuf, "しにがち度 : %d%%", shinigachiCurrent_);
 
 	int shiniTextW = GetDrawStringWidthToHandle(
@@ -139,20 +149,20 @@ void ClearScene::NormalDraw()
 
 	DrawStringToHandle(
 		Game::kScreenWidth / 2 - shiniTextW / 2 + kTextOffset,
-		340 + kTextOffset,
+		kShinigachiTextH + kTextOffset,
 		shiniBuf,
 		0x000000,
 		fontHandle_);
 
 	DrawStringToHandle(
 		Game::kScreenWidth / 2 - shiniTextW / 2,
-		340,
+		kShinigachiTextH,
 		shiniBuf,
-		GetColor(255, 180, 180),
+		kShigachidoTextColor,
 		fontHandle_);
 
 	//=====タイトルに戻る=====
-	bool visible = (frame_ / 30) % 2 == 0;//30フレームごとに点滅
+	bool visible = (frame_ / kBacktoTitleFrame) % 2 == 0;//30フレームごとに点滅
 
 	if (visible)
 	{
@@ -165,9 +175,9 @@ void ClearScene::NormalDraw()
 
 		DrawStringToHandle(
 			Game::kScreenWidth / 2 - titleTextW / 2,
-			500,
+			kBacktoTitleTextY,
 			titleText,
-			GetColor(255, 255, 255),
+			0xffffff,
 			fontTitleHandle_);
 	}
 }
@@ -177,8 +187,8 @@ void ClearScene::Init()
 	frame_ = kFadeDuration;
 
 	bgHandle_ = LoadGraph("data/map/bg.png");
-	fontHandle_ = CreateFontToHandle("g_コミックホラー悪党-教漢", 64, -1, -1);
-	fontTitleHandle_ = CreateFontToHandle("g_コミックホラー悪党-教漢", 24, -1, -1);
+	fontHandle_ = CreateFontToHandle("g_コミックホラー悪党-教漢", kFontSize, -1, -1);
+	fontTitleHandle_ = CreateFontToHandle("g_コミックホラー悪党-教漢", kFontTitleSize, -1, -1);
 	clearText_ = "GAME CLEAR";
 	charVisible_.assign(clearText_.size(), false);
 
