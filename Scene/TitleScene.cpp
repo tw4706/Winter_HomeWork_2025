@@ -42,9 +42,38 @@ namespace
 	constexpr int kArrowOffsetX = -20;
 	constexpr int kArrowOffsetY = 5;
 	constexpr float kArrowScale = 1.0f;
+
+	//画面配置用
+	constexpr int kTitleLogoOffsetY = -150;
+	constexpr int kPressStartOffsetY = 100;
+
+	constexpr float kPlayerExitOffsetX = 100.0f;
+	constexpr float kDemoZombieSpawnOffsetX = 50.0f;
+
+	constexpr float kDemoPlayerStartX = 200.0f;
+	constexpr float kDemoPlayerStartY = 510.0f;
+	constexpr float kDemoZombieStartY = 500.0f;
+
+	//タイトルロゴの演出用
+	constexpr float kTitleBaseScale = 1.5f;
+	constexpr float kTitlePulseAmplitude = 0.05f;
+	constexpr float kTitlePulseSpeed = 0.05f;
+
+	//スタートボタン点滅
+	constexpr int kDecideBlinkDiv = 3;
+	constexpr int kBlinkBaseAlpha = 128;
+	constexpr int kBlinkAlphaRange = 127;
+	constexpr float kBlinkSpeed = 0.05f;
+
+	//確認バナーのアルファ値
+	constexpr int kConfirmBgAlpha = 180;
+
+	//矢印調整用
+	constexpr int kArrowExtraOffsetY = 5;
+	constexpr int kFontSize = 24;
 }
 
-void TitleScene::FadeInUpdate(Input&input)
+void TitleScene::FadeInUpdate(Input& input)
 {
 	if (--frame_ <= 0)
 	{
@@ -54,7 +83,7 @@ void TitleScene::FadeInUpdate(Input&input)
 	}
 }
 
-void TitleScene::NormalUpdate(Input&input)
+void TitleScene::NormalUpdate(Input& input)
 {
 	//フェードアウト中はデモプレイヤーを更新しない
 	if (update_ == &TitleScene::FadeOutUpdate)
@@ -104,7 +133,7 @@ void TitleScene::NormalUpdate(Input&input)
 		return;
 #endif
 		Application::GetInstance().GetSEManager().PlaySE(SE::Decide);
-		if(isSkipedConfirm_)
+		if (isSkipedConfirm_)
 		{
 			//確認画面をスキップしている場合、直接フェードアウトへ
 			nextStage_ = StageType::Stage1;
@@ -120,9 +149,9 @@ void TitleScene::NormalUpdate(Input&input)
 	}
 }
 
-void TitleScene::FadeOutUpdate(Input&input)
+void TitleScene::FadeOutUpdate(Input& input)
 {
-	if (frame_++ >= kFadeInterval) 
+	if (frame_++ >= kFadeInterval)
 	{
 		//プレイ回数カウント
 		controller_.GetProgress().playCount_++;
@@ -134,13 +163,13 @@ void TitleScene::FadeOutUpdate(Input&input)
 #ifdef _DEBUG
 		controller_.ChangeScene(std::make_shared<SelectScene>(controller_));
 #else
-		controller_.ChangeScene(std::make_shared<GameScene>(controller_,nextStage_));
+		controller_.ChangeScene(std::make_shared<GameScene>(controller_, nextStage_));
 #endif
 		return;
 	}
 }
 
-void TitleScene::ConfirmUpdate(Input&input)
+void TitleScene::ConfirmUpdate(Input& input)
 {
 	if (input.IsTriggered("left") || input.IsTriggered("up"))
 	{
@@ -203,7 +232,7 @@ void TitleScene::PlayerRunUpdate(Input&)
 		demoPlayer_->Update();
 
 		//画面外に出たらフェードアウト開始
-		if (demoPlayer_->GetPos().x > Game::kScreenWidth + 100.0f)
+		if (demoPlayer_->GetPos().x > Game::kScreenWidth + kPlayerExitOffsetX)
 		{
 			frame_ = 0;
 			update_ = &TitleScene::FadeOutUpdate;
@@ -238,21 +267,21 @@ void TitleScene::NormalDraw()
 		demoPlayer_->Draw();
 	}
 
-	float scale = 1.5f + 0.05f * sinf(titleRogoPulseFrame_ * 0.05f);  // 1.5 を中心に ±0.05 で拡大縮小
+	float scale = kTitleBaseScale + kTitlePulseAmplitude * sinf(titleRogoPulseFrame_ * kTitlePulseSpeed);  //1.5を中心に+0.05～-0.05で拡大縮小
 	titleRogoPulseFrame_++;
 
-	DrawRotaGraph(Game::kScreenWidth / 2, Game::kScreenHeight / 2 - 150, scale, 0.0f, titleH_, true);
+	DrawRotaGraph(Game::kScreenWidth / 2, Game::kScreenHeight / 2 + kTitleLogoOffsetY, scale, 0.0f, titleH_, true);
 
 	//PressStartUIの点滅表示
 	if (isDeciding_)
 	{
 		//決定時の小刻み点滅
-		bool visible = ((pressBlinkFrame_ / 3) % 2) == 0;
+		bool visible = ((pressBlinkFrame_ / kDecideBlinkDiv) % 2) == 0;
 
 		if (visible)
 		{
 			DrawRotaGraph(Game::kScreenWidth / 2,
-				Game::kScreenHeight / 2 + 100,
+				Game::kScreenHeight / 2 + kPressStartOffsetY,
 				kPressStartScale,
 				0.0f,
 				pressStartH_,
@@ -262,12 +291,12 @@ void TitleScene::NormalDraw()
 	else
 	{
 		//通常時の点滅
-		int alpha = static_cast<int>(128+127 * sinf(pressBlinkFrame_ * 0.05f));
+		int alpha = static_cast<int>(kBlinkBaseAlpha + kBlinkAlphaRange * sinf(pressBlinkFrame_ * kBlinkSpeed));
 
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
 		DrawRotaGraph(
 			Game::kScreenWidth / 2,
-			Game::kScreenHeight / 2 + 100,
+			Game::kScreenHeight / 2 + kPressStartOffsetY,
 			kPressStartScale,
 			0.0f,
 			pressStartH_,
@@ -279,7 +308,7 @@ void TitleScene::NormalDraw()
 void TitleScene::FadeDraw()
 {
 	//値の範囲を一旦0.0~1.0にしておくといろいろと扱いやすくなります
-	auto rate = 1.0f-static_cast<float>(frame_) / static_cast<float>(kFadeInterval);
+	auto rate = 1.0f - static_cast<float>(frame_) / static_cast<float>(kFadeInterval);
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, static_cast<int>(kFadeRate * rate));//αブレンド
 	DrawBox(0, 0, Game::kScreenWidth, Game::kScreenHeight, 0xffffff, true);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);//ブレンドしない
@@ -291,12 +320,12 @@ void TitleScene::ConfirmDraw()
 	NormalDraw();
 
 	//半透明背景
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 180);
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, kConfirmBgAlpha);
 	DrawBox(kBannerX, kBannerY, kBannerX + kBannerW, kBannerY + kBannerH, 0x000000, true);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
 	//メッセージ
-	DrawStringToHandle(kConfirmMessageX, kConfirmMessageY, "このゲームを初めて遊びますか？", 0xffffff,fontH_);
+	DrawStringToHandle(kConfirmMessageX, kConfirmMessageY, "このゲームを初めて遊びますか？", 0xffffff, fontH_);
 
 	// 選択肢
 	DrawStringToHandle(kOptionYesOffsetX, kOptionOffsetY, "はい", confirmSelect_ == 0 ? 0xff0000 : 0xffffff, fontH_);
@@ -310,7 +339,7 @@ void TitleScene::ConfirmDraw()
 
 	DrawRotaGraph(
 		arrowX + kArrowOffsetX,
-		arrowY + kArrowOffsetY+5,
+		arrowY + kArrowOffsetY + kArrowExtraOffsetY,
 		kArrowScale,
 		DX_PI_F / 2.0f,
 		selectH_,
@@ -352,14 +381,14 @@ void TitleScene::Init()
 	selectH_ = LoadGraph("data/Bullet/Lance.png");
 	bgH_ = LoadGraph("data/map/bg.png");
 
-	fontH_ = CreateFontToHandle("g_コミックホラー悪党-教漢", 24, -1, -1);
+	fontH_ = CreateFontToHandle("g_コミックホラー悪党-教漢", kFontSize, -1, -1);
 	frame_ = kFadeInterval;
 
 	demoZombies_.clear();
 
-	demoZombies_.push_back(std::make_shared<DemoZombie>(Vector2{ Game::kScreenWidth + 50.0f, 500.0f }));
+	demoZombies_.push_back(std::make_shared<DemoZombie>(Vector2{ Game::kScreenWidth + kDemoZombieSpawnOffsetX, kDemoZombieStartY }));
 	demoPlayer_ = std::make_shared<DemoPlayer>(
-		Vector2{ 200.0f, 510.0f });
+		Vector2{ kDemoPlayerStartX, kDemoPlayerStartY });
 	pBg_ = std::make_shared<Bg>(StageType::Stage1);
 
 	demoPlayer_->Init();
@@ -383,7 +412,7 @@ void TitleScene::Init()
 	}
 }
 
-void TitleScene::Update(Input&input)
+void TitleScene::Update(Input& input)
 {
 	(this->*update_)(input);
 }
