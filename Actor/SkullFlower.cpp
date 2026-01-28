@@ -39,6 +39,9 @@ namespace
 	constexpr float kDistance = 300.0f;
 	constexpr int kDrawOffsetY = 15;
 	constexpr int kColOffsetY = 15;
+	constexpr int kDefaultRedR = 255;
+	constexpr int kDefaultRedG = 255;
+	constexpr int kDefaultRedB = 255;
 
 	// ==============================
 	// 弾発射
@@ -55,6 +58,11 @@ namespace
 	// 被弾演出関連
 	//========================
 	constexpr int kDamageFlashInterval = 4;
+	constexpr int kFlashAlpha = 128;
+	constexpr int kFlashRedR = 255;
+	constexpr int kFlashRedG = 64;
+	constexpr int kFlashRedB = 64;
+	constexpr int kFlashCycle = 2;
 
 	// ==============================
 	// 無効座標
@@ -137,14 +145,14 @@ void SkullFlower::Draw()
 	if (isDamageFlash_)
 	{
 		int t = damageFlashTimer_ / kDamageFlashInterval;
-		isFlashRed = (t % 2 == 0);
+		isFlashRed = (t % kFlashCycle == 0);
 	}
 
 	if (isFlashRed)
 	{
 		//赤色で点滅
-		SetDrawBlendMode(DX_BLENDMODE_ADD, 128);
-		SetDrawBright(255, 64, 64);
+		SetDrawBlendMode(DX_BLENDMODE_ADD, kFlashAlpha);
+		SetDrawBright(kFlashRedR, kFlashRedG, kFlashRedB);
 	}
 
 	animations_[static_cast<int>(flowerState_)]->Draw(drawX, drawY, !isTurn_);
@@ -153,7 +161,7 @@ void SkullFlower::Draw()
 	if (isFlashRed)
 	{
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-		SetDrawBright(255, 255, 255);
+		SetDrawBright(kDefaultRedR, kDefaultRedG, kDefaultRedB);
 	}
 
 #ifdef _DEBUG

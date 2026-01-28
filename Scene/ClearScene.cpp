@@ -13,6 +13,7 @@
 namespace
 {
 	constexpr int kFadeDuration = 60;
+	constexpr float kPercentageMax = 100.0f;
 
 	//========================
 	// •`‰æŠÖ˜A
@@ -196,7 +197,7 @@ void ClearScene::Init()
 	playCount_ = controller_.GetProgress().playCount_;
 
 	shinigachiTarget_ = (playCount_ > 0)
-		? static_cast<int>(deathCount_ * 100.0f / playCount_): 0;
+		? static_cast<int>(deathCount_ * kPercentageMax / playCount_): 0;
 
 	shinigachiCurrent_ = 0;
 	shinigachiFrame_ = 0;

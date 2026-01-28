@@ -14,9 +14,19 @@
 namespace
 {
 	//セルのサイズ
-	const int cellSize = 48;
+	const int kCellSize = 48;
 	//敵の描画オフセット
 	constexpr float kEnemyOffsetY = 32.0f;
+
+	//敵の識別番号の定数
+	enum class EnemyID : int
+	{
+		None = 0,
+		Zombie = 1,
+		SkullFlower = 2,
+		NormalDog = 3,
+		WeakDog = 4,
+	};
 }
 
 void EnemyFactory::LoadFromCSV(StageType stageType, BulletManager* bulletManager)
@@ -46,12 +56,12 @@ void EnemyFactory::LoadFromCSV(StageType stageType, BulletManager* bulletManager
 	int row = 0;
 
 	//敵生成用ファクトリ
-	std::map<int, std::function<std::shared_ptr<Enemy>(Vector2)>> enemyFactory =
+	std::map<EnemyID, std::function<std::shared_ptr<Enemy>(Vector2)>> enemyFactory =
 	{
-		{1, [](Vector2 pos) { return std::make_shared<Zombie>(pos, Vector2{0,0}); }},
-		{2, [bulletManager](Vector2 pos) { return std::make_shared<SkullFlower>(pos, Vector2{0,0}, bulletManager); }},
-		{3, [](Vector2 pos) { return std::make_shared<Dog>(pos, Vector2{0,0},DogType::Normal); }},
-		{4, [](Vector2 pos){ return std::make_shared<Dog>(pos, Vector2{0,0}, DogType::Weak); }}
+		{EnemyID::Zombie, [](Vector2 pos) { return std::make_shared<Zombie>(pos, Vector2{0,0}); }},
+		{EnemyID::SkullFlower, [bulletManager](Vector2 pos) { return std::make_shared<SkullFlower>(pos, Vector2{0,0}, bulletManager); }},
+		{EnemyID::NormalDog, [](Vector2 pos) { return std::make_shared<Dog>(pos, Vector2{0,0},DogType::Normal); }},
+		{EnemyID::WeakDog, [](Vector2 pos){ return std::make_shared<Dog>(pos, Vector2{0,0}, DogType::Weak); }}
 	};
 
 	//既存の敵データを削除
@@ -66,10 +76,16 @@ void EnemyFactory::LoadFromCSV(StageType stageType, BulletManager* bulletManager
 
 		while (std::getline(ss, cell, ','))
 		{
-			int id = std::stoi(cell);
-			if (id != 0 && enemyFactory.count(id))
+			int rawId = std::stoi(cell);
+			EnemyID id = static_cast<EnemyID>(rawId);
+
+			if (id != EnemyID::None && enemyFactory.count(id))
 			{
-				Vector2 pos{ static_cast<float>(col * cellSize), static_cast<float>(row * cellSize + kEnemyOffsetY) };
+				Vector2 pos
+				{
+					static_cast<float>(col * kCellSize),
+					static_cast<float>(row * kCellSize + kEnemyOffsetY)
+				};
 				enemies_.push_back(enemyFactory[id](pos));
 			}
 			col++;

@@ -277,6 +277,11 @@ void Boss::OnHit(int damage)
 	hp_ -= damage;
 	if (hp_ <= 0)
 	{
+		if (pBm_)
+		{
+			pBm_->ClearBossBullet();
+		}
+
 		currentState_ = BossState::Dead;
 		stateTimer_ = 0;
 		vel_ = { 0.0f,0.0f };

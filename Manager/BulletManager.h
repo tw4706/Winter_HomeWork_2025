@@ -32,6 +32,9 @@ public:
 	//プレイヤーの弾を追加
 	std::vector<std::shared_ptr<Bullet>>& GetBullets();
 
+	//ボスの弾を消す
+	void ClearBossBullet();
+
 	//カメラの設定
 	void SetCamera(Camera* camera);
 	void SetCameraOffset(Vector2 offset);

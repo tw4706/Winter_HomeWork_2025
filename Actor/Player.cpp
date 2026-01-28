@@ -515,7 +515,7 @@ void Player::Jump(Input& input)
 			landingTimer_ = 0;
 			Application::GetInstance().GetSEManager().PlaySE(SE::PlayerJump);
 
-			// 離陸フレームを即表示
+			//離陸フレームをすぐに表示
 			animations_[static_cast<int>(PlayerState::Jump)]->SetFrame(kJumpTakeoffFrame);
 			OnTutorialAction(TutorialAction::Jump);
 			return;

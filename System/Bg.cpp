@@ -16,6 +16,8 @@ namespace
 
 	constexpr int kChipNumX = 200;
 	constexpr int kChipNumY = 40;
+
+	constexpr float kScrollRate = 0.5f;
 }
 
 Bg::Bg(StageType stageType):
@@ -23,7 +25,7 @@ Bg::Bg(StageType stageType):
 	prevCameraX_(0.0f),
 	midbgHandle_(-1),
 	midPosY_(0.0f),
-	midScrollRate_(0.5f),
+	midScrollRate_(kScrollRate),
 	midBgScrollX_(0.0f),
 	stageType_(stageType)
 {
@@ -49,10 +51,7 @@ Bg::~Bg()
 	DeleteGraph(midbgHandle_);
 }
 
-void Bg::Init()
-{
-
-}
+void Bg::Init(){}
 
 void Bg::Draw(std::shared_ptr<Camera> pCamera)
 {
@@ -150,7 +149,7 @@ void Bg::LoadMapData(StageType stageType)
 		int x = 0;
 		while (std::getline(stream, field, ',') && x < kChipNumX)
 		{
-			// 文字列をint型に変換してmapChipDataに追加する
+			//文字列をint型に変換してmapChipDataに追加する
 			mapChipData_[y][x] = std::stoi(field);
 			x++;
 		}
@@ -160,7 +159,7 @@ void Bg::LoadMapData(StageType stageType)
 
 void Bg::UpdateMidBg(std::shared_ptr<Camera> pCamera)
 {
-	// 中景のX座標をカメラに合わせてスクロール
+	//中景のX座標をカメラに合わせてスクロールをするようにする
 	float cameraMoveX = pCamera->GetOffset().x - prevCameraX_;
 	midBgScrollX_ += cameraMoveX * midScrollRate_;
 	prevCameraX_ = pCamera->GetOffset().x;
@@ -216,8 +215,8 @@ void Bg::DrawMapChip(std::shared_ptr<Camera>pCamera)
 
 			//マップチップの描画
 			DrawRectRotaGraph(
-				posX + static_cast<int>(kChipSize * kScale * 0.5f),
-				posY + static_cast<int>(kChipSize * kScale * 0.5f),
+				posX + static_cast<int>((kChipSize * kScale) / 2),
+				posY + static_cast<int>((kChipSize * kScale) / 2),
 				srcX, srcY,
 				kChipSize, kChipSize,
 				kScale, 0.0f,
@@ -243,8 +242,8 @@ void Bg::DrawMapChipNoCamera()
 	int tileW = static_cast<int>(kChipSize * kScale);
 	int tileH = tileW;
 
-	// 画面下に描画するオフセット
-	int offsetY = Game::kScreenHeight - (kChipNumY * tileH); // 全チップの高さ分下に寄せる
+	//画面下に描画するオフセット
+	int offsetY = Game::kScreenHeight - (kChipNumY * tileH); //全チップの高さ分下に寄せる
 
 	for (int y = 0; y < kChipNumY; y++)
 	{
@@ -254,9 +253,9 @@ void Bg::DrawMapChipNoCamera()
 			if (chipNum == 0) continue;
 
 			int posX = x * tileW;
-			int posY = y * tileH + offsetY; // Y座標にオフセットを足す
+			int posY = y * tileH + offsetY;
 
-			// 画面内だけ描画
+			//画面内だけ描画
 			if (posX + tileW < 0 || posX > Game::kScreenWidth) continue;
 			if (posY + tileH < 0 || posY > Game::kScreenHeight) continue;
 
@@ -269,8 +268,7 @@ void Bg::DrawMapChipNoCamera()
 				srcX, srcY,
 				kChipSize, kChipSize,
 				kScale, 0.0f,
-				mapHandle_, true
-			);
+				mapHandle_, true);
 
 #ifdef _DEBUG
 			DrawBox(posX, posY, posX + tileW, posY + tileH, GetColor(255, 0, 0), false);

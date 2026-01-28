@@ -218,7 +218,7 @@ void TutorialManager::Draw(const Camera& camera)
 	int textY = kFrameY + (kFrameHeight - kTextHeight) / 2 + kTextOffsetY + slideY;
 
 	DrawStringToHandle(textX, textY,
-		waitingMessage_, GetColor(255, 255, 255), fontHandle_);
+		waitingMessage_,0xffffff, fontHandle_);
 
 	// ===== ƒ{ƒ^ƒ“ =====
 	if (buttonAnim_)

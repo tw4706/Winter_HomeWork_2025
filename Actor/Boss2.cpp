@@ -244,17 +244,6 @@ void Boss2::Draw()
 
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	}
-
-	//ヒットストップ時の画面を白くさせる
-	if (flashTimer_ > 0)
-	{
-		int alpha = flashTimer_ * 50;
-		SetDrawBlendMode(DX_BLENDMODE_ADD, alpha);
-		DrawBox(0, 0, 1280, 720, GetColor(255, 255, 255), TRUE);
-		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-
-		flashTimer_--;
-	}
 #ifdef _DEBUG
 	//当たり判定表示
 	colRect_.DrawAndCamera(cameraOffset_, GetColor(255, 0, 0), false);
@@ -452,15 +441,15 @@ void Boss2::OnHit(int damage, const BulletType& type)
 
 			Application::GetInstance().GetSEManager().PlaySE(SE::BossGuardBreak);
 
-			//破壊で大ダメージ
+			//破壊でボスに大ダメージ
 			Boss::OnHit(kShieldBreakDamage);
 			return;
 		}
 
-		//まだシールドがあるなら本体は無傷
+		//まだシールドがあるならボス本体にダメージが通らないようにする
 		return;
 	}
 
-	//シールドが無いときは普通にダメージ
+	//シールドが無いときはボス本体にダメージ
 	Boss::OnHit(damage);
 }

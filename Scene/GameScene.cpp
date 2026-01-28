@@ -55,6 +55,8 @@ namespace
 
 	//ライフの描画の拡大率
 	constexpr float kHpScale = 2.5f;
+
+	constexpr float kFadeRate = 255;
 }
 
 GameScene::GameScene(SceneController& controller, StageType stage) :
@@ -393,7 +395,7 @@ void GameScene::FadeDraw()
 
 	//フェードの描画
 	auto rate = static_cast<float>(frame_) / static_cast<float>(fade_interval);
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, static_cast <int>(255 * rate));
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, static_cast <int>(kFadeRate * rate));
 	DrawBox(0, 0, Game::kScreenWidth, Game::kScreenHeight, 0x000000, true);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);//ブレンドしない
 }

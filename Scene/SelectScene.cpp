@@ -2,12 +2,14 @@
 #include "GameScene.h"
 #include "TitleScene.h"
 #include "SceneController.h"
+#include"GlobalConstants.h"
 #include"input.h"
 #include<Dxlib.h>
 
 namespace
 {
 	constexpr int kFadeDuration = 60;
+	constexpr int kFadeRate = 255;
 	constexpr int kSelectIdxX = 20;
 	constexpr int kDrawOffsetX = 40;
 
@@ -106,8 +108,8 @@ void SelectScene::FadeOutUpdate(Input&)
 void SelectScene::FadeDraw()
 {
 	float rate = static_cast<float>(frame_) / kFadeDuration;
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255 * static_cast<int>(rate));
-	DrawBox(0, 0, 1280, 720, 0x000000, TRUE);
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, kFadeRate * static_cast<int>(rate));
+	DrawBox(0, 0,Game::kScreenWidth , Game::kScreenHeight, 0x000000, TRUE);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 }
 

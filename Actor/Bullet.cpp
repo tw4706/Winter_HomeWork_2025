@@ -21,8 +21,8 @@ namespace
 	constexpr float kHalfColSize = 32;
 	constexpr float KEnemyBulletScale = 2.0f;
 	constexpr float KBossBulletScale = 3.0f;
-	constexpr int kColOffsetX = 50;
-	constexpr int kColOffsetY = 20;
+	constexpr float kColOffsetX = 50.0f;
+	constexpr float kColOffsetY = 20.0f;
 	constexpr int kScreenOutOffset = 100;	//‰æ–ÊŠO”»’è—p
 
 	//====================
