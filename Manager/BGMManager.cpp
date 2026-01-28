@@ -10,7 +10,7 @@ namespace
 	constexpr int kVolumeMin = 0;
 	constexpr int kVolumeMax = 100;
 	constexpr int kDxVolumeMax = 255;
-	constexpr int kBgmBaseVolume = 60;
+	constexpr int kBgmBaseVolume = 80;
 
 	// ==============================
 	// ƒnƒ“ƒhƒ‹ŠÖ˜A
@@ -41,6 +41,8 @@ BGMManager::~BGMManager()
 
 void BGMManager::Init()
 {
+	volume_ = kBgmBaseVolume;
+
 	bgmHandles_[BGM::Title] = LoadSoundMem(kTitleBgmPath);
 	bgmHandles_[BGM::Game] = LoadSoundMem(kGameBgmPath);
 	bgmHandles_[BGM::GameOver] = LoadSoundMem(kGameOverBgmPath);
@@ -50,6 +52,9 @@ void BGMManager::Init()
 	bgmBaseVolume_[BGM::Game] = kBgmBaseVolume;
 	bgmBaseVolume_[BGM::GameOver] = kBgmBaseVolume;
 	bgmBaseVolume_[BGM::GameClear] = kBgmBaseVolume;
+
+	//Init‚µ‚½Œã‚É‰¹—Ê‚ð”½‰f‚³‚¹‚é
+	SetVolume(volume_);
 }
 
 void BGMManager::PlayBGM(BGM bgm)

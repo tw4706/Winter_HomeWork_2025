@@ -173,12 +173,8 @@ void GameScene::NormalUpdate(Input& input)
 	//各クラスの更新
 	pCamera_->Update(pPlayer_);
 
+	//プレイヤーの更新
 	pPlayer_->Update(input, bulletManager_, stageType_);
-
-	if (tutorialManager_)
-	{
-		tutorialManager_->Update(*pPlayer_, input);
-	}
 
 	//UIの更新
 	weaponUI_.Update(*pPlayer_);

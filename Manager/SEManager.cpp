@@ -7,10 +7,13 @@ namespace
 	// ==============================
 	// 音量関連関連
 	// ==============================
-	constexpr int kDefaultSEVolume = 100;
+	constexpr int kDefaultSEVolume = 80;
+	constexpr int kPlayerJumpSEVolume = 100;
 	constexpr int kVolumeMin = 0;
 	constexpr int kVolumeMax = 100;
 	constexpr int kDxVolumeMax = 255;
+
+	constexpr int kBaseVolumeDefault = 100;
 
 	// ==============================
 	// 再生設定関連
@@ -58,48 +61,47 @@ void SEManager::Init()
 {
 	volume_ = kDefaultSEVolume;
 
-	seHandles_[SE::Decide] = LoadSoundMem(kDecideSEPath);
-	seHandles_[SE::Cancel] = LoadSoundMem(kCancelSEPath);
-	seHandles_[SE::Select] = LoadSoundMem(kSelectSEPath);
-	seHandles_[SE::Shot] = LoadSoundMem(kShotSEPath);
-	seHandles_[SE::PlayerJump] = LoadSoundMem(kPlayerJumpSEPath);
-	seHandles_[SE::PlayerWalk] = LoadSoundMem(kPlayerWalkSEPath);
-	seHandles_[SE::Death] = LoadSoundMem(kDeathSEPath);
-	seHandles_[SE::Wave] = LoadSoundMem(kWaveSEPath);
-	seHandles_[SE::Hit] = LoadSoundMem(kHitSEPath);
-	seHandles_[SE::Damage] = LoadSoundMem(kDamageSEPath);
-	seHandles_[SE::Warp] = LoadSoundMem(kWarpSEPath);
-	seHandles_[SE::Fall] = LoadSoundMem(kFallSEPath);
-	seHandles_[SE::UnlockTorch] = LoadSoundMem(kUnlockTorchSEPath);
-	seHandles_[SE::FlowerAttack] = LoadSoundMem(kFlowerAttackSEPath);
-	seHandles_[SE::EnemyJump] = LoadSoundMem(kEnemyJumpSEPath);
-	seHandles_[SE::BossGuard] = LoadSoundMem(kBossGuardSEPath);
-	seHandles_[SE::BossGuardBreak] = LoadSoundMem(kBossGuardBreakSEPath);
-	seHandles_[SE::BossMove] = LoadSoundMem(kBossMoveSEPath);
-	seHandles_[SE::BossCry] = LoadSoundMem(kBossCrySEPath);
-	seHandles_[SE::BossBreath] = LoadSoundMem(kBossBreathSEPath);
-	seHandles_[SE::BossDeath] = LoadSoundMem(kBossDeathSEPath);
-	seHandles_[SE::Explosion] = LoadSoundMem(kExplosionSEPath);
-	seHandles_[SE::WeaponChange] = LoadSoundMem(kWeaponChangeSEPath);
-	seHandles_[SE::TutorialText] = LoadSoundMem(kTutorialTextSEPath);
+	seHandles_[SE::Decide]			= LoadSoundMem(kDecideSEPath);
+	seHandles_[SE::Cancel]			= LoadSoundMem(kCancelSEPath);
+	seHandles_[SE::Select]			= LoadSoundMem(kSelectSEPath);
+	seHandles_[SE::Shot]			= LoadSoundMem(kShotSEPath);
+	seHandles_[SE::PlayerJump]		= LoadSoundMem(kPlayerJumpSEPath);
+	seHandles_[SE::PlayerWalk]		= LoadSoundMem(kPlayerWalkSEPath);
+	seHandles_[SE::Death]			= LoadSoundMem(kDeathSEPath);
+	seHandles_[SE::Wave]			= LoadSoundMem(kWaveSEPath);
+	seHandles_[SE::Hit]				= LoadSoundMem(kHitSEPath);
+	seHandles_[SE::Damage]			= LoadSoundMem(kDamageSEPath);
+	seHandles_[SE::Warp]			= LoadSoundMem(kWarpSEPath);
+	seHandles_[SE::Fall]			= LoadSoundMem(kFallSEPath);
+	seHandles_[SE::UnlockTorch]		= LoadSoundMem(kUnlockTorchSEPath);
+	seHandles_[SE::FlowerAttack]	= LoadSoundMem(kFlowerAttackSEPath);
+	seHandles_[SE::EnemyJump]		= LoadSoundMem(kEnemyJumpSEPath);
+	seHandles_[SE::BossGuard]		= LoadSoundMem(kBossGuardSEPath);
+	seHandles_[SE::BossGuardBreak]	= LoadSoundMem(kBossGuardBreakSEPath);
+	seHandles_[SE::BossMove]		= LoadSoundMem(kBossMoveSEPath);
+	seHandles_[SE::BossCry]			= LoadSoundMem(kBossCrySEPath);
+	seHandles_[SE::BossBreath]		= LoadSoundMem(kBossBreathSEPath);
+	seHandles_[SE::BossDeath]		= LoadSoundMem(kBossDeathSEPath);
+	seHandles_[SE::Explosion]		= LoadSoundMem(kExplosionSEPath);
+	seHandles_[SE::WeaponChange]	= LoadSoundMem(kWeaponChangeSEPath);
+	seHandles_[SE::TutorialText]	= LoadSoundMem(kTutorialTextSEPath);
+
+	seBaseVolume_[SE::PlayerJump]	= kPlayerJumpSEVolume;
+
+	SetVolume(volume_);
 }
 
 void SEManager::PlaySE(SE se)
 {
-	int handle = seHandles_[se];
-
-	int vol = volume_ * kDxVolumeMax / kVolumeMax;
-	ChangeVolumeSoundMem(vol, handle);
-
+	const int handle = seHandles_.at(se);
+	ChangeVolumeSoundMem(CalcDxVolume(se), handle);
 	PlaySoundMem(handle, kSEPlayType);
 }
 
 void SEManager::StopSE(SE se)
 {
-	int handle = seHandles_[se];
-
-	//ハンドルに何か入っていたら音を止める
-	if (CheckSoundMem(handle) == 1)
+	const int handle = seHandles_.at(se);
+	if (CheckSoundMem(handle))
 	{
 		StopSoundMem(handle);
 	}
@@ -109,10 +111,9 @@ void SEManager::SetVolume(int volume)
 {
 	volume_ = std::clamp(volume, kVolumeMin, kVolumeMax);
 
-	int dxVol = volume_ * kDxVolumeMax / kVolumeMax;
 	for (auto& [se, handle] : seHandles_)
 	{
-		ChangeVolumeSoundMem(dxVol, handle);
+		ChangeVolumeSoundMem(CalcDxVolume(se), handle);
 	}
 }
 
@@ -124,4 +125,13 @@ int SEManager::GetVolume() const
 int SEManager::GetHandle(SE se)
 {
 	return seHandles_[se];
+}
+
+//音量の計算
+int SEManager::CalcDxVolume(SE se) const
+{
+	const int base =seBaseVolume_.count(se) ? seBaseVolume_.at(se) : kBaseVolumeDefault;
+
+	const int logical = volume_ * base / kVolumeMax;
+	return logical * kDxVolumeMax / kVolumeMax;
 }

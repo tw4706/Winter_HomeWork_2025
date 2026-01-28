@@ -41,9 +41,12 @@ public:
 	void SetVolume(int volume);
 	int GetVolume() const;
 	int GetHandle(SE se);
+	//‰¹—Ê‚ğDxLib—p‚Ì‰¹—Ê‚É•ÏŠ·‚·‚éŠÖ”
+	int CalcDxVolume(SE se) const;
 
 private:
 	std::map<SE, int>seHandles_;
+	std::map<SE, int>seBaseVolume_;
 	int volume_ = 0;
 };
 
