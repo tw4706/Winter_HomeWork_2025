@@ -94,7 +94,7 @@ GameScene::GameScene(SceneController& controller, StageType stage) :
 	update_(&GameScene::FadeInUpdate),
 	draw_(&GameScene::FadeDraw),
 	clearState_(ClearState::None),
-	gameProgress_(nullptr),
+	pGameProgress_(nullptr),
 	frame_(fade_interval),
 	stageTextTimer_(0),
 	isTorchUnlockMessageShow_(false),
@@ -564,7 +564,7 @@ void GameScene::Init()
 	fontTorchTextHandle_ = CreateFontToHandle("g_コミックホラー悪党-教漢", 24, -1, -1);
 
 	//ゲーム進行状況の取得
-	gameProgress_ = &controller_.GetProgress();
+	pGameProgress_ = &controller_.GetProgress();
 
 	//各クラスの初期化
 	bg_ = std::make_shared<Bg>(stageType_);
@@ -575,7 +575,7 @@ void GameScene::Init()
 	pPlayer_->Init();
 	pPlayer_->SetCamera(pCamera_);
 	pPlayer_->SetBg(bg_);
-	pPlayer_->SetGameProgress(gameProgress_);
+	pPlayer_->SetGameProgress(pGameProgress_);
 
 	//カメラの初期化
 	pCamera_->Init(pPlayer_);
@@ -589,7 +589,7 @@ void GameScene::Init()
 	if (stageType_ == StageType::Tutorial)
 	{
 		tutorialManager_ = std::make_unique<TutorialManager>();
-		tutorialManager_->Init();
+		tutorialManager_->Init(pGameProgress_);
 	}
 	else
 	{

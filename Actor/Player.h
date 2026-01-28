@@ -90,9 +90,6 @@ public:
 	//ゲームの進行状況を設定する関数
 	void SetGameProgress(GameProgress* progress) { gameProgress_ = progress; }
 
-	//チュートリアルアクションの通知を行う関数	
-	void OnTutorialAction(TutorialAction action);
-
 	//プレイヤーが操作可能かどうかの設定と取得
 	void SetControllable(bool canControl);
 	bool IsControllable() const;

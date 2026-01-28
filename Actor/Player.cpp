@@ -367,9 +367,6 @@ void Player::Update(Input& input, BulletManager& bm, StageType stage)
 		}
 
 		currentBulletType_ = static_cast<BulletType>(next);
-
-		//チュートリアル用フラグ
-		OnTutorialAction(TutorialAction::WeaponChange);
 	}
 	else if (input.IsTriggered("changeWeaponRight"))
 	{
@@ -392,8 +389,6 @@ void Player::Update(Input& input, BulletManager& bm, StageType stage)
 		}
 
 		currentBulletType_ = static_cast<BulletType>(next);
-
-		OnTutorialAction(TutorialAction::WeaponChange);
 	}
 
 #ifdef _DEBUG
@@ -461,10 +456,6 @@ void Player::Move(Input& input)
 	//地面にいるときかつダブルジャンプが可能な時
 	if (CanJumpMove)
 	{
-		if (input.IsTriggered("left") || input.IsTriggered("right"))
-		{
-			OnTutorialAction(TutorialAction::Move);
-		}
 		if (input.IsPressed("left"))
 		{
 			Application::GetInstance().GetSEManager().StopSE(SE::PlayerWalk);
@@ -517,7 +508,6 @@ void Player::Jump(Input& input)
 
 			//離陸フレームをすぐに表示
 			animations_[static_cast<int>(PlayerState::Jump)]->SetFrame(kJumpTakeoffFrame);
-			OnTutorialAction(TutorialAction::Jump);
 			return;
 		}
 
@@ -527,7 +517,6 @@ void Player::Jump(Input& input)
 			vel_.y = -kDoubleJumpPower;
 			isDoubleJumping_ = false;
 			Application::GetInstance().GetSEManager().PlaySE(SE::PlayerJump);
-			OnTutorialAction(TutorialAction::DoubleJump);
 		}
 	}
 }
@@ -596,8 +585,6 @@ void Player::Shot(Input& input, BulletManager& bm)
 		bullet->SetDirection(isTurn_);
 		bm.Init(bullet);
 		Application::GetInstance().GetSEManager().PlaySE(SE::Shot);
-
-		OnTutorialAction(TutorialAction::Attack);
 
 		// 攻撃開始
 		isAttacking_ = true;
@@ -734,31 +721,6 @@ void Player::SetCamera(std::shared_ptr<Camera>camera)
 {
 	pCamera_ = camera;
 }
-
-void Player::OnTutorialAction(TutorialAction action)
-{
-	if (!gameProgress_) return;
-
-	switch (action)
-	{
-	case TutorialAction::Move:
-		gameProgress_->IsMoved();
-		break;
-	case TutorialAction::Jump:
-		gameProgress_->IsJumped();
-		break;
-	case TutorialAction::DoubleJump:
-		gameProgress_->IsDoubleJumped();
-		break;
-	case TutorialAction::Attack:
-		gameProgress_->IsAttacked();
-		break;
-	case TutorialAction::WeaponChange:
-		gameProgress_->IsWeaponChanged();
-		break;
-	}
-}
-
 void Player::SetControllable(bool canControl)
 {
 	//プレイヤーの操作を可能にするかどうか

@@ -2,14 +2,6 @@
 class GameProgress
 {
 private:
-
-	//チュートリアル進捗
-	bool tutorialMoved_ = false;
-	bool tutorialJumped_ = false;
-	bool tutorialDoubleJumped_ = false;
-	bool tutorialAttacked_ = false;
-	bool tutorialWeaponChanged_ = false;
-
 	//ゲームからのタイトルに戻って来たかのフラグ
 	bool isReturnFromGame_ = false;
 
@@ -17,21 +9,8 @@ public:
 	bool isDefeatedBoss1_ = false;//ステージ1のボスを倒したかどうか
 	int deathCount_ = 0;//プレイヤーが死んだ回数
 	int playCount_ = 0;//プレイした回数
-	//チュートリアル進捗状況取得関数
-	bool IsMoved() const { return tutorialMoved_; }
-	bool IsJumped() const { return tutorialJumped_; }
-	bool IsDoubleJumped() const { return tutorialDoubleJumped_; }
-	bool IsAttacked() const { return tutorialAttacked_; }
-	bool IsWeaponChanged() const { return tutorialWeaponChanged_; }
-
-	bool IsTutorialCompleted() const
-	{
-		return IsMoved()
-			&& IsJumped()
-			&& IsDoubleJumped()
-			&& IsAttacked()
-			&& IsWeaponChanged();
-	}
+	//チュートリアル進捗
+	int tutorialStep_ = 0;
 
 	//ゲームからのタイトルに戻って来たかどうかの取得・設定関数
 	bool IsReturnFromGame() const { return isReturnFromGame_; }

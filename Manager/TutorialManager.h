@@ -14,7 +14,7 @@ public:
 	//使わないのでデフォルトコンストラクタのみ
 	TutorialManager() = default;
 
-	void Init();
+	void Init(GameProgress* progress);
 	void Update(Player& player, Input& input);
 	void Draw(const Camera& camera);
 
@@ -43,6 +43,7 @@ private:
 	bool isWaitingAction_ = false;
 	const char* waitingMessage_ = nullptr;
 
+	GameProgress* pGameProgress_ = nullptr;
 	std::unique_ptr<SpriteAnimation> goalAnim_;
 	std::unique_ptr<SpriteAnimation> buttonAnim_;
 };

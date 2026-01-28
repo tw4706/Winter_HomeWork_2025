@@ -70,7 +70,7 @@ private:
 	ClearState clearState_;
 	PlayerWeaponUI weaponUI_;
 	EnemyFactory enemyFactory_;
-	GameProgress*gameProgress_;
+	GameProgress*pGameProgress_;
 	BulletManager bulletManager_;
 	EffectManager effectManager_;
 	std::array<HpUI, 3> hpUIs_;

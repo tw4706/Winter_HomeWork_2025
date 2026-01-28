@@ -100,9 +100,13 @@ namespace
 	constexpr int kTutorialCount = sizeof(kTutorialX) / sizeof(kTutorialX[0]);
 }
 
-void TutorialManager::Init()
+void TutorialManager::Init(GameProgress* progress)
 {
-	currentStep_ = 0;
+	pGameProgress_ = progress;
+
+	//GameProgressのtutorialStep_から最新のチュートリアルステップをセット
+	currentStep_ = pGameProgress_ ? pGameProgress_->tutorialStep_ : 0;
+
 	isWaitingAction_ = false;
 	waitingMessage_ = nullptr;
 	appearFrame_ = 0;
@@ -182,6 +186,12 @@ void TutorialManager::Update(Player& player, Input& input)
 			isDisappearing_ = false;
 			waitingMessage_ = nullptr;
 			currentStep_++;
+
+			//ゲーム進捗管理にステップが進んだことを伝える
+			if (pGameProgress_)
+			{
+				pGameProgress_->tutorialStep_ = currentStep_;
+			}
 		}
 	}
 }
