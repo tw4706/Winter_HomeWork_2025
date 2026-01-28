@@ -15,7 +15,7 @@ public:
 	TutorialManager() = default;
 
 	void Init();
-	void Update(Player&player,Input&input);
+	void Update(Player& player, Input& input);
 	void Draw(const Camera& camera);
 
 	//チュートリアルが終了したかどうかを返す
@@ -32,7 +32,7 @@ private:
 	int fontHandle_ = -1;
 	int textButtonHandle_ = -1;
 	int appearFrame_ = 0;
-	bool isDisappearing_;
+	bool isDisappearing_ = false;
 	int inputLockFrame_ = 0;
 	//現在のチュートリアルステップ
 	int currentStep_ = 0;

@@ -19,11 +19,27 @@ namespace
 	const char* kOptions[] = { "Restart", "Title" };
 	const int kOptionCount = 2;
 
+	//=======================
+	// 描画関連
+	//=======================
 	//ゲームクリアの文字表示位置など
 	constexpr int kFontSize = 96;
+	constexpr int kFontOptionSize = 48;
 	constexpr int kCharWidth = 96;
 	constexpr int kTextY = 100;
 	constexpr int kScreenCenterX = 640;
+
+	//プレイヤーの死亡アニメーション用
+	constexpr int kCircleX = 300;
+	constexpr int kCircleY = 560;
+	constexpr int kPlayerX = 360;
+	constexpr int kPlayerY = 500;
+
+	//文字の揺らし演出用
+	constexpr int kShakeRange = 6;
+	constexpr float kShakeSpeed = 0.1f;
+	constexpr float kShakePhase = 0.8f;
+	constexpr int kShadowOffset = 4;
 
 	//エフェクト表示位置のオフセット
 	constexpr int kEffectOffsetY = 48;
@@ -32,6 +48,23 @@ namespace
 	constexpr int kFrameCount = 4;
 	constexpr int kFrameInterval = 10;
 	constexpr float kScale = 2.0f;
+	constexpr int kFadeMaxAlpha = 255;
+
+	//オプションの表示位置調整
+	constexpr int kOptionBaseX = 550;
+	constexpr int kOptionBaseY = 350;
+	constexpr int kOptionIntervalY = 80;
+
+	//=======================
+	// カーソル関連
+	//=======================
+	constexpr int kCursorX = 500;
+	constexpr int kCursorBaseY = 370;
+	constexpr float kCursorScale = 2.0f;
+	constexpr float kCursorAngle = DX_PI_F / 2.0f;
+
+	constexpr float kCursorShakeSpeed = 0.15f;
+	constexpr float kCursorShakeRange = 5.0f;
 }
 
 void GameOverScene::FadeInUpdate(Input&)
@@ -143,7 +176,7 @@ void GameOverScene::FadeDraw()
 	NormalDraw();
 
 	//フェード
-	int alpha = (frame_ * 255) / kFadeDuration;
+	int alpha = (frame_ * kFadeMaxAlpha) / kFadeDuration;
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
 	DrawBox(0, 0, Game::kScreenWidth, Game::kScreenHeight, 0x000000, true);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
@@ -151,25 +184,24 @@ void GameOverScene::FadeDraw()
 
 void GameOverScene::NormalDraw()
 {
-	constexpr int text_offset = 4;
-
 	DrawExtendGraph(0, 0, Game::kScreenWidth, Game::kScreenHeight, bgHandle_, false);
-	DrawGraph(300, 560, deadCircleHandle_, true);
+	DrawGraph(kCircleX, kCircleY, deadCircleHandle_, true);
 
-	pAnimation_->Draw(360, 500, false);
+	pAnimation_->Draw(kPlayerX, kPlayerY, false);
 
 	// 選択肢を描画
 	for (int i = 0; i < kOptionCount; ++i)
 	{
 		int color = (i == selectIdx_) ? 0xffff00 :0xffffff;
 
-		DrawStringToHandle(550+ text_offset, 350 + i * 80+ text_offset, kOptions[i], 0x000000, fontOptionHandle_);
-		DrawStringToHandle(550, 350 + i * 80, kOptions[i], color, fontOptionHandle_);
+		DrawStringToHandle(kOptionBaseX + kShadowOffset, kOptionBaseY + i * kOptionIntervalY + kShadowOffset, kOptions[i], 0x000000, fontOptionHandle_);
+		DrawStringToHandle(kOptionBaseX, kOptionBaseY + i * kOptionIntervalY, kOptions[i], color, fontOptionHandle_);
 	}
 	//選択するカーソルを上下に揺らす
-	float cursorOffset = sinf(frame_ * 0.15f) * 5.0f;
+	float cursorOffset = sinf(frame_ * kCursorShakeSpeed) * kCursorShakeRange;
 
-	DrawRotaGraph(500, 370 + selectIdx_ * 80 + static_cast<int>(cursorOffset), 2.0f, DX_PI_F / 2.0f, selectHandle_, true);
+	DrawRotaGraph(kCursorX, kCursorBaseY + selectIdx_ * kOptionIntervalY + static_cast<int>(cursorOffset), 
+		kCursorScale, kCursorAngle, selectHandle_, true);
 
 	int startX = kScreenCenterX - (static_cast<int>(gameOverText_.size()) * kCharWidth) / 2;
 
@@ -177,13 +209,13 @@ void GameOverScene::NormalDraw()
 	{
 		if (!charVisible_[i]) continue;
 
-		float shake = sinf(frame_ * 0.1f + i * 0.8f) * 6.0f;
+		float shake = sinf(frame_ * kShakeSpeed + i * kShakePhase) * kShakeRange;
 
 		char s[2] = { gameOverText_[i], '\0' };
 
 		DrawStringToHandle(
-			startX + static_cast<int>(i) * kCharWidth + text_offset,
-			kTextY + text_offset + static_cast<int>(shake),
+			startX + static_cast<int>(i) * kCharWidth + kShadowOffset,
+			kTextY + kShadowOffset + static_cast<int>(shake),
 			s,
 			0x000000,
 			fontHandle_);
@@ -223,8 +255,8 @@ void GameOverScene::Init()
 {
 	frame_ = kFadeDuration;
 
-	fontHandle_ = CreateFontToHandle("g_コミックホラー悪党-教漢", 96, -1, -1);
-	fontOptionHandle_ = CreateFontToHandle("g_コミックホラー悪党-教漢", 48, -1, -1);
+	fontHandle_ = CreateFontToHandle("g_コミックホラー悪党-教漢", kFontSize, -1, -1);
+	fontOptionHandle_ = CreateFontToHandle("g_コミックホラー悪党-教漢", kFontOptionSize, -1, -1);
 
 	bgHandle_ = LoadGraph("data/map/bg.png");
 	frameHandle_ = LoadGraph("data/UI/Tutorialframe.png");

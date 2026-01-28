@@ -46,6 +46,8 @@ private:
 
 public:
 	GameScene(SceneController& controller,StageType stage);
+	~GameScene();
+
 	void Init();
 	void Update(Input&)override;
 	void Draw()override;
@@ -59,7 +61,7 @@ private:
 	int stageTextTimer_;
 	bool isTorchUnlockMessageShow_;			//メッセージ表示したか
 	bool isTorchMessageActive_;
-	int torchTextTimer_;
+	int torchMesseageTimer_;
 	int hpHandle_;
 	int fontHandle_;
 	int fontTorchTextHandle_;

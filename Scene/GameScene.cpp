@@ -36,6 +36,8 @@ namespace
 	constexpr float kBoss2SpawnPosX = 8600.0f;
 	constexpr float kBoss2SpawnPosY = 1600.0f;
 
+	constexpr Vector2 kDebugWarpPos{ 8300.0f, 1740.0f };
+
 	//フェードまでの間隔
 	constexpr int fade_interval = 60;
 	constexpr float kColSize = 32.0f;
@@ -56,7 +58,34 @@ namespace
 	//ライフの描画の拡大率
 	constexpr float kHpScale = 2.5f;
 
-	constexpr float kFadeRate = 255;
+	// カメラ揺れ
+	constexpr int kBossDefeatShakeFrame = 60;
+	constexpr float kBossDefeatShakePower = 6.0f;
+
+	// 自動歩行終了位置
+	constexpr float kAutoWalkFinishX = 9050.0f;
+
+	// 松明メッセージ
+	constexpr int kTorchMessageEndTime = 180;
+	constexpr int kTorchMessageOffsetY = 100;
+	constexpr int kMessagePadding = 16;
+
+	constexpr int FadeMaxAlpha = 255;
+	constexpr int MessageAlpha = 220;
+
+	constexpr int kHpBaseX = 100;
+	constexpr int kHpBaseY = 100;
+	constexpr int kHpSpacing = 84;
+	constexpr int kMaxHp = 3;
+
+	constexpr int kHpAnimGraphW = 32;
+	constexpr int kHpAnimGraphH = 32;
+	constexpr int kHpCenterX = 16;
+	constexpr int kHpCenterY = 16;
+	constexpr int kFrameCount = 13;
+	constexpr int kFrameInterval = 6;
+	constexpr int kStartX = 0;
+	constexpr int kStartY = 160;
 }
 
 GameScene::GameScene(SceneController& controller, StageType stage) :
@@ -70,7 +99,7 @@ GameScene::GameScene(SceneController& controller, StageType stage) :
 	stageTextTimer_(0),
 	isTorchUnlockMessageShow_(false),
 	isTorchMessageActive_(false),
-	torchTextTimer_(0),
+	torchMesseageTimer_(0),
 	hpHandle_(-1),
 	fontHandle_(-1),
 	fontTorchTextHandle_(-1),
@@ -80,6 +109,13 @@ GameScene::GameScene(SceneController& controller, StageType stage) :
 	//bgにステージに対応するマップデータをセット
 	bg_ = std::make_shared<Bg>(stageType_);
 	pCamera_ = std::make_shared<Camera>();
+}
+
+GameScene::~GameScene()
+{
+	DeleteGraph(hpHandle_);
+	DeleteFontToHandle(fontHandle_);
+	DeleteFontToHandle(fontTorchTextHandle_);
 }
 
 void GameScene::FadeInUpdate(Input&)
@@ -185,11 +221,11 @@ void GameScene::NormalUpdate(Input& input)
 			return;
 		}
 	}
-	
+
 	bool tookDamage = false;
 
 	//敵弾との判定
-	Bullet* hitBullet =CollisionManager::EnemyBulletsVsPlayer(bulletManager_.GetBullets(), *pPlayer_);
+	Bullet* hitBullet = CollisionManager::EnemyBulletsVsPlayer(bulletManager_.GetBullets(), *pPlayer_);
 	if (hitBullet)
 	{
 		pPlayer_->OnDamage(hitBullet->GetPos().x);
@@ -214,7 +250,7 @@ void GameScene::NormalUpdate(Input& input)
 		controller_.GetProgress().isDefeatedBoss1_ = true;
 
 		// カメラ揺れ
-		pCamera_->Shake(30, 6.0f);
+		pCamera_->Shake(kBossDefeatShakeFrame, kBossDefeatShakePower);
 	}
 
 	//プレイヤーとボス2の当たり判定
@@ -268,7 +304,7 @@ void GameScene::NormalUpdate(Input& input)
 		if (!pCamera_->IsShaking())
 		{
 			clearState_ = ClearState::AutoWalk;
-			autoWalkFinishX_ = 9050.0f;
+			autoWalkFinishX_ = kAutoWalkFinishX;
 			pPlayer_->StartAutoWalk(kPlayerDir);
 		}
 	}
@@ -317,8 +353,8 @@ void GameScene::NormalUpdate(Input& input)
 			Application::GetInstance().GetSEManager().PlaySE(SE::UnlockTorch);
 			isTorchUnlockMessageShow_ = true;
 		}
-		torchTextTimer_++;
-		if (torchTextTimer_ >= 180)
+		torchMesseageTimer_++;
+		if (torchMesseageTimer_ >= kTorchMessageEndTime)
 		{
 			isTorchMessageActive_ = false;
 		}
@@ -336,7 +372,7 @@ void GameScene::NormalUpdate(Input& input)
 	//デバッグ用：ステージクリア
 	if (input.IsTriggered("debug_warp"))
 	{
-		pPlayer_->SetPos(Vector2{ 8300,1740 });
+		pPlayer_->SetPos(kDebugWarpPos);
 	}
 #endif
 }
@@ -395,7 +431,7 @@ void GameScene::FadeDraw()
 
 	//フェードの描画
 	auto rate = static_cast<float>(frame_) / static_cast<float>(fade_interval);
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, static_cast <int>(kFadeRate * rate));
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, static_cast <int>(FadeMaxAlpha * rate));
 	DrawBox(0, 0, Game::kScreenWidth, Game::kScreenHeight, 0x000000, true);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);//ブレンドしない
 }
@@ -439,17 +475,16 @@ void GameScene::NormalDraw()
 		int msgWidth = GetDrawStringWidthToHandle(message, static_cast<int>(strlen(message)), fontTorchTextHandle_);
 		int msgHeight = GetFontSizeToHandle(fontTorchTextHandle_);
 		int x = (Game::kScreenWidth - msgWidth) / 2;
-		int y = Game::kScreenHeight / 2 - 100;
+		int y = Game::kScreenHeight / 2 - kTorchMessageOffsetY;
 
-		int padding = 16;
-		int boxX1 = x - padding;
-		int boxY1 = y - padding;
-		int boxX2 = x + msgWidth + padding;
-		int boxY2 = y + msgHeight + padding;
+		int boxX1 = x - kMessagePadding;
+		int boxY1 = y - kMessagePadding;
+		int boxX2 = x + msgWidth + kMessagePadding;
+		int boxY2 = y + msgHeight + kMessagePadding;
 
 		//フェードイン・フェードアウト演出
 
-		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 220);
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, MessageAlpha);
 		DrawBox(boxX1, boxY1, boxX2, boxY2, 0x000000, TRUE);
 		DrawStringToHandle(x, y, message, 0xffff00, fontTorchTextHandle_);
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
@@ -458,14 +493,10 @@ void GameScene::NormalDraw()
 
 void GameScene::DrawHpUI()
 {
-	constexpr int baseX = 100;
-	constexpr int baseY = 100;
-	constexpr int spacing = 84;
-
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < kMaxHp; i++)
 	{
-		float x = static_cast<float>(baseX + i * spacing);
-		float y = static_cast<float>(baseY);
+		float x = static_cast<float>(kHpBaseX + i * kHpSpacing);
+		float y = static_cast<float>(kHpBaseY);
 
 		if (hpUIs_[i].isBroken)
 		{
@@ -476,8 +507,8 @@ void GameScene::DrawHpUI()
 			DrawRectRotaGraph3(
 				(int)x, (int)y,
 				0, 0,
-				32, 32,
-				16, 16,
+				kHpAnimGraphW, kHpAnimGraphH,
+				kHpCenterX, kHpCenterY,
 				kHpScale, kHpScale,
 				0.0f,
 				hpHandle_,
@@ -514,7 +545,7 @@ void GameScene::DrawStageText()
 
 	//フェードアウト
 	float rate = static_cast<float>(stageTextTimer_) / kStageTextDuration;
-	int alpha = static_cast<int>(255 * rate);
+	int alpha = static_cast<int>(FadeMaxAlpha * rate);
 
 	int stageTextW = GetDrawStringWidthToHandle(stageText, static_cast<int>(size_t(stageText)), fontHandle_);
 
@@ -544,7 +575,7 @@ void GameScene::Init()
 	bg_->Init();
 
 	//プレイヤーの初期化
-	pPlayer_ = std::make_shared<Player>(Vector2{ kPlayerSpawnPosX, kPlayerSpawnPosY }, Vector2{ 0,0 });
+	pPlayer_ = std::make_shared<Player>(Vector2{ kPlayerSpawnPosX, kPlayerSpawnPosY }, Vector2{ 0.0f,0.0f });
 	pPlayer_->Init();
 	pPlayer_->SetCamera(pCamera_);
 	pPlayer_->SetBg(bg_);
@@ -570,22 +601,22 @@ void GameScene::Init()
 	}
 	if (stageType_ == StageType::Stage1)
 	{
-		enemyFactory_.AddBoss1(Vector2{ kBoss1SpawnPosX,kBoss1SpawnPosY }, Vector2{ 0,0 },
+		enemyFactory_.AddBoss1(Vector2{ kBoss1SpawnPosX,kBoss1SpawnPosY }, Vector2{ 0.0f,0.0f },
 			pPlayer_, &bulletManager_, pCamera_, Boss1Type::Normal);
 	}
 	else if (stageType_ == StageType::Stage2)
 	{
-		enemyFactory_.AddBoss1(Vector2{ kBoss1SpawnPosX,kBoss1SpawnPosY }, Vector2{ 0,0 },
+		enemyFactory_.AddBoss1(Vector2{ kBoss1SpawnPosX,kBoss1SpawnPosY }, Vector2{ 0.0f,0.0f },
 			pPlayer_, &bulletManager_, pCamera_, Boss1Type::Variant);
 	}
 	else if (stageType_ == StageType::Stage3)
 	{
-		enemyFactory_.AddBoss2(Vector2{ kBoss2SpawnPosX,kBoss2SpawnPosY }, Vector2{ 0,0 },
+		enemyFactory_.AddBoss2(Vector2{ kBoss2SpawnPosX,kBoss2SpawnPosY }, Vector2{ 0.0f,0.0f },
 			pPlayer_, &bulletManager_, pCamera_);
 	}
 	else if (stageType_ == StageType::BossDebugStage)
 	{
-		enemyFactory_.AddBoss2(Vector2{ kBoss2SpawnPosX, kBoss2SpawnPosY }, Vector2{ 0,0 },
+		enemyFactory_.AddBoss2(Vector2{ kBoss2SpawnPosX, kBoss2SpawnPosY }, Vector2{ 0.0f,0.0f },
 			pPlayer_, &bulletManager_, pCamera_);
 	}
 	enemyFactory_.Init(pPlayer_, bg_);
@@ -609,16 +640,16 @@ void GameScene::Init()
 	}
 	stageTextTimer_ = kStageTextDuration;
 
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < kMaxHp; i++)
 	{
 		hpUIs_[i].isBroken = false;
 		hpUIs_[i].anim = std::make_unique<SpriteAnimation>(
 			hpHandle_,
-			32, 32,
-			13,
-			6,
+			kHpAnimGraphW, kHpAnimGraphH,
+			kFrameCount,
+			kFrameInterval,
 			kHpScale,
-			0, 160,
+			kStartX, kStartY,
 			false);
 	}
 }
@@ -637,7 +668,7 @@ void GameScene::OnDamagedHpUI()
 {
 	int hp = pPlayer_->GetHp();
 
-	for (int i = 2; i >= 0; i--)
+	for (int i = kMaxHp - 1; i >= 0; i--)
 	{
 		if (i >= hp)
 		{
