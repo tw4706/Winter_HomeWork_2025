@@ -169,15 +169,4 @@ void BulletManager::ClearBossBullet()
 			bullet->OnHit();
 		}
 	}
-
-	//¶‘¶‚µ‚Ä‚¢‚È‚¢’e‚Ííœ
-	bullets_.erase(
-		std::remove_if(
-			bullets_.begin(),
-			bullets_.end(),
-			[](const std::shared_ptr<Bullet>& bullet)
-			{
-				return !bullet->IsAlive();
-			}),
-		bullets_.end());
 }

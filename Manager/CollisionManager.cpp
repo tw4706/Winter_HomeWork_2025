@@ -93,7 +93,7 @@ void CollisionManager::PlayerBulletsVsEnemies(
                     // “G‚Éƒ_ƒ[ƒW‚ğ—^‚¦‚é
                     enemy->OnHit(bullet->GetDamage());
 
-c                    if (bullet->GetType() == BulletType::Lance)
+                    if (bullet->GetType() == BulletType::Lance)
                     {
                         bullet->ResetHitEnemies(enemy.get());
                     }
